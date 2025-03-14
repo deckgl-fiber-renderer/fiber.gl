@@ -1,12 +1,10 @@
 {
   "name": "@deckgl-fiber-renderer/shared",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "license": "MIT",
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {

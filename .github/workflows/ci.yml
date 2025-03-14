@@ -7,7 +7,7 @@ on:
 env:
   TURBO_TELEMETRY_DISABLED: 1
   RUNNER_NODE_VERSION: 22
-  RUNNER_PNPM_VERSION: 10
+  RUNNER_PNPM_VERSION: 10.5.2
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true

@@ -1,0 +1,13 @@
+packages:
+  - packages/*
+  - examples/*
+onlyBuiltDependencies:
+  - '@biomejs/biome'
+  - '@parcel/watcher'
+  - '@swc/core'
+  - core-js
+  - esbuild
+  - lefthook
+  - lmdb
+  - msgpackr-extract
+  - sharp

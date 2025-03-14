@@ -1,0 +1,27 @@
+{
+  "name": "examples-rsbuild",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm rsbuild dev",
+    "build": "pnpm rsbuild build",
+    "start": "pnpm rsbuild preview"
+  },
+  "dependencies": {
+    "@deck.gl/core": "^9.1.0",
+    "@deck.gl/extensions": "^9.1.0",
+    "@deck.gl/geo-layers": "^9.1.0",
+    "@deck.gl/layers": "^9.1.0",
+    "@deck.gl/mapbox": "^9.1.0",
+    "@deck.gl/mesh-layers": "^9.1.0",
+    "@deckgl-fiber-renderer/dom": "workspace:*",
+    "@rsbuild/core": "^1.2.18",
+    "@rsbuild/plugin-react": "^1.1.1",
+    "@tanstack/react-query": "^5.67.3",
+    "maplibre-gl": "^5.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zustand": "^5.0.3"
+  }
+}

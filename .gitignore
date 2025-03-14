@@ -1,0 +1,38 @@
+# Operating system
+.DS_Store
+
+# pnpm
+node_modules
+
+# Turborepo
+.turbo
+
+# Vitest
+.vitest
+coverage
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Build directories
+build
+dist
+
+# Environment variables
+.env
+
+# IDE files
+*.iml
+.idea
+
+# Vercel
+.vercel
+
+# Next
+.next
+
+# Parcel
+.parcel-cache
+
+# Remix
+.react-router

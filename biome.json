@@ -1,0 +1,116 @@
+{
+  "files": {
+    "include": ["**/*.js", "**/*.mjs", "**/*.ts", "**/*.tsx", "**/*.json"],
+    "ignore": [
+      "node_modules",
+      ".turbo",
+      ".next",
+      ".parcel-cache",
+      ".react-route",
+      ".vitest",
+      ".tsbuildinfo",
+      "dist",
+      "build",
+      "coverage"
+    ]
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80,
+    "lineEnding": "lf",
+    "attributePosition": "auto",
+    "formatWithErrors": false,
+    "ignore": []
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "always",
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false
+    }
+  },
+  "json": {
+    "parser": {
+      "allowComments": false,
+      "allowTrailingCommas": false
+    },
+    "formatter": {
+      "enabled": true,
+      "trailingCommas": "none"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": {
+            "maxAllowedComplexity": 15
+          }
+        },
+        "useSimplifiedLogicExpression": "error"
+      },
+      "correctness": {
+        "noUndeclaredVariables": "error",
+        "useExhaustiveDependencies": "warn",
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "useHookAtTopLevel": "error"
+      },
+      "performance": {
+        "noReExportAll": "error"
+      },
+      "security": {},
+      "style": {
+        "noNegationElse": "error",
+        "useCollapsedElseIf": "error",
+        "useBlockStatements": "warn",
+        "useConsistentArrayType": {
+          "level": "warn",
+          "options": {
+            "syntax": "shorthand"
+          }
+        },
+        "noParameterAssign": {
+          "level": "error"
+        },
+        "useNamingConvention": {
+          "level": "error",
+          "options": {
+            "strictCase": true,
+            "requireAscii": true,
+            "conventions": [
+              {
+                "selector": {
+                  "kind": "objectLiteralProperty"
+                },
+                "formats": ["CONSTANT_CASE", "camelCase"]
+              }
+            ]
+          }
+        }
+      },
+      "suspicious": {
+        "noArrayIndexKey": "warn",
+        "noEmptyBlockStatements": "error",
+        "useAwait": "error",
+        "noExplicitAny": "warn"
+      },
+      "nursery": {
+        "noDuplicateElseIf": "error"
+      }
+    }
+  }
+}

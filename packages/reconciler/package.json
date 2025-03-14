@@ -1,0 +1,53 @@
+{
+  "name": "@deckgl-fiber-renderer/reconciler",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist/**"],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "pnpm tsup",
+    "dev": "pnpm tsc --watch",
+    "lint": "pnpm biome lint",
+    "test": "pnpm vitest --dir=src"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-reconciler": "^0.31.0",
+    "esbuild-plugin-file-path-extensions": "^2.1.4",
+    "tsup": "^8.4.0",
+    "vitest": "^3.0.8",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@deckgl-fiber-renderer/shared": "workspace:*",
+    "@deckgl-fiber-renderer/types": "workspace:*",
+    "react-reconciler": "^0.31.0"
+  },
+  "peerDependencies": {
+    "@deck.gl/core": "^9.1.0",
+    "@deck.gl/extensions": "^9.1.0",
+    "@deck.gl/geo-layers": "^9.1.0",
+    "@deck.gl/layers": "^9.1.0",
+    "@deck.gl/mapbox": "^9.1.0",
+    "@deck.gl/mesh-layers": "^9.1.0",
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "$schema": "https://json.schemastore.org/package",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": true
+}

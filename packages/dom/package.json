@@ -1,0 +1,49 @@
+{
+  "name": "@deckgl-fiber-renderer/dom",
+  "version": "0.0.0",
+  "private": false,
+  "license": "MIT",
+  "type": "module",
+  "files": ["dist/**"],
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "pnpm tsup",
+    "dev": "pnpm tsc --watch",
+    "lint": "pnpm biome lint",
+    "test": "pnpm vitest --dir=src"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "esbuild-plugin-file-path-extensions": "^2.1.4",
+    "tsup": "^8.4.0",
+    "vitest": "^3.0.8",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@deckgl-fiber-renderer/reconciler": "workspace:*",
+    "@deckgl-fiber-renderer/shared": "workspace:*",
+    "@deckgl-fiber-renderer/types": "workspace:*",
+    "client-only": "^0.0.1",
+    "its-fine": "^2.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19"
+  },
+  "$schema": "https://json.schemastore.org/package",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}

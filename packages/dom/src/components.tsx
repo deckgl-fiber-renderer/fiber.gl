@@ -1,4 +1,3 @@
-'use client';
 import 'client-only';
 import { type ContextBridge, FiberProvider, useContextBridge } from 'its-fine';
 import { useEffect, useRef, type ReactNode } from 'react';

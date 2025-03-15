@@ -2,7 +2,24 @@
 
 A React renderer for [deck.gl](https://deck.gl/).
 
+> [!IMPORTANT]
+> Requires `react` `>=19` and `@deck.gl/*` `>=v9.1`
+
 ### Getting Started
+
+Install `@deckgl-fiber-renderer`:
+
+```bash
+npm i @deckgl-fiber-renderer/dom
+```
+
+Install peer dependencies:
+
+```bash
+npm i react react-dom @deck.gl/core @deck.gl/layers @deck.gl/geo-layers @deck.gl/mesh-layers @deck.gl/mapbox
+```
+
+Create a standalone map:
 
 ```jsx
 import { Deckgl } from '@deckgl-fiber-renderer/dom';

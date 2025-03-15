@@ -4,10 +4,6 @@ const INITIAL_VIEW_STATE = {
   longitude: -77.0369,
   latitude: 38.9072,
   zoom: 4,
-  minZoom: 1,
-  maxZoom: 22,
-  pitch: 0,
-  bearing: 0,
 };
 
 const MAP_STYLE =
@@ -19,10 +15,6 @@ export function connect(deckgl) {
     style: MAP_STYLE,
     center: [INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude],
     zoom: INITIAL_VIEW_STATE.zoom,
-    doubleClickZoom: false,
-    dragRotate: false,
-    pitchWithRotate: false,
-    rollEnabled: false,
   });
 
   map.once('style.load', () => {

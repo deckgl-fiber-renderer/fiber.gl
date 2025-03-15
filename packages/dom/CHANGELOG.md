@@ -1,5 +1,18 @@
 # @deckgl-fiber-renderer/dom
 
+## 1.1.0
+
+### Minor Changes
+
+- 834279f: Vendor `extends` function from reconciler into dom package
+  Remove `'use client'` directive
+
+### Patch Changes
+
+- @deckgl-fiber-renderer/reconciler@1.1.0
+- @deckgl-fiber-renderer/shared@1.1.0
+- @deckgl-fiber-renderer/types@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes

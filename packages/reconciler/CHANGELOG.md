@@ -1,5 +1,12 @@
 # @deckgl-fiber-renderer/reconciler
 
+## 1.1.0
+
+### Patch Changes
+
+- @deckgl-fiber-renderer/shared@1.1.0
+- @deckgl-fiber-renderer/types@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes

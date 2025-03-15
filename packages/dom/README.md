@@ -33,13 +33,18 @@ createRoot(document.getElementById('root')).render(<ExampleMap />);
 
 Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`, `@deck.gl/layers`, and `@deck.gl/mesh-layers` are available right away with no additional setup.
 
+---
+
 ### Examples
 
 - [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone)
+- [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer)
 - [Nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs)
 - [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix)
 - [Rsbuild](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/rsbuild)
 - [Vite](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/vite)
+
+---
 
 ### Features
 
@@ -60,6 +65,8 @@ Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`,
 - Interleaving DOM based elements like `<div />` inside of the `<Deckgl />` context tree is not supported
 - The `Map` component in `react-map-gl/*` as a child inside of the `<Deckgl />` context tree is not supported
   - Recommended approach is to apply the `interleaved` prop to the `<Deckgl />` component and setup your MapLibre or Mapbox instances directly. See our [examples/nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs) for an example.
+
+---
 
 ### Accessing the Deck.gl Instance
 
@@ -83,7 +90,12 @@ function MyComponent() {
 }
 ```
 
+---
+
 ### MapLibre Integration
+
+> [!CAUTION]
+> `react-map-gl` cannot be used as child of `<Deckgl />` so you will need to create your MapLibre/Mapbox instances manually. `@deck.gl/mapbox` overlay is implicitly included in `@react-fiber-renderer/dom` and will work out of the box if you pass an `interleave` prop to `<Deckgl />`. 
 
 First create a function that accepts a deckgl instance and then instantiates and sets up your MapLibre instance:
 
@@ -145,38 +157,39 @@ function MyMap(props) {
   }, []);
 
   return (
-    <Deckgl interleaved>
+    <Deckgl interleaved ... >
       {children}
     </Deckgl>
   )
 }
 ```
 
-> [!NOTE]
-> Make sure to set the `interleaved` prop to `true` or `false` for the `<Deckgl />` component depending on your needs.
+---
 
 ### Different Views
+
+> [!IMPORTANT]
+> There is no automatic layer filtering applied based on what View it is nested under in the tree. However, this is something we may add in the future as an opt-in feature.
 
 All of the baked in Views are supported:
 
 ```jsx
-<Deckgl>
-  <mapView id="main">
+<Deckgl ... >
+  <mapView id="main" ... >
     <scatterplotLayer id="thing" ... />
   </mapView>
 </Deckgl>
 ```
 
 ```jsx
-<Deckgl>
-  <orthographicView id="main">
+<Deckgl ... >
+  <orthographicView id="main" ... >
     <scatterplotLayer id="thing" ... />
   </orthographicView>
 </Deckgl>
 ```
 
-> [!IMPORTANT]
-> There is no automatic layer filtering applied based on what View it is nested under in the tree. However, this is something we may add in the future as an opt-in feature.
+---
 
 ### Custom Layers
 
@@ -186,6 +199,7 @@ All of the baked in Views are supported:
 Adding custom layers to `@deckg-fiber-renderer` is straightforward. First create a file that contains the custom layer:
 
 ```ts
+// custom-layer.ts
 import { CompositeLayer, type DefaultProps } from '@deck.gl/core';
 import { ScatterplotLayer, type ScatterplotLayerProps } from '@deck.gl/layers';
 
@@ -239,9 +253,10 @@ declare global {
 }
 ```
 
-Next create a `side-effect.ts` file in your app and import it. More optimally you can import it nearest to the root of where you are rendering deckgl:
+Next create a file in your app that will act as the central hub for adding additional layers to the reconciler. This file needs to imported in a root level file that is always executed (like a Nextjs page/layout). More optimally you can import it nearest to the root of where you are rendering `<Deckgl />`:
 
 ```ts
+// side-effects.ts
 import { extend } from '@deckgl-fiber-renderer/dom';
 import { CustomLayer } from './path/to/my-custom-layer';
 
@@ -256,7 +271,9 @@ extend({
 Now you can use this layer anywhere in your JSX:
 
 ```jsx
-<customLayer ... />
+<Deckgl ... >
+  <customLayer ... />
+</Deckgl>
 ```
 
 If you included the TypeScript snippet, it will also have full intellisense support and type safety.

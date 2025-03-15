@@ -5,7 +5,7 @@
 ### Minor Changes
 
 - 834279f: Vendor `extends` function from reconciler into dom package
-  Remove `'use client'` directive
+- 834279f: Remove `'use client'` directive
 
 ### Patch Changes
 

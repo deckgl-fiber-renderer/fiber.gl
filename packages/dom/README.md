@@ -1,3 +1,5 @@
+![Deckgl Fiber Renderer](../../assets/banner.jpg)
+
 # Deckgl Fiber Renderer
 
 A React renderer for [deck.gl](https://deck.gl/).

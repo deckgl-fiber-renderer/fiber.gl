@@ -4,9 +4,7 @@
   "private": false,
   "license": "MIT",
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -33,7 +31,6 @@
   "dependencies": {},
   "peerDependencies": {
     "@deck.gl/core": "^9.1.0",
-    "@deck.gl/extensions": "^9.1.0",
     "@deck.gl/geo-layers": "^9.1.0",
     "@deck.gl/layers": "^9.1.0",
     "@deck.gl/mapbox": "^9.1.0",

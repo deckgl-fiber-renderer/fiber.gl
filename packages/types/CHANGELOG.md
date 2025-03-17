@@ -1,5 +1,11 @@
 # @deckgl-fiber-renderer/types
 
+## 1.1.1
+
+### Patch Changes
+
+- e10b626: Remove unused peer dependency.
+
 ## 1.1.0
 
 ## 1.0.1

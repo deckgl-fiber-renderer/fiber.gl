@@ -1,5 +1,15 @@
 # @deckgl-fiber-renderer/dom
 
+## 1.1.1
+
+### Patch Changes
+
+- e10b626: Remove unused peer dependency.
+- Updated dependencies [e10b626]
+  - @deckgl-fiber-renderer/reconciler@1.1.1
+  - @deckgl-fiber-renderer/shared@1.1.1
+  - @deckgl-fiber-renderer/types@1.1.1
+
 ## 1.1.0
 
 ### Minor Changes

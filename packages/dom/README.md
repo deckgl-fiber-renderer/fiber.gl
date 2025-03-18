@@ -18,7 +18,7 @@ npm i @deckgl-fiber-renderer/dom
 Install peer dependencies:
 
 ```bash
-npm i react react-dom @deck.gl/core @deck.gl/layers @deck.gl/geo-layers @deck.gl/mesh-layers @deck.gl/mapbox
+npm i react react-dom @deck.gl/core @deck.gl/layers @deck.gl/geo-layers @deck.gl/mesh-layers @deck.gl/mapbox react-map-gl
 ```
 
 Create a standalone map:
@@ -103,7 +103,7 @@ Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`,
 ### Limitations
 
 - Interleaving DOM based elements like `<div />` inside of the `<Deckgl />` component tree is not supported.
-- The `<Map />` component from `react-map-gl/*` cannot be rendered as a child inside of the `<Deckgl />` component tree. However, you can wrap the `<Deckgl />` component with the `<Map />` component. For an example of this see [examples/react-map-gl](../../examples/react-map-gl/)
+- The `<Map />` component from `react-map-gl/*` cannot be rendered as a child inside of the `<Deckgl />` component tree. However, you can wrap the `<Deckgl />` component with the `<Map />` component. See below for examples.
 
 ---
 
@@ -131,77 +131,13 @@ function MyComponent() {
 
 ---
 
-### MapLibre Integration
+### Basemap Integration
 
 > [!CAUTION]
-> `react-map-gl` cannot be used as child of `<Deckgl />` so you will need to create your MapLibre/Mapbox instances manually. `@deck.gl/mapbox` overlay is implicitly included in `@react-fiber-renderer/dom` and will work out of the box if you pass an `interleave` prop to `<Deckgl />`. 
+> The `<Map />` component from `react-map-gl/*` cannot be rendered as a child inside of the `<Deckgl />` component tree. However, you can wrap the `<Deckgl />` component with the `<Map />` component. The `@deck.gl/mapbox` overlay is implicitly included in `@react-fiber-renderer/dom` and will work out of the box if you pass an `interleave` prop to the `<Deckgl />` component. 
 
-First create a function that accepts a deckgl instance and then instantiates and sets up your MapLibre instance:
-
-```ts
-// maplibre.ts
-import { Map as MapLibre } from 'maplibre-gl';
-
-const INITIAL_VIEW_STATE = {
-  longitude: -77.0369,
-  latitude: 38.9072,
-  zoom: 4,
-};
-
-const MAP_STYLE =
-  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-
-export function connect(deckgl) {
-  const map = new MapLibre({
-    container: 'maplibre',
-    style: MAP_STYLE,
-    center: [INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude],
-    zoom: INITIAL_VIEW_STATE.zoom,
-  });
-
-  map.once('style.load', () => {
-    map.setProjection({ type: 'globe' });
-  });
-
-  map.once('load', () => {
-    map.addControl(deckgl);
-  });
-
-  // Return a cleanup function to be called inside a `useEffect` return function
-  return () => {
-    map.removeControl(deckgl);
-    map.remove();
-  };
-}
-```
-
-Next setup your React components:
-
-```tsx
-// deckgl.tsx
-import { useEffect } from 'react';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { connect } from './maplibre';
-
-function MyMap(props) {
-  const { children } = props;
-  const deckglInstance = useDeckgl();
-
-  useEffect(() => {
-    if (deckglInstance) {
-      const removeMapLibre = connect(deckglInstance);
-
-      return () => removeMapLibre();
-    }
-  }, []);
-
-  return (
-    <Deckgl interleaved ... >
-      {children}
-    </Deckgl>
-  )
-}
-```
+- [Example](../../examples/react-map-gl/) with `react-map-gl` component
+- [Example](../../examples/vite/) with `maplibre-gl` standalone
 
 ---
 

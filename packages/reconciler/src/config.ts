@@ -259,18 +259,22 @@ export function replaceContainerChildren(
     // NOTE: splits views and layers into separate arrays
     const types = organizeList(list);
 
+    // NOTE: apply layers passed to the `layers` prop on `<Deckgl />` component
+    const combinedLayers = [...state._passedLayers, ...types.layers];
+
     log
       .withMetadata({
-        layers: types.layers,
+        layers: combinedLayers,
         views: types.views,
       })
       .debug('deck.setProps views and layers');
 
     // @ts-expect-error challenging to type accurately
     deckgl.setProps({
-      layers: types.layers,
+      layers: combinedLayers,
 
-      // NOTE: for interleaved mode we cannot pass a views prop
+      // NOTE: for interleaved mode we cannot pass a `views` prop
+      // IDEA: perhaps also do a props check for `interleaved`
       ...(types.views.length > 0 && { views: types.views }),
     });
   }

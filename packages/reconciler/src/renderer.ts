@@ -71,6 +71,14 @@ export function createRoot(node: RootElement): ReconcilerRoot {
   let configured = false;
 
   function configure(props: DeckglProps) {
+    // NOTE: we want to support a "mix-mode" of sorts where a user can pass an explicit `layers` prop alongside
+    // traditional usage of creating layers as JSX children.
+    if (props?.layers?.length) {
+      // IDEA: we could do some complex diffing logic here but since we don't expose the full store there are
+      // no footguns to just updating it all the time.
+      store.setState({ _passedLayers: props.layers });
+    }
+
     if (configured) {
       return;
     }

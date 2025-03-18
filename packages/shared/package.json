@@ -4,9 +4,7 @@
   "private": false,
   "license": "MIT",
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -20,7 +18,7 @@
   },
   "scripts": {
     "build": "pnpm tsup",
-    "dev": "pnpm tsc --watch",
+    "dev": "pnpm tsup --watch",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },

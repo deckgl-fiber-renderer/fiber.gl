@@ -8,6 +8,11 @@
       "outputs": ["coverage"]
     },
 
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist"]

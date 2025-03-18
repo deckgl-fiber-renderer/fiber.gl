@@ -1,5 +1,25 @@
 # @deckgl-fiber-renderer/shared
 
+## 1.2.0
+
+### Minor Changes
+
+- eb51691: Allow user to pass layers to the `layers` prop in our `<Deckgl />` component alongside tradition React children. E.g.
+
+  ```jsx
+  const passedLayers = [ new ScatterplotLayer({ id: 'a', ... }) ];
+
+  <Deckgl layers={passedLayers}>
+    <scatterplotLayer id="b" ... />
+  </Deckgl>
+  ```
+
+  This will result in the following layers array:
+
+  ```js
+  [layer.a, layer.b];
+  ```
+
 ## 1.1.1
 
 ### Patch Changes

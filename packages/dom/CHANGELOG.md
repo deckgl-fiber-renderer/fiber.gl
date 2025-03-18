@@ -1,5 +1,14 @@
 # @deckgl-fiber-renderer/dom
 
+## 1.2.0
+
+### Patch Changes
+
+- Updated dependencies [eb51691]
+  - @deckgl-fiber-renderer/reconciler@1.2.0
+  - @deckgl-fiber-renderer/shared@1.2.0
+  - @deckgl-fiber-renderer/types@1.2.0
+
 ## 1.1.1
 
 ### Patch Changes

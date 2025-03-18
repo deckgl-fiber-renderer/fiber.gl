@@ -24,33 +24,53 @@ npm i react react-dom @deck.gl/core @deck.gl/layers @deck.gl/geo-layers @deck.gl
 Create a standalone map:
 
 ```jsx
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
+import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
+import { Map, useControl } from 'react-map-gl/maplibre';
 
-export function ExampleMap() {
+const INITIAL_VIEW_STATE = {
+  longitude: -77.0369,
+  latitude: 38.9072,
+  zoom: 4,
+};
+
+const MAP_STYLE =
+  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+
+function BasemapSync() {
+  const deckglInstance = useDeckgl();
+  useControl(() => deckglInstance);
+
+  return null;
+}
+
+function DeckglMap() {
   return (
-    <Deckgl 
-      controller 
-      initialViewState={{
-        longitude: -77.0369,
-        latitude: 38.9072,
-        zoom: 4,
-      }}>
-        <geoJsonLayer
-          id="basemap"
-          data="https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_land.geojson"
-          stroked={false}
-          filled
-          opacity={0.1}
-          getFillColor={[30, 80, 120]}
-        />
+    <Deckgl interleaved>
+      <BasemapSync />
+      <scatterplotLayer id="example" ... />
     </Deckgl>
+}
+
+function Basemap({ children }) {
+  return (
+    <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
+      {children}
+    </Map>
   )
 }
 
-createRoot(document.getElementById('root')).render(<ExampleMap />);
+function App() {
+  return (
+    <Basemap>
+      <DeckglMap />
+    </Basemap>
+  )
+}
+
+createRoot(document.getElementById('root')).render(<App />);
 ```
 
-Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`, `@deck.gl/layers`, and `@deck.gl/mesh-layers` are available right away with no additional setup.
+Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`, `@deck.gl/layers`, and `@deck.gl/mesh-layers` are available right away with no additional setup and full intellisense.
 
 ---
 

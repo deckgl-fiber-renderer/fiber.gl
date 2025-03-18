@@ -1,12 +1,22 @@
 {
   "name": "@deckgl-fiber-renderer/dom",
+  "description": "A React renderer for Deck.gl",
   "version": "1.1.1",
   "private": false,
   "license": "MIT",
   "type": "module",
-  "files": [
-    "dist/**"
-  ],
+  "files": ["dist/**"],
+  "bugs": {
+    "url": "https://github.com/deckgl-fiber-renderer/fiber.gl/issues"
+  },
+  "author": "Brandon Pierce (https://github.com/brandonjpierce)",
+  "maintainers": ["Brandon Pierce (https://github.com/brandonjpierce)"],
+  "keywords": ["react", "renderer", "fiber", "deckgl", "deck.gl"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deckgl-fiber-renderer/fiber.gl.git",
+    "directory": "packages/dom"
+  },
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -20,7 +30,7 @@
   },
   "scripts": {
     "build": "pnpm tsup",
-    "dev": "pnpm tsc --watch",
+    "dev": "pnpm tsup --watch",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },

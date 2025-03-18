@@ -13,7 +13,7 @@
     "outDir": "dist",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "target": "es2022",
+    "target": "ES2023",
     "allowJs": true,
     "resolveJsonModule": true,
     "moduleDetection": "force",
@@ -22,11 +22,11 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "sourceMap": true,
     "declaration": true,
-    "lib": ["es2023", "dom", "dom.iterable"],
+    "lib": ["ESNext", "dom", "dom.iterable"],
     "jsx": "react-jsx"
   }
 }

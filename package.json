@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "turbo build --filter=./packages/*",
+    "dev": "turbo dev --filter=./packages/*",
     "lint": "turbo lint --filter=./packages/*",
     "test": "turbo test --filter=./packages/*",
     "format": "pnpm biome format . --write",

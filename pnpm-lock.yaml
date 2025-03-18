@@ -111,6 +111,54 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@types/react@19.0.10)(react@19.0.0)
 
+  examples/react-map-gl:
+    dependencies:
+      '@deck.gl/core':
+        specifier: ^9.1.0
+        version: 9.1.5
+      '@deck.gl/extensions':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
+      '@deck.gl/geo-layers':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@deck.gl/extensions@9.1.5(@deck.gl/core@9.1.5)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5))))(@deck.gl/layers@9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5))))(@deck.gl/mesh-layers@9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5))))(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
+      '@deck.gl/layers':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
+      '@deck.gl/mapbox':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@luma.gl/core@9.1.5)
+      '@deck.gl/mesh-layers':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
+      '@deckgl-fiber-renderer/dom':
+        specifier: workspace:*
+        version: link:../../packages/dom
+      '@tanstack/react-query':
+        specifier: ^5.67.3
+        version: 5.67.3(react@19.0.0)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.3.4(vite@6.2.1(@types/node@22.13.10)(jiti@2.4.2))
+      maplibre-gl:
+        specifier: ^5.2.0
+        version: 5.2.0
+      react:
+        specifier: ^19.0.0
+        version: 19.0.0
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.0.0(react@19.0.0)
+      react-map-gl:
+        specifier: ^8.0.1
+        version: 8.0.1(maplibre-gl@5.2.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      vite:
+        specifier: ^6.2.1
+        version: 6.2.1(@types/node@22.13.10)(jiti@2.4.2)
+      zustand:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/react@19.0.10)(react@19.0.0)
+
   examples/remix:
     dependencies:
       '@deck.gl/core':

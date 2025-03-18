@@ -57,6 +57,7 @@ Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`,
 ### Examples
 
 - [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone)
+- [MapLibre via `react-map-gl`](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/react-map-gl)
 - [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer)
 - [Nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs)
 - [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix)
@@ -81,9 +82,8 @@ Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`,
 
 ### Limitations
 
-- Interleaving DOM based elements like `<div />` inside of the `<Deckgl />` context tree is not supported
-- The `Map` component in `react-map-gl/*` as a child inside of the `<Deckgl />` context tree is not supported
-  - Recommended approach is to apply the `interleaved` prop to the `<Deckgl />` component and setup your MapLibre or Mapbox instances directly. See our [examples/nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs) for an example.
+- Interleaving DOM based elements like `<div />` inside of the `<Deckgl />` component tree is not supported.
+- The `<Map />` component from `react-map-gl/*` cannot be rendered as a child inside of the `<Deckgl />` component tree. However, you can wrap the `<Deckgl />` component with the `<Map />` component. For an example of this see [examples/react-map-gl](../../examples/react-map-gl/)
 
 ---
 

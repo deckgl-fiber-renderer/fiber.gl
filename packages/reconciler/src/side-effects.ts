@@ -70,9 +70,9 @@ extend({
   Tile3DLayer,
   TerrainLayer,
   MVTLayer,
-  mvtLayer: MVTLayer, // alias
+  MvtLayer: MVTLayer, // alias
   WMSLayer,
-  wmsLayer: WMSLayer, // alias
+  WmsLayer: WMSLayer, // alias
   GeohashLayer,
   // @deck.gl/mesh-layers
   ScenegraphLayer,

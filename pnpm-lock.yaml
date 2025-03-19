@@ -472,7 +472,7 @@ importers:
         specifier: ^19
         version: 19.0.0(react@19.0.0)
       react-reconciler:
-        specifier: ^0.31.0
+        specifier: ~0.31.0
         version: 0.31.0(react@19.0.0)
     devDependencies:
       '@types/react':

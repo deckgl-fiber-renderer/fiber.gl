@@ -1,5 +1,17 @@
 # @deckgl-fiber-renderer/reconciler
 
+## 1.3.0
+
+### Minor Changes
+
+- a2d4e12: Fix incorrect alias in default implicit `extend` call.
+  Target `~` semver range for `react-reconciler` for stability reasons.
+
+### Patch Changes
+
+- @deckgl-fiber-renderer/shared@1.3.0
+- @deckgl-fiber-renderer/types@1.3.0
+
 ## 1.2.0
 
 ### Minor Changes

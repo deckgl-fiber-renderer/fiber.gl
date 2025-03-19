@@ -79,6 +79,7 @@ Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`,
 - [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone)
 - [MapLibre via `react-map-gl`](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/react-map-gl)
 - [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer)
+- [Advanced with RSC](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/advanced)
 - [Nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs)
 - [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix)
 - [Rsbuild](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/rsbuild)

@@ -74,6 +74,19 @@ createRoot(document.getElementById('root')).render(<App />);
 
 Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`, `@deck.gl/layers`, and `@deck.gl/mesh-layers` are available right away with no additional setup.
 
+---
+
+### Examples
+
+- [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone)
+- [MapLibre via `react-map-gl`](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/react-map-gl)
+- [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer)
+- [Advanced with RSC](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/advanced)
+- [Nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs)
+- [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix)
+- [Rsbuild](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/rsbuild)
+- [Vite](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/vite)
+
 ## 💡 Contributing
 
 Read the [contributing](CONTRIBUTING.md) guidelines file if you are interested in contributing.

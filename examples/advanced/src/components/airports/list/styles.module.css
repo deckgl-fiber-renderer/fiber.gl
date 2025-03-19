@@ -1,0 +1,57 @@
+.scroll {
+  overflow-y: auto;
+  height: calc(100vh - 32px);
+  position: relative;
+}
+
+.list {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-auto-rows: auto;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.itemContainer {
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 90% auto;
+  flex-direction: row;
+  gap: 4;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  transition: background-color 125ms ease;
+  will-change: background-color;
+  color: hsl(var(--foreground));
+}
+
+.itemContainer:hover {
+  background-color: hsla(var(--border), 0.75);
+}
+
+.itemContainer[data-active="true"] {
+  background-color: hsl(var(--foreground));
+  color: hsl(var(--background));
+}
+
+.label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.subLabel {
+  font-size: 12px;
+  opacity: 0.666;
+}

@@ -1,0 +1,19 @@
+:root {
+  --background: 0, 0%, 4%;
+  --foreground: 60, 14%, 91%;
+  --muted-foreground: 0, 0%, 54%;
+  --border: 0, 0%, 13%;
+  --primary: 164, 91%, 56%;
+}
+
+body {
+  font-optical-sizing: auto;
+  font-variant-numeric: tabular-nums lining-nums;
+  height: 100vh;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+#maplibre {
+  height: 100%;
+}

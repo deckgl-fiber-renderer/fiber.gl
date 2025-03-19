@@ -1,0 +1,31 @@
+.container {
+  display: grid;
+  grid-template-columns: auto 320px;
+  grid-template-rows: auto 32px;
+  grid-template-areas:
+    "content right"
+    "footer footer";
+  height: 100vh;
+}
+
+.map {
+  grid-area: -1 / -1 / 1 / 1;
+  position: relative;
+}
+
+.right {
+  grid-area: right;
+  backdrop-filter: blur(4px);
+  background-color: hsla(var(--background), 0.15);
+  border-left: 1px solid hsl(var(--border));
+  margin-right: 8;
+  position: relative;
+}
+
+.footer {
+  grid-area: footer;
+  position: relative;
+  backdrop-filter: blur(4px);
+  background-color: hsla(var(--background), 0.15);
+  border-top: 1px solid hsl(var(--border));
+}

@@ -5,7 +5,7 @@
 ### Minor Changes
 
 - a2d4e12: Fix incorrect alias in default implicit `extend` call.
-  Target `~` semver range for `react-reconciler` for stability reasons.
+- a2d4e12: Target `~` semver range for `react-reconciler` for stability reasons.
 
 ### Patch Changes
 

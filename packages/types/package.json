@@ -53,5 +53,5 @@
   "publishConfig": {
     "access": "public"
   },
-  "sideEffects": ["./src/jsx.ts", "./dist/jsx.d.ts"]
+  "sideEffects": true
 }

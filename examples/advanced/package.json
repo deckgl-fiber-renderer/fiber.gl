@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "pnpm next dev",
+    "dev": "pnpm next dev --turbo",
     "build": "pnpm next build",
     "start": "pnpm next start"
   },

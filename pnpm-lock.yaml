@@ -399,6 +399,54 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@types/react@19.0.11)(react@19.0.0)
 
+  examples/widgets:
+    dependencies:
+      '@deck.gl/core':
+        specifier: ^9.1.0
+        version: 9.1.5
+      '@deck.gl/extensions':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
+      '@deck.gl/geo-layers':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@deck.gl/extensions@9.1.5(@deck.gl/core@9.1.5)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5))))(@deck.gl/layers@9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5))))(@deck.gl/mesh-layers@9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5))))(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
+      '@deck.gl/layers':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
+      '@deck.gl/mapbox':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@luma.gl/core@9.1.5)
+      '@deck.gl/mesh-layers':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
+      '@deck.gl/widgets':
+        specifier: ^9.1.0
+        version: 9.1.7(@deck.gl/core@9.1.5)
+      '@deckgl-fiber-renderer/dom':
+        specifier: workspace:*
+        version: link:../../packages/dom
+      '@tanstack/react-query':
+        specifier: ^5.67.3
+        version: 5.69.0(react@19.0.0)
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.3.4(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2))
+      maplibre-gl:
+        specifier: ^5.2.0
+        version: 5.2.0
+      react:
+        specifier: ^19.0.0
+        version: 19.0.0
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.0.0(react@19.0.0)
+      vite:
+        specifier: ^6.2.1
+        version: 6.2.2(@types/node@22.13.10)(jiti@2.4.2)
+      zustand:
+        specifier: ^5.0.3
+        version: 5.0.3(@types/react@19.0.11)(react@19.0.0)
+
   packages/dom:
     dependencies:
       '@deckgl-fiber-renderer/reconciler':
@@ -861,6 +909,11 @@ packages:
       '@deck.gl/core': ^9.1.0
       '@luma.gl/core': ^9.1.3
       '@luma.gl/engine': ^9.1.3
+
+  '@deck.gl/widgets@9.1.7':
+    resolution: {integrity: sha512-ZyTLuIiEa33BIcDiQKDOdb/ShIQxSlYnzUTKEwwOA+AfC5hM9S8naPjStOLgWRHIIKFKlJ+75xv0jnJj6ezpOA==}
+    peerDependencies:
+      '@deck.gl/core': ^9.1.0
 
   '@effect/schema@0.75.5':
     resolution: {integrity: sha512-TQInulTVCuF+9EIbJpyLP6dvxbQJMphrnRqgexm/Ze39rSjfhJuufF7XvU3SxTgg3HnL7B/kpORTJbHhlE6thw==}
@@ -3175,6 +3228,9 @@ packages:
   potpack@2.0.0:
     resolution: {integrity: sha512-Q+/tYsFU9r7xoOJ+y/ZTtdVQwTWfzjbiXBDMM/JKUux3+QPP02iUuIoeBQ+Ot6oEDlC+/PGjB/5A3K7KKb7hcw==}
 
+  preact@10.26.4:
+    resolution: {integrity: sha512-KJhO7LBFTjP71d83trW+Ilnjbo+ySsaAgCfXOXUlmGzJ4ygYPWmysm77yg4emwfmoz3b22yvH5IsVFHbhUaH5w==}
+
   prettier@2.8.8:
     resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
@@ -4397,6 +4453,11 @@ snapshots:
       '@luma.gl/shadertools': 9.1.5(@luma.gl/core@9.1.5)
     transitivePeerDependencies:
       - '@loaders.gl/core'
+
+  '@deck.gl/widgets@9.1.7(@deck.gl/core@9.1.5)':
+    dependencies:
+      '@deck.gl/core': 9.1.5
+      preact: 10.26.4
 
   '@effect/schema@0.75.5(effect@3.13.12)':
     dependencies:
@@ -6616,6 +6677,8 @@ snapshots:
       source-map-js: 1.2.1
 
   potpack@2.0.0: {}
+
+  preact@10.26.4: {}
 
   prettier@2.8.8: {}
 

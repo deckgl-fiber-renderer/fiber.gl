@@ -5,7 +5,7 @@
 A React renderer for [deck.gl](https://deck.gl/).
 
 > [!IMPORTANT]
-> Requires `react` `>=19` and `@deck.gl/*` `>=v9.1`
+> Requires `react`: `19.0.0` and `@deck.gl/*`: `^9.1.0`
 
 [See documentation here](./packages/dom/README.md)
 
@@ -78,14 +78,15 @@ Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`,
 
 ### Examples
 
-- [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone)
-- [MapLibre via `react-map-gl`](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/react-map-gl)
-- [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer)
-- [Advanced with RSC](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/advanced)
-- [Nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs)
-- [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix)
-- [Rsbuild](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/rsbuild)
-- [Vite](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/vite)
+- [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone): `pnpm --filter examples-standalone run dev`
+- [MapLibre via `react-map-gl`](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/react-map-gl): `pnpm --filter examples-react-map-gl run dev`
+- [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer): `pnpm --filter examples-custom-layer run dev`
+- [Advanced with RSC](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/advanced): `pnpm --filter examples-advanced run dev`
+- [Nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs): `pnpm --filter examples-nextjs run dev`
+- [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix): `pnpm --filter examples-remix run dev`
+- [Rsbuild](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/rsbuild): `pnpm --filter examples-rsbuild run dev`
+- [Vite](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/vite): `pnpm --filter examples-vite run dev`
+- [Widgets](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/widgets): `pnpm --filter examples-widgets run dev`
 
 ## 💡 Contributing
 

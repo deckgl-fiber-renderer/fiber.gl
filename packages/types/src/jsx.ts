@@ -39,17 +39,20 @@ import type {
   ScenegraphLayerProps,
   SimpleMeshLayerProps,
 } from '@deck.gl/mesh-layers';
+import type { ReactNode } from 'react';
 
 type ExtractViewProps<T> = T extends View<any, infer P> ? P : never;
 
 // TODO: allow for `children` type for React children
 export interface DeckglElements {
   // @deck.gl/core
-  mapView: ExtractViewProps<MapView>;
-  orthographicView: ExtractViewProps<OrthographicView>;
-  orbitView: ExtractViewProps<OrbitView>;
-  firstPersonView: ExtractViewProps<FirstPersonView>;
-  globeView: ExtractViewProps<GlobeView>;
+  mapView: ExtractViewProps<MapView> & { children: ReactNode };
+  orthographicView: ExtractViewProps<OrthographicView> & {
+    children: ReactNode;
+  };
+  orbitView: ExtractViewProps<OrbitView> & { children: ReactNode };
+  firstPersonView: ExtractViewProps<FirstPersonView> & { children: ReactNode };
+  globeView: ExtractViewProps<GlobeView> & { children: ReactNode };
 
   // @deck.gl/layers
   arcLayer: ArcLayerProps;

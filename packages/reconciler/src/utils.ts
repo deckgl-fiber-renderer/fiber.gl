@@ -1,8 +1,8 @@
-import { MapView, type Layer } from '@deck.gl/core';
+import { View, type Layer } from '@deck.gl/core';
 import type { Instance } from './types';
 
 export function isView(instance: Instance['node']) {
-  return instance instanceof MapView;
+  return instance instanceof View;
 }
 
 export function flattenTree(arr: Instance[]): Instance['node'][] {

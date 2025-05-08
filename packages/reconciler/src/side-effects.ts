@@ -1,6 +1,6 @@
 import {
   FirstPersonView,
-  _GlobeView as GlobeView,
+  _GlobeView,
   MapView,
   OrbitView,
   OrthographicView,
@@ -16,7 +16,7 @@ import {
   Tile3DLayer,
   TileLayer,
   TripsLayer,
-  _WMSLayer as WMSLayer,
+  _WMSLayer,
 } from '@deck.gl/geo-layers';
 import {
   ArcLayer,
@@ -45,7 +45,7 @@ extend({
   OrthographicView,
   OrbitView,
   FirstPersonView,
-  GlobeView,
+  GlobeView: _GlobeView,
   // @deck.gl/layers
   ArcLayer,
   BitmapLayer,
@@ -71,8 +71,8 @@ extend({
   TerrainLayer,
   MVTLayer,
   MvtLayer: MVTLayer, // alias
-  WMSLayer,
-  WmsLayer: WMSLayer, // alias
+  WMSLayer: _WMSLayer,
+  WmsLayer: _WMSLayer, // alias
   GeohashLayer,
   // @deck.gl/mesh-layers
   ScenegraphLayer,

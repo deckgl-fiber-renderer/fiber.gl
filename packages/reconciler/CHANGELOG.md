@@ -1,5 +1,18 @@
 # @deckgl-fiber-renderer/reconciler
 
+## 1.4.0
+
+### Minor Changes
+
+- 3471a06: Fixed `isView` logic to allow for other view types.
+  Fixed some types for Views.
+
+### Patch Changes
+
+- Updated dependencies [3471a06]
+  - @deckgl-fiber-renderer/shared@1.4.0
+  - @deckgl-fiber-renderer/types@1.4.0
+
 ## 1.3.0
 
 ### Minor Changes

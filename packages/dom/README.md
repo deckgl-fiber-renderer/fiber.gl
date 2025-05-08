@@ -84,6 +84,7 @@ Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`,
 - [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix): `pnpm --filter examples-remix run dev`
 - [Rsbuild](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/rsbuild): `pnpm --filter examples-rsbuild run dev`
 - [Vite](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/vite): `pnpm --filter examples-vite run dev`
+- [Views](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/views): `pnpm --filter examples-views run dev`
 - [Widgets](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/widgets): `pnpm --filter examples-widgets run dev`
 
 ---

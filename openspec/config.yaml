@@ -1,0 +1,65 @@
+schema: spec-driven
+
+context: |
+  Domain: React custom renderer for Deck.gl - declarative, component-based geospatial visualization
+
+  Monorepo: @deckgl-fiber-renderer/* packages managed with Turborepo + pnpm workspaces + Changesets
+  - packages/dom: Main user-facing package, React bindings for Deck.gl rendering
+  - packages/reconciler: Core React reconciler implementation
+  - packages/shared: Shared utilities, constants, and store logic
+  - packages/types: TypeScript type definitions and JSX typings
+
+  Stack:
+  - TypeScript 5.8+ (ES2023 target, ESNext modules, strict mode)
+  - React 19 (peer dependency)
+  - Deck.gl 9.1.0+ (peer dependency for layers and core)
+  - react-reconciler 0.31 (custom renderer foundation)
+  - Vitest 3+ (testing)
+  - Biome (lint/format)
+  - tsup (build)
+  - Turborepo (orchestration)
+
+  Patterns:
+  - Functional programming style (prefer pure functions, avoid classes)
+  - Custom React renderer architecture using react-reconciler
+  - ESM-only (no CommonJS)
+  - Workspace protocol for internal dependencies (workspace:*)
+  - Type guards for runtime type checking (isDefined, isFn)
+  - Declarative component API (layers as JSX elements)
+
+  Standards:
+  - Strict TypeScript: noUncheckedIndexedAccess, noImplicitOverride, verbatimModuleSyntax
+  - Type-safe exports with explicit .d.ts declarations
+  - sideEffects: false (except reconciler which is true)
+  - Semver versioning
+
+  Build:
+  - GitHub Actions CI/CD with Turbo caching
+  - Node 22+, pnpm 10+
+  - Changesets for version management and changelogs
+  - All packages publicly scoped to @deckgl-fiber-renderer on npm
+
+rules:
+  proposal:
+    - Identify which @deckgl-fiber-renderer/* packages are affected
+    - Consider React 19 and Deck.gl 9.1+ compatibility implications
+    - Assess impact on declarative JSX API surface
+    - Flag breaking changes that require major version bump per Semver
+
+  specs:
+    - Use Given/When/Then format for behavior scenarios
+    - Include examples with JSX component usage where applicable
+    - Reference Deck.gl layer types and props when specifying layer behavior
+    - Check openspec/specs/ for existing patterns before creating new ones
+
+  design:
+    - Document reconciler impacts for any changes to renderer lifecycle
+    - Consider browser/SSR environments (packages/dom uses client-only)
+    - Specify TypeScript type exports and JSX namespace changes
+    - Address workspace dependency graph (shared <- reconciler <- dom)
+
+  tasks:
+    - Break into max 2-hour independent chunks
+    - Each task must be testable with Vitest
+    - Include Biome lint/format check in implementation tasks
+    - Tag tasks that require changeset generation

@@ -1,9 +1,9 @@
-'use client';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
+"use client";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
 
 const INITIAL_VIEW_STATE = {
-  longitude: -77.0369,
   latitude: 38.9072,
+  longitude: -77.0369,
   zoom: 4,
 };
 

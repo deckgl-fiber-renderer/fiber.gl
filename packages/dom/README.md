@@ -137,7 +137,7 @@ function MyComponent() {
 ### Basemap Integration
 
 > [!CAUTION]
-> The `<Map />` component from `react-map-gl/*` cannot be rendered as a child inside of the `<Deckgl />` component tree. However, you can wrap the `<Deckgl />` component with the `<Map />` component. The `@deck.gl/mapbox` overlay is implicitly included in `@react-fiber-renderer/dom` and will work out of the box if you pass an `interleave` prop to the `<Deckgl />` component. 
+> The `<Map />` component from `react-map-gl/*` cannot be rendered as a child inside of the `<Deckgl />` component tree. However, you can wrap the `<Deckgl />` component with the `<Map />` component. The `@deck.gl/mapbox` overlay is implicitly included in `@react-fiber-renderer/dom` and will work out of the box if you pass an `interleave` prop to the `<Deckgl />` component.
 
 - [Example](../../examples/react-map-gl/) with `react-map-gl` component
 - [Example](../../examples/vite/) with `maplibre-gl` standalone
@@ -178,15 +178,15 @@ Adding custom layers to `@deckg-fiber-renderer` is straightforward. First create
 
 ```ts
 // custom-layer.ts
-import { CompositeLayer, type DefaultProps } from '@deck.gl/core';
-import { ScatterplotLayer, type ScatterplotLayerProps } from '@deck.gl/layers';
+import { CompositeLayer, type DefaultProps } from "@deck.gl/core";
+import { ScatterplotLayer, type ScatterplotLayerProps } from "@deck.gl/layers";
 
 export type CustomLayerProps = ScatterplotLayerProps & {
   scaler: number;
 };
 
 export class CustomLayer extends CompositeLayer<CustomLayerProps> {
-  static layerName = 'CustomLayer';
+  static layerName = "CustomLayer";
   static defaultProps: DefaultProps<CustomLayerProps> = {
     scaler: 1.0,
   };
@@ -198,18 +198,18 @@ export class CustomLayer extends CompositeLayer<CustomLayerProps> {
       new ScatterplotLayer(
         this.getSubLayerProps({
           ...props,
-          id: 'scaled',
+          id: "scaled",
           data: props.data,
           radiusScale: props.scaler,
           opacity: 0.25,
-        }),
+        })
       ),
       new ScatterplotLayer(
         this.getSubLayerProps({
           ...props,
           data: props.data,
-          id: 'not-scaled',
-        }),
+          id: "not-scaled",
+        })
       ),
     ];
   }
@@ -235,14 +235,14 @@ Next create a file in your app that will act as the central hub for adding addit
 
 ```ts
 // side-effects.ts
-import { extend } from '@deckgl-fiber-renderer/dom';
-import { CustomLayer } from './path/to/my-custom-layer';
+import { extend } from "@deckgl-fiber-renderer/dom";
+import { CustomLayer } from "./path/to/my-custom-layer";
 
 // Add custom layer(s) to reconciler
 extend({
   // jsx elements are transformed to PascalCase behind the scenes
   // so `<customLayer />` becomes `new CustomLayer()`
-  CustomLayer, 
+  CustomLayer,
 });
 ```
 
@@ -255,5 +255,3 @@ Now you can use this layer anywhere in your JSX:
 ```
 
 If you included the TypeScript snippet, it will also have full intellisense support and type safety.
-
-

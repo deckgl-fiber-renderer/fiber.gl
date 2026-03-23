@@ -39,4 +39,3 @@ pnpm run changeset
 ```
 
 From there you can follow along the prompts. Reminder that this project utilizes [semver](https://semver.org/).
-

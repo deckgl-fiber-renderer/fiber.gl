@@ -1,11 +1,12 @@
-import type { Fiber } from 'react-reconciler';
+import { log, toPascal } from "@deckgl-fiber-renderer/shared";
+import type { Fiber } from "react-reconciler";
 import {
   ContinuousEventPriority,
   DefaultEventPriority,
   DiscreteEventPriority,
-} from 'react-reconciler/constants';
-import { log, toPascal } from '@deckgl-fiber-renderer/shared';
-import { catalogue } from './extend';
+} from "react-reconciler/constants";
+
+import { catalogue } from "./extend";
 import type {
   ChildSet,
   Container,
@@ -14,15 +15,15 @@ import type {
   Props,
   Type,
   UpdatePayload,
-} from './types';
-import { flattenTree, organizeList } from './utils';
+} from "./types";
+import { flattenTree, organizeList } from "./utils";
 
 type EventPriority = number;
 
 // TODO: check to see if we can hoist this out of function
 const globalScope =
-  (typeof self !== 'undefined' && self) ||
-  (typeof window !== 'undefined' && window);
+  (typeof self !== "undefined" && self) ||
+  (typeof window !== "undefined" && window);
 
 /**
  * Rough host API flow chart
@@ -109,8 +110,8 @@ function createDeckglObject(type: Type, props: Props): Instance {
   const instance = new catalogue[name](props);
 
   return {
-    node: instance,
     children: [],
+    node: instance,
   };
 }
 
@@ -137,11 +138,11 @@ export function createInstance(
   props: Props,
   rootContainerInfo: Container,
   hostContext: HostContext,
-  fiber: Fiber,
+  fiber: Fiber
 ): Instance {
   log
-    .withMetadata({ type, props, rootContainerInfo, hostContext, fiber })
-    .debug('createInstance');
+    .withMetadata({ fiber, hostContext, props, rootContainerInfo, type })
+    .debug("createInstance");
 
   return createDeckglObject(type, props);
 }
@@ -151,9 +152,9 @@ export function createInstance(
  * If your renderer doesn't support text nodes, you can throw here.
  */
 export function createTextInstance() {
-  log.debug('createTextInstance');
+  log.debug("createTextInstance");
 
-  throw new Error('Text nodes are not supported');
+  throw new Error("Text nodes are not supported");
 }
 
 /**
@@ -169,18 +170,18 @@ export function cloneInstance(
   oldProps: Props,
   newProps: Props,
   keepChildren: boolean,
-  newChildSet?: ChildSet,
+  newChildSet?: ChildSet
 ): Instance {
   log
     .withMetadata({
       instance,
-      type,
-      oldProps,
-      newProps,
       keepChildren,
       newChildSet,
+      newProps,
+      oldProps,
+      type,
     })
-    .debug('cloneInstance');
+    .debug("cloneInstance");
 
   return createDeckglObject(type, newProps);
 }
@@ -193,7 +194,7 @@ export function cloneInstance(
  * No documentation
  */
 export function createContainerChildSet(): ChildSet {
-  log.debug('createContainerChildSet');
+  log.debug("createContainerChildSet");
 
   return [];
 }
@@ -207,14 +208,14 @@ export function createContainerChildSet(): ChildSet {
  */
 export function appendChildToContainerChildSet(
   childSet: ChildSet,
-  child: Instance,
+  child: Instance
 ): void {
   log
     .withMetadata({
-      childSet,
       child,
+      childSet,
     })
-    .debug('appendChildToContainerChildSet');
+    .debug("appendChildToContainerChildSet");
 
   childSet.push(child);
 }
@@ -224,14 +225,14 @@ export function appendChildToContainerChildSet(
  */
 export function finalizeContainerChildren(
   container: Container,
-  newChildren: ChildSet,
+  newChildren: ChildSet
 ): void {
   log
     .withMetadata({
       container,
       newChildren,
     })
-    .debug('finalizeContainerChildren');
+    .debug("finalizeContainerChildren");
 }
 
 /**
@@ -239,14 +240,14 @@ export function finalizeContainerChildren(
  */
 export function replaceContainerChildren(
   container: Container,
-  newChildren: ChildSet,
+  newChildren: ChildSet
 ): void {
   log
     .withMetadata({
       container,
       newChildren,
     })
-    .debug('replaceContainerChildren');
+    .debug("replaceContainerChildren");
 
   const state = container.store.getState();
   const { deckgl } = state;
@@ -267,7 +268,7 @@ export function replaceContainerChildren(
         layers: combinedLayers,
         views: types.views,
       })
-      .debug('deck.setProps views and layers');
+      .debug("deck.setProps views and layers");
 
     // @ts-expect-error challenging to type accurately
     deckgl.setProps({
@@ -290,14 +291,14 @@ export function replaceContainerChildren(
  */
 export function appendInitialChild(
   parentInstance: Instance,
-  child: Instance,
+  child: Instance
 ): void {
   log
     .withMetadata({
-      parentInstance,
       child,
+      parentInstance,
     })
-    .debug('appendInitialChild');
+    .debug("appendInitialChild");
 
   parentInstance.children.push(child);
 }
@@ -323,17 +324,17 @@ export function finalizeInitialChildren(
   type: Type,
   props: Props,
   rootContainer: Container,
-  hostContext: HostContext,
+  hostContext: HostContext
 ): boolean {
   log
     .withMetadata({
+      hostContext,
       instance,
-      type,
       props,
       rootContainer,
-      hostContext,
+      type,
     })
-    .debug('finalizeInitialChildren');
+    .debug("finalizeInitialChildren");
 
   return false;
 }
@@ -361,18 +362,18 @@ export function prepareUpdate(
   oldProps: Props,
   newProps: Props,
   rootContainer: Container,
-  hostContext: HostContext,
+  hostContext: HostContext
 ): UpdatePayload | null {
   log
     .withMetadata({
-      instance,
-      type,
-      oldProps,
-      newProps,
-      rootContainer,
       hostContext,
+      instance,
+      newProps,
+      oldProps,
+      rootContainer,
+      type,
     })
-    .debug('prepareUpdate');
+    .debug("prepareUpdate");
 
   return null;
 }
@@ -385,13 +386,13 @@ export function prepareUpdate(
  * Even if you don't want to do anything here, you need to return `null` from it.
  */
 export function prepareForCommit(
-  container: Container,
+  container: Container
 ): Record<string, unknown> | null {
   log
     .withMetadata({
       container,
     })
-    .debug('prepareForCommit');
+    .debug("prepareForCommit");
 
   return null;
 }
@@ -407,7 +408,7 @@ export function resetAfterCommit(container: Container): void {
     .withMetadata({
       container,
     })
-    .debug('resetAfterCommit');
+    .debug("resetAfterCommit");
 }
 
 /**
@@ -416,7 +417,7 @@ export function resetAfterCommit(container: Container): void {
  * You can leave it empty.
  */
 export function preparePortalMount(): void {
-  log.debug('preparePortalMount');
+  log.debug("preparePortalMount");
 }
 
 /**
@@ -438,10 +439,10 @@ export function preparePortalMount(): void {
 export function shouldSetTextContent(type: Type, props: Props): boolean {
   log
     .withMetadata({
-      type,
       props,
+      type,
     })
-    .debug('shouldSetTextContent');
+    .debug("shouldSetTextContent");
 
   return false;
 }
@@ -459,7 +460,7 @@ export function getRootHostContext(rootContainer: Container): HostContext {
     .withMetadata({
       rootContainer,
     })
-    .debug('getRootHostContext');
+    .debug("getRootHostContext");
 
   return rootContainer;
 }
@@ -480,14 +481,14 @@ export function getRootHostContext(rootContainer: Container): HostContext {
  */
 export function getChildHostContext(
   parentHostContext: HostContext,
-  type: Type,
+  type: Type
 ): HostContext {
   log
     .withMetadata({
       parentHostContext,
       type,
     })
-    .debug('getChildHostContext');
+    .debug("getChildHostContext");
 
   // IDEA: detect if we are inside of a View instance
   // let context = { ...parentHostContext };
@@ -510,7 +511,7 @@ export function getPublicInstance(instance: Instance): Instance {
     .withMetadata({
       instance,
     })
-    .debug('getPublicInstance');
+    .debug("getPublicInstance");
 
   return instance;
 }
@@ -523,7 +524,7 @@ export function detachDeletedInstance(instance: Instance): void {
     .withMetadata({
       instance,
     })
-    .debug('detachDeletedInstance');
+    .debug("detachDeletedInstance");
 }
 
 /**
@@ -542,7 +543,7 @@ export function detachDeletedInstance(instance: Instance): void {
  * this event is considered background work, and interactive events will be prioritized over it.
  */
 export function getCurrentEventPriority(): number {
-  log.debug('getCurrentEventPriority');
+  log.debug("getCurrentEventPriority");
 
   if (!globalScope) {
     return DefaultEventPriority;
@@ -551,22 +552,25 @@ export function getCurrentEventPriority(): number {
   // NOTE: window.event is technically deprecated but React does not pass the event
   // to this host function for some reason so we have to use it.
   switch (globalScope.event?.type) {
-    case 'click':
-    case 'contextmenu':
-    case 'dblclick':
-    case 'pointercancel':
-    case 'pointerdown':
-    case 'pointerup':
+    case "click":
+    case "contextmenu":
+    case "dblclick":
+    case "pointercancel":
+    case "pointerdown":
+    case "pointerup": {
       return DiscreteEventPriority;
-    case 'pointermove':
-    case 'pointerout':
-    case 'pointerover':
-    case 'pointerenter':
-    case 'pointerleave':
-    case 'wheel':
+    }
+    case "pointermove":
+    case "pointerout":
+    case "pointerover":
+    case "pointerenter":
+    case "pointerleave":
+    case "wheel": {
       return ContinuousEventPriority;
-    default:
+    }
+    default: {
       return DefaultEventPriority;
+    }
   }
 }
 
@@ -579,7 +583,7 @@ export function setCurrentUpdatePriority(newPriority: EventPriority): void {
     .withMetadata({
       newPriority,
     })
-    .debug('setCurrentUpdatePriority');
+    .debug("setCurrentUpdatePriority");
 
   currentUpdatePriority = newPriority;
 }
@@ -589,7 +593,7 @@ export function setCurrentUpdatePriority(newPriority: EventPriority): void {
  * https://github.com/facebook/react/pull/28751
  */
 export function getCurrentUpdatePriority(): EventPriority {
-  log.debug('getCurrentUpdatePriority');
+  log.debug("getCurrentUpdatePriority");
 
   return currentUpdatePriority;
 }
@@ -599,7 +603,7 @@ export function getCurrentUpdatePriority(): EventPriority {
  * https://github.com/facebook/react/pull/28751
  */
 export function resolveUpdatePriority(): EventPriority {
-  log.debug('resolveUpdatePriority');
+  log.debug("resolveUpdatePriority");
 
   if (currentUpdatePriority !== DefaultEventPriority) {
     return currentUpdatePriority;
@@ -615,10 +619,10 @@ export function resolveUpdatePriority(): EventPriority {
 export function maySuspendCommit(type: Type, props: Props): boolean {
   log
     .withMetadata({
-      type,
       props,
+      type,
     })
-    .debug('maySuspendCommit');
+    .debug("maySuspendCommit");
 
   return false;
 }
@@ -631,7 +635,7 @@ export function getInstanceFromNode(node: Fiber): Fiber | null | undefined {
     .withMetadata({
       node,
     })
-    .debug('getInstanceFromNode');
+    .debug("getInstanceFromNode");
 
   return null;
 }
@@ -640,14 +644,14 @@ export function getInstanceFromNode(node: Fiber): Fiber | null | undefined {
  * No documentation
  */
 export function beforeActiveInstanceBlur(): void {
-  log.debug('beforeActiveInstanceBlur');
+  log.debug("beforeActiveInstanceBlur");
 }
 
 /**
  * No documentation
  */
 export function afterActiveInstanceBlur(): void {
-  log.debug('afterActiveInstanceBlur');
+  log.debug("afterActiveInstanceBlur");
 }
 
 /**
@@ -658,7 +662,7 @@ export function getInstanceFromScope(scopeInstance: Instance): Instance | null {
     .withMetadata({
       scopeInstance,
     })
-    .debug('getInstanceFromScope');
+    .debug("getInstanceFromScope");
 
   return null;
 }
@@ -668,14 +672,14 @@ export function getInstanceFromScope(scopeInstance: Instance): Instance | null {
  */
 export function prepareScopeUpdate(
   scopeInstance: Instance,
-  instance: Instance,
+  instance: Instance
 ): void {
   log
     .withMetadata({
-      scopeInstance,
       instance,
+      scopeInstance,
     })
-    .debug('prepareScopeUpdate');
+    .debug("prepareScopeUpdate");
 }
 
 /**
@@ -683,7 +687,7 @@ export function prepareScopeUpdate(
  * https://github.com/facebook/react/pull/26025
  */
 export function shouldAttemptEagerTransition(): boolean {
-  log.debug('shouldAttemptEagerTransition');
+  log.debug("shouldAttemptEagerTransition");
 
   return false;
 }

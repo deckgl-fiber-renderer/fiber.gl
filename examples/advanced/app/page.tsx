@@ -1,9 +1,9 @@
-import { MapClient } from '@/components/map/client';
-import { AirportsLayer } from '@/components/airports/layer';
-import { AirportsList } from '@/components/airports/list';
-import { Layout, LayoutFooter, LayoutMap, LayoutRight } from '@/ui/layout';
-import { selectedCache } from '@/utils/params';
-import { AirportsCard } from '@/components/airports/card';
+import { AirportsCard } from "@/components/airports/card";
+import { AirportsLayer } from "@/components/airports/layer";
+import { AirportsList } from "@/components/airports/list";
+import { MapClient } from "@/components/map/client";
+import { Layout, LayoutFooter, LayoutMap, LayoutRight } from "@/ui/layout";
+import { selectedCache } from "@/utils/params";
 
 async function DynamicCard({ searchParams }) {
   const { selected } = await selectedCache.parse(searchParams);
@@ -27,7 +27,7 @@ export default function Page({ searchParams }) {
       <LayoutRight>
         <AirportsList />
       </LayoutRight>
-      <LayoutFooter></LayoutFooter>
+      <LayoutFooter />
     </Layout>
   );
 }

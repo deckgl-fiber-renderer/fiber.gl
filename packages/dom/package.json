@@ -1,32 +1,34 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@deckgl-fiber-renderer/dom",
-  "description": "A React renderer for Deck.gl",
   "version": "1.4.0",
   "private": false,
-  "license": "MIT",
-  "type": "module",
-  "files": [
-    "dist/**"
+  "description": "A React renderer for Deck.gl",
+  "keywords": [
+    "deck.gl",
+    "deckgl",
+    "fiber",
+    "react",
+    "renderer"
   ],
   "bugs": {
     "url": "https://github.com/deckgl-fiber-renderer/fiber.gl/issues"
   },
+  "license": "MIT",
   "author": "Brandon Pierce (https://github.com/brandonjpierce)",
   "maintainers": [
     "Brandon Pierce (https://github.com/brandonjpierce)"
-  ],
-  "keywords": [
-    "react",
-    "renderer",
-    "fiber",
-    "deckgl",
-    "deck.gl"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deckgl-fiber-renderer/fiber.gl.git",
     "directory": "packages/dom"
   },
+  "files": [
+    "dist/**"
+  ],
+  "type": "module",
+  "sideEffects": false,
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -38,19 +40,14 @@
     },
     "./package.json": "./package.json"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "pnpm tsup",
     "dev": "pnpm tsup --watch",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
-  },
-  "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "esbuild-plugin-file-path-extensions": "^2.1.4",
-    "tsup": "^8.4.0",
-    "vitest": "^3.0.8",
-    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@deckgl-fiber-renderer/reconciler": "workspace:*",
@@ -59,13 +56,16 @@
     "client-only": "^0.0.1",
     "its-fine": "^2.0.0"
   },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "esbuild-plugin-file-path-extensions": "^2.1.4",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.8"
+  },
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19"
-  },
-  "$schema": "https://json.schemastore.org/package",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+  }
 }

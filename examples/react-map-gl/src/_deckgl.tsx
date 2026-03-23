@@ -1,37 +1,38 @@
-'use client';
-import { useCallback } from 'react';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
+"use client";
+import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
+import { useCallback } from "react";
 import {
   Map as MapLibre,
   NavigationControl,
   useControl,
-} from 'react-map-gl/maplibre';
-import { useStore, selectors } from './_store';
+} from "react-map-gl/maplibre";
+
+import { useStore, selectors } from "./_store";
 
 const COLOR = [255, 255, 255, 155];
 const HOVER_COLOR = [255, 0, 0, 255];
 
 const INITIAL_VIEW_STATE = {
-  longitude: -77.0369,
   latitude: 38.9072,
+  longitude: -77.0369,
   zoom: 4,
 };
 
 const MAP_STYLE =
-  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+  "https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
 const PARAMETERS = {
-  depthWriteEnabled: true,
-  depthCompare: 'always',
-  depthBias: 0,
   blend: true,
+  blendAlphaDstFactor: "one-minus-src-alpha",
+  blendAlphaOperation: "add",
+  blendAlphaSrcFactor: "one",
+  blendColorDstFactor: "one-minus-src-alpha",
+  blendColorOperation: "add",
+  blendColorSrcFactor: "src-alpha",
+  depthBias: 0,
+  depthCompare: "always",
   depthTest: false,
-  blendColorSrcFactor: 'src-alpha',
-  blendColorDstFactor: 'one-minus-src-alpha',
-  blendAlphaSrcFactor: 'one',
-  blendAlphaDstFactor: 'one-minus-src-alpha',
-  blendColorOperation: 'add',
-  blendAlphaOperation: 'add',
+  depthWriteEnabled: true,
 };
 
 // NOTE: render this as a child of `<Deckgl />` so that we can grab the deck.gl instance
@@ -50,7 +51,7 @@ function DeckglMap(props) {
 
   const onHover = useCallback((pickInfo) => {
     pickInfo.picked ? setIndex(pickInfo.index) : setIndex(-1);
-  });
+  }, []);
 
   return (
     // NOTE: make sure to supply `interleaved` prop so a DeckglOverlay instance is created internally

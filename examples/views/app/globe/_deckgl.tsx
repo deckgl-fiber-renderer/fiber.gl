@@ -1,28 +1,28 @@
-'use client';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
+"use client";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
 
 const COLOR = [255, 255, 255, 155];
 const HOVER_COLOR = [255, 0, 0, 255];
 
 const INITIAL_VIEW_STATE = {
-  longitude: -77.0369,
   latitude: 38.9072,
+  longitude: -77.0369,
   zoom: 4,
 };
 
 const PARAMETERS = {
-  depthWriteEnabled: true,
-  depthCompare: 'always',
-  depthBias: 0,
   blend: true,
+  blendAlphaDstFactor: "one-minus-src-alpha",
+  blendAlphaOperation: "add",
+  blendAlphaSrcFactor: "one",
+  blendColorDstFactor: "one-minus-src-alpha",
+  blendColorOperation: "add",
+  blendColorSrcFactor: "src-alpha",
+  cullMode: "back",
+  depthBias: 0,
+  depthCompare: "always",
   depthTest: false,
-  blendColorSrcFactor: 'src-alpha',
-  blendColorDstFactor: 'one-minus-src-alpha',
-  blendAlphaSrcFactor: 'one',
-  blendAlphaDstFactor: 'one-minus-src-alpha',
-  blendColorOperation: 'add',
-  blendAlphaOperation: 'add',
-  cullMode: 'back',
+  depthWriteEnabled: true,
 };
 
 export function DeckglExample(props) {

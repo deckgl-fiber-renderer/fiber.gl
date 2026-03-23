@@ -1,13 +1,13 @@
-import { globalScope } from './constants';
+import { globalScope } from "./constants";
 
 export function noop(): void {}
 
 export function isDefined(value: unknown) {
-  return typeof value !== 'undefined';
+  return value !== undefined;
 }
 
 export function isFn(a: unknown): a is typeof Function {
-  return typeof a === 'function';
+  return typeof a === "function";
 }
 
 export function toPascal(str: string) {

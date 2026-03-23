@@ -1,14 +1,15 @@
-import { type StoreApi, create } from 'zustand';
-import type { Deck } from '@deck.gl/core';
-import type { LayersList } from '@deck.gl/core';
-import type { MapboxOverlay } from '@deck.gl/mapbox';
+import type { Deck } from "@deck.gl/core";
+import type { LayersList } from "@deck.gl/core";
+import type { MapboxOverlay } from "@deck.gl/mapbox";
+import { create } from 'zustand';
+import type { StoreApi } from 'zustand';
 
-export type State = {
+export interface State {
   deckgl: Deck | MapboxOverlay;
   setDeckgl: (instance: Deck | MapboxOverlay) => void;
 
   _passedLayers: LayersList;
-};
+}
 
 export type Store = StoreApi<State>;
 

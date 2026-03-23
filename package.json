@@ -3,31 +3,36 @@
   "name": "@deckgl-fiber-renderer/monorepo",
   "version": "0.0.0",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "build": "turbo build --filter=./packages/*",
     "dev": "turbo dev --filter=./packages/*",
     "lint": "turbo lint --filter=./packages/*",
     "test": "turbo test --filter=./packages/*",
-    "format": "pnpm biome format . --write",
+    "format": "pnpm exec oxfmt",
     "deps:mismatch-fix": "pnpm syncpack fix-mismatches",
     "changeset": "pnpm exec changeset",
     "changeset:release": "pnpm run build && pnpm exec changeset publish",
-    "changeset:version": "pnpm exec changeset version"
+    "changeset:version": "pnpm exec changeset version",
+    "prepare": "pnpm exec lefthook install",
+    "check": "pnpm exec ultracite check",
+    "fix": "pnpm exec ultracite fix"
   },
-  "license": "MIT",
+  "devDependencies": {
+    "@changesets/changelog-git": "^0.2.1",
+    "@changesets/cli": "^2.30.0",
+    "@fission-ai/openspec": "^1.2.0",
+    "lefthook": "^2.1.4",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
+    "syncpack": "^14.2.1",
+    "turbo": "^2.8.20",
+    "ultracite": "7.3.2"
+  },
   "engines": {
     "node": ">=22",
     "pnpm": ">=10"
   },
-  "packageManager": "pnpm@10.32.1",
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@changesets/changelog-git": "^0.2.1",
-    "@changesets/cli": "^2.28.1",
-    "@fission-ai/openspec": "^1.2.0",
-    "lefthook": "^1.11.3",
-    "syncpack": "^13.0.3",
-    "turbo": "^2.4.4"
-  }
+  "packageManager": "pnpm@10.32.1"
 }

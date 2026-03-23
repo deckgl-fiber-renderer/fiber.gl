@@ -1,22 +1,22 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   experimental: {
     reactCompiler: true,
-    ppr: 'incremental',
+    ppr: "incremental",
     dynamicIO: true,
     useCache: true,
   },
+  poweredByHeader: false,
 
   reactStrictMode: true,
-  poweredByHeader: false,
 
   typescript: {
     ignoreBuildErrors: true,
-  },
-
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 };
 

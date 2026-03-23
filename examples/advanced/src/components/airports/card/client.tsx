@@ -1,7 +1,8 @@
-'use client';
-import 'client-only';
-import { useSelected } from '@/hooks/use-selected';
-import styles from './styles.module.css';
+"use client";
+import "client-only";
+import { useSelected } from "@/hooks/use-selected";
+
+import styles from "./styles.module.css";
 
 const closeIcon = (
   <svg
@@ -16,7 +17,7 @@ const closeIcon = (
       fill="currentColor"
       fillRule="evenodd"
       clipRule="evenodd"
-    ></path>
+     />
   </svg>
 );
 

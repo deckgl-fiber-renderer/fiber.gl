@@ -1,24 +1,25 @@
-'use client';
-import { useCallback, useEffect } from 'react';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { connect } from './_maplibre';
-import { useStore, selectors } from './_store';
+"use client";
+import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
+import { useCallback, useEffect } from "react";
+
+import { connect } from "./_maplibre";
+import { useStore, selectors } from "./_store";
 
 const COLOR = [255, 255, 255, 155];
 const HOVER_COLOR = [255, 0, 0, 255];
 
 const PARAMETERS = {
-  depthWriteEnabled: true,
-  depthCompare: 'always',
-  depthBias: 0,
   blend: true,
+  blendAlphaDstFactor: "one-minus-src-alpha",
+  blendAlphaOperation: "add",
+  blendAlphaSrcFactor: "one",
+  blendColorDstFactor: "one-minus-src-alpha",
+  blendColorOperation: "add",
+  blendColorSrcFactor: "src-alpha",
+  depthBias: 0,
+  depthCompare: "always",
   depthTest: false,
-  blendColorSrcFactor: 'src-alpha',
-  blendColorDstFactor: 'one-minus-src-alpha',
-  blendAlphaSrcFactor: 'one',
-  blendAlphaDstFactor: 'one-minus-src-alpha',
-  blendColorOperation: 'add',
-  blendAlphaOperation: 'add',
+  depthWriteEnabled: true,
 };
 
 export function DeckglExample(props) {
@@ -29,7 +30,7 @@ export function DeckglExample(props) {
 
   const onHover = useCallback((pickInfo) => {
     pickInfo.picked ? setIndex(pickInfo.index) : setIndex(-1);
-  });
+  }, []);
 
   useEffect(() => {
     if (deckglInstance) {

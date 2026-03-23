@@ -1,7 +1,8 @@
-'use client';
-import 'client-only';
-import { useSelected } from '@/hooks/use-selected';
-import type { Color } from '@deck.gl/core';
+"use client";
+import "client-only";
+import type { Color } from "@deck.gl/core";
+
+import { useSelected } from "@/hooks/use-selected";
 
 const COLOR: Color = [255, 255, 255];
 const HIGHLIGHT_COLOR = [255, 0, 0];

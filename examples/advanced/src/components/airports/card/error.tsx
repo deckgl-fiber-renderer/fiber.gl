@@ -1,7 +1,8 @@
-'use client';
-import 'client-only';
-import { ErrorBoundary } from 'react-error-boundary';
-import styles from './styles.module.css';
+"use client";
+import "client-only";
+import { ErrorBoundary } from "react-error-boundary";
+
+import styles from "./styles.module.css";
 
 function logError(error, info) {
   console.error(error);

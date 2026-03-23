@@ -1,15 +1,15 @@
-'use client';
-import 'client-only';
+"use client";
+import "client-only";
+import { useQueryState } from "nuqs";
 
-import { useQueryState } from 'nuqs';
-import { selectedParsers } from '@/utils/params';
+import { selectedParsers } from "@/utils/params";
 
 export function useSelected() {
   return useQueryState(
-    'selected',
+    "selected",
     selectedParsers.selected.withOptions({
+      history: "push",
       shallow: false,
-      history: 'push',
-    }),
+    })
   );
 }

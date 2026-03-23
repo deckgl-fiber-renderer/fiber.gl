@@ -1,10 +1,10 @@
-import type { Instance } from './types';
+import type { Instance } from "./types";
 
-export type Catalogue = {
+export interface Catalogue {
   [name: string]: {
-    new (...args: unknown[]): Instance['node'];
+    new (...args: unknown[]): Instance["node"];
   };
-};
+}
 
 export const catalogue: Catalogue = {};
 

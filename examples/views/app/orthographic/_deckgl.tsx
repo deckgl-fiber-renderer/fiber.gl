@@ -1,19 +1,19 @@
-'use client';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
-import * as d3 from 'd3';
+"use client";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
+import * as d3 from "d3";
 
 const COLOR = [255, 255, 255, 155];
 
 const INITIAL_VIEW_STATE = {
+  maxZoom: 40,
+  minZoom: -2,
   target: [500, 500, 0],
   zoom: 0,
-  minZoom: -2,
-  maxZoom: 40,
 };
 
 const nodes = (async () => {
   const resp = await fetch(
-    'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/world-countries.json',
+    "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/world-countries.json"
   );
   const data = await resp.json();
   const tree = d3.hierarchy(data).sum((d) => d.population);

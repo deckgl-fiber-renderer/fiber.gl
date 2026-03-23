@@ -1,7 +1,7 @@
 {
   "name": "examples-widgets",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "pnpm vite",

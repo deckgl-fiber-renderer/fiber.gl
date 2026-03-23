@@ -4,7 +4,7 @@ import {
   MapView,
   OrbitView,
   OrthographicView,
-} from '@deck.gl/core';
+} from "@deck.gl/core";
 import {
   GeohashLayer,
   H3ClusterLayer,
@@ -17,7 +17,7 @@ import {
   TileLayer,
   TripsLayer,
   _WMSLayer,
-} from '@deck.gl/geo-layers';
+} from "@deck.gl/geo-layers";
 import {
   ArcLayer,
   BitmapLayer,
@@ -32,9 +32,10 @@ import {
   ScatterplotLayer,
   SolidPolygonLayer,
   TextLayer,
-} from '@deck.gl/layers';
-import { ScenegraphLayer, SimpleMeshLayer } from '@deck.gl/mesh-layers';
-import { extend } from './extend';
+} from "@deck.gl/layers";
+import { ScenegraphLayer, SimpleMeshLayer } from "@deck.gl/mesh-layers";
+
+import { extend } from "./extend";
 
 // IDEA: we can technically move this purely to userland so that a user is defining precisely
 // the layers they are intending to use in their app. May help out with bundle size for a

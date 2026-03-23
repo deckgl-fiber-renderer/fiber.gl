@@ -1,8 +1,10 @@
-'use client';
-import 'client-only';
-import { useEffect } from 'react';
-import { useSelected } from '@/hooks/use-selected';
-import styles from './styles.module.css';
+"use client";
+import "client-only";
+import { useEffect } from "react";
+
+import { useSelected } from "@/hooks/use-selected";
+
+import styles from "./styles.module.css";
 
 function Item(props) {
   function handleSelected() {
@@ -32,9 +34,9 @@ export function AirportsListClient(props) {
 
     if (el) {
       el.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'nearest',
+        behavior: "smooth",
+        block: "nearest",
+        inline: "nearest",
       });
     }
   }, [selected]);

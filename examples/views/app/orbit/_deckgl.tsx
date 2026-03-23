@@ -1,18 +1,18 @@
-'use client';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
-import { PLYLoader } from '@loaders.gl/ply';
+"use client";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
+import { PLYLoader } from "@loaders.gl/ply";
 
 const COLOR = [255, 255, 255];
 
 const INITIAL_VIEW_STATE = {
-  target: [0, 175, 0],
-  zoom: -0.5,
+  maxRotationX: 90,
+  maxZoom: 10,
+  minRotationX: -90,
+  minZoom: -10,
   rotationOrbit: 145,
   rotationX: 65,
-  minRotationX: -90,
-  maxRotationX: 90,
-  minZoom: -10,
-  maxZoom: 10,
+  target: [0, 175, 0],
+  zoom: -0.5,
 };
 
 export function DeckglExample(props) {

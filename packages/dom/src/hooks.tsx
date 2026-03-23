@@ -1,18 +1,14 @@
 import {
-  type DependencyList,
-  type EffectCallback,
-  useEffect,
-  useLayoutEffect,
-} from 'react';
-import {
   selectors,
   useStore,
   isBrowserEnvironment,
-} from '@deckgl-fiber-renderer/shared';
+} from "@deckgl-fiber-renderer/shared";
+import { useEffect, useLayoutEffect } from 'react';
+import type { DependencyList, EffectCallback } from 'react';
 
 export function useIsomorphicLayoutEffect(
   fn: EffectCallback,
-  deps?: DependencyList,
+  deps?: DependencyList
 ) {
   return isBrowserEnvironment ? useLayoutEffect(fn, deps) : useEffect(fn, deps);
 }

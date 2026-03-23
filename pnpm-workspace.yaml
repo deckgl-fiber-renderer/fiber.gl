@@ -3,6 +3,7 @@ packages:
   - examples/*
 onlyBuiltDependencies:
   - "@biomejs/biome"
+  - "@fission-ai/openspec"
   - "@parcel/watcher"
   - "@swc/core"
   - core-js

@@ -525,9 +525,6 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.0.4(@types/react@19.0.11)
-      esbuild-plugin-file-path-extensions:
-        specifier: ^2.1.4
-        version: 2.1.4
       react:
         specifier: ^19
         version: 19.0.0
@@ -546,6 +543,16 @@ importers:
 
   packages/reconciler:
     dependencies:
+      '@deckgl-fiber-renderer/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@deckgl-fiber-renderer/types':
+        specifier: workspace:*
+        version: link:../types
+      react-reconciler:
+        specifier: ~0.31.0
+        version: 0.31.0(react@19.0.0)
+    devDependencies:
       '@deck.gl/core':
         specifier: ^9.1.0
         version: 9.1.5
@@ -561,31 +568,18 @@ importers:
       '@deck.gl/mesh-layers':
         specifier: ^9.1.0
         version: 9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
-      '@deckgl-fiber-renderer/shared':
-        specifier: workspace:*
-        version: link:../shared
-      '@deckgl-fiber-renderer/types':
-        specifier: workspace:*
-        version: link:../types
+      '@types/react':
+        specifier: ^19
+        version: 19.0.11
+      '@types/react-reconciler':
+        specifier: ^0.31.0
+        version: 0.31.0(@types/react@19.0.11)
       react:
         specifier: ^19
         version: 19.0.0
       react-dom:
         specifier: ^19
         version: 19.0.0(react@19.0.0)
-      react-reconciler:
-        specifier: ~0.31.0
-        version: 0.31.0(react@19.0.0)
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.0.11
-      '@types/react-reconciler':
-        specifier: ^0.31.0
-        version: 0.31.0(@types/react@19.0.11)
-      esbuild-plugin-file-path-extensions:
-        specifier: ^2.1.4
-        version: 2.1.4
       tsdown:
         specifier: ^0.21.4
         version: 0.21.4(typescript@5.8.2)
@@ -598,12 +592,6 @@ importers:
 
   packages/shared:
     dependencies:
-      '@deck.gl/core':
-        specifier: ^9.1.0
-        version: 9.1.5
-      '@deck.gl/mapbox':
-        specifier: ^9.1.0
-        version: 9.1.5(@deck.gl/core@9.1.5)(@luma.gl/core@9.1.5)
       loglayer:
         specifier: ^6.3.1
         version: 6.3.2
@@ -611,9 +599,12 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3(@types/react@19.0.11)(react@19.0.0)
     devDependencies:
-      esbuild-plugin-file-path-extensions:
-        specifier: ^2.1.4
-        version: 2.1.4
+      '@deck.gl/core':
+        specifier: ^9.1.0
+        version: 9.1.5
+      '@deck.gl/mapbox':
+        specifier: ^9.1.0
+        version: 9.1.5(@deck.gl/core@9.1.5)(@luma.gl/core@9.1.5)
       tsdown:
         specifier: ^0.21.4
         version: 0.21.4(typescript@5.8.2)
@@ -625,7 +616,7 @@ importers:
         version: 3.0.9(@types/node@22.13.10)(jiti@2.4.2)(yaml@2.8.2)
 
   packages/types:
-    dependencies:
+    devDependencies:
       '@deck.gl/core':
         specifier: ^9.1.0
         version: 9.1.5
@@ -642,15 +633,11 @@ importers:
         specifier: ^9.1.0
         version: 9.1.5(@deck.gl/core@9.1.5)(@loaders.gl/core@4.3.3)(@luma.gl/core@9.1.5)(@luma.gl/engine@9.1.5(@luma.gl/core@9.1.5)(@luma.gl/shadertools@9.1.5(@luma.gl/core@9.1.5)))
       '@types/react':
-        specifier: ^19.0.0
+        specifier: ^19
         version: 19.0.11
       '@types/react-dom':
-        specifier: ^19.0.0
+        specifier: ^19
         version: 19.0.4(@types/react@19.0.11)
-    devDependencies:
-      esbuild-plugin-file-path-extensions:
-        specifier: ^2.1.4
-        version: 2.1.4
       tsdown:
         specifier: ^0.21.4
         version: 0.21.4(typescript@5.8.2)
@@ -3239,10 +3226,6 @@ packages:
   es-object-atoms@1.1.1:
     resolution: {integrity: sha512-FGgH2h8zKNim9ljj7dankFPcICIK9Cp5bm+c2gQSYePhpaG5+esrLODihIorn+Pe6FGJzWhXQotPv73jTaldXA==}
     engines: {node: '>= 0.4'}
-
-  esbuild-plugin-file-path-extensions@2.1.4:
-    resolution: {integrity: sha512-lNjylaAsJMprYg28zjUyBivP3y0ms9b7RJZ5tdhDUFLa3sCbqZw4wDnbFUSmnyZYWhCYDPxxp7KkXM2TXGw3PQ==}
-    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
   esbuild@0.25.1:
     resolution: {integrity: sha512-BGO5LtrGC7vxnqucAe/rmvKdJllfGaYWdyABvyMoXQlfYMb2bbRuReWR5tEGE//4LcNJj9XrkovTqNYRFZHAMQ==}
@@ -7349,8 +7332,6 @@ snapshots:
   es-object-atoms@1.1.1:
     dependencies:
       es-errors: 1.3.0
-
-  esbuild-plugin-file-path-extensions@2.1.4: {}
 
   esbuild@0.25.1:
     optionalDependencies:

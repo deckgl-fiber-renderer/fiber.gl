@@ -30,13 +30,13 @@
   "sideEffects": true,
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
+    ".": "./dist/index.js",
+    "./config": "./dist/config.js",
+    "./extend": "./dist/extend.js",
+    "./renderer": "./dist/renderer.js",
+    "./side-effects": "./dist/side-effects.js",
+    "./types": "./dist/types.js",
+    "./utils": "./dist/utils.js",
     "./package.json": "./package.json"
   },
   "publishConfig": {

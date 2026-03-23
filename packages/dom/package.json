@@ -31,13 +31,9 @@
   "sideEffects": false,
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
+    ".": "./dist/index.js",
+    "./components": "./dist/components.js",
+    "./hooks": "./dist/hooks.js",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -68,5 +64,18 @@
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19"
+  },
+  "inlinedDependencies": {
+    "@deck.gl/core": "9.1.5",
+    "@deck.gl/mapbox": "9.1.5",
+    "@loaders.gl/loader-utils": "4.3.3",
+    "@luma.gl/core": "9.1.5",
+    "@luma.gl/engine": "9.1.5",
+    "@luma.gl/shadertools": "9.1.5",
+    "@math.gl/core": "4.1.0",
+    "@math.gl/types": "4.1.0",
+    "@probe.gl/log": "4.1.0",
+    "@probe.gl/stats": "4.1.0",
+    "mjolnir.js": "3.0.0"
   }
 }

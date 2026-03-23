@@ -30,13 +30,11 @@
   "sideEffects": false,
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
+    ".": "./dist/index.js",
+    "./constants": "./dist/constants.js",
+    "./log": "./dist/log.js",
+    "./store": "./dist/store.js",
+    "./utils": "./dist/utils.js",
     "./package.json": "./package.json"
   },
   "publishConfig": {

@@ -6,14 +6,21 @@ import type { Fiber } from "react-reconciler";
 
 export type Type = string;
 
-export interface Container { store: Store }
+export interface Container {
+  store: Store;
+}
 
 export type Props = Record<string, unknown>;
 
-export interface HostContext { store: Store }
+export interface HostContext {
+  store: Store;
+}
 
 // NOTE: views are challenging to type, deferring to unknown for now
-export interface Instance { node: Layer | unknown; children: Instance[] }
+export interface Instance {
+  node: Layer | unknown;
+  children: Instance[];
+}
 
 export type ChildSet = Instance[];
 

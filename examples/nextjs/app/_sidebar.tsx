@@ -44,16 +44,16 @@ export function Sidebar(props) {
   return (
     <ul style={styles.container}>
       {data.features.map((feature, i) => (
-          <li
-            data-index={i}
-            key={feature.id}
-            style={i === index ? styles.itemActive : styles.item}
-            onPointerEnter={onEnter}
-            onPointerLeave={onLeave}
-          >
-            {feature.properties.NAME}
-          </li>
-        ))}
+        <li
+          data-index={i}
+          key={feature.id}
+          style={i === index ? styles.itemActive : styles.item}
+          onPointerEnter={onEnter}
+          onPointerLeave={onLeave}
+        >
+          {feature.properties.NAME}
+        </li>
+      ))}
     </ul>
   );
 }

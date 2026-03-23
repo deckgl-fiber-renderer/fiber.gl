@@ -1,7 +1,7 @@
-import { CompositeLayer } from '@deck.gl/core';
-import type { DefaultProps } from '@deck.gl/core';
-import { ScatterplotLayer } from '@deck.gl/layers';
-import type { ScatterplotLayerProps } from '@deck.gl/layers';
+import { CompositeLayer } from "@deck.gl/core";
+import type { DefaultProps } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
+import type { ScatterplotLayerProps } from "@deck.gl/layers";
 
 export type CustomLayerProps = ScatterplotLayerProps & {
   scaler: number;
@@ -14,7 +14,7 @@ export class CustomLayer extends CompositeLayer<CustomLayerProps> {
   };
 
   renderLayers() {
-    const {props} = this;
+    const { props } = this;
 
     return [
       new ScatterplotLayer(

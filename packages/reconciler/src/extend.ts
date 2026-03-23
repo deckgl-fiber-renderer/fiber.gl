@@ -1,10 +1,11 @@
 import type { Instance } from "./types";
 
-export interface Catalogue {
-  [name: string]: {
+export type Catalogue = Record<
+  string,
+  {
     new (...args: unknown[]): Instance["node"];
-  };
-}
+  }
+>;
 
 export const catalogue: Catalogue = {};
 

@@ -1,6 +1,11 @@
 {
   "version": 1,
   "skills": {
+    "turborepo": {
+      "source": "vercel/turborepo",
+      "sourceType": "github",
+      "computedHash": "affe2b38053704eae0c8a5613ae7b729124468458352c375727be50c4c01c073"
+    },
     "ultracite": {
       "source": "haydenbleasel/ultracite",
       "sourceType": "github",

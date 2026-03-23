@@ -13,7 +13,7 @@
     "format": "pnpm exec oxfmt",
     "deps:mismatch-fix": "pnpm syncpack fix-mismatches",
     "changeset": "pnpm exec changeset",
-    "changeset:release": "pnpm run build && pnpm exec changeset publish",
+    "changeset:release": "turbo run build && pnpm exec changeset publish",
     "changeset:version": "pnpm exec changeset version",
     "prepare": "pnpm exec lefthook install",
     "check": "pnpm exec ultracite check",

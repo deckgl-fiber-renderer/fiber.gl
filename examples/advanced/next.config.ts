@@ -6,9 +6,9 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
-    reactCompiler: true,
-    ppr: "incremental",
     dynamicIO: true,
+    ppr: "incremental",
+    reactCompiler: true,
     useCache: true,
   },
   poweredByHeader: false,

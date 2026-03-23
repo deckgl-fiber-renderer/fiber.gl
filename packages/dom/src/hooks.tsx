@@ -3,8 +3,8 @@ import {
   useStore,
   isBrowserEnvironment,
 } from "@deckgl-fiber-renderer/shared";
-import { useEffect, useLayoutEffect } from 'react';
-import type { DependencyList, EffectCallback } from 'react';
+import { useEffect, useLayoutEffect } from "react";
+import type { DependencyList, EffectCallback } from "react";
 
 export function useIsomorphicLayoutEffect(
   fn: EffectCallback,

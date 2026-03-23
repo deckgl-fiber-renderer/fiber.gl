@@ -1,5 +1,5 @@
-import { View } from '@deck.gl/core';
-import type { Layer } from '@deck.gl/core';
+import { View } from "@deck.gl/core";
+import type { Layer } from "@deck.gl/core";
 
 import type { Instance } from "./types";
 

@@ -17,7 +17,7 @@ const closeIcon = (
       fill="currentColor"
       fillRule="evenodd"
       clipRule="evenodd"
-     />
+    />
   </svg>
 );
 

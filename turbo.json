@@ -5,7 +5,7 @@
 
     "test": {
       "dependsOn": ["^build"],
-      "outputs": ["coverage"]
+      "outputs": ["coverage/**"]
     },
 
     "dev": {
@@ -15,7 +15,7 @@
 
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist"]
+      "outputs": ["dist/**"]
     }
   }
 }

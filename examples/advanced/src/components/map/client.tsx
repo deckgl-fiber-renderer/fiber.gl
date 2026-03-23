@@ -1,8 +1,8 @@
 "use client";
 import "client-only";
 import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
-import { useEffect } from 'react';
-import type { PropsWithChildren } from 'react';
+import { useEffect } from "react";
+import type { PropsWithChildren } from "react";
 
 import { useSelected } from "@/hooks/use-selected";
 

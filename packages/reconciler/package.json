@@ -43,8 +43,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "pnpm tsup",
-    "dev": "pnpm tsup --watch",
+    "build": "pnpm tsdown",
+    "dev": "pnpm tsdown --watch",
     "lint": "pnpm ultracite check",
     "test": "pnpm vitest --dir=src"
   },
@@ -54,10 +54,16 @@
     "react-reconciler": "~0.31.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
+    "@deck.gl/core": "^9.1.0",
+    "@deck.gl/geo-layers": "^9.1.0",
+    "@deck.gl/layers": "^9.1.0",
+    "@deck.gl/mapbox": "^9.1.0",
+    "@deck.gl/mesh-layers": "^9.1.0",
+    "@types/react": "^19",
     "@types/react-reconciler": "^0.31.0",
-    "esbuild-plugin-file-path-extensions": "^2.1.4",
-    "tsup": "^8.4.0",
+    "react": "^19",
+    "react-dom": "^19",
+    "tsdown": "^0.21.4",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
   },

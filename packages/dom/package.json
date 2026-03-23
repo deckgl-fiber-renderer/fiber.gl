@@ -44,8 +44,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "pnpm tsup",
-    "dev": "pnpm tsup --watch",
+    "build": "pnpm tsdown",
+    "dev": "pnpm tsdown --watch",
     "lint": "pnpm biome lint",
     "test": "pnpm vitest --dir=src"
   },
@@ -57,10 +57,11 @@
     "its-fine": "^2.0.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "esbuild-plugin-file-path-extensions": "^2.1.4",
-    "tsup": "^8.4.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "react": "^19",
+    "react-dom": "^19",
+    "tsdown": "^0.21.4",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
   },

@@ -3,8 +3,9 @@ import { Suspense, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import Page from "./page";
-// MAKE SURE TO IMPORT THIS
-import "./_side-effects";
+
+// No longer needed with v2+ API - custom layers work without registration!
+// import "./_side-effects";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "./_global.css";
 

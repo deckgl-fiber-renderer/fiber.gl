@@ -7,6 +7,15 @@ export type CustomLayerProps = ScatterplotLayerProps & {
   scaler: number;
 };
 
+/**
+ * Custom layer example demonstrating the new v2 API.
+ *
+ * With the new <layer> element pattern:
+ * - No need to register via extend()
+ * - No need to declare JSX.IntrinsicElements
+ * - Just create instances directly: <layer layer={new CustomLayer({...})} />
+ * - Full TypeScript generic support automatically
+ */
 export class CustomLayer extends CompositeLayer<CustomLayerProps> {
   static layerName = "CustomLayer";
   static defaultProps: DefaultProps<CustomLayerProps> = {
@@ -34,16 +43,5 @@ export class CustomLayer extends CompositeLayer<CustomLayerProps> {
         })
       ),
     ];
-  }
-}
-
-// Make TypeScript & React aware of this custom JSX element
-declare global {
-  namespace React {
-    namespace JSX {
-      interface IntrinsicElements {
-        customLayer: CustomLayerProps;
-      }
-    }
   }
 }

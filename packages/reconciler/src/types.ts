@@ -14,13 +14,15 @@ export type Props = Record<string, unknown>;
 
 export interface HostContext {
   store: Store;
+  insideView?: boolean;
 }
 
-// NOTE: views are challenging to type, deferring to unknown for now
 export interface Instance {
-  node: Layer | unknown;
+  node: Layer | View;
   children: Instance[];
 }
+
+export type TextInstance = void;
 
 export type ChildSet = Instance[];
 

@@ -1,11 +1,12 @@
 "use client";
 import "client-only";
 import type { Color } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
 
 import { useSelected } from "@/hooks/use-selected";
 
 const COLOR: Color = [255, 255, 255];
-const HIGHLIGHT_COLOR = [255, 0, 0];
+const HIGHLIGHT_COLOR = [255, 0, 0] as const;
 
 function getPosition(obj) {
   return [obj.geometry.x, obj.geometry.y];
@@ -36,22 +37,26 @@ export function AirportsLayerClient(props) {
   }
 
   return (
-    <scatterplotLayer
-      id="airports"
-      data={data}
-      radiusUnits="common"
-      pickable
-      autoHighlight
-      highlightColor={HIGHLIGHT_COLOR}
-      onClick={onClick}
-      getPosition={getPosition}
-      getRadius={getRadius}
-      getFillColor={getFillColor}
-      opacity={0.5}
-      updateTriggers={{
-        getFillColor: [selected],
-        getRadius: [selected],
-      }}
+    <layer
+      layer={
+        new ScatterplotLayer({
+          autoHighlight: true,
+          data,
+          getFillColor,
+          getPosition,
+          getRadius,
+          highlightColor: HIGHLIGHT_COLOR,
+          id: "airports",
+          onClick,
+          opacity: 0.5,
+          pickable: true,
+          radiusUnits: "common",
+          updateTriggers: {
+            getFillColor: selected,
+            getRadius: selected,
+          },
+        })
+      }
     />
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+import { GeoJsonLayer } from "@deck.gl/layers";
 import { Deckgl } from "@deckgl-fiber-renderer/dom";
 
 const INITIAL_VIEW_STATE = {
@@ -13,26 +14,34 @@ export function DeckglExample(props) {
   return (
     <>
       <Deckgl debug controller initialViewState={INITIAL_VIEW_STATE}>
-        <geoJsonLayer
-          id="basemap"
-          data="https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_land.geojson"
-          stroked={false}
-          filled
-          opacity={0.1}
-          getFillColor={[30, 80, 120]}
+        <layer
+          layer={
+            new GeoJsonLayer({
+              data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_land.geojson",
+              filled: true,
+              getFillColor: [30, 80, 120],
+              id: "basemap",
+              opacity: 0.1,
+              stroked: false,
+            })
+          }
         />
-        <geoJsonLayer
-          id="data"
-          data={data}
-          pointRadiusUnits="pixels"
-          getPointRadius={16}
-          autoHighlight
-          pickable
-          pointType="circle"
-          filled
-          stroked={false}
-          getFillColor={[255, 255, 255, 155]}
-          highlightColor={[255, 0, 0, 255]}
+        <layer
+          layer={
+            new GeoJsonLayer({
+              autoHighlight: true,
+              data,
+              filled: true,
+              getFillColor: [255, 255, 255, 155],
+              getPointRadius: 16,
+              highlightColor: [255, 0, 0, 255],
+              id: "data",
+              pickable: true,
+              pointRadiusUnits: "pixels",
+              pointType: "circle",
+              stroked: false,
+            })
+          }
         />
       </Deckgl>
     </>

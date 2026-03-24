@@ -2,11 +2,12 @@
 import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
 import { useCallback, useEffect } from "react";
 
+import { CustomLayer } from "./_layer";
 import { connect } from "./_maplibre";
-import { useStore, selectors } from "./_store";
+import { selectors, useStore } from "./_store";
 
-const COLOR = [255, 255, 255, 155];
-const HOVER_COLOR = [255, 0, 0, 255];
+const COLOR = [255, 255, 255, 155] as const;
+const HOVER_COLOR = [255, 0, 0, 255] as const;
 
 const PARAMETERS = {
   blend: true,
@@ -20,7 +21,7 @@ const PARAMETERS = {
   depthCompare: "always",
   depthTest: false,
   depthWriteEnabled: true,
-};
+} as const;
 
 export function DeckglExample(props) {
   const { data } = props;
@@ -28,9 +29,12 @@ export function DeckglExample(props) {
   const index = useStore(selectors.index);
   const setIndex = useStore(selectors.setIndex);
 
-  const onHover = useCallback((pickInfo) => {
-    pickInfo.picked ? setIndex(pickInfo.index) : setIndex(-1);
-  }, []);
+  const onHover = useCallback(
+    (pickInfo) => {
+      pickInfo.picked ? setIndex(pickInfo.index) : setIndex(-1);
+    },
+    [setIndex]
+  );
 
   useEffect(() => {
     if (deckglInstance) {
@@ -43,21 +47,26 @@ export function DeckglExample(props) {
   return (
     <div id="maplibre">
       <Deckgl debug interleaved parameters={PARAMETERS}>
-        <customLayer
-          id="data"
-          data={data.features}
-          radiusUnits="pixels"
-          getRadius={4}
-          getPosition={(feature) => feature.geometry.coordinates}
-          autoHighlight
-          highlightedObjectIndex={index}
-          pickable
-          filled
-          stroked={false}
-          getFillColor={COLOR}
-          highlightColor={HOVER_COLOR}
-          onHover={onHover}
-          scaler={3}
+        {/* Custom layers work directly with new <layer> element - no registration needed! */}
+        <layer
+          layer={
+            new CustomLayer({
+              autoHighlight: true,
+              data: data.features,
+              filled: true,
+              getFillColor: COLOR,
+              getPosition: (feature) => feature.geometry.coordinates,
+              getRadius: 4,
+              highlightColor: HOVER_COLOR,
+              highlightedObjectIndex: index,
+              id: "data",
+              onHover,
+              pickable: true,
+              radiusUnits: "pixels",
+              scaler: 3,
+              stroked: false,
+            })
+          }
         />
       </Deckgl>
     </div>

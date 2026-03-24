@@ -1,8 +1,10 @@
 "use client";
+import { OrbitView } from "@deck.gl/core";
+import { SimpleMeshLayer } from "@deck.gl/mesh-layers";
 import { Deckgl } from "@deckgl-fiber-renderer/dom";
 import { PLYLoader } from "@loaders.gl/ply";
 
-const COLOR = [255, 255, 255];
+const COLOR = [255, 255, 255] as const;
 
 const INITIAL_VIEW_STATE = {
   maxRotationX: 90,
@@ -18,15 +20,27 @@ const INITIAL_VIEW_STATE = {
 export function DeckglExample(props) {
   return (
     <Deckgl debug initialViewState={INITIAL_VIEW_STATE}>
-      <orbitView id="main" controller orbitAxis="Y">
-        <simpleMeshLayer
-          id="mesh"
-          data={[0]}
-          mesh="https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/point-cloud-ply/lucy100k.ply"
-          getColor={COLOR}
-          loaders={[PLYLoader]}
+      <layer
+        layer={
+          new OrbitView({
+            controller: true,
+            id: "main",
+            orbitAxis: "Y",
+          })
+        }
+      >
+        <layer
+          layer={
+            new SimpleMeshLayer({
+              data: [0],
+              getColor: COLOR,
+              id: "mesh",
+              loaders: [PLYLoader],
+              mesh: "https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/point-cloud-ply/lucy100k.ply",
+            })
+          }
         />
-      </orbitView>
+      </layer>
     </Deckgl>
   );
 }

@@ -195,6 +195,33 @@ importers:
         specifier: 'catalog:'
         version: 5.0.12(@types/react@19.2.14)(react@19.2.4)
 
+  examples/migration:
+    dependencies:
+      '@deck.gl/core':
+        specifier: 'catalog:'
+        version: 9.2.11
+      '@deck.gl/layers':
+        specifier: 'catalog:'
+        version: 9.2.11(@deck.gl/core@9.2.11)(@loaders.gl/core@4.3.4)(@luma.gl/core@9.2.6)(@luma.gl/engine@9.2.6(@luma.gl/core@9.2.6)(@luma.gl/shadertools@9.2.6(@luma.gl/core@9.2.6)))
+      '@deckgl-fiber-renderer/dom':
+        specifier: workspace:*
+        version: link:../../packages/dom
+      '@deckgl-fiber-renderer/reconciler':
+        specifier: workspace:*
+        version: link:../../packages/reconciler
+      '@vitejs/plugin-react':
+        specifier: ^4.3.4
+        version: 4.7.0(vite@6.4.1(@types/node@25.5.0)(jiti@2.6.1)(yaml@2.8.3))
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
+      vite:
+        specifier: ^6.2.1
+        version: 6.4.1(@types/node@25.5.0)(jiti@2.6.1)(yaml@2.8.3)
+
   examples/nextjs:
     dependencies:
       '@deck.gl/core':

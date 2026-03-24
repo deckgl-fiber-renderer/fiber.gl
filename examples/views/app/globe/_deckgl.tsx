@@ -1,8 +1,10 @@
 "use client";
+import { _GlobeView as GlobeView } from "@deck.gl/core";
+import { GeoJsonLayer } from "@deck.gl/layers";
 import { Deckgl } from "@deckgl-fiber-renderer/dom";
 
-const COLOR = [255, 255, 255, 155];
-const HOVER_COLOR = [255, 0, 0, 255];
+const COLOR = [255, 255, 255, 155] as const;
+const HOVER_COLOR = [255, 0, 0, 255] as const;
 
 const INITIAL_VIEW_STATE = {
   latitude: 38.9072,
@@ -23,36 +25,52 @@ const PARAMETERS = {
   depthCompare: "always",
   depthTest: false,
   depthWriteEnabled: true,
-};
+} as const;
 
 export function DeckglExample(props) {
   const { data } = props;
 
   return (
     <Deckgl debug parameters={PARAMETERS} initialViewState={INITIAL_VIEW_STATE}>
-      <globeView id="main" controller={true} resolution={1}>
-        <geoJsonLayer
-          id="bg"
-          data="https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_land.geojson"
-          stroked={false}
-          filled={true}
-          opacity={0.1}
-          getFillColor={[30, 80, 120]}
+      <layer
+        layer={
+          new GlobeView({
+            controller: true,
+            id: "main",
+            resolution: 1,
+          })
+        }
+      >
+        <layer
+          layer={
+            new GeoJsonLayer({
+              data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_land.geojson",
+              filled: true,
+              getFillColor: [30, 80, 120],
+              id: "bg",
+              opacity: 0.1,
+              stroked: false,
+            })
+          }
         />
-        <geoJsonLayer
-          id="data"
-          data={data}
-          pointRadiusUnits="pixels"
-          getPointRadius={16}
-          autoHighlight
-          pickable
-          pointType="circle"
-          filled
-          stroked={false}
-          getFillColor={COLOR}
-          highlightColor={HOVER_COLOR}
+        <layer
+          layer={
+            new GeoJsonLayer({
+              autoHighlight: true,
+              data,
+              filled: true,
+              getFillColor: COLOR,
+              getPointRadius: 16,
+              highlightColor: HOVER_COLOR,
+              id: "data",
+              pickable: true,
+              pointRadiusUnits: "pixels",
+              pointType: "circle",
+              stroked: false,
+            })
+          }
         />
-      </globeView>
+      </layer>
     </Deckgl>
   );
 }

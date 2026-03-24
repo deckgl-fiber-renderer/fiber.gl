@@ -25,7 +25,8 @@ npm i react react-dom @deck.gl/core @deck.gl/layers @deck.gl/geo-layers @deck.gl
 
 Create a standalone map:
 
-```jsx
+```tsx
+import { ScatterplotLayer } from '@deck.gl/layers';
 import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
 import { Map, useControl } from 'react-map-gl/maplibre';
 
@@ -49,7 +50,17 @@ function DeckglMap() {
   return (
     <Deckgl interleaved>
       <BasemapSync />
-      <scatterplotLayer id="example" ... />
+      <layer
+        layer={
+          new ScatterplotLayer({
+            id: 'points',
+            data: myData,
+            getPosition: (d) => d.coordinates,
+            getRadius: 100,
+            getFillColor: [255, 140, 0],
+          })
+        }
+      />
     </Deckgl>
 }
 
@@ -72,15 +83,39 @@ function App() {
 createRoot(document.getElementById('root')).render(<App />);
 ```
 
-Out of the box all layers and views from `@deck.gl/core`, `@deck.gl/geo-layers`, `@deck.gl/layers`, and `@deck.gl/mesh-layers` are available right away with no additional setup.
+### Documentation
+
+- **[React Integration Patterns](docs/REACT_PATTERNS.md)** - Learn best practices for using Deck.gl with React
+- **[Migration Guide](docs/MIGRATION.md)** - Step-by-step guide for upgrading from v1 to v2
+- **[Package Documentation](packages/dom/README.md)** - Detailed API reference
+
+### Key Concepts
+
+**New in v2:** The universal `<layer>` element replaces layer-specific elements, bringing:
+
+- Full TypeScript generic support for type-safe accessor functions
+- Automatic code-splitting - only bundle the layers you import
+- Zero configuration - no registration required, even for custom layers
+- Backwards compatible - v1 syntax still works during migration
+
+**Important:** Always provide explicit `id` props on your layers for optimal performance.
+
+```tsx
+// ✅ Good - explicit ID
+<layer layer={new ScatterplotLayer({ id: 'points', data })} />
+
+// ❌ Bad - missing ID causes performance issues
+<layer layer={new ScatterplotLayer({ data })} />
+```
 
 ---
 
 ### Examples
 
+- [Migration Examples](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/migration): Side-by-side v1 vs v2 syntax comparison - `pnpm --filter examples-migration run dev`
 - [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone): `pnpm --filter examples-standalone run dev`
 - [MapLibre via `react-map-gl`](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/react-map-gl): `pnpm --filter examples-react-map-gl run dev`
-- [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer): `pnpm --filter examples-custom-layer run dev`
+- [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer): No registration needed! `pnpm --filter examples-custom-layer run dev`
 - [Advanced with RSC](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/advanced): `pnpm --filter examples-advanced run dev`
 - [Nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs): `pnpm --filter examples-nextjs run dev`
 - [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix): `pnpm --filter examples-remix run dev`

@@ -14,7 +14,8 @@ import * as config from "./config";
 import type { ReconcilerRoot, RootElement } from "./types";
 
 // @ts-expect-error @types/react-reconciler is incorrect
-export const renderer = reactReconciler(config);
+export const renderer: ReturnType<typeof reactReconciler> =
+  reactReconciler(config);
 
 export const roots = new Map<RootElement, ReconcilerRoot>();
 
@@ -46,28 +47,29 @@ export function createRoot(node: RootElement): ReconcilerRoot {
     })
     .debug("renderer.createRoot");
 
-  const prevRoot = roots.get(node);
-  const prevStore = prevRoot?.store;
-  const prevContainer = prevRoot?.container;
+  // Early return if root already exists for this node
+  const existingRoot = roots.get(node);
+  if (existingRoot) {
+    return existingRoot;
+  }
 
-  const store = prevStore ?? storeInstance;
+  // Create new root
+  const store = storeInstance;
 
-  const container =
-    prevContainer ??
-    renderer.createContainer(
-      { store },
-      ConcurrentRoot, // tag
-      null, // hydration callbacks
-      false, // isStrictMode
-      null, // concurrentUpdatesByDefaultOverride
-      "", // identifierPrefix
-      reportError, // onUncaughtError
-      reportError, // onCaughtError
-      // https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js#L1159
-      // @ts-expect-error @types/react-reconciler is incorrect
-      reportError, // onRecoverableError
-      null // transitionCallbacks
-    );
+  const container = renderer.createContainer(
+    { store },
+    ConcurrentRoot, // tag
+    null, // hydration callbacks
+    false, // isStrictMode
+    null, // concurrentUpdatesByDefaultOverride
+    "", // identifierPrefix
+    reportError, // onUncaughtError
+    reportError, // onCaughtError
+    // https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js#L1159
+    // @ts-expect-error @types/react-reconciler is incorrect
+    reportError, // onRecoverableError
+    null // transitionCallbacks
+  );
 
   let configured = false;
 
@@ -107,10 +109,8 @@ export function createRoot(node: RootElement): ReconcilerRoot {
     renderer.updateContainer(children, container, null, noop);
   }
 
-  if (!prevRoot) {
-    roots.set(node, { configure, container, render, store });
-  }
+  const root: ReconcilerRoot = { configure, container, render, store };
+  roots.set(node, root);
 
-  // Due to the above condition we are always guaranteed a result
-  return roots.get(node) as ReconcilerRoot;
+  return root;
 }

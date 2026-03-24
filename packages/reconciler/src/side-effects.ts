@@ -1,81 +1,22 @@
-import {
-  FirstPersonView,
-  _GlobeView,
-  MapView,
-  OrbitView,
-  OrthographicView,
-} from "@deck.gl/core";
-import {
-  GeohashLayer,
-  H3ClusterLayer,
-  H3HexagonLayer,
-  MVTLayer,
-  QuadkeyLayer,
-  S2Layer,
-  TerrainLayer,
-  Tile3DLayer,
-  TileLayer,
-  TripsLayer,
-  _WMSLayer,
-} from "@deck.gl/geo-layers";
-import {
-  ArcLayer,
-  BitmapLayer,
-  ColumnLayer,
-  GeoJsonLayer,
-  GridCellLayer,
-  IconLayer,
-  LineLayer,
-  PathLayer,
-  PointCloudLayer,
-  PolygonLayer,
-  ScatterplotLayer,
-  SolidPolygonLayer,
-  TextLayer,
-} from "@deck.gl/layers";
-import { ScenegraphLayer, SimpleMeshLayer } from "@deck.gl/mesh-layers";
+/**
+ * @deprecated This file is deprecated and will be removed in v3.
+ *
+ * Layer registration is no longer needed with the new <layer> element.
+ * Remove this import and use:
+ *
+ * import { ScatterplotLayer } from '@deck.gl/layers';
+ * <layer layer={new ScatterplotLayer({ id: 'points', data })} />
+ *
+ * This provides better type safety, enables code-splitting, and eliminates
+ * the need for manual layer registration.
+ */
 
-import { extend } from "./extend";
-
-// IDEA: we can technically move this purely to userland so that a user is defining precisely
-// the layers they are intending to use in their app. May help out with bundle size for a
-// tradeoff on developer experience / maintainability.
-extend({
-  // @deck.gl/core
-  MapView,
-  OrthographicView,
-  OrbitView,
-  FirstPersonView,
-  GlobeView: _GlobeView,
-  // @deck.gl/layers
-  ArcLayer,
-  BitmapLayer,
-  IconLayer,
-  LineLayer,
-  PointCloudLayer,
-  ScatterplotLayer,
-  ColumnLayer,
-  GridCellLayer,
-  PathLayer,
-  PolygonLayer,
-  GeoJsonLayer,
-  TextLayer,
-  SolidPolygonLayer,
-  // @deck.gl/geo-layers
-  S2Layer,
-  QuadkeyLayer,
-  TileLayer,
-  TripsLayer,
-  H3ClusterLayer,
-  H3HexagonLayer,
-  Tile3DLayer,
-  TerrainLayer,
-  MVTLayer,
-  MvtLayer: MVTLayer, // alias
-  WMSLayer: _WMSLayer,
-  WmsLayer: _WMSLayer, // alias
-  GeohashLayer,
-  // @deck.gl/mesh-layers
-  ScenegraphLayer,
-  SimpleMeshLayer,
-});
+if (process.env.NODE_ENV === "development") {
+  console.warn(
+    "@deckgl-fiber-renderer/reconciler/side-effects is deprecated and will be removed in v3.\n" +
+      "Layer registration is no longer needed. Remove this import and use:\n" +
+      '  import { ScatterplotLayer } from "@deck.gl/layers";\n' +
+      '  <layer layer={new ScatterplotLayer({ id: "points", data })} />\n' +
+      "See migration guide for more details."
+  );
+}

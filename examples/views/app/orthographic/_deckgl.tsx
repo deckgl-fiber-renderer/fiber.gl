@@ -1,8 +1,10 @@
 "use client";
+import { OrthographicView } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
 import { Deckgl } from "@deckgl-fiber-renderer/dom";
 import * as d3 from "d3";
 
-const COLOR = [255, 255, 255, 155];
+const COLOR = [255, 255, 255, 155] as const;
 
 const INITIAL_VIEW_STATE = {
   maxZoom: 40,
@@ -24,18 +26,30 @@ const nodes = (async () => {
 export function DeckglExample(props) {
   return (
     <Deckgl debug initialViewState={INITIAL_VIEW_STATE}>
-      <orthographicView id="main" controller flipY={false}>
-        <scatterplotLayer
-          id="circles"
-          data={nodes}
-          getPosition={(d) => [d.x, d.y]}
-          getRadius={(d) => d.r}
-          getLineWidth={1}
-          lineWidthUnits="pixels"
-          stroked={true}
-          getFillColor={COLOR}
+      <layer
+        layer={
+          new OrthographicView({
+            controller: true,
+            flipY: false,
+            id: "main",
+          })
+        }
+      >
+        <layer
+          layer={
+            new ScatterplotLayer({
+              data: nodes,
+              getFillColor: COLOR,
+              getLineWidth: 1,
+              getPosition: (d) => [d.x, d.y],
+              getRadius: (d) => d.r,
+              id: "circles",
+              lineWidthUnits: "pixels",
+              stroked: true,
+            })
+          }
         />
-      </orthographicView>
+      </layer>
     </Deckgl>
   );
 }

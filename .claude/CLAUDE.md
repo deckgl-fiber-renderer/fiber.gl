@@ -1,3 +1,58 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Structure
+
+This is a **Turbo monorepo** with the following structure:
+
+- `packages/*` - Core library packages
+- `examples/*` - Example applications
+
+Use pnpm as the package manager (not npm or yarn).
+
+## Development Workflow
+
+**Building, testing, and linting:**
+
+- Build: `turbo build --filter=./packages/*`
+- Test: `turbo test --filter=./packages/*`
+- Lint: `turbo lint --filter=./packages/*`
+- Format: `pnpm exec oxfmt` or `pnpm dlx ultracite fix`
+
+**Working in specific packages:**
+Use Turbo's `--filter` flag to target specific packages:
+
+```bash
+turbo test --filter=@deckgl-fiber/core
+turbo build --filter=./examples/basic-app
+```
+
+**Pre-commit hooks:**
+This project uses lefthook for pre-commit hooks. Changes are automatically formatted and linted before commit.
+
+## Architecture
+
+**React Reconciler (Persistence Mode):**
+
+This project implements a custom React reconciler for deck.gl using **persistence mode** where existing nodes are never mutated - every change creates a new tree. This is appropriate because deck.gl layers are "descriptor objects that are very cheap to instantiate" and are matched by ID for efficient diffing.
+
+**Critical deck.gl Integration Patterns:**
+
+- **Layer IDs are mandatory**: deck.gl matches layers by ID during diffing. Missing IDs cause expensive re-initialization on every render; duplicate IDs cause silent bugs where the wrong layer gets updated.
+- **Layers are descriptors**: deck.gl Layer instances are cheap to create/replace. The reconciler creates new layer instances on prop changes rather than mutating.
+- **Views vs Layers**: deck.gl uses View objects for camera/viewport management and Layer objects for rendering. The reconciler must handle both types correctly.
+
+**Common Footguns:**
+
+- Missing layer IDs → expensive re-initialization
+- Duplicate layer IDs → incorrect updates during diffing
+- Mutating layers instead of replacing them → breaks persistence mode contract
+
+**For more context:** See `openspec/changes/archive/` for detailed architectural decisions and design rationale.
+
+---
+
 # Ultracite Code Standards
 
 This project uses **Ultracite**, a zero-config preset that enforces strict code quality standards through automated formatting and linting.

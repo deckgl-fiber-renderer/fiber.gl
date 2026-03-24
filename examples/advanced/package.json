@@ -9,22 +9,22 @@
     "start": "pnpm next start"
   },
   "dependencies": {
-    "@deck.gl/core": "^9.1.0",
-    "@deck.gl/extensions": "^9.1.0",
-    "@deck.gl/geo-layers": "^9.1.0",
-    "@deck.gl/layers": "^9.1.0",
-    "@deck.gl/mapbox": "^9.1.0",
-    "@deck.gl/mesh-layers": "^9.1.0",
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/extensions": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
     "@deckgl-fiber-renderer/dom": "workspace:*",
     "babel-plugin-react-compiler": "19.0.0-beta-3229e95-20250315",
     "client-only": "^0.0.1",
-    "maplibre-gl": "^5.2.0",
+    "maplibre-gl": "catalog:",
     "next": "canary",
     "nuqs": "^2.4.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "react-error-boundary": "^5.0.0",
     "server-only": "^0.0.1",
-    "zustand": "^5.0.3"
+    "zustand": "catalog:"
   }
 }

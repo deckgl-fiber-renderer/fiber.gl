@@ -9,20 +9,20 @@
     "start": "pnpm vite preview"
   },
   "dependencies": {
-    "@deck.gl/core": "^9.1.0",
-    "@deck.gl/extensions": "^9.1.0",
-    "@deck.gl/geo-layers": "^9.1.0",
-    "@deck.gl/layers": "^9.1.0",
-    "@deck.gl/mapbox": "^9.1.0",
-    "@deck.gl/mesh-layers": "^9.1.0",
-    "@deck.gl/widgets": "^9.1.0",
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/extensions": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
+    "@deck.gl/widgets": "catalog:",
     "@deckgl-fiber-renderer/dom": "workspace:*",
     "@tanstack/react-query": "^5.67.3",
     "@vitejs/plugin-react": "^4.3.4",
-    "maplibre-gl": "^5.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "maplibre-gl": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "vite": "^6.2.1",
-    "zustand": "^5.0.3"
+    "zustand": "catalog:"
   }
 }

@@ -9,19 +9,19 @@
     "start": "pnpm rsbuild preview"
   },
   "dependencies": {
-    "@deck.gl/core": "^9.1.0",
-    "@deck.gl/extensions": "^9.1.0",
-    "@deck.gl/geo-layers": "^9.1.0",
-    "@deck.gl/layers": "^9.1.0",
-    "@deck.gl/mapbox": "^9.1.0",
-    "@deck.gl/mesh-layers": "^9.1.0",
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/extensions": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
     "@deckgl-fiber-renderer/dom": "workspace:*",
     "@rsbuild/core": "^1.2.18",
     "@rsbuild/plugin-react": "^1.1.1",
     "@tanstack/react-query": "^5.67.3",
-    "maplibre-gl": "^5.2.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "zustand": "^5.0.3"
+    "maplibre-gl": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "zustand": "catalog:"
   }
 }

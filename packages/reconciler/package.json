@@ -51,29 +51,29 @@
   "dependencies": {
     "@deckgl-fiber-renderer/shared": "workspace:*",
     "@deckgl-fiber-renderer/types": "workspace:*",
-    "react-reconciler": "~0.31.0"
+    "react-reconciler": "catalog:"
   },
   "devDependencies": {
-    "@deck.gl/core": "^9.1.0",
-    "@deck.gl/geo-layers": "^9.1.0",
-    "@deck.gl/layers": "^9.1.0",
-    "@deck.gl/mapbox": "^9.1.0",
-    "@deck.gl/mesh-layers": "^9.1.0",
-    "@types/react": "^19",
-    "@types/react-reconciler": "^0.31.0",
-    "react": "^19",
-    "react-dom": "^19",
-    "tsdown": "^0.21.4",
-    "typescript": "^6.0.2",
-    "vitest": "^4.1.1"
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-reconciler": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
-    "@deck.gl/core": "^9.1.0",
-    "@deck.gl/geo-layers": "^9.1.0",
-    "@deck.gl/layers": "^9.1.0",
-    "@deck.gl/mapbox": "^9.1.0",
-    "@deck.gl/mesh-layers": "^9.1.0",
-    "react": "^19",
-    "react-dom": "^19"
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
   }
 }

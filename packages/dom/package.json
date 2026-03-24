@@ -57,7 +57,7 @@
     "@testing-library/react": "^16.3.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "jsdom": "^29.0.1",
+    "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "tsdown": "catalog:",

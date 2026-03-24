@@ -1,5 +1,5 @@
 import { ScatterplotLayer } from "@deck.gl/layers";
-import { createElement } from "react";
+import { createElement, Fragment } from "react";
 import type { vi } from "vitest";
 import { describe, expect, it } from "vitest";
 
@@ -14,7 +14,7 @@ extend({
 });
 
 describe("Layer Tree Snapshot Tests", () => {
-  it("should render complex layer hierarchy with snapshot", () => {
+  it("should render complex layer hierarchy with snapshot", async () => {
     // Arrange
     const mockDeck = createMockDeckInstance();
     const rootElement = document.createElement("div");
@@ -38,24 +38,25 @@ describe("Layer Tree Snapshot Tests", () => {
     // Act
     root.render(
       createElement(
-        "group",
+        Fragment,
         {},
         createElement("layer", { layer: scatterplot1 }),
         createElement(
-          "group",
+          Fragment,
           {},
           createElement("layer", { layer: scatterplot2 }),
           createElement("layer", { layer: path })
         )
       )
     );
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert - snapshot the layer structure with property matchers
     const state = root.store.getState();
     expect(state._passedLayers).toMatchSnapshot();
   });
 
-  it("should snapshot with property matchers for dynamic values", () => {
+  it("should snapshot with property matchers for dynamic values", async () => {
     // Arrange
     const mockDeck = createMockDeckInstance();
     const rootElement = document.createElement("div");
@@ -78,12 +79,13 @@ describe("Layer Tree Snapshot Tests", () => {
     // Act
     root.render(
       createElement(
-        "group",
+        Fragment,
         {},
         createElement("layer", { layer: layer1 }),
         createElement("layer", { layer: layer2 })
       )
     );
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert - snapshot with property matchers for IDs
     const lastCall = (

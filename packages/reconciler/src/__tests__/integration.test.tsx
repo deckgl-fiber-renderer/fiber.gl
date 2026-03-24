@@ -1,5 +1,5 @@
 import { ScatterplotLayer } from "@deck.gl/layers";
-import { createElement } from "react";
+import { createElement, Fragment } from "react";
 import type { vi } from "vitest";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
@@ -41,12 +41,13 @@ describe("Reconciler Integration Tests", () => {
     }
   });
 
-  it("should render single ScatterplotLayer via React", () => {
+  it("should render single ScatterplotLayer via React", async () => {
     // Arrange
     const layer = fixtures.scatterplotLayer({ id: "test-scatterplot" });
 
     // Act
     root.render(createElement("layer", { layer }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert
     const state = root.store.getState();
@@ -54,7 +55,7 @@ describe("Reconciler Integration Tests", () => {
     expect(mockDeck.setProps).toHaveBeenCalled();
   });
 
-  it("should render multiple layers in hierarchy", () => {
+  it("should render multiple layers in hierarchy", async () => {
     // Arrange
     const scatterplot = fixtures.scatterplotLayer({ id: "scatterplot-1" });
     const path = fixtures.pathLayer({ id: "path-1" });
@@ -62,24 +63,26 @@ describe("Reconciler Integration Tests", () => {
     // Act
     root.render(
       createElement(
-        "group",
+        Fragment,
         {},
         createElement("layer", { layer: scatterplot }),
         createElement("layer", { layer: path })
       )
     );
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert
     expect(mockDeck.setProps).toHaveBeenCalled();
   });
 
-  it("should update layer props triggers new instance", () => {
+  it("should update layer props triggers new instance", async () => {
     // Arrange
     const initialLayer = fixtures.scatterplotLayer({
       id: "test",
       radiusScale: 1,
     });
     root.render(createElement("layer", { layer: initialLayer }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
     const callCountBefore = (mockDeck.setProps as ReturnType<typeof vi.fn>).mock
       .calls.length;
 
@@ -89,6 +92,7 @@ describe("Reconciler Integration Tests", () => {
       radiusScale: 2,
     });
     root.render(createElement("layer", { layer: updatedLayer }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert
     const callCountAfter = (mockDeck.setProps as ReturnType<typeof vi.fn>).mock
@@ -96,7 +100,7 @@ describe("Reconciler Integration Tests", () => {
     expect(callCountAfter).toBeGreaterThan(callCountBefore);
   });
 
-  it("should update preserves layer ID", () => {
+  it("should update preserves layer ID", async () => {
     // Arrange
     const layerId = "persistent-id";
     const initialLayer = fixtures.scatterplotLayer({
@@ -104,6 +108,7 @@ describe("Reconciler Integration Tests", () => {
       radiusScale: 1,
     });
     root.render(createElement("layer", { layer: initialLayer }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Act
     const updatedLayer = fixtures.scatterplotLayer({
@@ -111,6 +116,7 @@ describe("Reconciler Integration Tests", () => {
       radiusScale: 2,
     });
     root.render(createElement("layer", { layer: updatedLayer }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert
     const lastCall = (
@@ -120,10 +126,11 @@ describe("Reconciler Integration Tests", () => {
     expect(layers[0]?.id).toBe(layerId);
   });
 
-  it("should unmount removes all layers", () => {
+  it("should unmount removes all layers", async () => {
     // Arrange
     const layer = fixtures.scatterplotLayer({ id: "to-remove" });
     root.render(createElement("layer", { layer }));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Act
     unmountAtNode(rootElement);
@@ -132,18 +139,19 @@ describe("Reconciler Integration Tests", () => {
     expect(mockDeck.finalize).toHaveBeenCalled();
   });
 
-  it("should unmount with nested layers", () => {
+  it("should unmount with nested layers", async () => {
     // Arrange
     const layer1 = fixtures.scatterplotLayer({ id: "nested-1" });
     const layer2 = fixtures.pathLayer({ id: "nested-2" });
     root.render(
       createElement(
-        "group",
+        Fragment,
         {},
         createElement("layer", { layer: layer1 }),
         createElement("layer", { layer: layer2 })
       )
     );
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Act
     unmountAtNode(rootElement);

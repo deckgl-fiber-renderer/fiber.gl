@@ -4,17 +4,25 @@ import { describe, expect, it, vi } from "vitest";
 import { useDeckgl, useIsomorphicLayoutEffect } from "../hooks";
 
 // Mock the shared module
-const mockUseStore = vi.fn();
-const mockSelectors = {
-  deckgl: vi.fn((state) => state.deckgl),
-  setDeckgl: vi.fn((state) => state.setDeckgl),
-};
+vi.mock("@deckgl-fiber-renderer/shared", () => {
+  const mockUseStore = vi.fn();
+  const mockSelectors = {
+    deckgl: vi.fn((state) => state.deckgl),
+    setDeckgl: vi.fn((state) => state.setDeckgl),
+  };
 
-vi.mock("@deckgl-fiber-renderer/shared", () => ({
-  isBrowserEnvironment: false,
-  selectors: mockSelectors,
-  useStore: mockUseStore, // Node environment for tests
-}));
+  return {
+    isBrowserEnvironment: false,
+    mockSelectors,
+    mockUseStore,
+    selectors: mockSelectors,
+    useStore: mockUseStore,
+  };
+});
+
+// Get the mocks after they've been set up
+const { mockUseStore, mockSelectors } =
+  (await import("@deckgl-fiber-renderer/shared")) as never;
 
 describe("Dom Hooks Tests", () => {
   describe("useDeckgl", () => {

@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Layer Tree Snapshot Tests > should render complex layer hierarchy with snapshot 1`] = `[]`;
+
+exports[`Layer Tree Snapshot Tests > should snapshot with property matchers for dynamic values 1`] = `
+[
+  ScatterplotLayer {
+    "count": 3,
+    "id": "dynamic-1",
+    "internalState": null,
+    "lifecycle": "Awaiting state",
+    "parent": null,
+    "props": {
+      "id": "dynamic-1",
+      Symbol(component): [Circular],
+      Symbol(asyncPropOriginal): {},
+      Symbol(asyncPropResolved): {
+        "data": [
+          {
+            "x": 1,
+            "y": 2,
+          },
+        ],
+      },
+    },
+  },
+  PathLayer {
+    "count": 4,
+    "id": "dynamic-2",
+    "internalState": null,
+    "lifecycle": "Awaiting state",
+    "parent": null,
+    "props": {
+      "id": "dynamic-2",
+      Symbol(component): [Circular],
+      Symbol(asyncPropOriginal): {},
+      Symbol(asyncPropResolved): {
+        "data": [
+          {
+            "path": [
+              [
+                0,
+                0,
+              ],
+            ],
+          },
+        ],
+      },
+    },
+  },
+]
+`;

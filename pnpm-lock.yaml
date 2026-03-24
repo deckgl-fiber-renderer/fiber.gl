@@ -36,6 +36,9 @@ catalogs:
     '@types/react-reconciler':
       specifier: 0.31.0
       version: 0.31.0
+    jsdom:
+      specifier: ^29
+      version: 29.0.1
     loglayer:
       specifier: ^9
       version: 9.1.0
@@ -619,7 +622,7 @@ importers:
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.14)
       jsdom:
-        specifier: ^29.0.1
+        specifier: 'catalog:'
         version: 29.0.1
       react:
         specifier: 'catalog:'
@@ -673,6 +676,9 @@ importers:
       '@types/react-reconciler':
         specifier: 'catalog:'
         version: 0.31.0(@types/react@19.2.14)
+      jsdom:
+        specifier: 'catalog:'
+        version: 29.0.1
       react:
         specifier: 'catalog:'
         version: 19.2.4
@@ -737,6 +743,15 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.2.3(@types/react@19.2.14)
+      jsdom:
+        specifier: 'catalog:'
+        version: 29.0.1
+      react:
+        specifier: 'catalog:'
+        version: 19.2.4
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.4(react@19.2.4)
       tsdown:
         specifier: 'catalog:'
         version: 0.21.4(typescript@6.0.2)

@@ -4,25 +4,41 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Deckgl } from "../components";
 
 // Mock the reconciler module
-const mockRender = vi.fn();
-const mockConfigure = vi.fn();
-const mockCreateRoot = vi.fn(() => ({
-  configure: mockConfigure,
-  render: mockRender,
-  store: {
-    getState: vi.fn(),
-    setState: vi.fn(),
-    subscribe: vi.fn(),
-  },
-}));
-const mockUnmountAtNode = vi.fn();
-const mockRoots = new Map();
+vi.mock("@deckgl-fiber-renderer/reconciler", () => {
+  const mockRender = vi.fn();
+  const mockConfigure = vi.fn();
+  const mockCreateRoot = vi.fn(() => ({
+    configure: mockConfigure,
+    render: mockRender,
+    store: {
+      getState: vi.fn(),
+      setState: vi.fn(),
+      subscribe: vi.fn(),
+    },
+  }));
+  const mockUnmountAtNode = vi.fn();
+  const mockRoots = new Map();
 
-vi.mock("@deckgl-fiber-renderer/reconciler", () => ({
-  createRoot: mockCreateRoot,
-  roots: mockRoots,
-  unmountAtNode: mockUnmountAtNode,
-}));
+  return {
+    createRoot: mockCreateRoot,
+    mockConfigure,
+    mockCreateRoot,
+    mockRender,
+    mockRoots,
+    mockUnmountAtNode,
+    roots: mockRoots,
+    unmountAtNode: mockUnmountAtNode,
+  };
+});
+
+// Get the mocks after they've been set up
+const {
+  mockRender,
+  mockConfigure,
+  mockCreateRoot,
+  mockUnmountAtNode,
+  mockRoots,
+} = (await import("@deckgl-fiber-renderer/reconciler")) as never;
 
 describe("Deckgl Component Tests", () => {
   beforeEach(() => {

@@ -39,6 +39,7 @@ catalog:
   # Misc
   zustand: ^5
   loglayer: ^9
+  jsdom: ^29
 
   # Build Tools
   typescript: ^6.0.2

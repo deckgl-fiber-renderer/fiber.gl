@@ -8,7 +8,7 @@ export default defineConfig({
     restoreMocks: true,
 
     // Test environment
-    environment: "node",
+    environment: "jsdom",
 
     // Coverage thresholds (80%+ for reconciler)
     coverage: {

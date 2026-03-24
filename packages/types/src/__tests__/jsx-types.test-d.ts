@@ -13,8 +13,8 @@ describe("JSX Type Tests", () => {
     const element = createElement("layer", { layer });
 
     // Assert
-    expectTypeOf(element).toMatchTypeOf<ReactElement>();
-    expectTypeOf(element.props.layer).toMatchTypeOf<Layer>();
+    expectTypeOf(element).toEqualTypeOf<ReactElement>();
+    expectTypeOf(element.props.layer).toEqualTypeOf<Layer>();
   });
 
   it("should invalid element types rejected (@ts-expect-error)", () => {

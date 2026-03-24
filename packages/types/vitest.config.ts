@@ -8,7 +8,7 @@ export default defineConfig({
     restoreMocks: true,
 
     // Test environment
-    environment: "node",
+    environment: "jsdom",
 
     // Include .test-d.ts files for type tests
     include: ["**/*.{test,spec}.?(c|m)[jt]s?(x)", "**/*.test-d.ts"],

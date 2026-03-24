@@ -17,7 +17,7 @@ describe("Props Type Tests", () => {
     };
 
     // Assert
-    expectTypeOf(props.initialViewState).toMatchTypeOf<
+    expectTypeOf(props.initialViewState).toEqualTypeOf<
       { longitude: number; latitude: number; zoom: number } | undefined
     >();
   });
@@ -30,7 +30,7 @@ describe("Props Type Tests", () => {
     };
 
     // Assert
-    expectTypeOf(props.layers).toMatchTypeOf<unknown[] | undefined>();
+    expectTypeOf(props.layers).toEqualTypeOf<unknown[] | undefined>();
   });
 
   it("should DeckglProps accepts views array", () => {
@@ -41,7 +41,7 @@ describe("Props Type Tests", () => {
     };
 
     // Assert
-    expectTypeOf(props.views).toMatchTypeOf<unknown[] | undefined>();
+    expectTypeOf(props.views).toEqualTypeOf<unknown[] | undefined>();
   });
 
   it("should DeckglProps accepts children (ReactNode)", () => {
@@ -51,7 +51,7 @@ describe("Props Type Tests", () => {
     };
 
     // Assert
-    expectTypeOf(props.children).toMatchTypeOf<ReactNode | undefined>();
+    expectTypeOf(props.children).toEqualTypeOf<ReactNode | undefined>();
   });
 
   it("should ScatterplotLayer preserves data generic type", () => {
@@ -73,8 +73,8 @@ describe("Props Type Tests", () => {
     });
 
     // Assert - TypeScript should preserve the generic type
-    expectTypeOf(layer.props.data).toMatchTypeOf<DataPoint[]>();
-    expectTypeOf(layer.props.getPosition).toMatchTypeOf<
+    expectTypeOf(layer.props.data).toEqualTypeOf<DataPoint[]>();
+    expectTypeOf(layer.props.getPosition).toEqualTypeOf<
       ((d: DataPoint) => number[]) | undefined
     >();
   });
@@ -101,10 +101,10 @@ describe("Props Type Tests", () => {
     const nullNode: ReactNode = null;
     const undefinedNode: ReactNode = undefined;
 
-    expectTypeOf(stringNode).toMatchTypeOf<ReactNode>();
-    expectTypeOf(numberNode).toMatchTypeOf<ReactNode>();
-    expectTypeOf(booleanNode).toMatchTypeOf<ReactNode>();
-    expectTypeOf(nullNode).toMatchTypeOf<ReactNode>();
-    expectTypeOf(undefinedNode).toMatchTypeOf<ReactNode>();
+    expectTypeOf(stringNode).toEqualTypeOf<ReactNode>();
+    expectTypeOf(numberNode).toEqualTypeOf<ReactNode>();
+    expectTypeOf(booleanNode).toEqualTypeOf<ReactNode>();
+    expectTypeOf(nullNode).toEqualTypeOf<ReactNode>();
+    expectTypeOf(undefinedNode).toEqualTypeOf<ReactNode>();
   });
 });

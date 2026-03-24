@@ -59,6 +59,7 @@
     "@deck.gl/layers": "catalog:",
     "@deck.gl/mapbox": "catalog:",
     "@deck.gl/mesh-layers": "catalog:",
+    "@deck.gl/test-utils": "^9.2.11",
     "@types/react": "catalog:",
     "@types/react-reconciler": "catalog:",
     "react": "catalog:",

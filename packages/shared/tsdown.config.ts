@@ -7,6 +7,8 @@ export default defineConfig({
     "src/**/*.{ts,tsx}",
     "!src/**/*.{d,stories,test,test-d,bench}.{ts,tsx}",
     "!**/__fixture__",
+    "!**/__fixtures__",
+    "!**/__tests__",
   ],
   exports: true,
   format: "esm",

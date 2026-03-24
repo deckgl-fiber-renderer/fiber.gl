@@ -1,0 +1,67 @@
+import { renderHook, act } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+
+import { useDeckgl, useIsomorphicLayoutEffect } from "../hooks";
+
+// Mock the shared module
+const mockUseStore = vi.fn();
+const mockSelectors = {
+  deckgl: vi.fn((state) => state.deckgl),
+  setDeckgl: vi.fn((state) => state.setDeckgl),
+};
+
+vi.mock("@deckgl-fiber-renderer/shared", () => ({
+  isBrowserEnvironment: false,
+  selectors: mockSelectors,
+  useStore: mockUseStore, // Node environment for tests
+}));
+
+describe("Dom Hooks Tests", () => {
+  describe("useDeckgl", () => {
+    it("should useDeckgl returns deckgl instance from store", () => {
+      // Arrange
+      const mockDeckgl = {
+        finalize: vi.fn(),
+        setProps: vi.fn(),
+      };
+      mockUseStore.mockReturnValue(mockDeckgl);
+
+      // Act
+      const { result } = renderHook(() => useDeckgl());
+
+      // Assert
+      expect(result.current).toBe(mockDeckgl);
+      expect(mockUseStore).toHaveBeenCalledWith(mockSelectors.deckgl);
+    });
+
+    it("should useDeckgl updates when store changes", () => {
+      // Arrange
+      const mockDeckgl1 = { finalize: vi.fn(), id: "deck1", setProps: vi.fn() };
+      const mockDeckgl2 = { finalize: vi.fn(), id: "deck2", setProps: vi.fn() };
+
+      mockUseStore.mockReturnValue(mockDeckgl1);
+      const { result, rerender } = renderHook(() => useDeckgl());
+
+      // Act - simulate store change
+      mockUseStore.mockReturnValue(mockDeckgl2);
+      rerender();
+
+      // Assert
+      expect(result.current).toBe(mockDeckgl2);
+    });
+  });
+
+  describe("useIsomorphicLayoutEffect", () => {
+    it("should useIsomorphicLayoutEffect uses useEffect in Node environment", () => {
+      // Arrange
+      const effectFn = vi.fn();
+
+      // Act
+      renderHook(() => useIsomorphicLayoutEffect(effectFn, []));
+
+      // Assert - in Node environment (isBrowserEnvironment = false),
+      // should use useEffect which runs after render
+      expect(effectFn).toHaveBeenCalled();
+    });
+  });
+});

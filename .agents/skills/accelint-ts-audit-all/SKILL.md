@@ -165,6 +165,7 @@ For each file in the pending list, follow this exact sequence:
 
 - Apply accepted changes
 - **BLOCKING REQUIREMENT:** If property-based tests added, run verification:
+
   ```bash
   # Run test suite 100 times to verify PBT stability
   for i in {1..100}; do <test-command> || break; done
@@ -175,6 +176,7 @@ For each file in the pending list, follow this exact sequence:
   - Fix test properties (add constraints to arbitraries: date ranges, filtered NaNs, safe strings)
   - Re-run 100 times until 100 consecutive passes achieved
   - DO NOT proceed to Step 3 until this verification passes
+
 - Document findings in "Current File - Detailed Progress" section
 - Update status to show Step 1 ✅, Step 2 ✅
 - **SAVE PROGRESS to audit-process file NOW before continuing**

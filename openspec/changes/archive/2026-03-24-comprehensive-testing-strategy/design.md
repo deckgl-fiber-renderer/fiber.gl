@@ -134,13 +134,13 @@ packages/reconciler/src/
 ```yaml
 strategy:
   matrix:
-    react-version: ["18.3.1", "19.0.0"]
-    react-reconciler-version: ["0.29.2", "0.30.0"]
+    react-version: ['18.3.1', '19.0.0']
+    react-reconciler-version: ['0.29.2', '0.30.0']
     exclude:
-      - react-version: "18.3.1"
-        react-reconciler-version: "0.30.0"
-      - react-version: "19.0.0"
-        react-reconciler-version: "0.29.2"
+      - react-version: '18.3.1'
+        react-reconciler-version: '0.30.0'
+      - react-version: '19.0.0'
+        react-reconciler-version: '0.29.2'
 ```
 
 ### Decision 5: Global mock cleanup in vitest.config.ts
@@ -181,14 +181,14 @@ export default defineConfig({
 **Example:**
 
 ```typescript
-it("should render ScatterplotLayer via React", () => {
+it('should render ScatterplotLayer via React', () => {
   // Arrange
   const rootElement = createMockDeckInstance();
   const root = createRoot(rootElement);
-  const layer = new ScatterplotLayer({ id: "test", data: [] });
+  const layer = new ScatterplotLayer({ id: 'test', data: [] });
 
   // Act
-  root.render(createElement("layer", { layer }));
+  root.render(createElement('layer', { layer }));
 
   // Assert
   expect(root.container.layers).toHaveLength(1);
@@ -210,12 +210,12 @@ it("should render ScatterplotLayer via React", () => {
 **Example:**
 
 ```typescript
-it("should render complex layer hierarchy", () => {
+it('should render complex layer hierarchy', () => {
   root.render(/* nested layers */);
 
   expect(root.container.layers).toMatchSnapshot({
-    0: expect.objectContaining({ id: "points" }),
-    1: expect.objectContaining({ id: "paths" }),
+    0: expect.objectContaining({ id: 'points' }),
+    1: expect.objectContaining({ id: 'paths' }),
   });
 });
 ```

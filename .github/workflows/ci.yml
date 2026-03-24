@@ -1,7 +1,7 @@
 name: CI
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
     types: [opened, synchronize]
 env:
@@ -32,6 +32,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.RUNNER_NODE_VERSION }}
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install
       - run: pnpm run build

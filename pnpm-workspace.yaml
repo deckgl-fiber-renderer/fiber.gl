@@ -2,10 +2,10 @@ packages:
   - packages/*
   - examples/*
 onlyBuiltDependencies:
-  - "@biomejs/biome"
-  - "@fission-ai/openspec"
-  - "@parcel/watcher"
-  - "@swc/core"
+  - '@biomejs/biome'
+  - '@fission-ai/openspec'
+  - '@parcel/watcher'
+  - '@swc/core'
   - core-js
   - esbuild
   - lefthook
@@ -17,21 +17,21 @@ catalog:
   # React
   react: ^19
   react-dom: ^19
-  "@types/react": ^19
-  "@types/react-dom": ^19
+  '@types/react': ^19
+  '@types/react-dom': ^19
 
   # React Reconciler (pinned to exact versions)
   react-reconciler: 0.31.0
-  "@types/react-reconciler": 0.31.0
+  '@types/react-reconciler': 0.31.0
 
   # Deck.gl
-  "@deck.gl/core": ">=9.1"
-  "@deck.gl/extensions": ">=9.1"
-  "@deck.gl/geo-layers": ">=9.1"
-  "@deck.gl/layers": ">=9.1"
-  "@deck.gl/mapbox": ">=9.1"
-  "@deck.gl/mesh-layers": ">=9.1"
-  "@deck.gl/widgets": ">=9.1"
+  '@deck.gl/core': '>=9.1'
+  '@deck.gl/extensions': '>=9.1'
+  '@deck.gl/geo-layers': '>=9.1'
+  '@deck.gl/layers': '>=9.1'
+  '@deck.gl/mapbox': '>=9.1'
+  '@deck.gl/mesh-layers': '>=9.1'
+  '@deck.gl/widgets': '>=9.1'
 
   # Maplibre
   maplibre-gl: ^5

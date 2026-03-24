@@ -30,7 +30,7 @@ Include variable values in assertion messages.
 **❌ Incorrect: variable value not included**
 
 ```ts
-assert(index < items.length, "Index error");
+assert(index < items.length, 'Index error');
 ```
 
 **✅ Correct: variable value included**

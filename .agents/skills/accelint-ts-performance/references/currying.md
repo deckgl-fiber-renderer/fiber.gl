@@ -13,7 +13,7 @@ Convert functions to curried form when parameters are constant across many calls
 ```ts
 export function round(precision: number, value: number): number {
   if (!Number.isInteger(precision)) {
-    throw new Error("Precision must be an integer.");
+    throw new Error('Precision must be an integer.');
   }
 
   const multiplier = 10 ** precision;
@@ -37,7 +37,7 @@ export function round(
   value?: number
 ): number | ((value: number) => number) {
   if (!Number.isInteger(precision)) {
-    throw new Error("Precision must be an integer.");
+    throw new Error('Precision must be an integer.');
   }
 
   const multiplier = 10 ** precision;
@@ -70,7 +70,7 @@ function validate(pattern: string, value: string): boolean {
 }
 
 for (const email of emails) {
-  if (validate("^[a-z]+@[a-z]+\\.[a-z]+$", email)) {
+  if (validate('^[a-z]+@[a-z]+\\.[a-z]+$', email)) {
     validEmails.push(email);
   }
 }
@@ -94,7 +94,7 @@ function validate(
   return regex.test(value);
 }
 
-const isValidEmail = validate("^[a-z]+@[a-z]+\\.[a-z]+$");
+const isValidEmail = validate('^[a-z]+@[a-z]+\\.[a-z]+$');
 for (const email of emails) {
   if (isValidEmail(email)) {
     validEmails.push(email);

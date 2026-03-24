@@ -1,7 +1,7 @@
-import "server-only";
-import { airportById } from "@/dal/airports";
+import 'server-only';
+import { airportById } from '@/dal/airports';
 
-import { AirportsCardClient } from "./client";
+import { AirportsCardClient } from './client';
 
 interface PageProps {
   id: string;

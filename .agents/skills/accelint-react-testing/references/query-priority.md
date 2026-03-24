@@ -25,13 +25,13 @@ The query hierarchy reflects how users and assistive technologies interact with 
 
 ```tsx
 // Using test ID first bypasses accessibility checks
-const button = screen.getByTestId("submit-button");
+const button = screen.getByTestId('submit-button');
 
 // Using text without role doesn't verify semantic meaning
-const heading = screen.getByText("Dashboard");
+const heading = screen.getByText('Dashboard');
 
 // Using class names tests implementation
-const modal = container.querySelector(".modal-overlay");
+const modal = container.querySelector('.modal-overlay');
 ```
 
 **Problems:**
@@ -44,13 +44,13 @@ const modal = container.querySelector(".modal-overlay");
 
 ```tsx
 // Verify button role AND accessible name
-const button = screen.getByRole("button", { name: /submit/i });
+const button = screen.getByRole('button', { name: /submit/i });
 
 // Verify heading role AND level
-const heading = screen.getByRole("heading", { name: /dashboard/i, level: 1 });
+const heading = screen.getByRole('heading', { name: /dashboard/i, level: 1 });
 
 // Verify dialog role AND label
-const modal = screen.getByRole("dialog", { name: /confirm delete/i });
+const modal = screen.getByRole('dialog', { name: /confirm delete/i });
 ```
 
 **Benefits:**
@@ -70,13 +70,13 @@ const modal = screen.getByRole("dialog", { name: /confirm delete/i });
 
 ```tsx
 // Placeholder is not a label replacement
-const input = screen.getByPlaceholderText("Enter email");
+const input = screen.getByPlaceholderText('Enter email');
 
 // Name attribute is for form submission, not accessibility
-const input = screen.getByRole("textbox", { name: "" });
+const input = screen.getByRole('textbox', { name: '' });
 
 // Test ID bypasses label verification
-const input = screen.getByTestId("email-input");
+const input = screen.getByTestId('email-input');
 ```
 
 **Problems:**
@@ -89,13 +89,13 @@ const input = screen.getByTestId("email-input");
 
 ```tsx
 // Label via <label> element
-const input = screen.getByLabelText("Email address");
+const input = screen.getByLabelText('Email address');
 
 // Or query by role if label exists
-const input = screen.getByRole("textbox", { name: /email address/i });
+const input = screen.getByRole('textbox', { name: /email address/i });
 
 // For aria-label
-const input = screen.getByRole("searchbox", { name: /search products/i });
+const input = screen.getByRole('searchbox', { name: /search products/i });
 ```
 
 **Benefits:**
@@ -114,10 +114,10 @@ const input = screen.getByRole("searchbox", { name: /search products/i });
 
 ```tsx
 // Static button doesn't need test ID
-const button = screen.getByTestId("save-button");
+const button = screen.getByTestId('save-button');
 
 // Headings have semantic role
-const title = screen.getByTestId("page-title");
+const title = screen.getByTestId('page-title');
 
 // Generated content could use text or role
 const item = screen.getByTestId(`item-${id}`);
@@ -133,10 +133,10 @@ const item = screen.getByTestId(`item-${id}`);
 
 ```tsx
 // Use role for interactive elements
-const button = screen.getByRole("button", { name: /save/i });
+const button = screen.getByRole('button', { name: /save/i });
 
 // Use role + level for headings
-const title = screen.getByRole("heading", { name: /settings/i, level: 1 });
+const title = screen.getByRole('heading', { name: /settings/i, level: 1 });
 
 // Test ID acceptable for dynamic content without stable text
 const avatar = screen.getByTestId(`user-avatar-${userId}`);
@@ -159,13 +159,13 @@ const avatar = screen.getByTestId(`user-avatar-${userId}`);
 
 ```tsx
 // Button might have icon, state text, etc.
-const button = screen.getByText("Delete");
+const button = screen.getByText('Delete');
 
 // Link text might be inside nested spans
-const link = screen.getByText("View details");
+const link = screen.getByText('View details');
 
 // Headings need semantic verification
-const heading = screen.getByText("Error");
+const heading = screen.getByText('Error');
 ```
 
 **Problems:**
@@ -181,11 +181,11 @@ const heading = screen.getByText("Error");
 const message = screen.getByText(/your order has been confirmed/i);
 
 // But use role for interactive elements
-const button = screen.getByRole("button", { name: /delete/i });
-const link = screen.getByRole("link", { name: /view details/i });
+const button = screen.getByRole('button', { name: /delete/i });
+const link = screen.getByRole('link', { name: /view details/i });
 
 // Role for semantic elements
-const heading = screen.getByRole("heading", { name: /error/i });
+const heading = screen.getByRole('heading', { name: /error/i });
 ```
 
 **Benefits:**
@@ -225,16 +225,16 @@ Start with getByRole and move down only when necessary:
 
 ```tsx
 // 1st choice: Role (semantic + accessible)
-screen.getByRole("button", { name: /submit/i });
+screen.getByRole('button', { name: /submit/i });
 
 // 2nd choice: Label (for form fields)
-screen.getByLabelText("Email address");
+screen.getByLabelText('Email address');
 
 // 3rd choice: Text (for static content)
 screen.getByText(/confirmation message/i);
 
 // Last choice: Test ID (when semantic query impossible)
-screen.getByTestId("dynamic-widget-123");
+screen.getByTestId('dynamic-widget-123');
 ```
 
 **Each step down = less confidence in accessibility.**

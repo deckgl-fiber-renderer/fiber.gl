@@ -41,8 +41,8 @@ Install different versions side by side:
 Usage:
 
 ```js
-import lodash3 from "lodash3";
-import lodash4 from "lodash4";
+import lodash3 from 'lodash3';
+import lodash4 from 'lodash4';
 ```
 
 ### Replace Package with Fork
@@ -132,7 +132,7 @@ Force all transitive dependencies to use an alias:
 ```yaml
 # pnpm-workspace.yaml
 overrides:
-  "underscore": "npm:lodash@^4.17.21"
+  'underscore': 'npm:lodash@^4.17.21'
 ```
 
 This replaces all `underscore` imports (including in dependencies) with lodash.

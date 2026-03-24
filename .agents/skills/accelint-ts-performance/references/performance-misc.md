@@ -29,9 +29,9 @@ String concatenation creates new strings on each operation. Use array join for b
 **❌ Incorrect: repeated string concatenation**
 
 ```ts
-let result = "";
+let result = '';
 for (const item of items) {
-  result += item.name + ", ";
+  result += item.name + ', ';
 }
 ```
 
@@ -42,7 +42,7 @@ const parts = [];
 for (const item of items) {
   parts.push(item.name);
 }
-const result = parts.join(", ");
+const result = parts.join(', ');
 ```
 
 ### Regular Expression in Loops
@@ -170,15 +170,15 @@ function Component({ items }) {
 **❌ Incorrect: synchronous blocking**
 
 ```ts
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 
 function loadTemplate(name) {
-  return readFileSync(`./templates/${name}.html`, "utf-8");
+  return readFileSync(`./templates/${name}.html`, 'utf-8');
 }
 
 // Called in request handler
-app.get("/page", (req, res) => {
-  const template = loadTemplate("home");
+app.get('/page', (req, res) => {
+  const template = loadTemplate('home');
   res.send(template);
 });
 ```
@@ -186,20 +186,20 @@ app.get("/page", (req, res) => {
 **✅ Correct: async with caching**
 
 ```ts
-import { readFile } from "fs/promises";
+import { readFile } from 'fs/promises';
 
 const templateCache = new Map();
 
 async function loadTemplate(name) {
   if (!templateCache.has(name)) {
-    const content = await readFile(`./templates/${name}.html`, "utf-8");
+    const content = await readFile(`./templates/${name}.html`, 'utf-8');
     templateCache.set(name, content);
   }
   return templateCache.get(name);
 }
 
-app.get("/page", async (req, res) => {
-  const template = await loadTemplate("home");
+app.get('/page', async (req, res) => {
+  const template = await loadTemplate('home');
   res.send(template);
 });
 ```
@@ -212,11 +212,11 @@ For complex string building with many parts, array join can be more efficient th
 
 ```ts
 function buildHTML(items) {
-  let html = "<ul>";
+  let html = '<ul>';
   for (const item of items) {
-    html += "<li>" + item.name + "</li>";
+    html += '<li>' + item.name + '</li>';
   }
-  html += "</ul>";
+  html += '</ul>';
   return html;
 }
 ```
@@ -225,12 +225,12 @@ function buildHTML(items) {
 
 ```ts
 function buildHTML(items) {
-  const parts = ["<ul>"];
+  const parts = ['<ul>'];
   for (const item of items) {
-    parts.push("<li>", item.name, "</li>");
+    parts.push('<li>', item.name, '</li>');
   }
-  parts.push("</ul>");
-  return parts.join("");
+  parts.push('</ul>');
+  return parts.join('');
 }
 ```
 

@@ -1,8 +1,8 @@
-"use client";
-import "client-only";
-import { useSelected } from "@/hooks/use-selected";
+'use client';
+import 'client-only';
+import { useSelected } from '@/hooks/use-selected';
 
-import styles from "./styles.module.css";
+import styles from './styles.module.css';
 
 const closeIcon = (
   <svg

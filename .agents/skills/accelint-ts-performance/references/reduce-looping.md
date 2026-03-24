@@ -195,7 +195,7 @@ When the primary optimization doesn't work, use these alternatives:
 ```ts
 // In configuration loading (runs once at startup)
 const activeUsers = users
-  .filter((u) => u.status === "active")
+  .filter((u) => u.status === 'active')
   .map((u) => u.name)
   .sort();
 ```
@@ -308,7 +308,7 @@ function contains(id: string): boolean {
 
 ```ts
 // ✅ Array.includes() is fine here
-const ALLOWED_METHODS = ["GET", "POST", "PUT", "DELETE"];
+const ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
 
 if (ALLOWED_METHODS.includes(method)) {
   // Only 4 items - Set overhead not worth it

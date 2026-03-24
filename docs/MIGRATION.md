@@ -47,14 +47,14 @@ The new `<layer>` element brings significant improvements:
 **Old (v1):** All layer classes bundled together
 
 ```tsx
-import "@deckgl-fiber-renderer/reconciler/side-effects"; // Imports ALL layers
+import '@deckgl-fiber-renderer/reconciler/side-effects'; // Imports ALL layers
 ```
 
 **New (v2):** Only bundle what you use
 
 ```tsx
-import { ScatterplotLayer } from "@deck.gl/layers"; // Only this layer
-import { Tile3DLayer } from "@deck.gl/geo-layers"; // Tree-shakeable
+import { ScatterplotLayer } from '@deck.gl/layers'; // Only this layer
+import { Tile3DLayer } from '@deck.gl/geo-layers'; // Tree-shakeable
 ```
 
 ### 3. **No Registration Required**
@@ -62,8 +62,8 @@ import { Tile3DLayer } from "@deck.gl/geo-layers"; // Tree-shakeable
 **Old (v1):** Custom layers need manual registration
 
 ```tsx
-import { extend } from "@deckgl-fiber-renderer/reconciler";
-import { MyCustomLayer } from "./my-layer";
+import { extend } from '@deckgl-fiber-renderer/reconciler';
+import { MyCustomLayer } from './my-layer';
 
 extend({ MyCustomLayer }); // Required!
 ```
@@ -71,9 +71,9 @@ extend({ MyCustomLayer }); // Required!
 **New (v2):** Custom layers work immediately
 
 ```tsx
-import { MyCustomLayer } from "./my-layer";
+import { MyCustomLayer } from './my-layer';
 
-<layer layer={new MyCustomLayer({ id: "custom" })} />; // Just works!
+<layer layer={new MyCustomLayer({ id: 'custom' })} />; // Just works!
 ```
 
 ---
@@ -107,7 +107,7 @@ import { MyCustomLayer } from "./my-layer";
 <layer
   layer={
     new ScatterplotLayer({
-      id: "points",
+      id: 'points',
       data,
       getPosition: (d) => d.coords,
       getRadius: 100,
@@ -147,7 +147,7 @@ import { MyCustomLayer } from "./my-layer";
 <layer
   layer={
     new ScatterplotLayer<DataPoint>({
-      id: "points",
+      id: 'points',
       data: dataPoints,
       getPosition: (d) => d.coordinates,
       // ✅ TypeScript knows d is DataPoint
@@ -183,7 +183,7 @@ import { MyCustomLayer } from "./my-layer";
 <layer
   layer={
     new GlobeView({
-      id: "main",
+      id: 'main',
       controller: true,
     })
   }
@@ -191,7 +191,7 @@ import { MyCustomLayer } from "./my-layer";
   <layer
     layer={
       new GeoJsonLayer({
-        id: "data",
+        id: 'data',
         data,
         getFillColor: [255, 255, 255],
       })
@@ -220,9 +220,9 @@ Add imports for the layer classes you use:
 
 ```tsx
 // Add these imports
-import { ScatterplotLayer, GeoJsonLayer } from "@deck.gl/layers";
-import { Tile3DLayer } from "@deck.gl/geo-layers";
-import { MapView, GlobeView } from "@deck.gl/core";
+import { ScatterplotLayer, GeoJsonLayer } from '@deck.gl/layers';
+import { Tile3DLayer } from '@deck.gl/geo-layers';
+import { MapView, GlobeView } from '@deck.gl/core';
 ```
 
 ### Step 3: Remove Side-Effects Import
@@ -230,7 +230,7 @@ import { MapView, GlobeView } from "@deck.gl/core";
 **Remove this line:**
 
 ```tsx
-import "@deckgl-fiber-renderer/reconciler/side-effects"; // ❌ Delete
+import '@deckgl-fiber-renderer/reconciler/side-effects'; // ❌ Delete
 ```
 
 This import is deprecated and no longer needed.
@@ -250,7 +250,7 @@ For each layer, wrap it in `<layer>` and instantiate the class:
 ```tsx
 <layer
   layer={
-    new ScatterplotLayer({ id: "points", data, getPosition: (d) => d.coords })
+    new ScatterplotLayer({ id: 'points', data, getPosition: (d) => d.coords })
   }
 />
 ```
@@ -263,7 +263,7 @@ For each layer, wrap it in `<layer>` and instantiate the class:
 <layer
   layer={
     new ScatterplotLayer({
-      id: "my-unique-id", // ✅ Required!
+      id: 'my-unique-id', // ✅ Required!
       data,
       // ...
     })
@@ -285,8 +285,8 @@ Custom layers become much simpler with v2!
 
 ```tsx
 // my-custom-layer.ts
-import { CompositeLayer } from "@deck.gl/core";
-import { ScatterplotLayer } from "@deck.gl/layers";
+import { CompositeLayer } from '@deck.gl/core';
+import { ScatterplotLayer } from '@deck.gl/layers';
 
 export class MyCustomLayer extends CompositeLayer {
   renderLayers() {
@@ -315,8 +315,8 @@ declare global {
 
 ```tsx
 // side-effects.ts
-import { extend } from "@deckgl-fiber-renderer/reconciler";
-import { MyCustomLayer } from "./my-custom-layer";
+import { extend } from '@deckgl-fiber-renderer/reconciler';
+import { MyCustomLayer } from './my-custom-layer';
 
 extend({ MyCustomLayer }); // ❌ Required registration
 ```
@@ -325,7 +325,7 @@ extend({ MyCustomLayer }); // ❌ Required registration
 
 ```tsx
 // main.tsx
-import "./side-effects"; // ❌ Must remember to import
+import './side-effects'; // ❌ Must remember to import
 ```
 
 **4. Use the layer:**
@@ -340,8 +340,8 @@ import "./side-effects"; // ❌ Must remember to import
 
 ```tsx
 // my-custom-layer.ts
-import { CompositeLayer } from "@deck.gl/core";
-import { ScatterplotLayer } from "@deck.gl/layers";
+import { CompositeLayer } from '@deck.gl/core';
+import { ScatterplotLayer } from '@deck.gl/layers';
 
 export class MyCustomLayer extends CompositeLayer {
   renderLayers() {
@@ -360,9 +360,9 @@ export class MyCustomLayer extends CompositeLayer {
 **2. Use the layer directly:**
 
 ```tsx
-import { MyCustomLayer } from "./my-custom-layer";
+import { MyCustomLayer } from './my-custom-layer';
 
-<layer layer={new MyCustomLayer({ id: "custom", data })} />;
+<layer layer={new MyCustomLayer({ id: 'custom', data })} />;
 ```
 
 **That's it!** No registration, no side-effects file, no JSX declarations.
@@ -374,8 +374,8 @@ import { MyCustomLayer } from "./my-custom-layer";
 **Both syntaxes work in v2** - you can migrate gradually.
 
 ```tsx
-import { ScatterplotLayer } from "@deck.gl/layers";
-import "@deckgl-fiber-renderer/reconciler/side-effects"; // Keep for old syntax
+import { ScatterplotLayer } from '@deck.gl/layers';
+import '@deckgl-fiber-renderer/reconciler/side-effects'; // Keep for old syntax
 
 function Map({ data }) {
   return (
@@ -384,7 +384,7 @@ function Map({ data }) {
       <geoJsonLayer id="old" data={oldData} />
 
       {/* New syntax */}
-      <layer layer={new ScatterplotLayer({ id: "new", data: newData })} />
+      <layer layer={new ScatterplotLayer({ id: 'new', data: newData })} />
     </Deckgl>
   );
 }
@@ -459,7 +459,7 @@ Repeat for each layer type:
 You must instantiate the layer class with `new`:
 
 ```tsx
-<layer layer={new ScatterplotLayer({ id: "points", data })} /> // ✅
+<layer layer={new ScatterplotLayer({ id: 'points', data })} /> // ✅
 ```
 
 ---
@@ -473,7 +473,7 @@ You're using the layer class but haven't imported it.
 Add the import:
 
 ```tsx
-import { ScatterplotLayer } from "@deck.gl/layers";
+import { ScatterplotLayer } from '@deck.gl/layers';
 ```
 
 ---

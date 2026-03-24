@@ -149,8 +149,8 @@ npm install typescript@latest --workspaces
 ```yaml
 # pnpm-workspace.yaml
 packages:
-  - "apps/*"
-  - "packages/*"
+  - 'apps/*'
+  - 'packages/*'
 
 catalog:
   react: ^18.2.0

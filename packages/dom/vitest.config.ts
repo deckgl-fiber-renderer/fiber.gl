@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -8,13 +8,13 @@ export default defineConfig({
     restoreMocks: true,
 
     // Test environment for React components
-    environment: "jsdom",
+    environment: 'jsdom',
 
     // Coverage thresholds (80%+ for dom)
     coverage: {
-      exclude: ["**/__tests__/**", "**/dist/**", "**/node_modules/**"],
-      provider: "v8",
-      reporter: ["text", "json", "html"],
+      exclude: ['**/__tests__/**', '**/dist/**', '**/node_modules/**'],
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
       thresholds: {
         branches: 80,
         functions: 80,

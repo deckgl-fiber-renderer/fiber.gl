@@ -1,10 +1,10 @@
-import { render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { Deckgl } from "../components";
+import { Deckgl } from '../components';
 
 // Mock the reconciler module
-vi.mock("@deckgl-fiber-renderer/reconciler", () => {
+vi.mock('@deckgl-fiber-renderer/reconciler', () => {
   const mockRender = vi.fn();
   const mockConfigure = vi.fn();
   const mockCreateRoot = vi.fn(() => ({
@@ -38,9 +38,9 @@ const {
   mockCreateRoot,
   mockUnmountAtNode,
   mockRoots,
-} = (await import("@deckgl-fiber-renderer/reconciler")) as never;
+} = (await import('@deckgl-fiber-renderer/reconciler')) as never;
 
-describe("Deckgl Component Tests", () => {
+describe('Deckgl Component Tests', () => {
   beforeEach(() => {
     // Clear all mocks before each test
     vi.clearAllMocks();
@@ -52,7 +52,7 @@ describe("Deckgl Component Tests", () => {
     vi.clearAllMocks();
   });
 
-  it("should creates reconciler root on mount", () => {
+  it('should creates reconciler root on mount', () => {
     // Act
     render(
       <Deckgl>
@@ -64,7 +64,7 @@ describe("Deckgl Component Tests", () => {
     expect(mockCreateRoot).toHaveBeenCalled();
   });
 
-  it("should passes props to root.configure", () => {
+  it('should passes props to root.configure', () => {
     // Arrange
     const props = {
       initialViewState: {
@@ -89,7 +89,7 @@ describe("Deckgl Component Tests", () => {
     );
   });
 
-  it("should renders canvas in standalone mode (follow accelint-react-testing query priority: getByRole > getByLabelText > getByText)", () => {
+  it('should renders canvas in standalone mode (follow accelint-react-testing query priority: getByRole > getByLabelText > getByText)', () => {
     // Act
     render(
       <Deckgl>
@@ -98,12 +98,12 @@ describe("Deckgl Component Tests", () => {
     );
 
     // Assert - Query by element presence (canvas doesn't have role by default)
-    const canvas = document.querySelector("#deckgl-fiber-canvas");
+    const canvas = document.querySelector('#deckgl-fiber-canvas');
     expect(canvas).toBeTruthy();
-    expect(canvas?.tagName).toBe("CANVAS");
+    expect(canvas?.tagName).toBe('CANVAS');
   });
 
-  it("should renders hidden div in interleaved mode", () => {
+  it('should renders hidden div in interleaved mode', () => {
     // Act
     render(
       <Deckgl interleaved>
@@ -112,12 +112,12 @@ describe("Deckgl Component Tests", () => {
     );
 
     // Assert - Check that interleave div is rendered with hidden attribute
-    const interleaveDiv = document.querySelector("#deckgl-fiber-interleave");
+    const interleaveDiv = document.querySelector('#deckgl-fiber-interleave');
     expect(interleaveDiv).toBeTruthy();
-    expect(interleaveDiv?.hasAttribute("hidden")).toBe(true);
+    expect(interleaveDiv?.hasAttribute('hidden')).toBe(true);
   });
 
-  it("should unmounts cleanly", () => {
+  it('should unmounts cleanly', () => {
     // Arrange
     const { unmount } = render(
       <Deckgl>

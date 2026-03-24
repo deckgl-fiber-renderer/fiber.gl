@@ -2,13 +2,13 @@
 // Reusable test utilities with all common providers
 // Customize this template based on your project's needs
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { RenderOptions, RenderResult } from "@testing-library/react";
-import { render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import type { ReactElement, ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { RenderOptions, RenderResult } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import type { ReactElement, ReactNode } from 'react';
 
-import { getQueryClient } from "~/configs/query-client";
+import { getQueryClient } from '~/configs/query-client';
 // import { ThemeProvider } from '~/configs/theme'; // Uncomment if using themes
 
 // Re-export Testing Library utilities for convenience
@@ -17,13 +17,13 @@ export {
   waitFor,
   within,
   waitForElementToBeRemoved,
-} from "@testing-library/react";
+} from '@testing-library/react';
 
 /**
  * Custom render options extending RTL's RenderOptions
  * Add your project-specific provider options here
  */
-interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
+interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   // Redux
   // preloadedState?: PreloadedState<RootState>;
   // store?: ReturnType<typeof configureStore>;
@@ -129,10 +129,10 @@ export { renderWithProviders as render };
  */
 export function createTestUser(overrides = {}) {
   return {
-    email: "test@example.com",
-    id: "123",
-    name: "Test User",
-    role: "user",
+    email: 'test@example.com',
+    id: '123',
+    name: 'Test User',
+    role: 'user',
     ...overrides,
   };
 }

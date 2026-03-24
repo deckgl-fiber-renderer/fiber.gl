@@ -14,9 +14,9 @@ The recommended location for pnpm-specific configurations. Place at project root
 ```yaml
 # Define workspace packages
 packages:
-  - "packages/*"
-  - "apps/*"
-  - "!**/test/**" # Exclude pattern
+  - 'packages/*'
+  - 'apps/*'
+  - '!**/test/**' # Exclude pattern
 
 # Catalog for shared dependency versions
 catalog:
@@ -35,7 +35,7 @@ catalogs:
 # Override resolutions (preferred location)
 overrides:
   lodash: ^4.17.21
-  "foo@^1.0.0>bar": ^2.0.0
+  'foo@^1.0.0>bar': ^2.0.0
 
 # pnpm settings (alternative to .npmrc)
 settings:

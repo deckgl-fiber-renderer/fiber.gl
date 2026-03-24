@@ -3,8 +3,8 @@
   grid-template-columns: auto 320px;
   grid-template-rows: auto 32px;
   grid-template-areas:
-    "content right"
-    "footer footer";
+    'content right'
+    'footer footer';
   height: 100vh;
 }
 

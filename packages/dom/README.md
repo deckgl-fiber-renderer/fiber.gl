@@ -213,15 +213,15 @@ Adding custom layers to `@deckg-fiber-renderer` is straightforward. First create
 
 ```ts
 // custom-layer.ts
-import { CompositeLayer, type DefaultProps } from "@deck.gl/core";
-import { ScatterplotLayer, type ScatterplotLayerProps } from "@deck.gl/layers";
+import { CompositeLayer, type DefaultProps } from '@deck.gl/core';
+import { ScatterplotLayer, type ScatterplotLayerProps } from '@deck.gl/layers';
 
 export type CustomLayerProps = ScatterplotLayerProps & {
   scaler: number;
 };
 
 export class CustomLayer extends CompositeLayer<CustomLayerProps> {
-  static layerName = "CustomLayer";
+  static layerName = 'CustomLayer';
   static defaultProps: DefaultProps<CustomLayerProps> = {
     scaler: 1.0,
   };
@@ -233,7 +233,7 @@ export class CustomLayer extends CompositeLayer<CustomLayerProps> {
       new ScatterplotLayer(
         this.getSubLayerProps({
           ...props,
-          id: "scaled",
+          id: 'scaled',
           data: props.data,
           radiusScale: props.scaler,
           opacity: 0.25,
@@ -243,7 +243,7 @@ export class CustomLayer extends CompositeLayer<CustomLayerProps> {
         this.getSubLayerProps({
           ...props,
           data: props.data,
-          id: "not-scaled",
+          id: 'not-scaled',
         })
       ),
     ];
@@ -270,8 +270,8 @@ Next create a file in your app that will act as the central hub for adding addit
 
 ```ts
 // side-effects.ts
-import { extend } from "@deckgl-fiber-renderer/dom";
-import { CustomLayer } from "./path/to/my-custom-layer";
+import { extend } from '@deckgl-fiber-renderer/dom';
+import { CustomLayer } from './path/to/my-custom-layer';
 
 // Add custom layer(s) to reconciler
 extend({

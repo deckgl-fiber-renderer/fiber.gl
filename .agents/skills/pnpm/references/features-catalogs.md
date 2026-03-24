@@ -13,7 +13,7 @@ Define a catalog in `pnpm-workspace.yaml`:
 
 ```yaml
 packages:
-  - "packages/*"
+  - 'packages/*'
 
 catalog:
   react: ^18.2.0
@@ -43,7 +43,7 @@ Create multiple catalogs for different scenarios:
 
 ```yaml
 packages:
-  - "packages/*"
+  - 'packages/*'
 
 # Default catalog
 catalog:
@@ -61,7 +61,7 @@ catalogs:
 
   testing:
     vitest: ^1.0.0
-    "@testing-library/react": ^14.0.0
+    '@testing-library/react': ^14.0.0
 ```
 
 Reference named catalogs:

@@ -9,7 +9,7 @@ Tests should run in milliseconds, not seconds.
 **✅ Correct: fast, focused test**
 
 ```ts
-it("should calculate total price", () => {
+it('should calculate total price', () => {
   const order = { items: [{ price: 10 }, { price: 20 }] };
   expect(calculateTotal(order)).toBe(30);
 });
@@ -19,7 +19,7 @@ it("should calculate total price", () => {
 **❌ Incorrect: unnecessarily slow test**
 
 ```ts
-it("should calculate total price", async () => {
+it('should calculate total price', async () => {
   await delay(1000); // Why?
   const order = await fetchOrderFromAPI(); // Use test data instead!
   expect(calculateTotal(order)).toBeGreaterThan(0);
@@ -34,10 +34,10 @@ Never make actual HTTP requests in unit tests.
 **❌ Incorrect: real network calls**
 
 ```ts
-it("should fetch user data", async () => {
-  const response = await fetch("https://api.example.com/users/123");
+it('should fetch user data', async () => {
+  const response = await fetch('https://api.example.com/users/123');
   const user = await response.json();
-  expect(user.id).toBe("123");
+  expect(user.id).toBe('123');
 });
 // Slow, flaky, requires network
 ```
@@ -45,13 +45,13 @@ it("should fetch user data", async () => {
 **✅ Correct: mocked network calls**
 
 ```ts
-it("should fetch user data", async () => {
+it('should fetch user data', async () => {
   const mockFetch = vi.fn().mockResolvedValue({
-    json: async () => ({ id: "123", name: "John" }),
+    json: async () => ({ id: '123', name: 'John' }),
   });
 
-  const user = await fetchUser("123", mockFetch);
-  expect(user.id).toBe("123");
+  const user = await fetchUser('123', mockFetch);
+  expect(user.id).toBe('123');
 });
 // Fast, reliable, no network needed
 ```
@@ -63,7 +63,7 @@ Only set up what you need for each test.
 **❌ Incorrect: expensive shared setup**
 
 ```ts
-describe("UserService", () => {
+describe('UserService', () => {
   let database: Database;
   let cache: Cache;
   let emailService: EmailService;
@@ -78,9 +78,9 @@ describe("UserService", () => {
     analyticsService = new AnalyticsService(await createKafkaProducer());
   });
 
-  it("should validate email format", () => {
+  it('should validate email format', () => {
     // Only needs email validation, but set up entire system!
-    expect(UserService.isValidEmail("test@example.com")).toBe(true);
+    expect(UserService.isValidEmail('test@example.com')).toBe(true);
   });
 });
 ```
@@ -88,18 +88,18 @@ describe("UserService", () => {
 **✅ Correct: minimal setup per test**
 
 ```ts
-describe("UserService", () => {
-  it("should validate email format", () => {
+describe('UserService', () => {
+  it('should validate email format', () => {
     // No setup needed for pure function
-    expect(UserService.isValidEmail("test@example.com")).toBe(true);
+    expect(UserService.isValidEmail('test@example.com')).toBe(true);
   });
 
-  it("should save user to database", async () => {
+  it('should save user to database', async () => {
     // Only set up what's needed
     const db = new InMemoryDatabase();
     const service = new UserService(db);
 
-    await service.saveUser({ name: "John", email: "john@example.com" });
+    await service.saveUser({ name: 'John', email: 'john@example.com' });
 
     const users = await db.findAll();
     expect(users).toHaveLength(1);
@@ -126,12 +126,12 @@ class InMemoryUserRepository {
   }
 }
 
-describe("UserService", () => {
-  it("should create and retrieve user", async () => {
+describe('UserService', () => {
+  it('should create and retrieve user', async () => {
     const repo = new InMemoryUserRepository();
     const service = new UserService(repo);
 
-    const created = await service.createUser({ name: "John" });
+    const created = await service.createUser({ name: 'John' });
     const retrieved = await service.getUser(created.id);
 
     expect(retrieved).toEqual(created);
@@ -147,32 +147,32 @@ Mock file system operations in unit tests.
 **❌ Incorrect: real file operations**
 
 ```ts
-it("should save config to file", async () => {
-  const config = { theme: "dark", language: "en" };
-  await saveConfig("./test-config.json", config);
+it('should save config to file', async () => {
+  const config = { theme: 'dark', language: 'en' };
+  await saveConfig('./test-config.json', config);
 
-  const loaded = await loadConfig("./test-config.json");
+  const loaded = await loadConfig('./test-config.json');
   expect(loaded).toEqual(config);
 
   // Clean up
-  await fs.unlink("./test-config.json");
+  await fs.unlink('./test-config.json');
 });
 ```
 
 **✅ Correct: mocked file system**
 
 ```ts
-it("should save config to file", async () => {
+it('should save config to file', async () => {
   const mockFs = {
     writeFile: vi.fn().mockResolvedValue(undefined),
     readFile: vi.fn().mockResolvedValue('{"theme":"dark","language":"en"}'),
   };
 
-  const config = { theme: "dark", language: "en" };
-  await saveConfig("./test-config.json", config, mockFs);
+  const config = { theme: 'dark', language: 'en' };
+  await saveConfig('./test-config.json', config, mockFs);
 
   expect(mockFs.writeFile).toHaveBeenCalledWith(
-    "./test-config.json",
+    './test-config.json',
     JSON.stringify(config)
   );
 });
@@ -185,7 +185,7 @@ Use fake timers instead of real delays.
 **❌ Incorrect: real delays**
 
 ```ts
-it("should throttle function calls", async () => {
+it('should throttle function calls', async () => {
   const fn = vi.fn();
   const throttled = throttle(fn, 1000);
 
@@ -203,7 +203,7 @@ it("should throttle function calls", async () => {
 **✅ Correct: fake timers**
 
 ```ts
-it("should throttle function calls", () => {
+it('should throttle function calls', () => {
   vi.useFakeTimers();
 
   const fn = vi.fn();
@@ -229,7 +229,7 @@ Don't make tests async if they don't need to be.
 **❌ Incorrect: unnecessary async**
 
 ```ts
-it("should add two numbers", async () => {
+it('should add two numbers', async () => {
   const result = add(2, 3);
   expect(result).toBe(5);
 });
@@ -238,7 +238,7 @@ it("should add two numbers", async () => {
 **✅ Correct: synchronous test**
 
 ```ts
-it("should add two numbers", () => {
+it('should add two numbers', () => {
   const result = add(2, 3);
   expect(result).toBe(5);
 });
@@ -251,21 +251,21 @@ Use `it.each` to reduce setup duplication.
 **❌ Incorrect: repeated setup**
 
 ```ts
-describe("isValidEmail", () => {
-  it("should return true for test@example.com", () => {
-    expect(isValidEmail("test@example.com")).toBe(true);
+describe('isValidEmail', () => {
+  it('should return true for test@example.com', () => {
+    expect(isValidEmail('test@example.com')).toBe(true);
   });
 
-  it("should return true for user.name@example.co.uk", () => {
-    expect(isValidEmail("user.name@example.co.uk")).toBe(true);
+  it('should return true for user.name@example.co.uk', () => {
+    expect(isValidEmail('user.name@example.co.uk')).toBe(true);
   });
 
-  it("should return false for invalid", () => {
-    expect(isValidEmail("invalid")).toBe(false);
+  it('should return false for invalid', () => {
+    expect(isValidEmail('invalid')).toBe(false);
   });
 
-  it("should return false for @example.com", () => {
-    expect(isValidEmail("@example.com")).toBe(false);
+  it('should return false for @example.com', () => {
+    expect(isValidEmail('@example.com')).toBe(false);
   });
 });
 ```
@@ -273,12 +273,12 @@ describe("isValidEmail", () => {
 **✅ Correct: parameterized tests**
 
 ```ts
-describe("isValidEmail", () => {
+describe('isValidEmail', () => {
   it.each([
-    { email: "test@example.com", expected: true },
-    { email: "user.name@example.co.uk", expected: true },
-    { email: "invalid", expected: false },
-    { email: "@example.com", expected: false },
+    { email: 'test@example.com', expected: true },
+    { email: 'user.name@example.co.uk', expected: true },
+    { email: 'invalid', expected: false },
+    { email: '@example.com', expected: false },
   ])('should return $expected for "$email"', ({ email, expected }) => {
     expect(isValidEmail(email)).toBe(expected);
   });
@@ -293,11 +293,11 @@ Only create expensive objects when needed.
 **❌ Incorrect: eager initialization**
 
 ```ts
-describe("OrderService", () => {
+describe('OrderService', () => {
   const emailService = new EmailService(); // Created even if not used
   const paymentGateway = new PaymentGateway(); // Created even if not used
 
-  it("should calculate order total", () => {
+  it('should calculate order total', () => {
     const order = { items: [{ price: 10 }] };
     expect(OrderService.calculateTotal(order)).toBe(10);
     // Didn't need emailService or paymentGateway!
@@ -308,7 +308,7 @@ describe("OrderService", () => {
 **✅ Correct: lazy initialization**
 
 ```ts
-describe("OrderService", () => {
+describe('OrderService', () => {
   function createEmailService() {
     return new EmailService();
   }
@@ -317,13 +317,13 @@ describe("OrderService", () => {
     return new PaymentGateway();
   }
 
-  it("should calculate order total", () => {
+  it('should calculate order total', () => {
     // No services created
     const order = { items: [{ price: 10 }] };
     expect(OrderService.calculateTotal(order)).toBe(10);
   });
 
-  it("should send confirmation email", async () => {
+  it('should send confirmation email', async () => {
     // Only create what's needed
     const emailService = createEmailService();
     const orderService = new OrderService(emailService);
@@ -361,7 +361,7 @@ export default defineConfig({
 **✅ Correct: minimal per-test cleanup**
 
 ```ts
-describe("EventEmitter", () => {
+describe('EventEmitter', () => {
   let emitter: EventEmitter;
 
   beforeEach(() => {
@@ -372,10 +372,10 @@ describe("EventEmitter", () => {
     emitter.removeAllListeners(); // Only clean up non-mock resources
   });
 
-  it("should emit event", () => {
+  it('should emit event', () => {
     const listener = vi.fn();
-    emitter.on("test", listener);
-    emitter.emit("test");
+    emitter.on('test', listener);
+    emitter.emit('test');
     expect(listener).toHaveBeenCalled();
   });
 });
@@ -419,10 +419,10 @@ afterEach(() => {
 Only when you need **explicit state persistence** across tests for a documented reason:
 
 ```ts
-describe("StatefulMockScenario", () => {
+describe('StatefulMockScenario', () => {
   // Only override global cleanup when you need mock state to persist
   // Document WHY you need this
-  it("test that requires mock state from previous test", () => {
+  it('test that requires mock state from previous test', () => {
     // Documented use case here
   });
 });
@@ -438,31 +438,31 @@ Create minimal test data instead of large fixtures.
 **❌ Incorrect: large, realistic data**
 
 ```ts
-it("should validate user name", () => {
+it('should validate user name', () => {
   const user = {
-    id: "550e8400-e29b-41d4-a716-446655440000",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "+1-555-123-4567",
+    id: '550e8400-e29b-41d4-a716-446655440000',
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    phone: '+1-555-123-4567',
     address: {
-      street: "123 Main St",
-      city: "Springfield",
-      state: "IL",
-      zip: "62701",
-      country: "USA",
+      street: '123 Main St',
+      city: 'Springfield',
+      state: 'IL',
+      zip: '62701',
+      country: 'USA',
     },
     preferences: {
-      theme: "dark",
-      language: "en",
-      timezone: "America/Chicago",
+      theme: 'dark',
+      language: 'en',
+      timezone: 'America/Chicago',
       notifications: {
         email: true,
         sms: false,
         push: true,
       },
     },
-    createdAt: new Date("2024-01-01"),
-    updatedAt: new Date("2024-01-15"),
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date('2024-01-15'),
   };
 
   expect(validateUserName(user.name)).toBe(true);
@@ -473,14 +473,14 @@ it("should validate user name", () => {
 **✅ Correct: minimal test data**
 
 ```ts
-it("should validate user name", () => {
-  expect(validateUserName("John Doe")).toBe(true);
+it('should validate user name', () => {
+  expect(validateUserName('John Doe')).toBe(true);
 });
 
-it("should validate full user object", () => {
+it('should validate full user object', () => {
   const user = {
-    name: "John Doe",
-    email: "john@example.com",
+    name: 'John Doe',
+    email: 'john@example.com',
   };
   expect(validateUser(user)).toBe(true);
 });
@@ -493,13 +493,13 @@ Use specific assertions instead of comparing entire objects.
 **❌ Incorrect: deep comparison**
 
 ```ts
-it("should update user name", async () => {
-  const user = await userService.updateName("user-123", "Jane Doe");
+it('should update user name', async () => {
+  const user = await userService.updateName('user-123', 'Jane Doe');
 
   expect(user).toEqual({
-    id: "user-123",
-    name: "Jane Doe",
-    email: "user@example.com",
+    id: 'user-123',
+    name: 'Jane Doe',
+    email: 'user@example.com',
     createdAt: expect.any(Date),
     updatedAt: expect.any(Date),
     preferences: {
@@ -513,11 +513,11 @@ it("should update user name", async () => {
 **✅ Correct: specific assertions**
 
 ```ts
-it("should update user name", async () => {
-  const user = await userService.updateName("user-123", "Jane Doe");
+it('should update user name', async () => {
+  const user = await userService.updateName('user-123', 'Jane Doe');
 
-  expect(user.name).toBe("Jane Doe");
-  expect(user.id).toBe("user-123");
+  expect(user.name).toBe('Jane Doe');
+  expect(user.id).toBe('user-123');
 });
 ```
 
@@ -542,7 +542,7 @@ export default {
 // vitest.config.ts
 export default {
   test: {
-    pool: "forks",
+    pool: 'forks',
     poolOptions: {
       threads: {
         singleThread: true, // Slow!
@@ -563,17 +563,17 @@ Avoid shared global state between test files.
 export const cache = new Map();
 
 // test1.test.ts
-import { cache } from "./global-state";
+import { cache } from './global-state';
 
-it("should add item to cache", () => {
-  cache.set("key", "value");
-  expect(cache.get("key")).toBe("value");
+it('should add item to cache', () => {
+  cache.set('key', 'value');
+  expect(cache.get('key')).toBe('value');
 });
 
 // test2.test.ts
-import { cache } from "./global-state";
+import { cache } from './global-state';
 
-it("should have empty cache", () => {
+it('should have empty cache', () => {
   expect(cache.size).toBe(0); // Fails if test1 runs first!
 });
 ```
@@ -582,14 +582,14 @@ it("should have empty cache", () => {
 
 ```ts
 // test1.test.ts
-it("should add item to cache", () => {
+it('should add item to cache', () => {
   const cache = new Map();
-  cache.set("key", "value");
-  expect(cache.get("key")).toBe("value");
+  cache.set('key', 'value');
+  expect(cache.get('key')).toBe('value');
 });
 
 // test2.test.ts
-it("should have empty cache", () => {
+it('should have empty cache', () => {
   const cache = new Map();
   expect(cache.size).toBe(0);
 });
@@ -611,14 +611,14 @@ vitest --reporter=default --slow-test-threshold=1000
 
 ```ts
 // Before: 5 seconds
-it("should process large dataset", async () => {
+it('should process large dataset', async () => {
   const data = await fetchLargeDataset(); // Slow API call
   const result = processData(data);
   expect(result.length).toBeGreaterThan(0);
 });
 
 // After: <10ms
-it("should process large dataset", () => {
+it('should process large dataset', () => {
   const data = createMockDataset(1000); // Fast mock data
   const result = processData(data);
   expect(result.length).toBe(1000);

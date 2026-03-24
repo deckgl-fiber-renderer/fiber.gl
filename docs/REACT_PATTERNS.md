@@ -34,8 +34,8 @@ When an ID changes (or is missing):
 ### ✅ Correct: Explicit IDs
 
 ```tsx
-import { ScatterplotLayer } from "@deck.gl/layers";
-import { Deckgl } from "@deckgl-fiber-renderer/dom";
+import { ScatterplotLayer } from '@deck.gl/layers';
+import { Deckgl } from '@deckgl-fiber-renderer/dom';
 
 function Map({ data }) {
   return (
@@ -43,7 +43,7 @@ function Map({ data }) {
       <layer
         layer={
           new ScatterplotLayer({
-            id: "points", // ✅ Explicit, stable ID
+            id: 'points', // ✅ Explicit, stable ID
             data,
             getPosition: (d) => d.coordinates,
             getRadius: 100,
@@ -113,10 +113,10 @@ function Map({ data, colorScheme }) {
       <layer
         layer={
           new ScatterplotLayer({
-            id: "points",
+            id: 'points',
             data,
             getPosition: (d) => d.coordinates,
-            getFillColor: colorScheme === "red" ? [255, 0, 0] : [0, 0, 255],
+            getFillColor: colorScheme === 'red' ? [255, 0, 0] : [0, 0, 255],
             getRadius: 100,
           })
         }
@@ -136,10 +136,10 @@ function Map({ data, colorScheme }) {
   const layer = useMemo(
     () =>
       new ScatterplotLayer({
-        id: "points",
+        id: 'points',
         data,
         getPosition: (d) => d.coordinates,
-        getFillColor: colorScheme === "red" ? [255, 0, 0] : [0, 0, 255],
+        getFillColor: colorScheme === 'red' ? [255, 0, 0] : [0, 0, 255],
         getRadius: 100,
       }),
     [data, colorScheme] // Easy to forget dependencies
@@ -178,7 +178,7 @@ It does **not** detect when the accessor function's _behavior_ changes due to cl
 
 ```tsx
 function Map({ data }) {
-  const [colorScheme, setColorScheme] = useState<"red" | "blue">("red");
+  const [colorScheme, setColorScheme] = useState<'red' | 'blue'>('red');
   const [sizeMultiplier, setSizeMultiplier] = useState(1);
 
   return (
@@ -186,13 +186,13 @@ function Map({ data }) {
       <layer
         layer={
           new ScatterplotLayer({
-            id: "points",
+            id: 'points',
             data,
             getPosition: (d) => d.coordinates,
 
             // Accessor depends on colorScheme state
             getFillColor: (d) =>
-              colorScheme === "red" ? [255, 0, 0] : [0, 0, 255],
+              colorScheme === 'red' ? [255, 0, 0] : [0, 0, 255],
 
             // Accessor depends on sizeMultiplier state
             getRadius: (d) => d.value * sizeMultiplier,
@@ -214,19 +214,19 @@ function Map({ data }) {
 
 ```tsx
 function Map({ data }) {
-  const [colorScheme, setColorScheme] = useState<"red" | "blue">("red");
+  const [colorScheme, setColorScheme] = useState<'red' | 'blue'>('red');
 
   return (
     <Deckgl>
       <layer
         layer={
           new ScatterplotLayer({
-            id: "points",
+            id: 'points',
             data,
             getPosition: (d) => d.coordinates,
             // ❌ Accessor depends on colorScheme, but no updateTrigger!
             getFillColor: (d) =>
-              colorScheme === "red" ? [255, 0, 0] : [0, 0, 255],
+              colorScheme === 'red' ? [255, 0, 0] : [0, 0, 255],
             getRadius: 100,
           })
         }
@@ -342,7 +342,7 @@ function Map({ data, showHeatmap }) {
       <layer
         layer={
           new ScatterplotLayer({
-            id: "points",
+            id: 'points',
             data,
             getPosition: (d) => d.coordinates,
             getRadius: 100,
@@ -366,7 +366,7 @@ function Map({ data, showHeatmap }) {
         <layer
           layer={
             new ScatterplotLayer({
-              id: "points",
+              id: 'points',
               data,
               getPosition: (d) => d.coordinates,
               getRadius: 100,
@@ -402,7 +402,7 @@ function Map({ data, showHeatmap }) {
 ```tsx
 // ❌ WRONG: Layer created once at module level
 const layer = new ScatterplotLayer({
-  id: "points",
+  id: 'points',
   data: [], // Frozen at initial value!
   getPosition: (d) => d.coordinates,
 });
@@ -465,7 +465,7 @@ function Map({ data, filter }) {
   const layer = useMemo(
     () =>
       new ScatterplotLayer({
-        id: "points",
+        id: 'points',
         data: filteredData,
         getPosition: (d) => d.coordinates,
         getRadius: 100,

@@ -15,7 +15,7 @@ This package is automatically installed as a dependency of `@deckgl-fiber-render
 The types package now includes the universal `<layer>` JSX element:
 
 ```tsx
-import { ScatterplotLayer } from "@deck.gl/layers";
+import { ScatterplotLayer } from '@deck.gl/layers';
 
 interface DataPoint {
   coordinates: [number, number];
@@ -26,7 +26,7 @@ interface DataPoint {
 <layer
   layer={
     new ScatterplotLayer<DataPoint>({
-      id: "points",
+      id: 'points',
       data: myData,
       getPosition: (d) => d.coordinates, // d is typed as DataPoint
       getRadius: (d) => d.value,

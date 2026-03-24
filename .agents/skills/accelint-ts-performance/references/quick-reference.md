@@ -213,7 +213,7 @@ for (let i = 0; i < items.length; i++) {
 // ❌ Storage API not cached - Category: Caching
 // References: cache-storage-api.md
 function getValue() {
-  return JSON.parse(localStorage.getItem("key") || "{}");
+  return JSON.parse(localStorage.getItem('key') || '{}');
 }
 
 // ❌ Sequential awaits - Category: I/O

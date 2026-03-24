@@ -15,22 +15,22 @@ React state updates are asynchronous. Tests must wait for updates to complete be
 \*\*❌ Incorrect: Synchronous query for async content
 
 ```tsx
-test("loads user data", () => {
+test('loads user data', () => {
   render(<UserProfile id={123} />);
 
   // ❌ Throws immediately - data not loaded yet
-  const name = screen.getByText("John Doe");
+  const name = screen.getByText('John Doe');
 });
 ```
 
 \*\*✅ Correct: Async query waits for content
 
 ```tsx
-test("loads user data", async () => {
+test('loads user data', async () => {
   render(<UserProfile id={123} />);
 
   // ✅ Waits up to 1000ms for element to appear
-  const name = await screen.findByText("John Doe");
+  const name = await screen.findByText('John Doe');
   expect(name).toBeInTheDocument();
 });
 ```
@@ -50,7 +50,7 @@ expect(callback).toHaveBeenCalled(); // Might not be called yet
 
 // ❌ Element might still be visible
 await userEvent.click(closeButton);
-expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 ```
 
 \*\*✅ Correct: waitFor for non-query assertions
@@ -62,7 +62,7 @@ await waitFor(() => expect(callback).toHaveBeenCalled());
 
 // ✅ Or use findBy for element queries
 await userEvent.click(button);
-await screen.findByText("Success");
+await screen.findByText('Success');
 ```
 
 **Prefer findBy\* over waitFor + getBy when possible.**
@@ -78,11 +78,11 @@ await screen.findByText("Success");
 ```tsx
 // ❌ No await - state update after test finishes
 userEvent.click(button);
-expect(screen.getByText("Clicked")).toBeInTheDocument();
+expect(screen.getByText('Clicked')).toBeInTheDocument();
 
 // ❌ Promise resolves after assertion
 fetchData().then((data) => setState(data));
-expect(screen.getByText("Data")).toBeInTheDocument();
+expect(screen.getByText('Data')).toBeInTheDocument();
 ```
 
 \*\*✅ Correct: Await all async operations
@@ -90,10 +90,10 @@ expect(screen.getByText("Data")).toBeInTheDocument();
 ```tsx
 // ✅ Wait for click to complete
 await userEvent.click(button);
-expect(screen.getByText("Clicked")).toBeInTheDocument();
+expect(screen.getByText('Clicked')).toBeInTheDocument();
 
 // ✅ Wait for data to load and render
-await screen.findByText("Data");
+await screen.findByText('Data');
 ```
 
 ---
@@ -107,13 +107,13 @@ await screen.findByText("Data");
 ```tsx
 await userEvent.click(closeButton);
 // ❌ Might still be visible due to animation
-expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 ```
 
 \*\*✅ Correct: Wait for removal
 
 ```tsx
-const dialog = screen.getByRole("dialog");
+const dialog = screen.getByRole('dialog');
 await userEvent.click(closeButton);
 await waitForElementToBeRemoved(dialog);
 ```
@@ -125,14 +125,14 @@ await waitForElementToBeRemoved(dialog);
 ### Loading state → Success
 
 ```tsx
-test("shows loading then data", async () => {
+test('shows loading then data', async () => {
   render(<DataList />);
 
   // Loading appears immediately
   expect(screen.getByText(/loading/i)).toBeInTheDocument();
 
   // Wait for data to replace loading
-  const items = await screen.findAllByRole("listitem");
+  const items = await screen.findAllByRole('listitem');
   expect(items).toHaveLength(5);
 
   // Loading gone
@@ -143,12 +143,12 @@ test("shows loading then data", async () => {
 ### Error handling
 
 ```tsx
-test("shows error on failure", async () => {
-  server.use(http.get("/api/users", () => HttpResponse.error()));
+test('shows error on failure', async () => {
+  server.use(http.get('/api/users', () => HttpResponse.error()));
 
   render(<UserList />);
 
-  const error = await screen.findByRole("alert");
+  const error = await screen.findByRole('alert');
   expect(error).toHaveTextContent(/failed to load/i);
 });
 ```
@@ -156,15 +156,15 @@ test("shows error on failure", async () => {
 ### Debounced input
 
 ```tsx
-test("debounced search", async () => {
+test('debounced search', async () => {
   const user = userEvent.setup();
   render(<Search />);
 
-  const input = screen.getByRole("searchbox");
-  await user.type(input, "react");
+  const input = screen.getByRole('searchbox');
+  await user.type(input, 'react');
 
   // Wait for debounce + API call
-  const results = await screen.findAllByRole("listitem");
+  const results = await screen.findAllByRole('listitem');
   expect(results).toHaveLength(3);
 });
 ```
@@ -173,22 +173,22 @@ test("debounced search", async () => {
 
 ```tsx
 test(
-  "retries failed request",
+  'retries failed request',
   async () => {
     let attempts = 0;
     server.use(
-      http.get("/api/data", () => {
+      http.get('/api/data', () => {
         attempts++;
         return attempts < 3
           ? HttpResponse.error()
-          : HttpResponse.json({ data: "success" });
+          : HttpResponse.json({ data: 'success' });
       })
     );
 
     render(<RetryComponent />);
 
     // Eventually succeeds after retries
-    expect(await screen.findByText("success")).toBeInTheDocument();
+    expect(await screen.findByText('success')).toBeInTheDocument();
   },
   { timeout: 10000 }
 ); // Increase timeout for retry logic
@@ -218,7 +218,7 @@ await waitFor(async () => {
 // ❌ State mutations on every retry
 await waitFor(() => {
   setItems((prev) => [...prev, newItem]); // ❌ Adds item multiple times
-  expect(screen.getByText("Item added")).toBeInTheDocument();
+  expect(screen.getByText('Item added')).toBeInTheDocument();
 });
 ```
 
@@ -240,7 +240,7 @@ await waitFor(() => {
 
 // ✅ Or better: use findBy
 await userEvent.click(button);
-expect(await screen.findByText("Success")).toBeInTheDocument();
+expect(await screen.findByText('Success')).toBeInTheDocument();
 
 // ✅ Fetch once, wait for result
 const dataPromise = fetchData();
@@ -252,7 +252,7 @@ await waitFor(async () => {
 // ✅ State change once, wait for UI update
 setItems((prev) => [...prev, newItem]);
 await waitFor(() => {
-  expect(screen.getByText("Item added")).toBeInTheDocument();
+  expect(screen.getByText('Item added')).toBeInTheDocument();
 });
 ```
 
@@ -269,12 +269,12 @@ await waitFor(() => {
 ```tsx
 // ❌ Verbose and less intention-revealing
 await waitFor(() => {
-  expect(screen.getByText("Loaded")).toBeInTheDocument();
+  expect(screen.getByText('Loaded')).toBeInTheDocument();
 });
 
 // ❌ Even worse
 await waitFor(() => {
-  const element = screen.getByText("Loaded");
+  const element = screen.getByText('Loaded');
   expect(element).toBeInTheDocument();
 });
 ```
@@ -283,10 +283,10 @@ await waitFor(() => {
 
 ```tsx
 // ✅ Concise and clear
-expect(await screen.findByText("Loaded")).toBeInTheDocument();
+expect(await screen.findByText('Loaded')).toBeInTheDocument();
 
 // ✅ Or just
-await screen.findByText("Loaded");
+await screen.findByText('Loaded');
 ```
 
 **Use waitFor only when:**
@@ -303,13 +303,13 @@ Default timeout is 1000ms. Configure per query or globally:
 
 ```tsx
 // Per query
-await screen.findByText("Slow content", {}, { timeout: 3000 });
+await screen.findByText('Slow content', {}, { timeout: 3000 });
 
 // Per waitFor
 await waitFor(() => expect(element).toBeVisible(), { timeout: 5000 });
 
 // Globally in setup
-import { configure } from "@testing-library/react";
+import { configure } from '@testing-library/react';
 configure({ asyncUtilTimeout: 2000 });
 ```
 

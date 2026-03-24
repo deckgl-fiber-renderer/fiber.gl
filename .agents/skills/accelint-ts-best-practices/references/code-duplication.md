@@ -26,12 +26,12 @@ Extract common patterns when:
 **❌ Incorrect: duplicated padding logic**
 
 ```ts
-const TWO_DIGIT_DEFAULT = "--";
-const FOUR_DIGIT_DEFAULT = "----";
+const TWO_DIGIT_DEFAULT = '--';
+const FOUR_DIGIT_DEFAULT = '----';
 
 export function formatCodeM1(value?: string | number): string {
   if (value) {
-    return `${value}`.padStart(2, "0");
+    return `${value}`.padStart(2, '0');
   }
 
   return TWO_DIGIT_DEFAULT;
@@ -39,7 +39,7 @@ export function formatCodeM1(value?: string | number): string {
 
 export function formatCodeM2(value?: string | number): string {
   if (value) {
-    return `${value}`.padStart(4, "0");
+    return `${value}`.padStart(4, '0');
   }
 
   return FOUR_DIGIT_DEFAULT;
@@ -49,8 +49,8 @@ export function formatCodeM2(value?: string | number): string {
 **✅ Correct: extracted common pattern with optimizations**
 
 ```ts
-const TWO_DIGIT_DEFAULT = "--";
-const FOUR_DIGIT_DEFAULT = "----";
+const TWO_DIGIT_DEFAULT = '--';
+const FOUR_DIGIT_DEFAULT = '----';
 
 function formatCode(value: string | number | undefined, digits: 2 | 4): string {
   if (!value) {
@@ -58,8 +58,8 @@ function formatCode(value: string | number | undefined, digits: 2 | 4): string {
   }
 
   // Optimize string coercion: avoid template literal overhead
-  const str = typeof value === "string" ? value : String(value);
-  return str.padStart(digits, "0");
+  const str = typeof value === 'string' ? value : String(value);
+  return str.padStart(digits, '0');
 }
 
 export function formatCodeM1(value?: string | number): string {
@@ -77,21 +77,21 @@ export function formatCodeM2(value?: string | number): string {
 
 ```ts
 export function updateEmail(email: string): void {
-  if (!email || email.trim() === "") {
-    throw new Error("Email is required");
+  if (!email || email.trim() === '') {
+    throw new Error('Email is required');
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Invalid email format");
+    throw new Error('Invalid email format');
   }
   // Update email logic
 }
 
 export function registerUser(email: string, password: string): void {
-  if (!email || email.trim() === "") {
-    throw new Error("Email is required");
+  if (!email || email.trim() === '') {
+    throw new Error('Email is required');
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Invalid email format");
+    throw new Error('Invalid email format');
   }
   // Registration logic
 }
@@ -101,11 +101,11 @@ export function registerUser(email: string, password: string): void {
 
 ```ts
 function validateEmail(email: string): void {
-  if (!email || email.trim() === "") {
-    throw new Error("Email is required");
+  if (!email || email.trim() === '') {
+    throw new Error('Email is required');
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Invalid email format");
+    throw new Error('Invalid email format');
   }
 }
 
@@ -135,7 +135,7 @@ export function getUserDisplayName(user: User): string {
   if (user.lastName) {
     return user.lastName;
   }
-  return "Anonymous";
+  return 'Anonymous';
 }
 
 export function getAuthorDisplayName(author: Author): string {
@@ -148,7 +148,7 @@ export function getAuthorDisplayName(author: Author): string {
   if (author.lastName) {
     return author.lastName;
   }
-  return "Anonymous";
+  return 'Anonymous';
 }
 ```
 
@@ -168,7 +168,7 @@ function formatFullName(
   if (lastName) {
     return lastName;
   }
-  return "Anonymous";
+  return 'Anonymous';
 }
 
 export function getUserDisplayName(user: User): string {

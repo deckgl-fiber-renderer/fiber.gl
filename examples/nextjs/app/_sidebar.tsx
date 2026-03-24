@@ -1,19 +1,19 @@
-"use client";
-import { useCallback } from "react";
+'use client';
+import { useCallback } from 'react';
 
-import { selectors, useStore } from "./_store";
+import { selectors, useStore } from './_store';
 
 const styles = {
   container: {
-    background: "rgba(0,0,0,0.5)",
+    background: 'rgba(0,0,0,0.5)',
     bottom: 0,
-    cursor: "pointer",
-    listStyle: "none",
+    cursor: 'pointer',
+    listStyle: 'none',
     margin: 0,
     maxWidth: 340,
-    overflow: "auto",
+    overflow: 'auto',
     padding: 16,
-    position: "fixed",
+    position: 'fixed',
     right: 0,
     top: 0,
   },
@@ -21,8 +21,8 @@ const styles = {
   item: {},
 
   itemActive: {
-    background: "#fff",
-    color: "#000",
+    background: '#fff',
+    color: '#000',
   },
 };
 

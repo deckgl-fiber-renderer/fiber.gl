@@ -24,14 +24,14 @@ Snapshots capture the output of code and save it for comparison in future test r
 **✅ Correct: snapshot for complex structure**
 
 ```ts
-import { describe, it, expect } from "vitest";
-import { generateConfig } from "./config-generator";
+import { describe, it, expect } from 'vitest';
+import { generateConfig } from './config-generator';
 
-describe("generateConfig", () => {
-  it("should generate correct config structure", () => {
+describe('generateConfig', () => {
+  it('should generate correct config structure', () => {
     const config = generateConfig({
-      environment: "production",
-      features: ["auth", "analytics"],
+      environment: 'production',
+      features: ['auth', 'analytics'],
     });
 
     expect(config).toMatchSnapshot();
@@ -66,10 +66,10 @@ For smaller snapshots, use inline snapshots to keep tests self-contained.
 **✅ Correct: inline snapshot**
 
 ```ts
-it("should format error message", () => {
+it('should format error message', () => {
   const error = formatError({
-    code: "AUTH_FAILED",
-    message: "Invalid credentials",
+    code: 'AUTH_FAILED',
+    message: 'Invalid credentials',
   });
 
   expect(error).toMatchInlineSnapshot(`
@@ -89,10 +89,10 @@ Use property matchers for dynamic values like dates and IDs.
 **✅ Correct: snapshot with property matchers**
 
 ```ts
-it("should create user with generated fields", () => {
+it('should create user with generated fields', () => {
   const user = createUser({
-    name: "John Doe",
-    email: "john@example.com",
+    name: 'John Doe',
+    email: 'john@example.com',
   });
 
   expect(user).toMatchSnapshot({
@@ -196,11 +196,11 @@ Snapshots work well for error messages that include context.
 **✅ Correct: error snapshot**
 
 ```ts
-it("should throw detailed validation error", () => {
+it('should throw detailed validation error', () => {
   const invalidData = {
-    email: "invalid-email",
+    email: 'invalid-email',
     age: -5,
-    name: "",
+    name: '',
   };
 
   expect(() => validateUser(invalidData)).toThrowErrorMatchingSnapshot();
@@ -225,14 +225,14 @@ Custom serializers normalize output for consistent snapshots.
 **✅ Correct: custom serializer for dates**
 
 ```ts
-import { expect } from "vitest";
+import { expect } from 'vitest';
 
 expect.addSnapshotSerializer({
   test: (val) => val instanceof Date,
   serialize: (val) => `Date<${val.toISOString()}>`,
 });
 
-it("should create order with timestamp", () => {
+it('should create order with timestamp', () => {
   const order = createOrder({ items: [] });
 
   expect(order).toMatchInlineSnapshot(`
@@ -250,7 +250,7 @@ it("should create order with timestamp", () => {
 **❌ Incorrect: snapshot for simple value**
 
 ```ts
-it("should return user name", () => {
+it('should return user name', () => {
   const name = getUserName(user);
   expect(name).toMatchInlineSnapshot(`"John Doe"`);
 });
@@ -259,16 +259,16 @@ it("should return user name", () => {
 **✅ Correct: explicit assertion**
 
 ```ts
-it("should return user name", () => {
+it('should return user name', () => {
   const name = getUserName(user);
-  expect(name).toBe("John Doe");
+  expect(name).toBe('John Doe');
 });
 ```
 
 **❌ Incorrect: snapshot with dynamic data**
 
 ```ts
-it("should generate report", () => {
+it('should generate report', () => {
   const report = generateReport();
 
   // Snapshot will change every run!
@@ -279,7 +279,7 @@ it("should generate report", () => {
 **✅ Correct: snapshot with matchers**
 
 ```ts
-it("should generate report", () => {
+it('should generate report', () => {
   const report = generateReport();
 
   expect(report).toMatchSnapshot({
@@ -296,7 +296,7 @@ Snapshots work well for command-line output.
 **✅ Correct: CLI output snapshot**
 
 ```ts
-it("should display help text", () => {
+it('should display help text', () => {
   const output = cli.getHelpText();
 
   expect(output).toMatchInlineSnapshot(`
@@ -319,8 +319,8 @@ it("should display help text", () => {
 **✅ Correct: API response snapshot**
 
 ```ts
-it("should return user API response", async () => {
-  const response = await api.getUser("user-123");
+it('should return user API response', async () => {
+  const response = await api.getUser('user-123');
 
   expect(response).toMatchSnapshot({
     data: {
@@ -368,7 +368,7 @@ it('should render navigation', () => {
 **❌ Incorrect: generic name**
 
 ```ts
-it("test 1", () => {
+it('test 1', () => {
   expect(result).toMatchSnapshot();
 });
 ```
@@ -376,8 +376,8 @@ it("test 1", () => {
 **✅ Correct: descriptive name**
 
 ```ts
-it("should format currency with symbol and decimals", () => {
-  expect(formatCurrency(1234.56, "USD")).toMatchInlineSnapshot(`"$1,234.56"`);
+it('should format currency with symbol and decimals', () => {
+  expect(formatCurrency(1234.56, 'USD')).toMatchInlineSnapshot(`"$1,234.56"`);
 });
 ```
 
@@ -409,9 +409,9 @@ vitest run
 **✅ Correct: snapshots + assertions**
 
 ```ts
-it("should generate invoice", () => {
+it('should generate invoice', () => {
   const invoice = generateInvoice({
-    items: [{ name: "Widget", price: 10, quantity: 2 }],
+    items: [{ name: 'Widget', price: 10, quantity: 2 }],
     tax: 0.08,
   });
 
@@ -433,7 +433,7 @@ it("should generate invoice", () => {
 **❌ Incorrect: using snapshots as a crutch**
 
 ```ts
-it("should work", () => {
+it('should work', () => {
   // Lazy: just snapshot everything instead of thinking about what to test
   expect(doSomething()).toMatchSnapshot();
 });
@@ -449,7 +449,7 @@ vitest run -u  # ❌ Without reviewing changes first
 **❌ Incorrect: snapshots for test doubles**
 
 ```ts
-it("should call service", () => {
+it('should call service', () => {
   const mockService = vi.fn();
   callService(mockService);
 
@@ -461,13 +461,13 @@ it("should call service", () => {
 **✅ Correct: explicit assertions for mocks**
 
 ```ts
-it("should call service with correct params", () => {
+it('should call service with correct params', () => {
   const mockService = vi.fn();
   callService(mockService);
 
   expect(mockService).toHaveBeenCalledWith({
-    id: "123",
-    action: "update",
+    id: '123',
+    action: 'update',
   });
 });
 ```

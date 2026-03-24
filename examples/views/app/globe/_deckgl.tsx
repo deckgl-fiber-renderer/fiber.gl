@@ -1,7 +1,7 @@
-"use client";
-import { _GlobeView as GlobeView } from "@deck.gl/core";
-import { GeoJsonLayer } from "@deck.gl/layers";
-import { Deckgl } from "@deckgl-fiber-renderer/dom";
+'use client';
+import { _GlobeView as GlobeView } from '@deck.gl/core';
+import { GeoJsonLayer } from '@deck.gl/layers';
+import { Deckgl } from '@deckgl-fiber-renderer/dom';
 
 const COLOR = [255, 255, 255, 155] as const;
 const HOVER_COLOR = [255, 0, 0, 255] as const;
@@ -14,15 +14,15 @@ const INITIAL_VIEW_STATE = {
 
 const PARAMETERS = {
   blend: true,
-  blendAlphaDstFactor: "one-minus-src-alpha",
-  blendAlphaOperation: "add",
-  blendAlphaSrcFactor: "one",
-  blendColorDstFactor: "one-minus-src-alpha",
-  blendColorOperation: "add",
-  blendColorSrcFactor: "src-alpha",
-  cullMode: "back",
+  blendAlphaDstFactor: 'one-minus-src-alpha',
+  blendAlphaOperation: 'add',
+  blendAlphaSrcFactor: 'one',
+  blendColorDstFactor: 'one-minus-src-alpha',
+  blendColorOperation: 'add',
+  blendColorSrcFactor: 'src-alpha',
+  cullMode: 'back',
   depthBias: 0,
-  depthCompare: "always",
+  depthCompare: 'always',
   depthTest: false,
   depthWriteEnabled: true,
 } as const;
@@ -36,7 +36,7 @@ export function DeckglExample(props) {
         layer={
           new GlobeView({
             controller: true,
-            id: "main",
+            id: 'main',
             resolution: 1,
           })
         }
@@ -44,10 +44,10 @@ export function DeckglExample(props) {
         <layer
           layer={
             new GeoJsonLayer({
-              data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_land.geojson",
+              data: 'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_land.geojson',
               filled: true,
               getFillColor: [30, 80, 120],
-              id: "bg",
+              id: 'bg',
               opacity: 0.1,
               stroked: false,
             })
@@ -62,10 +62,10 @@ export function DeckglExample(props) {
               getFillColor: COLOR,
               getPointRadius: 16,
               highlightColor: HOVER_COLOR,
-              id: "data",
+              id: 'data',
               pickable: true,
-              pointRadiusUnits: "pixels",
-              pointType: "circle",
+              pointRadiusUnits: 'pixels',
+              pointType: 'circle',
               stroked: false,
             })
           }

@@ -23,13 +23,13 @@
 **❌ Incorrect: trivial computation**
 
 ```ts
-const ternMemo = memoize((pred) => (pred ? "Right!" : "Wrong"));
+const ternMemo = memoize((pred) => (pred ? 'Right!' : 'Wrong'));
 ```
 
 **✅ Correct: direct computation**
 
 ```ts
-const result = test ? "Right!" : "Wrong";
+const result = test ? 'Right!' : 'Wrong';
 ```
 
 ### Hoist Loop-Invariant Calculations
@@ -38,7 +38,7 @@ const result = test ? "Right!" : "Wrong";
 
 ```ts
 for (let i = 0; i < items.length; i++) {
-  const prefix = config.namespace + ".";
+  const prefix = config.namespace + '.';
   const multiplier = Math.PI * 2;
   process(items[i], prefix, multiplier);
 }
@@ -47,7 +47,7 @@ for (let i = 0; i < items.length; i++) {
 **✅ Correct: hoist outside loop**
 
 ```ts
-const prefix = config.namespace + ".";
+const prefix = config.namespace + '.';
 const multiplier = Math.PI * 2;
 const len = items.length;
 

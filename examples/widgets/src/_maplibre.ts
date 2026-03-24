@@ -1,4 +1,4 @@
-import { Map as MapLibre } from "maplibre-gl";
+import { Map as MapLibre } from 'maplibre-gl';
 
 const INITIAL_VIEW_STATE = {
   latitude: 38.9072,
@@ -7,17 +7,17 @@ const INITIAL_VIEW_STATE = {
 };
 
 const MAP_STYLE =
-  "https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 export function connect(deckgl) {
   const map = new MapLibre({
     center: [INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude],
-    container: "maplibre",
+    container: 'maplibre',
     style: MAP_STYLE,
     zoom: INITIAL_VIEW_STATE.zoom,
   });
 
-  map.once("load", () => {
+  map.once('load', () => {
     map.addControl(deckgl);
   });
 

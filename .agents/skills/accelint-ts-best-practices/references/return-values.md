@@ -65,8 +65,8 @@ function anotherFn() {
 
 ```ts
 function getUsers() {
-  if (!cache.has("users")) return null;
-  return cache.get("users");
+  if (!cache.has('users')) return null;
+  return cache.get('users');
 }
 
 function getActiveUsers() {
@@ -84,9 +84,9 @@ function getUserNames() {
 // Caller
 const names = getUserNames();
 if (!names) {
-  console.log("No names");
+  console.log('No names');
 } else {
-  console.log(names.join(", "));
+  console.log(names.join(', '));
 }
 ```
 
@@ -94,8 +94,8 @@ if (!names) {
 
 ```ts
 function getUsers() {
-  if (!cache.has("users")) return [];
-  return cache.get("users");
+  if (!cache.has('users')) return [];
+  return cache.get('users');
 }
 
 function getActiveUsers() {
@@ -107,7 +107,7 @@ function getUserNames() {
 }
 
 // Caller
-console.log(getUserNames().join(", ")); // No checks needed
+console.log(getUserNames().join(', ')); // No checks needed
 ```
 
 The zero-value version eliminates 4 null checks and makes the code linear and composable.

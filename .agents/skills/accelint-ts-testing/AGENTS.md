@@ -132,10 +132,10 @@ To detect the package manager, check for:
 
 ```typescript
 // ❌ Type error: property 'email' is missing
-const user = createUser({ name: "Alice" });
+const user = createUser({ name: 'Alice' });
 
 // ✅ Correct: all required properties provided
-const user = createUser({ name: "Alice", email: "alice@example.com" });
+const user = createUser({ name: 'Alice', email: 'alice@example.com' });
 
 // ❌ Type error: vi.fn() returns unknown, not User
 const mockGetUser = vi.fn().mockReturnValue({ id: 1 });
@@ -143,7 +143,7 @@ const mockGetUser = vi.fn().mockReturnValue({ id: 1 });
 // ✅ Correct: explicitly type the mock
 const mockGetUser = vi
   .fn<() => User>()
-  .mockReturnValue({ id: 1, name: "Alice", email: "test@example.com" });
+  .mockReturnValue({ id: 1, name: 'Alice', email: 'test@example.com' });
 ```
 
 **Principle: Type-safe tests prevent silent failures**
@@ -189,8 +189,8 @@ Use [assets/output-report-template.md](assets/output-report-template.md) and inc
 function get<T>(obj: Record<string, T>, path: string): T | undefined;
 
 // Example-based test found:
-it("gets nested value", () => {
-  expect(get({ a: { b: 1 } }, "a.b")).toBe(1);
+it('gets nested value', () => {
+  expect(get({ a: { b: 1 } }, 'a.b')).toBe(1);
 });
 
 // PBT opportunity identified:

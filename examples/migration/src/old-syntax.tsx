@@ -7,8 +7,8 @@
  * ⚠️ This syntax is deprecated and will be removed in v3.
  */
 
-import { Deckgl } from "@deckgl-fiber-renderer/dom";
-import "@deckgl-fiber-renderer/reconciler/side-effects";
+import { Deckgl } from '@deckgl-fiber-renderer/dom';
+import '@deckgl-fiber-renderer/reconciler/side-effects';
 
 const INITIAL_VIEW_STATE = {
   latitude: 37.7749,
@@ -31,7 +31,7 @@ const SAMPLE_DATA: DataPoint[] = [
 
 export function OldSyntaxExample() {
   return (
-    <div style={{ height: "100vh", width: "100vw" }}>
+    <div style={{ height: '100vh', width: '100vw' }}>
       <Deckgl controller initialViewState={INITIAL_VIEW_STATE}>
         {/* Legacy syntax: layer-specific intrinsic elements */}
         <scatterplotLayer

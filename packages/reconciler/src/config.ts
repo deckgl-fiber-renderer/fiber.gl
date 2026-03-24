@@ -1,13 +1,13 @@
-import type { Layer, View } from "@deck.gl/core";
-import { log, toPascal } from "@deckgl-fiber-renderer/shared";
-import type { Fiber } from "react-reconciler";
+import type { Layer, View } from '@deck.gl/core';
+import { log, toPascal } from '@deckgl-fiber-renderer/shared';
+import type { Fiber } from 'react-reconciler';
 import {
   ContinuousEventPriority,
   DefaultEventPriority,
   DiscreteEventPriority,
-} from "react-reconciler/constants";
+} from 'react-reconciler/constants';
 
-import { catalogue } from "./extend";
+import { catalogue } from './extend';
 import type {
   ChildSet,
   Container,
@@ -16,15 +16,15 @@ import type {
   Props,
   Type,
   UpdatePayload,
-} from "./types";
-import { flattenTree, organizeList } from "./utils";
+} from './types';
+import { flattenTree, organizeList } from './utils';
 
 type EventPriority = number;
 
 // TODO: check to see if we can hoist this out of function
 const globalScope =
-  (typeof self !== "undefined" && self) ||
-  (typeof window !== "undefined" && window);
+  (typeof self !== 'undefined' && self) ||
+  (typeof window !== 'undefined' && window);
 
 /**
  * Rough host API flow chart
@@ -144,19 +144,19 @@ export const scheduleMicrotask = queueMicrotask;
  */
 function createDeckglObject(type: Type, props: Props): Instance {
   // New <layer> element (v2+): pass-through pre-instantiated Layer/View
-  if (type === "layer") {
+  if (type === 'layer') {
     if (!props.layer) {
       throw new Error("<layer> element requires a 'layer' prop");
     }
 
     // Development-mode warning for missing or default layer ID
-    if (process.env.NODE_ENV === "development") {
+    if (process.env.NODE_ENV === 'development') {
       const layer = props.layer as {
         id?: string;
         constructor?: { name?: string };
       };
-      if (!layer.id || layer.id === "unknown") {
-        const layerName = layer.constructor?.name ?? "Layer";
+      if (!layer.id || layer.id === 'unknown') {
+        const layerName = layer.constructor?.name ?? 'Layer';
         console.warn(
           `⚠️  Layer missing explicit "id" prop. This causes expensive ` +
             `reinitialization on every render.\n\n` +
@@ -173,7 +173,7 @@ function createDeckglObject(type: Type, props: Props): Instance {
   }
 
   // Legacy path with deprecation warning (v2 backwards compatibility)
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === 'development') {
     const pascalName = toPascal(type);
     console.warn(
       `Using deprecated <${type}> element. Migrate to <layer layer={new ${pascalName}({...})} /> for better type safety and code-splitting. This syntax will be removed in v3.`
@@ -183,7 +183,7 @@ function createDeckglObject(type: Type, props: Props): Instance {
   const name = toPascal(type);
 
   if (!catalogue[name]) {
-    const availableElements = Object.keys(catalogue).join(", ");
+    const availableElements = Object.keys(catalogue).join(', ');
     throw new Error(
       `Unsupported element type: "${type}"\n\n` +
         `Available elements: ${availableElements}\n\n` +
@@ -259,7 +259,7 @@ export function createInstance(
 ): Instance {
   log
     .withMetadata({ fiber, hostContext, props, rootContainerInfo, type })
-    .debug("createInstance");
+    .debug('createInstance');
 
   return createDeckglObject(type, props);
 }
@@ -290,9 +290,9 @@ export function createInstance(
  * @see {@link https://deck.gl/docs/api-reference/layers/text-layer TextLayer for rendering text in Deck.gl}
  */
 export function createTextInstance() {
-  log.debug("createTextInstance");
+  log.debug('createTextInstance');
 
-  throw new Error("Text nodes are not supported");
+  throw new Error('Text nodes are not supported');
 }
 
 /**
@@ -369,7 +369,7 @@ export function cloneInstance(
       oldProps,
       type,
     })
-    .debug("cloneInstance");
+    .debug('cloneInstance');
 
   const cloned = createDeckglObject(type, newProps);
 
@@ -428,7 +428,7 @@ export function cloneHiddenInstance(
       props,
       type,
     })
-    .debug("cloneHiddenInstance");
+    .debug('cloneHiddenInstance');
 
   return {
     children: instance.children,
@@ -454,9 +454,9 @@ export function cloneHiddenTextInstance(instance: void): void {
     .withMetadata({
       instance,
     })
-    .debug("cloneHiddenTextInstance");
+    .debug('cloneHiddenTextInstance');
 
-  throw new Error("Text nodes are not supported in deck.gl renderer");
+  throw new Error('Text nodes are not supported in deck.gl renderer');
 }
 
 /**
@@ -489,7 +489,7 @@ export function unhideInstance(instance: Instance, props: Props): void {
       instance,
       props,
     })
-    .debug("unhideInstance");
+    .debug('unhideInstance');
 
   // No-op: deck.gl handles visibility through its `visible` prop
 }
@@ -513,9 +513,9 @@ export function unhideTextInstance(textInstance: void, text: string): void {
       text,
       textInstance,
     })
-    .debug("unhideTextInstance");
+    .debug('unhideTextInstance');
 
-  throw new Error("Text nodes are not supported in deck.gl renderer");
+  throw new Error('Text nodes are not supported in deck.gl renderer');
 }
 
 /**
@@ -547,7 +547,7 @@ export function unhideTextInstance(textInstance: void, text: string): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-native-renderer/src/ReactFiberConfigFabric.js#L237 React Native Fabric Reference}
  */
 export function createContainerChildSet(): ChildSet {
-  log.debug("createContainerChildSet");
+  log.debug('createContainerChildSet');
 
   return [];
 }
@@ -586,7 +586,7 @@ export function appendChildToContainerChildSet(
       child,
       childSet,
     })
-    .debug("appendChildToContainerChildSet");
+    .debug('appendChildToContainerChildSet');
 
   childSet.push(child);
 }
@@ -616,7 +616,7 @@ export function appendChildToSet(
       child,
       childSet,
     })
-    .debug("appendChildToSet");
+    .debug('appendChildToSet');
 
   return [...childSet, child];
 }
@@ -646,10 +646,10 @@ export function finalizeContainerChildren(
       container,
       newChildren,
     })
-    .debug("finalizeContainerChildren");
+    .debug('finalizeContainerChildren');
 
   // Development-mode validation: detect duplicate layer IDs
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === 'development') {
     const flattened = flattenTree(newChildren);
     const { layers } = organizeList(flattened);
 
@@ -664,7 +664,7 @@ export function finalizeContainerChildren(
     if (duplicates.length > 0) {
       const uniqueDuplicates = [...new Set(duplicates)];
       console.error(
-        `❌ Duplicate layer IDs detected: ${uniqueDuplicates.join(", ")}\n\n` +
+        `❌ Duplicate layer IDs detected: ${uniqueDuplicates.join(', ')}\n\n` +
           `Deck.gl uses layer IDs for diffing. Duplicate IDs cause incorrect updates.\n` +
           `Each layer must have a unique ID.\n`
       );
@@ -726,7 +726,7 @@ export function replaceContainerChildren(
       container,
       newChildren,
     })
-    .debug("replaceContainerChildren");
+    .debug('replaceContainerChildren');
 
   const state = container.store.getState();
   const { deckgl } = state;
@@ -747,7 +747,7 @@ export function replaceContainerChildren(
         layers: combinedLayers,
         views: types.views,
       })
-      .debug("deck.setProps views and layers");
+      .debug('deck.setProps views and layers');
 
     // @ts-expect-error challenging to type accurately
     deckgl.setProps({
@@ -805,7 +805,7 @@ export function appendInitialChild(
       child,
       parentInstance,
     })
-    .debug("appendInitialChild");
+    .debug('appendInitialChild');
 
   parentInstance.children.push(child);
 }
@@ -869,7 +869,7 @@ export function finalizeInitialChildren(
       rootContainer,
       type,
     })
-    .debug("finalizeInitialChildren");
+    .debug('finalizeInitialChildren');
 
   return false;
 }
@@ -927,7 +927,7 @@ export function prepareUpdate(
       rootContainer,
       type,
     })
-    .debug("prepareUpdate");
+    .debug('prepareUpdate');
 
   return null;
 }
@@ -966,7 +966,7 @@ export function prepareForCommit(
     .withMetadata({
       container,
     })
-    .debug("prepareForCommit");
+    .debug('prepareForCommit');
 
   return null;
 }
@@ -1003,7 +1003,7 @@ export function resetAfterCommit(container: Container): void {
     .withMetadata({
       container,
     })
-    .debug("resetAfterCommit");
+    .debug('resetAfterCommit');
 }
 
 /**
@@ -1033,7 +1033,7 @@ export function resetAfterCommit(container: Container): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js Portal Mounting}
  */
 export function preparePortalMount(): void {
-  log.debug("preparePortalMount");
+  log.debug('preparePortalMount');
 }
 
 /**
@@ -1077,7 +1077,7 @@ export function shouldSetTextContent(type: Type, props: Props): boolean {
       props,
       type,
     })
-    .debug("shouldSetTextContent");
+    .debug('shouldSetTextContent');
 
   return false;
 }
@@ -1135,7 +1135,7 @@ export function getRootHostContext(rootContainer: Container): HostContext {
     .withMetadata({
       rootContainer,
     })
-    .debug("getRootHostContext");
+    .debug('getRootHostContext');
 
   return rootContainer;
 }
@@ -1188,13 +1188,13 @@ export function getChildHostContext(
       parentHostContext,
       type,
     })
-    .debug("getChildHostContext");
+    .debug('getChildHostContext');
 
   // Detect if we are inside of a View instance
   // Note: This currently checks type string. Once single-layer-element lands,
   // we should also check instance.node instanceof View for runtime detection
   const context = { ...parentHostContext };
-  if (type.toLowerCase().includes("view")) {
+  if (type.toLowerCase().includes('view')) {
     context.insideView = true;
   }
   return context;
@@ -1218,12 +1218,12 @@ export function getChildHostContext(
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/README.md#getpublicinstance React Reconciler Docs}
  */
-export function getPublicInstance(instance: Instance): Instance["node"] {
+export function getPublicInstance(instance: Instance): Instance['node'] {
   log
     .withMetadata({
       instance,
     })
-    .debug("getPublicInstance");
+    .debug('getPublicInstance');
 
   return instance.node;
 }
@@ -1244,7 +1244,7 @@ export function detachDeletedInstance(instance: Instance): void {
     .withMetadata({
       instance,
     })
-    .debug("detachDeletedInstance");
+    .debug('detachDeletedInstance');
 
   // Clear children array to help garbage collection
   instance.children.length = 0;
@@ -1276,7 +1276,7 @@ export function detachDeletedInstance(instance: Instance): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/events/ReactDOMEventListener.js DOM Event Handling}
  */
 export function getCurrentEventPriority(): number {
-  log.debug("getCurrentEventPriority");
+  log.debug('getCurrentEventPriority');
 
   if (!globalScope) {
     return DefaultEventPriority;
@@ -1285,27 +1285,27 @@ export function getCurrentEventPriority(): number {
   // NOTE: window.event is technically deprecated but React does not pass the event
   // to this host function for some reason so we have to use it.
   switch (globalScope.event?.type) {
-    case "click":
-    case "contextmenu":
-    case "dblclick":
-    case "pointercancel":
-    case "pointerdown":
-    case "pointerup":
-    case "keydown":
-    case "keyup":
-    case "focusin":
-    case "focusout": {
+    case 'click':
+    case 'contextmenu':
+    case 'dblclick':
+    case 'pointercancel':
+    case 'pointerdown':
+    case 'pointerup':
+    case 'keydown':
+    case 'keyup':
+    case 'focusin':
+    case 'focusout': {
       return DiscreteEventPriority;
     }
-    case "pointermove":
-    case "pointerout":
-    case "pointerover":
-    case "pointerenter":
-    case "pointerleave":
-    case "wheel":
-    case "touchmove":
-    case "drag":
-    case "scroll": {
+    case 'pointermove':
+    case 'pointerout':
+    case 'pointerover':
+    case 'pointerenter':
+    case 'pointerleave':
+    case 'wheel':
+    case 'touchmove':
+    case 'drag':
+    case 'scroll': {
       return ContinuousEventPriority;
     }
     default: {
@@ -1336,7 +1336,7 @@ export function setCurrentUpdatePriority(newPriority: EventPriority): void {
     .withMetadata({
       newPriority,
     })
-    .debug("setCurrentUpdatePriority");
+    .debug('setCurrentUpdatePriority');
 
   currentUpdatePriority = newPriority;
 }
@@ -1354,7 +1354,7 @@ export function setCurrentUpdatePriority(newPriority: EventPriority): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberWorkLoop.js Update Batching}
  */
 export function getCurrentUpdatePriority(): EventPriority {
-  log.debug("getCurrentUpdatePriority");
+  log.debug('getCurrentUpdatePriority');
 
   return currentUpdatePriority;
 }
@@ -1379,7 +1379,7 @@ export function getCurrentUpdatePriority(): EventPriority {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberWorkLoop.js Priority Resolution}
  */
 export function resolveUpdatePriority(): EventPriority {
-  log.debug("resolveUpdatePriority");
+  log.debug('resolveUpdatePriority');
 
   if (currentUpdatePriority !== DefaultEventPriority) {
     return currentUpdatePriority;
@@ -1417,7 +1417,7 @@ export function maySuspendCommit(type: Type, props: Props): boolean {
       props,
       type,
     })
-    .debug("maySuspendCommit");
+    .debug('maySuspendCommit');
 
   return false;
 }
@@ -1447,7 +1447,7 @@ export function getInstanceFromNode(node: Fiber): Fiber | null | undefined {
     .withMetadata({
       node,
     })
-    .debug("getInstanceFromNode");
+    .debug('getInstanceFromNode');
 
   return null;
 }
@@ -1470,7 +1470,7 @@ export function getInstanceFromNode(node: Fiber): Fiber | null | undefined {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js DOM Focus Management}
  */
 export function beforeActiveInstanceBlur(): void {
-  log.debug("beforeActiveInstanceBlur");
+  log.debug('beforeActiveInstanceBlur');
 }
 
 /**
@@ -1490,7 +1490,7 @@ export function beforeActiveInstanceBlur(): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js DOM Focus Management}
  */
 export function afterActiveInstanceBlur(): void {
-  log.debug("afterActiveInstanceBlur");
+  log.debug('afterActiveInstanceBlur');
 }
 
 /**
@@ -1518,7 +1518,7 @@ export function getInstanceFromScope(scopeInstance: Instance): Instance | null {
     .withMetadata({
       scopeInstance,
     })
-    .debug("getInstanceFromScope");
+    .debug('getInstanceFromScope');
 
   return null;
 }
@@ -1550,7 +1550,7 @@ export function prepareScopeUpdate(
       instance,
       scopeInstance,
     })
-    .debug("prepareScopeUpdate");
+    .debug('prepareScopeUpdate');
 }
 
 /**
@@ -1583,7 +1583,7 @@ export function prepareScopeUpdate(
  * @see {@link https://react.dev/reference/react/startTransition React Transitions Documentation}
  */
 export function shouldAttemptEagerTransition(): boolean {
-  log.debug("shouldAttemptEagerTransition");
+  log.debug('shouldAttemptEagerTransition');
 
   return false;
 }

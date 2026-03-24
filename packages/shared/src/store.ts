@@ -1,8 +1,8 @@
-import type { Deck } from "@deck.gl/core";
-import type { LayersList } from "@deck.gl/core";
-import type { MapboxOverlay } from "@deck.gl/mapbox";
-import { create } from "zustand";
-import type { StoreApi } from "zustand";
+import type { Deck } from '@deck.gl/core';
+import type { LayersList } from '@deck.gl/core';
+import type { MapboxOverlay } from '@deck.gl/mapbox';
+import { create } from 'zustand';
+import type { StoreApi } from 'zustand';
 
 export interface State {
   deckgl: Deck | MapboxOverlay;

@@ -10,9 +10,9 @@
  * updateTriggers to tell Deck.gl to recompute the accessor values.
  */
 
-import { ScatterplotLayer } from "@deck.gl/layers";
-import { Deckgl } from "@deckgl-fiber-renderer/dom";
-import { useState } from "react";
+import { ScatterplotLayer } from '@deck.gl/layers';
+import { Deckgl } from '@deckgl-fiber-renderer/dom';
+import { useState } from 'react';
 
 const INITIAL_VIEW_STATE = {
   latitude: 37.7749,
@@ -34,23 +34,23 @@ const SAMPLE_DATA: DataPoint[] = [
   { position: [-122.32, 37.72], value: 90 },
 ];
 
-type ColorScheme = "red" | "blue" | "green";
+type ColorScheme = 'red' | 'blue' | 'green';
 
 export function UpdateTriggersExample() {
-  const [colorScheme, setColorScheme] = useState<ColorScheme>("red");
+  const [colorScheme, setColorScheme] = useState<ColorScheme>('red');
   const [sizeMultiplier, setSizeMultiplier] = useState(1);
 
   // Accessor function that depends on React state
   const getFillColor = (d: DataPoint) => {
     // Logic depends on colorScheme state - needs updateTriggers!
     switch (colorScheme) {
-      case "red": {
+      case 'red': {
         return [d.value * 2.5, 0, 0];
       }
-      case "blue": {
+      case 'blue': {
         return [0, 0, d.value * 2.5];
       }
-      case "green": {
+      case 'green': {
         return [0, d.value * 2.5, 0];
       }
       default: {
@@ -63,14 +63,14 @@ export function UpdateTriggersExample() {
   const getRadius = (d: DataPoint) => d.value * sizeMultiplier;
 
   return (
-    <div style={{ height: "100vh", width: "100vw" }}>
+    <div style={{ height: '100vh', width: '100vw' }}>
       <div
         style={{
-          background: "white",
-          borderRadius: "5px",
+          background: 'white',
+          borderRadius: '5px',
           left: 20,
-          padding: "10px",
-          position: "absolute",
+          padding: '10px',
+          position: 'absolute',
           top: 20,
           zIndex: 1,
         }}
@@ -86,7 +86,7 @@ export function UpdateTriggersExample() {
             <option value="green">Green</option>
           </select>
         </div>
-        <div style={{ marginTop: "10px" }}>
+        <div style={{ marginTop: '10px' }}>
           <label>Size Multiplier: {sizeMultiplier}x </label>
           <input
             type="range"
@@ -105,7 +105,7 @@ export function UpdateTriggersExample() {
         <layer
           layer={
             new ScatterplotLayer<DataPoint>({
-              id: "interactive-scatter",
+              id: 'interactive-scatter',
               data: SAMPLE_DATA,
               getPosition: (d) => d.position,
               getRadius,

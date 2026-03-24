@@ -1,4 +1,4 @@
-import { DeckglExample } from "./_deckgl";
+import { DeckglExample } from './_deckgl';
 
 export default function Page() {
   return (

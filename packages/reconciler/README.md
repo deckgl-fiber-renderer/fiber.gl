@@ -15,12 +15,12 @@ This package is automatically installed as a dependency of `@deckgl-fiber-render
 The reconciler now supports the universal `<layer>` element pattern:
 
 ```tsx
-import { ScatterplotLayer } from "@deck.gl/layers";
+import { ScatterplotLayer } from '@deck.gl/layers';
 
 <layer
   layer={
     new ScatterplotLayer({
-      id: "points",
+      id: 'points',
       data: myData,
       getPosition: (d) => d.coordinates,
       getRadius: 100,
@@ -44,7 +44,7 @@ The following APIs are deprecated in v2 and will be removed in v3:
 
 ```tsx
 // ❌ Deprecated - remove this import
-import "@deckgl-fiber-renderer/reconciler/side-effects";
+import '@deckgl-fiber-renderer/reconciler/side-effects';
 ```
 
 Layer registration is no longer needed. This import is now a no-op that shows a deprecation warning.
@@ -53,7 +53,7 @@ Layer registration is no longer needed. This import is now a no-op that shows a 
 
 ```tsx
 // ❌ Deprecated - no longer needed
-import { extend } from "@deckgl-fiber-renderer/reconciler";
+import { extend } from '@deckgl-fiber-renderer/reconciler';
 extend({ MyCustomLayer });
 ```
 
@@ -61,9 +61,9 @@ Custom layers now work directly without registration:
 
 ```tsx
 // ✅ Just use them!
-import { MyCustomLayer } from "./my-custom-layer";
+import { MyCustomLayer } from './my-custom-layer';
 
-<layer layer={new MyCustomLayer({ id: "custom" })} />;
+<layer layer={new MyCustomLayer({ id: 'custom' })} />;
 ```
 
 ## Features
@@ -73,8 +73,8 @@ import { MyCustomLayer } from "./my-custom-layer";
 Refs now correctly expose the actual Layer or View instance, giving you access to all Deck.gl methods:
 
 ```tsx
-import { useRef } from "react";
-import { ScatterplotLayer } from "@deck.gl/layers";
+import { useRef } from 'react';
+import { ScatterplotLayer } from '@deck.gl/layers';
 
 function MyComponent() {
   const layerRef = useRef<ScatterplotLayer>(null);
@@ -90,7 +90,7 @@ function MyComponent() {
       ref={layerRef}
       layer={
         new ScatterplotLayer({
-          id: "points",
+          id: 'points',
           data: myData,
         })
       }
@@ -104,7 +104,7 @@ function MyComponent() {
 The reconciler fully supports React Suspense boundaries:
 
 ```tsx
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
 <Suspense fallback={<LoadingLayers />}>
   <AsyncLayerComponent />

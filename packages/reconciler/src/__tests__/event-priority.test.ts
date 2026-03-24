@@ -1,11 +1,11 @@
-import { DefaultEventPriority } from "react-reconciler/constants";
-import { describe, expect, it } from "vitest";
+import { DefaultEventPriority } from 'react-reconciler/constants';
+import { describe, expect, it } from 'vitest';
 
-import { getCurrentEventPriority } from "../config";
+import { getCurrentEventPriority } from '../config';
 
-describe("event priority", () => {
-  describe("getCurrentEventPriority", () => {
-    it("returns DefaultEventPriority when no global scope", () => {
+describe('event priority', () => {
+  describe('getCurrentEventPriority', () => {
+    it('returns DefaultEventPriority when no global scope', () => {
       // Note: In a Node.js test environment without window/self,
       // getCurrentEventPriority returns DefaultEventPriority
       expect(getCurrentEventPriority()).toBe(DefaultEventPriority);

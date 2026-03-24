@@ -4,5 +4,5 @@
 globalThis.reportError =
   globalThis.reportError ||
   ((error: unknown) => {
-    console.error("Unhandled error:", error);
+    console.error('Unhandled error:', error);
   });

@@ -24,8 +24,8 @@
 
 ```ts
 const users = new Map();
-users.set("id1", { name: "Alice", age: 30 });
-users.set("id2", { name: "Bob", age: 25 });
+users.set('id1', { name: 'Alice', age: 30 });
+users.set('id2', { name: 'Bob', age: 25 });
 
 // Random access through Map
 for (const id of shuffledIds) {
@@ -37,8 +37,8 @@ for (const id of shuffledIds) {
 
 ```ts
 const users = [
-  { id: "id1", name: "Alice", age: 30 },
-  { id: "id2", name: "Bob", age: 25 },
+  { id: 'id1', name: 'Alice', age: 30 },
+  { id: 'id2', name: 'Bob', age: 25 },
 ];
 
 // Sequential memory access
@@ -116,7 +116,7 @@ for (let i = 0; i < values.length; i++) {
 
 ```ts
 const ids = [1, 2, 3];
-const names = ["Alice", "Bob", "Charlie"];
+const names = ['Alice', 'Bob', 'Charlie'];
 const ages = [30, 25, 35];
 
 for (let i = 0; i < ids.length; i++) {
@@ -128,9 +128,9 @@ for (let i = 0; i < ids.length; i++) {
 
 ```ts
 const users = [
-  { id: 1, name: "Alice", age: 30 },
-  { id: 2, name: "Bob", age: 25 },
-  { id: 3, name: "Charlie", age: 35 },
+  { id: 1, name: 'Alice', age: 30 },
+  { id: 2, name: 'Bob', age: 25 },
+  { id: 3, name: 'Charlie', age: 35 },
 ];
 
 for (let i = 0; i < users.length; i++) {
@@ -160,7 +160,7 @@ function process(items) {
 ```ts
 function process(items) {
   for (const item of items) {
-    if (item.type === "A") {
+    if (item.type === 'A') {
       handleA(item);
     } else {
       handleB(item);

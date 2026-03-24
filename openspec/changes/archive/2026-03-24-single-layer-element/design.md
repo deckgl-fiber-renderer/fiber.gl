@@ -59,7 +59,7 @@ The reconciler operates in **persistence mode** (not mutation mode), meaning it 
 
 ```ts
 function createDeckglObject(type: Type, props: Props): Instance {
-  if (type === "layer") {
+  if (type === 'layer') {
     if (!props.layer) {
       throw new Error("<layer> element requires a 'layer' prop");
     }
@@ -67,7 +67,7 @@ function createDeckglObject(type: Type, props: Props): Instance {
   }
 
   // Legacy path with deprecation warning
-  if (process.env.NODE_ENV === "development") {
+  if (process.env.NODE_ENV === 'development') {
     console.warn(
       `Using deprecated ${type} element. Migrate to <layer layer={new ${toPascal(type)}({...})} />`
     );
@@ -96,7 +96,7 @@ function createDeckglObject(type: Type, props: Props): Instance {
 Add check in `createDeckglObject` for `type === "layer"`:
 
 ```ts
-if (process.env.NODE_ENV === "development" && props.layer && !props.layer.id) {
+if (process.env.NODE_ENV === 'development' && props.layer && !props.layer.id) {
   console.warn(
     'Layer missing explicit "id" prop - this will cause expensive ' +
       'reinitialization on every render. Add: id: "unique-id"'
@@ -142,9 +142,9 @@ export interface DeckglElements {
 ```ts
 // v2: side-effects.ts
 console.warn(
-  "@deckgl-fiber-renderer/reconciler/side-effects is deprecated. " +
-    "Layer registration is no longer needed. " +
-    "Remove this import and use <layer layer={new LayerClass({...})} />"
+  '@deckgl-fiber-renderer/reconciler/side-effects is deprecated. ' +
+    'Layer registration is no longer needed. ' +
+    'Remove this import and use <layer layer={new LayerClass({...})} />'
 );
 // No actual imports
 

@@ -108,7 +108,7 @@ for (const price of prices) {
 
 ```ts
 for (const item of items) {
-  const theme = localStorage.getItem("theme");
+  const theme = localStorage.getItem('theme');
   applyTheme(theme, item);
   // 100 iterations = 100 storage reads
 }
@@ -130,7 +130,7 @@ function getCached(key: string): string | null {
 
 // Use cached version
 for (const item of items) {
-  const theme = getCached("theme");
+  const theme = getCached('theme');
   applyTheme(theme, item);
   // 100 iterations = 1 storage read
 }

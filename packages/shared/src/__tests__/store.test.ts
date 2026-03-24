@@ -1,11 +1,11 @@
-import { describe, expect, it, vi } from "vitest";
-import { create } from "zustand";
+import { describe, expect, it, vi } from 'vitest';
+import { create } from 'zustand';
 
-import type { State } from "../store";
-import { selectors } from "../store";
+import type { State } from '../store';
+import { selectors } from '../store';
 
-describe("Store Tests", () => {
-  it("should initial state is correct (deckgl undefined, _passedLayers empty)", () => {
+describe('Store Tests', () => {
+  it('should initial state is correct (deckgl undefined, _passedLayers empty)', () => {
     // Arrange & Act
     const store = create<State>()((set) => ({
       _passedLayers: [],
@@ -24,7 +24,7 @@ describe("Store Tests", () => {
     expect(state._passedLayers).toEqual([]);
   });
 
-  it("should setDeckgl updates state", () => {
+  it('should setDeckgl updates state', () => {
     // Arrange
     const store = create<State>()((set) => ({
       _passedLayers: [],
@@ -45,7 +45,7 @@ describe("Store Tests", () => {
     expect(store.getState().deckgl).toBe(mockDeckgl);
   });
 
-  it("should selectors.deckgl returns correct value", () => {
+  it('should selectors.deckgl returns correct value', () => {
     // Arrange
     const mockDeckgl = { finalize: vi.fn(), setProps: vi.fn() } as never;
     const state: State = {
@@ -61,7 +61,7 @@ describe("Store Tests", () => {
     expect(result).toBe(mockDeckgl);
   });
 
-  it("should selectors.setDeckgl returns correct value", () => {
+  it('should selectors.setDeckgl returns correct value', () => {
     // Arrange
     const setDeckglFn = vi.fn();
     const state: State = {
@@ -77,7 +77,7 @@ describe("Store Tests", () => {
     expect(result).toBe(setDeckglFn);
   });
 
-  it("should store can be created multiple times with independent state", () => {
+  it('should store can be created multiple times with independent state', () => {
     // Arrange & Act
     const store1 = create<State>()((set) => ({
       _passedLayers: [],
@@ -101,12 +101,12 @@ describe("Store Tests", () => {
 
     const mockDeckgl1 = {
       finalize: vi.fn(),
-      id: "deck1",
+      id: 'deck1',
       setProps: vi.fn(),
     } as never;
     const mockDeckgl2 = {
       finalize: vi.fn(),
-      id: "deck2",
+      id: 'deck2',
       setProps: vi.fn(),
     } as never;
 

@@ -85,11 +85,11 @@ export class UserService {
 }
 
 // user-service.test.ts
-describe("UserService", () => {
-  describe("getUser", () => {
+describe('UserService', () => {
+  describe('getUser', () => {
     /* ... */
   });
-  describe("updateUser", () => {
+  describe('updateUser', () => {
     /* ... */
   });
 });
@@ -123,19 +123,19 @@ src/
 // test-utils/factories.ts
 export function createMockUser(overrides?: Partial<User>): User {
   return {
-    id: "test-user-id",
-    name: "Test User",
-    email: "test@example.com",
-    role: "user",
+    id: 'test-user-id',
+    name: 'Test User',
+    email: 'test@example.com',
+    role: 'user',
     ...overrides,
   };
 }
 
 // user-service.test.ts
-import { createMockUser } from "../test-utils/factories";
+import { createMockUser } from '../test-utils/factories';
 
-it("should update user email", () => {
-  const user = createMockUser({ email: "old@example.com" });
+it('should update user email', () => {
+  const user = createMockUser({ email: 'old@example.com' });
   // ...
 });
 ```
@@ -202,36 +202,36 @@ export class UserService {
 }
 
 // user-service.test.ts
-describe("UserService", () => {
-  describe("createUser", () => {
+describe('UserService', () => {
+  describe('createUser', () => {
     // ✅ Test validation through public API
-    it("should reject invalid email addresses", () => {
+    it('should reject invalid email addresses', () => {
       const service = new UserService();
-      expect(() => service.createUser({ email: "not-an-email" })).toThrow(
-        "Invalid email"
+      expect(() => service.createUser({ email: 'not-an-email' })).toThrow(
+        'Invalid email'
       );
     });
 
     // ✅ Test normalization through public API
-    it("should normalize email to lowercase", () => {
+    it('should normalize email to lowercase', () => {
       const service = new UserService();
       const user = service.createUser({
-        name: "Test User",
-        email: "TEST@EXAMPLE.COM",
+        name: 'Test User',
+        email: 'TEST@EXAMPLE.COM',
       });
-      expect(user.email).toBe("test@example.com");
+      expect(user.email).toBe('test@example.com');
     });
 
     // ✅ Test multiple validation rules through public API
-    it("should accept valid user data", () => {
+    it('should accept valid user data', () => {
       const service = new UserService();
       const user = service.createUser({
-        name: "John Doe",
-        email: "john@example.com",
+        name: 'John Doe',
+        email: 'john@example.com',
         age: 30,
       });
-      expect(user.name).toBe("John Doe");
-      expect(user.email).toBe("john@example.com");
+      expect(user.name).toBe('John Doe');
+      expect(user.email).toBe('john@example.com');
     });
   });
 });
@@ -251,45 +251,45 @@ export function normalizeEmail(email: string): string {
 }
 
 // email-validator.test.ts
-describe("Email Validator", () => {
-  describe("isValidEmail", () => {
-    it("should accept valid emails", () => {
-      expect(isValidEmail("test@example.com")).toBe(true);
+describe('Email Validator', () => {
+  describe('isValidEmail', () => {
+    it('should accept valid emails', () => {
+      expect(isValidEmail('test@example.com')).toBe(true);
     });
 
-    it("should reject invalid emails", () => {
-      expect(isValidEmail("not-an-email")).toBe(false);
+    it('should reject invalid emails', () => {
+      expect(isValidEmail('not-an-email')).toBe(false);
     });
   });
 
-  describe("normalizeEmail", () => {
-    it("should convert to lowercase", () => {
-      expect(normalizeEmail("TEST@EXAMPLE.COM")).toBe("test@example.com");
+  describe('normalizeEmail', () => {
+    it('should convert to lowercase', () => {
+      expect(normalizeEmail('TEST@EXAMPLE.COM')).toBe('test@example.com');
     });
   });
 });
 
 // user-service.ts (uses the new module)
-import { isValidEmail, normalizeEmail } from "./email-validator";
+import { isValidEmail, normalizeEmail } from './email-validator';
 
 export class UserService {
   createUser(data: UserData): User {
     if (!isValidEmail(data.email)) {
-      throw new Error("Invalid email");
+      throw new Error('Invalid email');
     }
     return { ...data, email: normalizeEmail(data.email) };
   }
 }
 
 // user-service.test.ts (tests high-level behavior)
-describe("UserService", () => {
-  it("should create user with normalized email", () => {
+describe('UserService', () => {
+  it('should create user with normalized email', () => {
     const service = new UserService();
     const user = service.createUser({
-      name: "Test",
-      email: "TEST@EXAMPLE.COM",
+      name: 'Test',
+      email: 'TEST@EXAMPLE.COM',
     });
-    expect(user.email).toBe("test@example.com");
+    expect(user.email).toBe('test@example.com');
   });
 });
 ```
@@ -303,23 +303,23 @@ Test your business logic, not library internals. Standard libraries (JavaScript/
 **❌ Incorrect: testing library functionality**
 
 ```ts
-describe("array operations", () => {
+describe('array operations', () => {
   // ❌ Testing that Array.prototype.map works
-  it("should map array values", () => {
+  it('should map array values', () => {
     const input = [1, 2, 3];
     const result = input.map((x) => x * 2);
     expect(result).toEqual([2, 4, 6]);
   });
 
   // ❌ Testing that Array.prototype.filter works
-  it("should filter array values", () => {
+  it('should filter array values', () => {
     const input = [1, 2, 3, 4];
     const result = input.filter((x) => x > 2);
     expect(result).toEqual([3, 4]);
   });
 
   // ❌ Testing that lodash works
-  it("should deeply clone object", () => {
+  it('should deeply clone object', () => {
     const input = { a: { b: 1 } };
     const result = _.cloneDeep(input);
     expect(result).toEqual({ a: { b: 1 } });
@@ -327,9 +327,9 @@ describe("array operations", () => {
   });
 });
 
-describe("React hooks", () => {
+describe('React hooks', () => {
   // ❌ Testing that useState works
-  it("should update state", () => {
+  it('should update state', () => {
     const { result } = renderHook(() => useState(0));
     const [, setState] = result.current;
     act(() => setState(1));
@@ -337,10 +337,10 @@ describe("React hooks", () => {
   });
 });
 
-describe("axios", () => {
+describe('axios', () => {
   // ❌ Testing that axios makes HTTP requests
-  it("should make GET request", async () => {
-    const response = await axios.get("https://api.example.com/data");
+  it('should make GET request', async () => {
+    const response = await axios.get('https://api.example.com/data');
     expect(response.status).toBe(200);
   });
 });
@@ -351,12 +351,12 @@ _Why incorrect?_ These tests verify that the language, framework, and libraries 
 **✅ Correct: test how YOUR code uses libraries**
 
 ```ts
-describe("UserProcessor", () => {
+describe('UserProcessor', () => {
   // ✅ Testing business logic that happens to use map
-  it("should extract user IDs from user objects", () => {
+  it('should extract user IDs from user objects', () => {
     const users = [
-      { id: 1, name: "Alice" },
-      { id: 2, name: "Bob" },
+      { id: 1, name: 'Alice' },
+      { id: 2, name: 'Bob' },
     ];
 
     const processor = new UserProcessor();
@@ -366,87 +366,87 @@ describe("UserProcessor", () => {
   });
 
   // ✅ Testing business rules that use filter
-  it("should return only active premium users", () => {
+  it('should return only active premium users', () => {
     const users = [
-      { id: 1, status: "active", tier: "premium" },
-      { id: 2, status: "inactive", tier: "premium" },
-      { id: 3, status: "active", tier: "free" },
+      { id: 1, status: 'active', tier: 'premium' },
+      { id: 2, status: 'inactive', tier: 'premium' },
+      { id: 3, status: 'active', tier: 'free' },
     ];
 
     const processor = new UserProcessor();
     const activePremium = processor.getActivePremiumUsers(users);
 
     expect(activePremium).toEqual([
-      { id: 1, status: "active", tier: "premium" },
+      { id: 1, status: 'active', tier: 'premium' },
     ]);
   });
 
   // ✅ Testing business logic that uses lodash
-  it("should create user snapshot without modifying original", () => {
-    const user = { id: 1, profile: { name: "Alice" } };
+  it('should create user snapshot without modifying original', () => {
+    const user = { id: 1, profile: { name: 'Alice' } };
 
     const processor = new UserProcessor();
     const snapshot = processor.createSnapshot(user);
-    snapshot.profile.name = "Bob";
+    snapshot.profile.name = 'Bob';
 
     // Testing OUR business requirement: snapshots are independent
-    expect(user.profile.name).toBe("Alice");
-    expect(snapshot.profile.name).toBe("Bob");
+    expect(user.profile.name).toBe('Alice');
+    expect(snapshot.profile.name).toBe('Bob');
   });
 });
 
-describe("useUserData hook", () => {
+describe('useUserData hook', () => {
   // ✅ Testing custom hook behavior, not useState itself
-  it("should initialize with loading state", () => {
-    const { result } = renderHook(() => useUserData("user-123"));
+  it('should initialize with loading state', () => {
+    const { result } = renderHook(() => useUserData('user-123'));
 
     expect(result.current.isLoading).toBe(true);
     expect(result.current.user).toBeNull();
   });
 
   // ✅ Testing business logic: error handling
-  it("should set error when user not found", async () => {
-    mockAPI.getUser.mockRejectedValue(new Error("User not found"));
+  it('should set error when user not found', async () => {
+    mockAPI.getUser.mockRejectedValue(new Error('User not found'));
 
-    const { result } = renderHook(() => useUserData("invalid-id"));
+    const { result } = renderHook(() => useUserData('invalid-id'));
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
-      expect(result.current.error).toBe("User not found");
+      expect(result.current.error).toBe('User not found');
     });
   });
 });
 
-describe("ApiClient", () => {
+describe('ApiClient', () => {
   // ✅ Testing OUR API client logic, not axios
-  it("should add authentication header to requests", async () => {
-    const mockAxios = { get: vi.fn().mockResolvedValue({ data: "test" }) };
-    const client = new ApiClient(mockAxios, "auth-token-123");
+  it('should add authentication header to requests', async () => {
+    const mockAxios = { get: vi.fn().mockResolvedValue({ data: 'test' }) };
+    const client = new ApiClient(mockAxios, 'auth-token-123');
 
-    await client.fetchData("/api/users");
+    await client.fetchData('/api/users');
 
     expect(mockAxios.get).toHaveBeenCalledWith(
-      "/api/users",
+      '/api/users',
       expect.objectContaining({
-        headers: { Authorization: "Bearer auth-token-123" },
+        headers: { Authorization: 'Bearer auth-token-123' },
       })
     );
   });
 
   // ✅ Testing OUR retry logic, not axios
-  it("should retry failed requests up to 3 times", async () => {
+  it('should retry failed requests up to 3 times', async () => {
     const mockAxios = {
       get: vi
         .fn()
-        .mockRejectedValueOnce(new Error("Network error"))
-        .mockRejectedValueOnce(new Error("Network error"))
-        .mockResolvedValueOnce({ data: "success" }),
+        .mockRejectedValueOnce(new Error('Network error'))
+        .mockRejectedValueOnce(new Error('Network error'))
+        .mockResolvedValueOnce({ data: 'success' }),
     };
     const client = new ApiClient(mockAxios);
 
-    const result = await client.fetchWithRetry("/api/data");
+    const result = await client.fetchWithRetry('/api/data');
 
-    expect(result).toBe("success");
+    expect(result).toBe('success');
     expect(mockAxios.get).toHaveBeenCalledTimes(3);
   });
 });
@@ -479,9 +479,9 @@ Test library usage only when:
 
 ```ts
 // ✅ Test your date formatting wrapper
-it("should format date in US format", () => {
+it('should format date in US format', () => {
   const formatter = new DateFormatter();
-  expect(formatter.toUSFormat(new Date("2024-01-15"))).toBe("01/15/2024");
+  expect(formatter.toUSFormat(new Date('2024-01-15'))).toBe('01/15/2024');
 });
 ```
 
@@ -489,10 +489,10 @@ it("should format date in US format", () => {
 
 ```ts
 // ✅ Test how you integrate zod validation with axios
-it("should validate response schema before returning data", async () => {
+it('should validate response schema before returning data', async () => {
   const client = new TypedApiClient(UserSchema);
-  await expect(client.fetchUser("invalid")).rejects.toThrow(
-    "Invalid response schema"
+  await expect(client.fetchUser('invalid')).rejects.toThrow(
+    'Invalid response schema'
   );
 });
 ```
@@ -501,7 +501,7 @@ it("should validate response schema before returning data", async () => {
 
 ```ts
 // ❌ Don't test library bugs in your test suite
-it("should work around lodash bug in version X.Y.Z", () => {
+it('should work around lodash bug in version X.Y.Z', () => {
   // This belongs in the library's test suite, not yours
 });
 ```
@@ -541,23 +541,23 @@ Use flat, focused describe blocks to group related tests.
 **❌ Incorrect: deep nesting**
 
 ```ts
-describe("ShoppingCart", () => {
-  describe("when cart is empty", () => {
-    describe("addItem", () => {
-      describe("with valid item", () => {
-        it("should add item", () => {
+describe('ShoppingCart', () => {
+  describe('when cart is empty', () => {
+    describe('addItem', () => {
+      describe('with valid item', () => {
+        it('should add item', () => {
           /* ... */
         });
       });
-      describe("with invalid item", () => {
-        it("should throw", () => {
+      describe('with invalid item', () => {
+        it('should throw', () => {
           /* ... */
         });
       });
     });
   });
-  describe("when cart has items", () => {
-    describe("addItem", () => {
+  describe('when cart has items', () => {
+    describe('addItem', () => {
       // deeply nested...
     });
   });
@@ -567,33 +567,33 @@ describe("ShoppingCart", () => {
 **✅ Correct: flat structure, grouped by method**
 
 ```ts
-describe("ShoppingCart", () => {
-  describe("addItem", () => {
-    it("should add item to empty cart", () => {
+describe('ShoppingCart', () => {
+  describe('addItem', () => {
+    it('should add item to empty cart', () => {
       /* ... */
     });
-    it("should increment quantity when adding existing item", () => {
+    it('should increment quantity when adding existing item', () => {
       /* ... */
     });
-    it("should throw when adding invalid item", () => {
-      /* ... */
-    });
-  });
-
-  describe("removeItem", () => {
-    it("should remove item from cart", () => {
-      /* ... */
-    });
-    it("should throw when removing non-existent item", () => {
+    it('should throw when adding invalid item', () => {
       /* ... */
     });
   });
 
-  describe("calculateTotal", () => {
-    it("should return 0 for empty cart", () => {
+  describe('removeItem', () => {
+    it('should remove item from cart', () => {
       /* ... */
     });
-    it("should sum all item prices", () => {
+    it('should throw when removing non-existent item', () => {
+      /* ... */
+    });
+  });
+
+  describe('calculateTotal', () => {
+    it('should return 0 for empty cart', () => {
+      /* ... */
+    });
+    it('should sum all item prices', () => {
       /* ... */
     });
   });
@@ -609,20 +609,20 @@ Test descriptions must be written in lowercase and complete the sentence "it ...
 **❌ Incorrect: capitalized or non-sentence formats**
 
 ```ts
-describe("ShoppingCart", () => {
-  it("Add item to cart", () => {
+describe('ShoppingCart', () => {
+  it('Add item to cart', () => {
     /* ... */
   });
-  it("It should calculate total", () => {
+  it('It should calculate total', () => {
     /* ... */
   });
-  it("Calculate Total", () => {
+  it('Calculate Total', () => {
     /* ... */
   });
-  it("SHOULD_REMOVE_ITEM", () => {
+  it('SHOULD_REMOVE_ITEM', () => {
     /* ... */
   });
-  it("addToCart test", () => {
+  it('addToCart test', () => {
     /* ... */
   });
 });
@@ -631,17 +631,17 @@ describe("ShoppingCart", () => {
 **✅ Correct: lowercase sentence format**
 
 ```ts
-describe("ShoppingCart", () => {
-  it("should add item to cart", () => {
+describe('ShoppingCart', () => {
+  it('should add item to cart', () => {
     /* ... */
   });
-  it("should calculate total price", () => {
+  it('should calculate total price', () => {
     /* ... */
   });
-  it("should remove item when quantity reaches zero", () => {
+  it('should remove item when quantity reaches zero', () => {
     /* ... */
   });
-  it("should apply discount to premium members", () => {
+  it('should apply discount to premium members', () => {
     /* ... */
   });
 });
@@ -659,19 +659,19 @@ _Why?_ The test description completes the sentence "it ..." — reading as "it s
 **Examples of good test descriptions:**
 
 ```ts
-it("should return empty array when no results found");
-it("should throw error for invalid email format");
-it("should update user profile with new data");
-it("should calculate discount for premium members");
-it("should preserve order when sorting by date");
-it("should retry failed requests up to 3 times");
+it('should return empty array when no results found');
+it('should throw error for invalid email format');
+it('should update user profile with new data');
+it('should calculate discount for premium members');
+it('should preserve order when sorting by date');
+it('should retry failed requests up to 3 times');
 ```
 
 **Special case: Property-based tests**
 
 ```ts
 // Property-based tests use 'property:' prefix
-it("property: decode(encode(x)) === x for all valid inputs", () => {
+it('property: decode(encode(x)) === x for all valid inputs', () => {
   fc.assert(
     fc.property(fc.string(), (input) => {
       expect(decode(encode(input))).toEqual(input);
@@ -687,17 +687,17 @@ Use `beforeEach` and `afterEach` for common setup, but keep tests independent.
 **❌ Incorrect: shared mutable state between tests**
 
 ```ts
-describe("DatabaseService", () => {
+describe('DatabaseService', () => {
   const db = createTestDatabase(); // Shared across all tests!
 
-  it("should insert record", async () => {
-    await db.insert({ name: "Test" });
+  it('should insert record', async () => {
+    await db.insert({ name: 'Test' });
     // ...
   });
 
-  it("should update record", async () => {
+  it('should update record', async () => {
     // Depends on previous test's data!
-    await db.update(1, { name: "Updated" });
+    await db.update(1, { name: 'Updated' });
   });
 });
 ```
@@ -705,7 +705,7 @@ describe("DatabaseService", () => {
 **✅ Correct: clean setup per test**
 
 ```ts
-describe("DatabaseService", () => {
+describe('DatabaseService', () => {
   let db: Database;
 
   beforeEach(async () => {
@@ -716,9 +716,9 @@ describe("DatabaseService", () => {
     await db.close();
   });
 
-  it("should insert record", async () => {
-    await db.insert({ name: "Test" });
-    const records = await db.query("SELECT * FROM users");
+  it('should insert record', async () => {
+    await db.insert({ name: 'Test' });
+    const records = await db.query('SELECT * FROM users');
     expect(records).toHaveLength(1);
   });
 });

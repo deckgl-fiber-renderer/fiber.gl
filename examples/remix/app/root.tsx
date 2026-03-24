@@ -1,7 +1,7 @@
-import { Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Outlet, Scripts, ScrollRestoration } from 'react-router';
 
-import "maplibre-gl/dist/maplibre-gl.css";
-import "./_global.css";
+import 'maplibre-gl/dist/maplibre-gl.css';
+import './_global.css';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

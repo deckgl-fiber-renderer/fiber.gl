@@ -1,18 +1,18 @@
-import "client-only";
+import 'client-only';
 import {
   createRoot,
   roots,
   unmountAtNode,
-} from "@deckgl-fiber-renderer/reconciler";
-import type { ReconcilerRoot } from "@deckgl-fiber-renderer/reconciler";
-import { log } from "@deckgl-fiber-renderer/shared";
-import type { DeckglProps } from "@deckgl-fiber-renderer/types";
-import { FiberProvider, useContextBridge } from "its-fine";
-import type { ContextBridge } from "its-fine";
-import { useEffect, useRef } from "react";
-import type { ReactNode } from "react";
+} from '@deckgl-fiber-renderer/reconciler';
+import type { ReconcilerRoot } from '@deckgl-fiber-renderer/reconciler';
+import { log } from '@deckgl-fiber-renderer/shared';
+import type { DeckglProps } from '@deckgl-fiber-renderer/types';
+import { FiberProvider, useContextBridge } from 'its-fine';
+import type { ContextBridge } from 'its-fine';
+import { useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
 
-import { useIsomorphicLayoutEffect } from "./hooks";
+import { useIsomorphicLayoutEffect } from './hooks';
 
 function DeckglComponent(props: DeckglProps) {
   const { children, ...etc } = props;
@@ -54,7 +54,7 @@ function DeckglComponent(props: DeckglProps) {
 
   // NOTE: interleaved prop is a hint that we are utilizing an external renderer such as Mapbox/Maplibre
   // so we want to avoid rendering another container / canvas element if that is true.
-  if ("interleaved" in props) {
+  if ('interleaved' in props) {
     return <div ref={interleave} id="deckgl-fiber-interleave" hidden />;
   }
 

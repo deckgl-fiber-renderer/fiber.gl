@@ -52,7 +52,7 @@ function MyMap({ data }) {
     <layer
       layer={
         new ScatterplotLayer({
-          id: "my-points",
+          id: 'my-points',
           data,
           getPosition: (d) => d.coordinates,
         })
@@ -119,8 +119,8 @@ function MyMap() {
   // ❌ Both layers have id "data-layer"
   return (
     <>
-      <layer layer={new ScatterplotLayer({ id: "data-layer", data: points })} />
-      <layer layer={new PathLayer({ id: "data-layer", data: paths })} />
+      <layer layer={new ScatterplotLayer({ id: 'data-layer', data: points })} />
+      <layer layer={new PathLayer({ id: 'data-layer', data: paths })} />
     </>
   );
 }
@@ -134,9 +134,9 @@ function MyMap() {
   return (
     <>
       <layer
-        layer={new ScatterplotLayer({ id: "points-layer", data: points })}
+        layer={new ScatterplotLayer({ id: 'points-layer', data: points })}
       />
-      <layer layer={new PathLayer({ id: "paths-layer", data: paths })} />
+      <layer layer={new PathLayer({ id: 'paths-layer', data: paths })} />
     </>
   );
 }
@@ -171,8 +171,8 @@ All validation runs **only in development**:
 
 ```tsx
 // This check only runs if NODE_ENV === "development"
-if (process.env.NODE_ENV === "development") {
-  if (!layer.id || layer.id === "unknown") {
+if (process.env.NODE_ENV === 'development') {
+  if (!layer.id || layer.id === 'unknown') {
     console.warn("Layer missing explicit 'id' prop...");
   }
 }
@@ -206,7 +206,7 @@ When you build for production, these checks are completely removed by your bundl
    id: `layer-${Math.random()}`;
 
    // ✅ Good - stable ID
-   id: "my-layer";
+   id: 'my-layer';
    ```
 
 4. **Unique per layer type** - It's fine to have `{ id: "points" }` for both a ScatterplotLayer and a different map:
@@ -229,7 +229,7 @@ Validation is automatically disabled in production builds. If you need to disabl
 
 ```tsx
 // Not recommended - validation helps catch bugs
-process.env.NODE_ENV = "production";
+process.env.NODE_ENV = 'production';
 ```
 
 However, it's better to fix the underlying issues than to silence warnings.

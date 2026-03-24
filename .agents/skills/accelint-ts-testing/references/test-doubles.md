@@ -25,8 +25,8 @@ Use real code whenever possible - it provides the most confidence.
 **✅ Correct: using real implementation**
 
 ```ts
-describe("OrderService", () => {
-  it("should calculate order total correctly", () => {
+describe('OrderService', () => {
+  it('should calculate order total correctly', () => {
     const priceCalculator = new PriceCalculator(); // Real implementation
     const orderService = new OrderService(priceCalculator);
 
@@ -67,7 +67,7 @@ class FakeUserRepository implements UserRepository {
   }
 }
 
-describe("UserService", () => {
+describe('UserService', () => {
   let userRepo: FakeUserRepository;
   let userService: UserService;
 
@@ -76,10 +76,10 @@ describe("UserService", () => {
     userService = new UserService(userRepo);
   });
 
-  it("should create and retrieve user", async () => {
+  it('should create and retrieve user', async () => {
     const user = await userService.createUser({
-      name: "John",
-      email: "john@example.com",
+      name: 'John',
+      email: 'john@example.com',
     });
 
     const retrieved = await userService.getUser(user.id);
@@ -87,9 +87,9 @@ describe("UserService", () => {
     expect(retrieved).toEqual(user);
   });
 
-  it("should list all users", async () => {
-    await userService.createUser({ name: "Alice", email: "alice@example.com" });
-    await userService.createUser({ name: "Bob", email: "bob@example.com" });
+  it('should list all users', async () => {
+    await userService.createUser({ name: 'Alice', email: 'alice@example.com' });
+    await userService.createUser({ name: 'Bob', email: 'bob@example.com' });
 
     const users = await userService.getAllUsers();
 
@@ -109,7 +109,7 @@ class FakePaymentGateway implements PaymentGateway {
       id: `pay_${Date.now()}`,
       amount,
       token,
-      status: "succeeded",
+      status: 'succeeded',
       createdAt: new Date(),
     };
 
@@ -131,32 +131,32 @@ Stubs return pre-configured responses without implementing real behavior.
 **✅ Correct: stubbing external API call**
 
 ```ts
-describe("WeatherService", () => {
-  it("should return temperature for city", async () => {
+describe('WeatherService', () => {
+  it('should return temperature for city', async () => {
     const apiClient = {
       fetch: vi.fn().mockResolvedValue({
         temperature: 72,
-        conditions: "sunny",
-        city: "San Francisco",
+        conditions: 'sunny',
+        city: 'San Francisco',
       }),
     };
 
     const weatherService = new WeatherService(apiClient);
-    const weather = await weatherService.getWeather("San Francisco");
+    const weather = await weatherService.getWeather('San Francisco');
 
     expect(weather.temperature).toEqual(72);
-    expect(apiClient.fetch).toHaveBeenCalledWith("/weather?city=San+Francisco");
+    expect(apiClient.fetch).toHaveBeenCalledWith('/weather?city=San+Francisco');
   });
 
-  it("should handle API errors", async () => {
+  it('should handle API errors', async () => {
     const apiClient = {
-      fetch: vi.fn().mockRejectedValue(new Error("API unavailable")),
+      fetch: vi.fn().mockRejectedValue(new Error('API unavailable')),
     };
 
     const weatherService = new WeatherService(apiClient);
 
-    await expect(weatherService.getWeather("Invalid")).rejects.toThrow(
-      "API unavailable"
+    await expect(weatherService.getWeather('Invalid')).rejects.toThrow(
+      'API unavailable'
     );
   });
 });
@@ -165,20 +165,20 @@ describe("WeatherService", () => {
 **✅ Correct: stubbing multiple scenarios**
 
 ```ts
-describe("DataService", () => {
-  it("should retry on failure then succeed", async () => {
+describe('DataService', () => {
+  it('should retry on failure then succeed', async () => {
     const apiClient = {
       fetch: vi
         .fn()
-        .mockRejectedValueOnce(new Error("Timeout"))
-        .mockRejectedValueOnce(new Error("Timeout"))
-        .mockResolvedValueOnce({ data: "success" }),
+        .mockRejectedValueOnce(new Error('Timeout'))
+        .mockRejectedValueOnce(new Error('Timeout'))
+        .mockResolvedValueOnce({ data: 'success' }),
     };
 
     const service = new DataService(apiClient);
-    const result = await service.fetchWithRetry("/api/data");
+    const result = await service.fetchWithRetry('/api/data');
 
-    expect(result).toEqual({ data: "success" });
+    expect(result).toEqual({ data: 'success' });
     expect(apiClient.fetch).toHaveBeenCalledTimes(3);
   });
 });
@@ -191,14 +191,14 @@ Spies record function calls while preserving original behavior.
 **✅ Correct: spying on method calls**
 
 ```ts
-describe("Logger", () => {
-  it("should log errors to console", () => {
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+describe('Logger', () => {
+  it('should log errors to console', () => {
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const logger = new Logger();
-    logger.error("Something went wrong");
+    logger.error('Something went wrong');
 
-    expect(consoleSpy).toHaveBeenCalledWith("[ERROR]", "Something went wrong");
+    expect(consoleSpy).toHaveBeenCalledWith('[ERROR]', 'Something went wrong');
 
     consoleSpy.mockRestore();
   });
@@ -208,16 +208,16 @@ describe("Logger", () => {
 **✅ Correct: spying to verify side effects**
 
 ```ts
-describe("Analytics", () => {
-  it("should track page views", () => {
+describe('Analytics', () => {
+  it('should track page views', () => {
     const trackingSpy = vi.fn();
     const analytics = new Analytics({ track: trackingSpy });
 
-    analytics.pageView("/home", { userId: "123" });
+    analytics.pageView('/home', { userId: '123' });
 
-    expect(trackingSpy).toHaveBeenCalledWith("pageview", {
-      path: "/home",
-      userId: "123",
+    expect(trackingSpy).toHaveBeenCalledWith('pageview', {
+      path: '/home',
+      userId: '123',
     });
   });
 });
@@ -230,19 +230,19 @@ Mocks replace behavior AND verify interactions. Use only when necessary.
 **✅ Correct: mocking external service**
 
 ```ts
-describe("EmailService", () => {
-  it("should send welcome email to new users", async () => {
+describe('EmailService', () => {
+  it('should send welcome email to new users', async () => {
     const emailProvider = {
-      send: vi.fn().mockResolvedValue({ messageId: "msg-123" }),
+      send: vi.fn().mockResolvedValue({ messageId: 'msg-123' }),
     };
 
     const emailService = new EmailService(emailProvider);
-    await emailService.sendWelcomeEmail("user@example.com");
+    await emailService.sendWelcomeEmail('user@example.com');
 
     expect(emailProvider.send).toHaveBeenCalledWith({
-      to: "user@example.com",
-      subject: "Welcome!",
-      body: expect.stringContaining("Welcome"),
+      to: 'user@example.com',
+      subject: 'Welcome!',
+      body: expect.stringContaining('Welcome'),
     });
   });
 });
@@ -251,11 +251,11 @@ describe("EmailService", () => {
 **❌ Incorrect: over-mocking internal code**
 
 ```ts
-describe("OrderProcessor", () => {
-  it("should process order", () => {
+describe('OrderProcessor', () => {
+  it('should process order', () => {
     const calculateTaxMock = vi.fn().mockReturnValue(5);
     const calculateShippingMock = vi.fn().mockReturnValue(10);
-    const formatPriceMock = vi.fn().mockReturnValue("$50.00");
+    const formatPriceMock = vi.fn().mockReturnValue('$50.00');
 
     // Too many mocks! Just use real implementations
     const processor = new OrderProcessor({
@@ -278,8 +278,8 @@ Create mock functions when you need fine control.
 **✅ Correct: creating mock with specific behavior**
 
 ```ts
-describe("DataFetcher", () => {
-  it("should handle pagination", async () => {
+describe('DataFetcher', () => {
+  it('should handle pagination', async () => {
     const fetchFn = vi
       .fn()
       .mockResolvedValueOnce({ items: [1, 2, 3], hasMore: true })
@@ -302,22 +302,22 @@ Mock entire modules when you need to replace external dependencies.
 **✅ Correct: mocking external module**
 
 ```ts
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
-vi.mock("uuid", () => ({
+vi.mock('uuid', () => ({
   v4: vi.fn(),
 }));
 
-describe("UserService", () => {
-  it("should generate unique user IDs", () => {
-    vi.mocked(uuidv4).mockReturnValueOnce("id-1").mockReturnValueOnce("id-2");
+describe('UserService', () => {
+  it('should generate unique user IDs', () => {
+    vi.mocked(uuidv4).mockReturnValueOnce('id-1').mockReturnValueOnce('id-2');
 
     const service = new UserService();
-    const user1 = service.createUser({ name: "Alice" });
-    const user2 = service.createUser({ name: "Bob" });
+    const user1 = service.createUser({ name: 'Alice' });
+    const user2 = service.createUser({ name: 'Bob' });
 
-    expect(user1.id).toBe("id-1");
-    expect(user2.id).toBe("id-2");
+    expect(user1.id).toBe('id-1');
+    expect(user2.id).toBe('id-2');
   });
 });
 ```
@@ -325,8 +325,8 @@ describe("UserService", () => {
 **✅ Correct: partial module mock**
 
 ```ts
-vi.mock("../utils", async () => {
-  const actual = await vi.importActual("../utils");
+vi.mock('../utils', async () => {
+  const actual = await vi.importActual('../utils');
   return {
     ...actual,
     fetchData: vi.fn(), // Only mock fetchData, keep other utils real
@@ -341,7 +341,7 @@ Use fake timers for testing time-dependent code.
 **✅ Correct: testing debounce with fake timers**
 
 ```ts
-describe("debounce", () => {
+describe('debounce', () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -350,7 +350,7 @@ describe("debounce", () => {
     vi.useRealTimers();
   });
 
-  it("should delay function execution", () => {
+  it('should delay function execution', () => {
     const callback = vi.fn();
     const debounced = debounce(callback, 1000);
 
@@ -370,7 +370,7 @@ describe("debounce", () => {
 **✅ Correct: testing intervals**
 
 ```ts
-it("should poll every 5 seconds", () => {
+it('should poll every 5 seconds', () => {
   vi.useFakeTimers();
 
   const pollFn = vi.fn();
@@ -398,23 +398,23 @@ Mock dates for consistent test results.
 **✅ Correct: mocking current date**
 
 ```ts
-describe("isExpired", () => {
+describe('isExpired', () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2024-01-01"));
+    vi.setSystemTime(new Date('2024-01-01'));
   });
 
   afterEach(() => {
     vi.useRealTimers();
   });
 
-  it("should return true for expired items", () => {
-    const expiredItem = { expiryDate: new Date("2023-12-31") };
+  it('should return true for expired items', () => {
+    const expiredItem = { expiryDate: new Date('2023-12-31') };
     expect(isExpired(expiredItem)).toBe(true);
   });
 
-  it("should return false for valid items", () => {
-    const validItem = { expiryDate: new Date("2024-12-31") };
+  it('should return false for valid items', () => {
+    const validItem = { expiryDate: new Date('2024-12-31') };
     expect(isExpired(validItem)).toBe(false);
   });
 });
@@ -427,7 +427,7 @@ Always clean up mocks between tests.
 **✅ Correct: clearing mocks**
 
 ```ts
-describe("UserService", () => {
+describe('UserService', () => {
   const mockApi = {
     fetchUser: vi.fn(),
   };
@@ -436,13 +436,13 @@ describe("UserService", () => {
     mockApi.fetchUser.mockClear(); // Clear call history
   });
 
-  it("test 1", async () => {
-    mockApi.fetchUser.mockResolvedValue({ id: "1", name: "Alice" });
+  it('test 1', async () => {
+    mockApi.fetchUser.mockResolvedValue({ id: '1', name: 'Alice' });
     // ... test logic
   });
 
-  it("test 2", async () => {
-    mockApi.fetchUser.mockResolvedValue({ id: "2", name: "Bob" });
+  it('test 2', async () => {
+    mockApi.fetchUser.mockResolvedValue({ id: '2', name: 'Bob' });
     // ... test logic
   });
 });
@@ -454,11 +454,11 @@ describe("UserService", () => {
 // vitest.config.ts should have:
 // restoreMocks: true  // Handles spy restoration automatically
 
-describe("Logger", () => {
-  it("should log to console", () => {
-    const spy = vi.spyOn(console, "log");
-    logger.info("test message");
-    expect(spy).toHaveBeenCalledWith("[INFO]", "test message");
+describe('Logger', () => {
+  it('should log to console', () => {
+    const spy = vi.spyOn(console, 'log');
+    logger.info('test message');
+    expect(spy).toHaveBeenCalledWith('[INFO]', 'test message');
     // Spy automatically restored by global config
   });
 });
@@ -467,13 +467,13 @@ describe("Logger", () => {
 **❌ Anti-pattern: manual spy restoration**
 
 ```ts
-describe("Logger", () => {
+describe('Logger', () => {
   afterEach(() => {
     vi.restoreAllMocks(); // ❌ Use restoreMocks: true in config instead
   });
 
-  it("should log to console", () => {
-    const spy = vi.spyOn(console, "log");
+  it('should log to console', () => {
+    const spy = vi.spyOn(console, 'log');
     // ... test logic
   });
 });
@@ -484,10 +484,10 @@ describe("Logger", () => {
 **❌ Incorrect: mocking everything**
 
 ```ts
-it("should create user", () => {
+it('should create user', () => {
   const mockValidate = vi.fn().mockReturnValue(true);
-  const mockHash = vi.fn().mockReturnValue("hashed");
-  const mockGenId = vi.fn().mockReturnValue("id-123");
+  const mockHash = vi.fn().mockReturnValue('hashed');
+  const mockGenId = vi.fn().mockReturnValue('id-123');
   const mockSave = vi.fn();
 
   // Way too many mocks - just use real code!
@@ -503,11 +503,11 @@ it("should create user", () => {
 **❌ Incorrect: testing mocks instead of behavior**
 
 ```ts
-it("should call formatUser", () => {
+it('should call formatUser', () => {
   const mockFormat = vi.fn();
   service.formatUser = mockFormat;
 
-  service.getUser("123");
+  service.getUser('123');
 
   expect(mockFormat).toHaveBeenCalled(); // Who cares if it was called?
 });
@@ -518,13 +518,13 @@ _Why?_ Test the actual behavior (what the user gets), not internal implementatio
 **❌ Incorrect: brittle interaction testing**
 
 ```ts
-it("should process user", () => {
+it('should process user', () => {
   service.processUser(user);
 
   expect(logger.log).toHaveBeenCalledTimes(3); // Fragile!
-  expect(logger.log).toHaveBeenNthCalledWith(1, "start");
-  expect(logger.log).toHaveBeenNthCalledWith(2, "processing");
-  expect(logger.log).toHaveBeenNthCalledWith(3, "done");
+  expect(logger.log).toHaveBeenNthCalledWith(1, 'start');
+  expect(logger.log).toHaveBeenNthCalledWith(2, 'processing');
+  expect(logger.log).toHaveBeenNthCalledWith(3, 'done');
 });
 ```
 

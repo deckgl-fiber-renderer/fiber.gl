@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -8,18 +8,18 @@ export default defineConfig({
     restoreMocks: true,
 
     // Test environment
-    environment: "node",
+    environment: 'node',
 
     // Coverage thresholds (80%+ for shared)
     coverage: {
       exclude: [
-        "**/__tests__/**",
-        "**/dist/**",
-        "**/node_modules/**",
-        "**/logger.ts", // Excluded per design doc
+        '**/__tests__/**',
+        '**/dist/**',
+        '**/node_modules/**',
+        '**/logger.ts', // Excluded per design doc
       ],
-      provider: "v8",
-      reporter: ["text", "json", "html"],
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
       thresholds: {
         branches: 80,
         functions: 80,

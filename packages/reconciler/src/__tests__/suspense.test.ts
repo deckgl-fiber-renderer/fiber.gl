@@ -1,31 +1,31 @@
-import { ScatterplotLayer } from "@deck.gl/layers";
-import { describe, expect, it } from "vitest";
+import { ScatterplotLayer } from '@deck.gl/layers';
+import { describe, expect, it } from 'vitest';
 
 import {
   cloneHiddenInstance,
   cloneHiddenTextInstance,
   unhideInstance,
   unhideTextInstance,
-} from "../config";
-import type { Instance } from "../types";
+} from '../config';
+import type { Instance } from '../types';
 
-describe("suspense", () => {
-  describe("cloneHiddenInstance", () => {
-    it("returns instance with same structure", () => {
+describe('suspense', () => {
+  describe('cloneHiddenInstance', () => {
+    it('returns instance with same structure', () => {
       const layer = new ScatterplotLayer({
         data: [],
-        id: "test-layer",
+        id: 'test-layer',
       });
       const child: Instance = {
         children: [],
-        node: new ScatterplotLayer({ data: [], id: "child" }),
+        node: new ScatterplotLayer({ data: [], id: 'child' }),
       };
       const instance: Instance = {
         children: [child],
         node: layer,
       };
 
-      const hidden = cloneHiddenInstance(instance, "layer", { layer });
+      const hidden = cloneHiddenInstance(instance, 'layer', { layer });
 
       // Should preserve node and children references
       expect(hidden.node).toBe(layer);
@@ -35,11 +35,11 @@ describe("suspense", () => {
     });
   });
 
-  describe("unhideInstance", () => {
+  describe('unhideInstance', () => {
     it("doesn't throw", () => {
       const layer = new ScatterplotLayer({
         data: [],
-        id: "test-layer",
+        id: 'test-layer',
       });
       const instance: Instance = {
         children: [],
@@ -52,27 +52,27 @@ describe("suspense", () => {
     });
   });
 
-  describe("text instance methods", () => {
-    it("cloneHiddenTextInstance throws with helpful error", () => {
+  describe('text instance methods', () => {
+    it('cloneHiddenTextInstance throws with helpful error', () => {
       const instance: Instance = {
         children: [],
-        node: new ScatterplotLayer({ data: [], id: "test" }),
+        node: new ScatterplotLayer({ data: [], id: 'test' }),
       };
 
       expect(() => {
         cloneHiddenTextInstance(instance);
-      }).toThrow("Text nodes are not supported in deck.gl renderer");
+      }).toThrow('Text nodes are not supported in deck.gl renderer');
     });
 
-    it("unhideTextInstance throws with helpful error", () => {
+    it('unhideTextInstance throws with helpful error', () => {
       const instance: Instance = {
         children: [],
-        node: new ScatterplotLayer({ data: [], id: "test" }),
+        node: new ScatterplotLayer({ data: [], id: 'test' }),
       };
 
       expect(() => {
-        unhideTextInstance(instance, "text");
-      }).toThrow("Text nodes are not supported in deck.gl renderer");
+        unhideTextInstance(instance, 'text');
+      }).toThrow('Text nodes are not supported in deck.gl renderer');
     });
   });
 });

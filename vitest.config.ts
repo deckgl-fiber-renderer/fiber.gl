@@ -1,4 +1,4 @@
-import { defineConfig } from "vitest/config";
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
@@ -8,12 +8,12 @@ export default defineConfig({
     restoreMocks: true,
 
     // Test environment
-    environment: "node",
+    environment: 'node',
 
     // Coverage configuration
     coverage: {
-      provider: "v8",
-      reporter: ["text", "json", "html"],
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
       // Package-specific thresholds are defined in each package's vitest.config.ts
       // This root config serves as a fallback
       thresholds: {
@@ -23,12 +23,12 @@ export default defineConfig({
         statements: 80,
       },
       exclude: [
-        "**/__tests__/**",
-        "**/__fixtures__/**",
-        "**/dist/**",
-        "**/node_modules/**",
-        "**/examples/**",
-        "**/docs/**",
+        '**/__tests__/**',
+        '**/__fixtures__/**',
+        '**/dist/**',
+        '**/node_modules/**',
+        '**/examples/**',
+        '**/docs/**',
       ],
     },
   },

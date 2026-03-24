@@ -1,8 +1,8 @@
-import type { Layer, View } from "@deck.gl/core";
-import type { createStore } from "@deckgl-fiber-renderer/shared";
-import { vi } from "vitest";
+import type { Layer, View } from '@deck.gl/core';
+import type { createStore } from '@deckgl-fiber-renderer/shared';
+import { vi } from 'vitest';
 
-import type { Container, HostContext, Instance } from "../types";
+import type { Container, HostContext, Instance } from '../types';
 
 /**
  * Creates a mock Deck.gl instance for testing

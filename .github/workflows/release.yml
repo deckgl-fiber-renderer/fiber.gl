@@ -32,9 +32,9 @@ jobs:
           run_install: false
       - uses: actions/setup-node@v4
         with:
-          registry-url: "https://registry.npmjs.org"
+          registry-url: 'https://registry.npmjs.org'
           node-version: ${{ env.RUNNER_NODE_VERSION }}
-          cache: "pnpm"
+          cache: 'pnpm'
       - run: pnpm install
       - name: Creating .npmrc
         run: |
@@ -47,8 +47,8 @@ jobs:
         with:
           publish: pnpm run changeset:release
           version: pnpm run changeset:version
-          commit: "build: version packages"
-          title: "Changeset Action: Version Packages + Publish"
+          commit: 'build: version packages'
+          title: 'Changeset Action: Version Packages + Publish'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -16,7 +16,7 @@ Don't repeat provider setup in every test. Create custom render utilities that w
 
 ```tsx
 // ❌ Every test file repeats this
-test("component with theme", () => {
+test('component with theme', () => {
   render(
     <ThemeProvider theme={theme}>
       <Component />
@@ -25,7 +25,7 @@ test("component with theme", () => {
 });
 
 // ❌ Duplicated in another test file
-test("other component", () => {
+test('other component', () => {
   render(
     <ThemeProvider theme={theme}>
       <OtherComponent />
@@ -44,17 +44,17 @@ test("other component", () => {
 
 ```tsx
 // test-utils.tsx
-import { render } from "@testing-library/react";
-import { ThemeProvider } from "./theme";
+import { render } from '@testing-library/react';
+import { ThemeProvider } from './theme';
 
 export function renderWithTheme(ui: React.ReactElement, theme = defaultTheme) {
   return render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
 }
 
 // component.test.tsx
-import { renderWithTheme } from "./test-utils";
+import { renderWithTheme } from './test-utils';
 
-test("component with theme", () => {
+test('component with theme', () => {
   renderWithTheme(<Component />);
   // Test assertions...
 });
@@ -68,11 +68,11 @@ test("component with theme", () => {
 
 ```tsx
 // test-utils.tsx
-import { render, RenderOptions } from "@testing-library/react";
-import { ThemeProvider } from "./ThemeProvider";
-import { theme } from "./theme";
+import { render, RenderOptions } from '@testing-library/react';
+import { ThemeProvider } from './ThemeProvider';
+import { theme } from './theme';
 
-interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
+interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   theme?: typeof theme;
 }
 
@@ -88,7 +88,7 @@ export function renderWithTheme(
 }
 
 // Usage
-test("uses theme colors", () => {
+test('uses theme colors', () => {
   renderWithTheme(<Button />, { theme: darkTheme });
   // ...
 });
@@ -98,12 +98,12 @@ test("uses theme colors", () => {
 
 ```tsx
 // test-utils.tsx
-import { render, RenderOptions } from "@testing-library/react";
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
-import { rootReducer } from "./store";
+import { render, RenderOptions } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { rootReducer } from './store';
 
-interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
+interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   preloadedState?: RootState;
   store?: ReturnType<typeof configureStore>;
 }
@@ -124,12 +124,12 @@ export function renderWithStore(
 }
 
 // Usage
-test("dispatches action", async () => {
+test('dispatches action', async () => {
   const { store } = renderWithStore(<TodoList />, {
     preloadedState: { todos: [] },
   });
 
-  await userEvent.click(screen.getByRole("button", { name: /add/i }));
+  await userEvent.click(screen.getByRole('button', { name: /add/i }));
   expect(store.getState().todos).toHaveLength(1);
 });
 ```
@@ -138,16 +138,16 @@ test("dispatches action", async () => {
 
 ```tsx
 // test-utils.tsx
-import { render, RenderOptions } from "@testing-library/react";
-import { BrowserRouter, MemoryRouter } from "react-router-dom";
+import { render, RenderOptions } from '@testing-library/react';
+import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 
-interface RouterRenderOptions extends Omit<RenderOptions, "wrapper"> {
+interface RouterRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   initialEntries?: string[];
 }
 
 export function renderWithRouter(
   ui: React.ReactElement,
-  { initialEntries = ["/"], ...options }: RouterRenderOptions = {}
+  { initialEntries = ['/'], ...options }: RouterRenderOptions = {}
 ) {
   function Wrapper({ children }: { children: React.ReactNode }) {
     return (
@@ -159,10 +159,10 @@ export function renderWithRouter(
 }
 
 // Usage
-test("navigates to detail page", async () => {
-  renderWithRouter(<App />, { initialEntries: ["/items/123"] });
+test('navigates to detail page', async () => {
+  renderWithRouter(<App />, { initialEntries: ['/items/123'] });
   expect(
-    await screen.findByRole("heading", { name: /item 123/i })
+    await screen.findByRole('heading', { name: /item 123/i })
   ).toBeInTheDocument();
 });
 ```
@@ -171,14 +171,14 @@ test("navigates to detail page", async () => {
 
 ```tsx
 // test-utils.tsx
-import { render, RenderOptions } from "@testing-library/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
-import { ThemeProvider } from "./theme";
+import { render, RenderOptions } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { ThemeProvider } from './theme';
 
-interface AllProvidersOptions extends Omit<RenderOptions, "wrapper"> {
+interface AllProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
   initialEntries?: string[];
   preloadedState?: RootState;
   queryClient?: QueryClient;
@@ -188,7 +188,7 @@ interface AllProvidersOptions extends Omit<RenderOptions, "wrapper"> {
 export function renderWithAllProviders(
   ui: React.ReactElement,
   {
-    initialEntries = ["/"],
+    initialEntries = ['/'],
     preloadedState = {},
     queryClient = new QueryClient({
       defaultOptions: {
@@ -235,10 +235,10 @@ export function renderWithAllProviders(
 
 ```tsx
 // ❌ Mixing custom and standard imports
-import { screen } from "@testing-library/react";
-import { renderWithProviders } from "./test-utils";
+import { screen } from '@testing-library/react';
+import { renderWithProviders } from './test-utils';
 
-test("example", () => {
+test('example', () => {
   renderWithProviders(<Component />);
   // ...
 });
@@ -248,15 +248,15 @@ test("example", () => {
 
 ```tsx
 // test-utils.tsx
-export { screen, waitFor, within } from "@testing-library/react";
-export * from "@testing-library/user-event";
+export { screen, waitFor, within } from '@testing-library/react';
+export * from '@testing-library/user-event';
 
 // component.test.tsx
-import { renderWithProviders, screen, waitFor } from "./test-utils";
+import { renderWithProviders, screen, waitFor } from './test-utils';
 
-test("example", async () => {
+test('example', async () => {
   renderWithProviders(<Component />);
-  expect(await screen.findByText("Content")).toBeInTheDocument();
+  expect(await screen.findByText('Content')).toBeInTheDocument();
 });
 ```
 
@@ -266,16 +266,16 @@ test("example", async () => {
 
 ```tsx
 // test-utils.tsx
-import { render, RenderOptions, RenderResult } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import { ReactElement } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { configureStore } from "@reduxjs/toolkit";
-import { ThemeProvider } from "./theme";
-import { rootReducer, RootState } from "./store";
-import { defaultTheme, Theme } from "./theme";
+import { render, RenderOptions, RenderResult } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { ReactElement } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { ThemeProvider } from './theme';
+import { rootReducer, RootState } from './store';
+import { defaultTheme, Theme } from './theme';
 
 // Re-export Testing Library utilities
 export {
@@ -283,9 +283,9 @@ export {
   waitFor,
   within,
   waitForElementToBeRemoved,
-} from "@testing-library/react";
+} from '@testing-library/react';
 
-interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
+interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   preloadedState?: Partial<RootState>;
   store?: ReturnType<typeof configureStore>;
   queryClient?: QueryClient;
@@ -311,7 +311,7 @@ export function renderWithProviders(
       },
     }),
     theme = defaultTheme,
-    initialEntries = ["/"],
+    initialEntries = ['/'],
     ...options
   }: CustomRenderOptions = {}
 ): CustomRenderResult {
@@ -342,15 +342,15 @@ export { renderWithProviders as render };
 ### Usage
 
 ```tsx
-import { render, screen } from "./test-utils";
+import { render, screen } from './test-utils';
 
-test("full app integration", async () => {
+test('full app integration', async () => {
   const { user, store } = render(<App />, {
     preloadedState: { user: mockUser },
-    initialEntries: ["/dashboard"],
+    initialEntries: ['/dashboard'],
   });
 
-  await user.click(screen.getByRole("button", { name: /logout/i }));
+  await user.click(screen.getByRole('button', { name: /logout/i }));
 
   expect(store.getState().user).toBeNull();
   expect(screen.getByText(/login/i)).toBeInTheDocument();

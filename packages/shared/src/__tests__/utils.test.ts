@@ -1,10 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from 'vitest';
 
-import { isDefined, isFn, toPascal, isBrowserEnvironment } from "../utils";
+import { isDefined, isFn, toPascal, isBrowserEnvironment } from '../utils';
 
-describe("Utility Functions Tests", () => {
-  describe("isDefined", () => {
-    it("should isDefined returns false for undefined", () => {
+describe('Utility Functions Tests', () => {
+  describe('isDefined', () => {
+    it('should isDefined returns false for undefined', () => {
       // Act
       const result = isDefined();
 
@@ -12,7 +12,7 @@ describe("Utility Functions Tests", () => {
       expect(result).toBe(false);
     });
 
-    it("should isDefined returns true for null", () => {
+    it('should isDefined returns true for null', () => {
       // Act
       const result = isDefined(null);
 
@@ -23,13 +23,13 @@ describe("Utility Functions Tests", () => {
     it('should isDefined returns true for falsy values (0, "", false)', () => {
       // Act & Assert
       expect(isDefined(0)).toBe(true);
-      expect(isDefined("")).toBe(true);
+      expect(isDefined('')).toBe(true);
       expect(isDefined(false)).toBe(true);
     });
   });
 
-  describe("isFn", () => {
-    it("should isFn returns true for functions", () => {
+  describe('isFn', () => {
+    it('should isFn returns true for functions', () => {
       // Arrange
       const func = () => {};
       const arrowFunc = () => {};
@@ -42,10 +42,10 @@ describe("Utility Functions Tests", () => {
       expect(isFn(namedFunc)).toBe(true);
     });
 
-    it("should isFn returns false for non-functions", () => {
+    it('should isFn returns false for non-functions', () => {
       // Act & Assert
       expect(isFn(123)).toBe(false);
-      expect(isFn("string")).toBe(false);
+      expect(isFn('string')).toBe(false);
       expect(isFn({})).toBe(false);
       expect(isFn([])).toBe(false);
       expect(isFn(null)).toBe(false);
@@ -53,34 +53,34 @@ describe("Utility Functions Tests", () => {
     });
   });
 
-  describe("toPascal", () => {
-    it("should toPascal capitalizes first letter", () => {
+  describe('toPascal', () => {
+    it('should toPascal capitalizes first letter', () => {
       // Act
-      const result = toPascal("hello");
+      const result = toPascal('hello');
 
       // Assert
-      expect(result).toBe("Hello");
+      expect(result).toBe('Hello');
     });
 
-    it("should toPascal handles empty string", () => {
+    it('should toPascal handles empty string', () => {
       // Act
-      const result = toPascal("");
+      const result = toPascal('');
 
       // Assert
-      expect(result).toBe("");
+      expect(result).toBe('');
     });
 
-    it("should toPascal preserves rest of string", () => {
+    it('should toPascal preserves rest of string', () => {
       // Act
-      const result = toPascal("helloWorld");
+      const result = toPascal('helloWorld');
 
       // Assert
-      expect(result).toBe("HelloWorld");
+      expect(result).toBe('HelloWorld');
     });
   });
 
-  describe("isBrowserEnvironment", () => {
-    it("should isBrowserEnvironment returns false in Node test environment", () => {
+  describe('isBrowserEnvironment', () => {
+    it('should isBrowserEnvironment returns false in Node test environment', () => {
       // Assert - in Node.js/vitest environment, should be false
       expect(isBrowserEnvironment).toBe(false);
     });

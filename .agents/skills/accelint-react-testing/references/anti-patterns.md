@@ -10,26 +10,26 @@ Avoid these common mistakes that make tests brittle, hard to maintain, or provid
 
 ```tsx
 // ❌ Testing state variable
-test("counter increments", () => {
+test('counter increments', () => {
   const { result } = renderHook(() => useCounter());
   act(() => result.current.increment());
   expect(result.current.count).toBe(1); // Testing internal state
 });
 
 // ❌ Testing function was called
-test("calls handler", async () => {
+test('calls handler', async () => {
   const handleClick = vi.fn();
   render(<Button onClick={handleClick} />);
   // Component refactored to call onClick twice internally
-  await userEvent.click(screen.getByRole("button"));
+  await userEvent.click(screen.getByRole('button'));
   expect(handleClick).toHaveBeenCalledTimes(1); // Breaks if implementation changes
 });
 
 // ❌ Testing component instance methods
-test("validates input", () => {
+test('validates input', () => {
   const ref = React.createRef();
   render(<Form ref={ref} />);
-  expect(ref.current.validateEmail("test")).toBe(false); // Testing private API
+  expect(ref.current.validateEmail('test')).toBe(false); // Testing private API
 });
 ```
 
@@ -43,32 +43,32 @@ test("validates input", () => {
 
 ```tsx
 // ✅ Test rendered output
-test("counter increments", async () => {
+test('counter increments', async () => {
   const user = userEvent.setup();
   render(<Counter />);
 
-  await user.click(screen.getByRole("button", { name: /increment/i }));
-  expect(screen.getByText("Count: 1")).toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: /increment/i }));
+  expect(screen.getByText('Count: 1')).toBeInTheDocument();
 });
 
 // ✅ Test effect of click
-test("submits form", async () => {
+test('submits form', async () => {
   const user = userEvent.setup();
   render(<ContactForm />);
 
-  await user.type(screen.getByLabelText(/email/i), "test@example.com");
-  await user.click(screen.getByRole("button", { name: /submit/i }));
+  await user.type(screen.getByLabelText(/email/i), 'test@example.com');
+  await user.click(screen.getByRole('button', { name: /submit/i }));
 
   expect(await screen.findByText(/thank you/i)).toBeInTheDocument();
 });
 
 // ✅ Test validation feedback
-test("shows validation error", async () => {
+test('shows validation error', async () => {
   const user = userEvent.setup();
   render(<Form />);
 
-  await user.type(screen.getByLabelText(/email/i), "invalid");
-  await user.click(screen.getByRole("button", { name: /submit/i }));
+  await user.type(screen.getByLabelText(/email/i), 'invalid');
+  await user.click(screen.getByRole('button', { name: /submit/i }));
 
   expect(screen.getByText(/invalid email/i)).toBeInTheDocument();
 });
@@ -86,15 +86,15 @@ test("shows validation error", async () => {
 // ❌ Destructured queries go stale
 const { getByText, rerender } = render(<Counter count={0} />);
 rerender(<Counter count={1} />);
-getByText("Count: 1"); // ❌ Searches old snapshot, might fail
+getByText('Count: 1'); // ❌ Searches old snapshot, might fail
 
 // ❌ container is implementation detail
 const { container } = render(<Component />);
-const button = container.querySelector(".btn"); // ❌ Tests CSS class
+const button = container.querySelector('.btn'); // ❌ Tests CSS class
 
 // ❌ container.firstChild
 const { container } = render(<Component />);
-expect(container.firstChild).toHaveClass("active"); // ❌ Fragile
+expect(container.firstChild).toHaveClass('active'); // ❌ Fragile
 ```
 
 **Problems:**
@@ -108,14 +108,14 @@ expect(container.firstChild).toHaveClass("active"); // ❌ Fragile
 ```tsx
 // ✅ screen always queries current DOM
 render(<Counter count={0} />);
-expect(screen.getByText("Count: 0")).toBeInTheDocument();
+expect(screen.getByText('Count: 0')).toBeInTheDocument();
 
 // After state update
-await userEvent.click(screen.getByRole("button", { name: /increment/i }));
-expect(screen.getByText("Count: 1")).toBeInTheDocument();
+await userEvent.click(screen.getByRole('button', { name: /increment/i }));
+expect(screen.getByText('Count: 1')).toBeInTheDocument();
 
 // ✅ Query by role, not class
-const button = screen.getByRole("button", { name: /submit/i });
+const button = screen.getByRole('button', { name: /submit/i });
 expect(button).toBeEnabled();
 ```
 
@@ -131,12 +131,12 @@ expect(button).toBeEnabled();
 // ❌ Manually forcing re-render
 const { rerender } = render(<Counter count={0} />);
 rerender(<Counter count={1} />); // Not how users interact
-expect(screen.getByText("Count: 1")).toBeInTheDocument();
+expect(screen.getByText('Count: 1')).toBeInTheDocument();
 
 // ❌ Testing prop changes directly
 const { rerender } = render(<Toggle enabled={false} />);
 rerender(<Toggle enabled={true} />);
-expect(screen.getByRole("switch")).toBeChecked();
+expect(screen.getByRole('switch')).toBeChecked();
 ```
 
 **Problems:**
@@ -149,20 +149,20 @@ expect(screen.getByRole("switch")).toBeChecked();
 
 ```tsx
 // ✅ User clicks button
-test("counter increments", async () => {
+test('counter increments', async () => {
   const user = userEvent.setup();
   render(<Counter />);
 
-  await user.click(screen.getByRole("button", { name: /increment/i }));
-  expect(screen.getByText("Count: 1")).toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: /increment/i }));
+  expect(screen.getByText('Count: 1')).toBeInTheDocument();
 });
 
 // ✅ Test prop changes from parent interaction
-test("toggle switch", async () => {
+test('toggle switch', async () => {
   const user = userEvent.setup();
   render(<SettingsPanel />);
 
-  const toggle = screen.getByRole("switch", { name: /notifications/i });
+  const toggle = screen.getByRole('switch', { name: /notifications/i });
   await user.click(toggle);
 
   expect(toggle).toBeChecked();
@@ -185,13 +185,13 @@ test("toggle switch", async () => {
 
 ```tsx
 // ❌ Mocking internal component
-vi.mock("./UserAvatar", () => ({
+vi.mock('./UserAvatar', () => ({
   UserAvatar: () => <div data-testid="mock-avatar" />,
 }));
 
-test("profile page", () => {
+test('profile page', () => {
   render(<ProfilePage />);
-  expect(screen.getByTestId("mock-avatar")).toBeInTheDocument();
+  expect(screen.getByTestId('mock-avatar')).toBeInTheDocument();
   // Doesn't test if UserAvatar actually works with ProfilePage
 });
 ```
@@ -206,16 +206,16 @@ test("profile page", () => {
 
 ```tsx
 // ✅ Use real component
-test("profile page", async () => {
+test('profile page', async () => {
   render(<ProfilePage user={mockUser} />);
 
   // Test actual rendered output
-  const avatar = screen.getByRole("img", { name: mockUser.name });
-  expect(avatar).toHaveAttribute("src", mockUser.avatarUrl);
+  const avatar = screen.getByRole('img', { name: mockUser.name });
+  expect(avatar).toHaveAttribute('src', mockUser.avatarUrl);
 });
 
 // ✅ Mock external dependencies, not internals
-vi.mock("./api", () => ({
+vi.mock('./api', () => ({
   fetchUser: vi.fn(() => Promise.resolve(mockUser)),
 }));
 ```
@@ -244,10 +244,10 @@ vi.mock("./api", () => ({
 
 ```tsx
 // ❌ Internal imports
-import { buildQueries } from "@testing-library/react/internal";
+import { buildQueries } from '@testing-library/react/internal';
 
 // ❌ debug() in committed tests
-test("example", () => {
+test('example', () => {
   render(<Component />);
   screen.debug(); // ❌ Left in committed code
 });
@@ -257,12 +257,12 @@ test("example", () => {
 
 ```tsx
 // ✅ Use documented Testing Library exports
-import { render, screen, within, waitFor } from "@testing-library/react";
+import { render, screen, within, waitFor } from '@testing-library/react';
 
 // ✅ Remove debug() before committing
-test("example", () => {
+test('example', () => {
   render(<Component />);
-  expect(screen.getByRole("button")).toBeInTheDocument();
+  expect(screen.getByRole('button')).toBeInTheDocument();
 });
 ```
 
@@ -276,7 +276,7 @@ test("example", () => {
 
 ```tsx
 // ❌ null + expect gives unhelpful errors
-const button = screen.queryByRole("button", { name: /submit/i });
+const button = screen.queryByRole('button', { name: /submit/i });
 expect(button).toBeInTheDocument();
 // When fails: "Expected null to be in document" - no hints about what roles exist
 ```
@@ -291,12 +291,12 @@ expect(button).toBeInTheDocument();
 
 ```tsx
 // ✅ getBy throws with helpful error immediately
-const button = screen.getByRole("button", { name: /submit/i });
+const button = screen.getByRole('button', { name: /submit/i });
 // When fails: "Unable to find button with name /submit/i
 //              Here are the available roles: link (2), heading (1)..."
 
 // ✅ queryBy only for asserting absence
-expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 ```
 
 **Benefits:**
@@ -317,15 +317,15 @@ expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 // ❌ Click runs on every retry
 await waitFor(() => {
   fireEvent.click(incrementButton);
-  expect(screen.getByText("Count: 5")).toBeInTheDocument();
+  expect(screen.getByText('Count: 5')).toBeInTheDocument();
 });
 // Button clicked 10+ times before assertion passes
 
 // ❌ Multiple queries and actions
 await waitFor(() => {
-  const input = screen.getByRole("textbox");
-  fireEvent.change(input, { target: { value: "test" } });
-  expect(input).toHaveValue("test");
+  const input = screen.getByRole('textbox');
+  fireEvent.change(input, { target: { value: 'test' } });
+  expect(input).toHaveValue('test');
 });
 // Value set multiple times as waitFor retries
 ```
@@ -342,18 +342,18 @@ await waitFor(() => {
 // ✅ Click once, then wait for result
 await userEvent.click(incrementButton);
 await waitFor(() => {
-  expect(screen.getByText("Count: 5")).toBeInTheDocument();
+  expect(screen.getByText('Count: 5')).toBeInTheDocument();
 });
 
 // ✅ Or better: use findBy
 await userEvent.click(incrementButton);
-expect(await screen.findByText("Count: 5")).toBeInTheDocument();
+expect(await screen.findByText('Count: 5')).toBeInTheDocument();
 
 // ✅ Setup outside, assertion inside
-const input = screen.getByRole("textbox");
-await userEvent.type(input, "test");
+const input = screen.getByRole('textbox');
+await userEvent.type(input, 'test');
 await waitFor(() => {
-  expect(input).toHaveValue("test");
+  expect(input).toHaveValue('test');
 });
 ```
 
@@ -386,7 +386,7 @@ function SubmitButton() {
 }
 
 // Test works but component is inaccessible
-const button = screen.getByRole("button", { name: /submit/i });
+const button = screen.getByRole('button', { name: /submit/i });
 ```
 
 **Problems:**
@@ -404,7 +404,7 @@ function SubmitButton() {
 }
 
 // ✅ Test works because component is properly semantic
-const button = screen.getByRole("button", { name: /submit/i });
+const button = screen.getByRole('button', { name: /submit/i });
 
 // ✅ Icon button needs aria-label (this is OK)
 function DeleteButton() {

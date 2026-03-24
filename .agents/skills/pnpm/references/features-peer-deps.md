@@ -110,10 +110,10 @@ Use `.pnpmfile.cjs` to add missing peer dependencies:
 // .pnpmfile.cjs
 function readPackage(pkg, context) {
   // Add missing peer dependency
-  if (pkg.name === "problematic-package") {
+  if (pkg.name === 'problematic-package') {
     pkg.peerDependencies = {
       ...pkg.peerDependencies,
-      react: "*",
+      react: '*',
     };
   }
   return pkg;

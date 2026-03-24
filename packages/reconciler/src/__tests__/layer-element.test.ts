@@ -5,7 +5,7 @@ import {
   MapView,
   OrbitView,
   OrthographicView,
-} from "@deck.gl/core";
+} from '@deck.gl/core';
 import {
   GeohashLayer,
   H3ClusterLayer,
@@ -18,7 +18,7 @@ import {
   TileLayer,
   TripsLayer,
   _WMSLayer,
-} from "@deck.gl/geo-layers";
+} from '@deck.gl/geo-layers';
 import {
   ArcLayer,
   BitmapLayer,
@@ -33,13 +33,13 @@ import {
   ScatterplotLayer,
   SolidPolygonLayer,
   TextLayer,
-} from "@deck.gl/layers";
-import { ScenegraphLayer, SimpleMeshLayer } from "@deck.gl/mesh-layers";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+} from '@deck.gl/layers';
+import { ScenegraphLayer, SimpleMeshLayer } from '@deck.gl/mesh-layers';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createInstance } from "../config";
-import { extend } from "../extend";
-import type { Container, HostContext, Props } from "../types";
+import { createInstance } from '../config';
+import { extend } from '../extend';
+import type { Container, HostContext, Props } from '../types';
 
 // Register layers for backwards compatibility testing
 extend({
@@ -87,13 +87,13 @@ const mockContainer = {} as Container;
 const mockHostContext = {} as HostContext;
 const mockFiber = {} as any;
 
-describe("layer element", () => {
+describe('layer element', () => {
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
   let originalNodeEnv: string | undefined;
 
   beforeEach(() => {
     // Spy on console.warn to verify deprecation warnings
-    consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     // Save original NODE_ENV
     originalNodeEnv = process.env.NODE_ENV;
   });
@@ -104,16 +104,16 @@ describe("layer element", () => {
     process.env.NODE_ENV = originalNodeEnv;
   });
 
-  describe("new <layer> element", () => {
-    it("creates instance from passed layer", () => {
+  describe('new <layer> element', () => {
+    it('creates instance from passed layer', () => {
       const layer = new ScatterplotLayer({
         data: [],
-        id: "test-layer",
+        id: 'test-layer',
       });
 
       const props: Props = { layer };
       const instance = createInstance(
-        "layer",
+        'layer',
         props,
         mockContainer,
         mockHostContext,
@@ -124,12 +124,12 @@ describe("layer element", () => {
       expect(instance.children).toEqual([]);
     });
 
-    it("throws error when layer prop is missing", () => {
+    it('throws error when layer prop is missing', () => {
       const props: Props = {};
 
       expect(() =>
         createInstance(
-          "layer",
+          'layer',
           props,
           mockContainer,
           mockHostContext,
@@ -138,15 +138,15 @@ describe("layer element", () => {
       ).toThrow("<layer> element requires a 'layer' prop");
     });
 
-    it("works with Layer instances", () => {
+    it('works with Layer instances', () => {
       const layer = new ScatterplotLayer({
         data: [],
-        id: "scatter",
+        id: 'scatter',
       });
 
       const props: Props = { layer };
       const instance = createInstance(
-        "layer",
+        'layer',
         props,
         mockContainer,
         mockHostContext,
@@ -157,14 +157,14 @@ describe("layer element", () => {
       expect(instance.node).toBe(layer);
     });
 
-    it("works with View instances", () => {
+    it('works with View instances', () => {
       const view = new MapView({
-        id: "map-view",
+        id: 'map-view',
       });
 
       const props: Props = { layer: view };
       const instance = createInstance(
-        "layer",
+        'layer',
         props,
         mockContainer,
         mockHostContext,
@@ -174,8 +174,8 @@ describe("layer element", () => {
       expect(instance.node).toBe(view);
     });
 
-    it("preserves layer ID through reconciliation", () => {
-      const layerId = "my-unique-layer-id";
+    it('preserves layer ID through reconciliation', () => {
+      const layerId = 'my-unique-layer-id';
       const layer = new ScatterplotLayer({
         data: [],
         id: layerId,
@@ -183,7 +183,7 @@ describe("layer element", () => {
 
       const props: Props = { layer };
       const instance = createInstance(
-        "layer",
+        'layer',
         props,
         mockContainer,
         mockHostContext,
@@ -193,61 +193,61 @@ describe("layer element", () => {
       expect(instance.node.id).toBe(layerId);
     });
 
-    it("warns when layer is missing explicit id in development", () => {
-      process.env.NODE_ENV = "development";
+    it('warns when layer is missing explicit id in development', () => {
+      process.env.NODE_ENV = 'development';
 
       const layer = new ScatterplotLayer({
         data: [],
-        id: "unknown",
+        id: 'unknown',
       });
 
       const props: Props = { layer };
-      createInstance("layer", props, mockContainer, mockHostContext, mockFiber);
+      createInstance('layer', props, mockContainer, mockHostContext, mockFiber);
 
       expect(consoleWarnSpy).toHaveBeenCalled();
-      const calls = consoleWarnSpy.mock.calls.flat().join(" ");
+      const calls = consoleWarnSpy.mock.calls.flat().join(' ');
       expect(calls).toContain('Layer missing explicit "id" prop');
     });
 
-    it("does not warn when layer has explicit id in development", () => {
-      process.env.NODE_ENV = "development";
+    it('does not warn when layer has explicit id in development', () => {
+      process.env.NODE_ENV = 'development';
       consoleWarnSpy.mockClear();
 
       const layer = new ScatterplotLayer({
         data: [],
-        id: "test-layer",
+        id: 'test-layer',
       });
 
       const props: Props = { layer };
-      createInstance("layer", props, mockContainer, mockHostContext, mockFiber);
+      createInstance('layer', props, mockContainer, mockHostContext, mockFiber);
 
-      const calls = consoleWarnSpy.mock.calls.flat().join(" ");
+      const calls = consoleWarnSpy.mock.calls.flat().join(' ');
       expect(calls).not.toContain('Layer missing explicit "id" prop');
     });
 
-    it("does not warn about missing id in production", () => {
-      process.env.NODE_ENV = "production";
+    it('does not warn about missing id in production', () => {
+      process.env.NODE_ENV = 'production';
 
       const layer = new ScatterplotLayer({
         data: [],
       });
 
       const props: Props = { layer };
-      createInstance("layer", props, mockContainer, mockHostContext, mockFiber);
+      createInstance('layer', props, mockContainer, mockHostContext, mockFiber);
 
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
   });
 
-  describe("backwards compatibility", () => {
-    it("legacy scatterplotLayer element still works", () => {
+  describe('backwards compatibility', () => {
+    it('legacy scatterplotLayer element still works', () => {
       const props: Props = {
         data: [],
-        id: "legacy-layer",
+        id: 'legacy-layer',
       };
 
       const instance = createInstance(
-        "scatterplotLayer",
+        'scatterplotLayer',
         props,
         mockContainer,
         mockHostContext,
@@ -255,16 +255,16 @@ describe("layer element", () => {
       );
 
       expect(instance.node).toBeInstanceOf(ScatterplotLayer);
-      expect(instance.node.id).toBe("legacy-layer");
+      expect(instance.node.id).toBe('legacy-layer');
     });
 
-    it("legacy mapView element still works", () => {
+    it('legacy mapView element still works', () => {
       const props: Props = {
-        id: "legacy-view",
+        id: 'legacy-view',
       };
 
       const instance = createInstance(
-        "mapView",
+        'mapView',
         props,
         mockContainer,
         mockHostContext,
@@ -274,16 +274,16 @@ describe("layer element", () => {
       expect(instance.node).toBeInstanceOf(MapView);
     });
 
-    it("shows deprecation warning for legacy elements in development", () => {
-      process.env.NODE_ENV = "development";
+    it('shows deprecation warning for legacy elements in development', () => {
+      process.env.NODE_ENV = 'development';
 
       const props: Props = {
         data: [],
-        id: "test",
+        id: 'test',
       };
 
       createInstance(
-        "scatterplotLayer",
+        'scatterplotLayer',
         props,
         mockContainer,
         mockHostContext,
@@ -291,21 +291,21 @@ describe("layer element", () => {
       );
 
       expect(consoleWarnSpy).toHaveBeenCalled();
-      const calls = consoleWarnSpy.mock.calls.flat().join(" ");
-      expect(calls).toContain("deprecated <scatterplotLayer> element");
-      expect(calls).toContain("Migrate to <layer layer={new ScatterplotLayer");
+      const calls = consoleWarnSpy.mock.calls.flat().join(' ');
+      expect(calls).toContain('deprecated <scatterplotLayer> element');
+      expect(calls).toContain('Migrate to <layer layer={new ScatterplotLayer');
     });
 
-    it("does not show deprecation warning in production", () => {
-      process.env.NODE_ENV = "production";
+    it('does not show deprecation warning in production', () => {
+      process.env.NODE_ENV = 'production';
 
       const props: Props = {
         data: [],
-        id: "test",
+        id: 'test',
       };
 
       createInstance(
-        "scatterplotLayer",
+        'scatterplotLayer',
         props,
         mockContainer,
         mockHostContext,
@@ -315,14 +315,14 @@ describe("layer element", () => {
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
 
-    it("both new and legacy syntaxes work in same session", () => {
+    it('both new and legacy syntaxes work in same session', () => {
       // New syntax
       const newLayer = new ScatterplotLayer({
         data: [],
-        id: "new-style",
+        id: 'new-style',
       });
       const newInstance = createInstance(
-        "layer",
+        'layer',
         { layer: newLayer },
         mockContainer,
         mockHostContext,
@@ -331,10 +331,10 @@ describe("layer element", () => {
 
       // Legacy syntax
       const legacyInstance = createInstance(
-        "scatterplotLayer",
+        'scatterplotLayer',
         {
           data: [],
-          id: "legacy-style",
+          id: 'legacy-style',
         },
         mockContainer,
         mockHostContext,
@@ -343,16 +343,16 @@ describe("layer element", () => {
 
       expect(newInstance.node).toBeInstanceOf(ScatterplotLayer);
       expect(legacyInstance.node).toBeInstanceOf(ScatterplotLayer);
-      expect(newInstance.node.id).toBe("new-style");
-      expect(legacyInstance.node.id).toBe("legacy-style");
+      expect(newInstance.node.id).toBe('new-style');
+      expect(legacyInstance.node.id).toBe('legacy-style');
     });
   });
 
-  describe("error handling", () => {
-    it("throws error for unsupported element type", () => {
+  describe('error handling', () => {
+    it('throws error for unsupported element type', () => {
       expect(() =>
         createInstance(
-          "nonexistentLayer",
+          'nonexistentLayer',
           {},
           mockContainer,
           mockHostContext,
@@ -361,10 +361,10 @@ describe("layer element", () => {
       ).toThrow(/Unsupported element type: "nonexistentLayer"/);
     });
 
-    it("error message includes available elements", () => {
+    it('error message includes available elements', () => {
       expect(() =>
         createInstance(
-          "nonexistentLayer",
+          'nonexistentLayer',
           {},
           mockContainer,
           mockHostContext,
@@ -373,10 +373,10 @@ describe("layer element", () => {
       ).toThrow(/Available elements:/);
     });
 
-    it("error message suggests side-effects import", () => {
+    it('error message suggests side-effects import', () => {
       expect(() =>
         createInstance(
-          "nonexistentLayer",
+          'nonexistentLayer',
           {},
           mockContainer,
           mockHostContext,

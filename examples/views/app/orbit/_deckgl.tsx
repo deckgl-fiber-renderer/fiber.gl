@@ -1,8 +1,8 @@
-"use client";
-import { OrbitView } from "@deck.gl/core";
-import { SimpleMeshLayer } from "@deck.gl/mesh-layers";
-import { Deckgl } from "@deckgl-fiber-renderer/dom";
-import { PLYLoader } from "@loaders.gl/ply";
+'use client';
+import { OrbitView } from '@deck.gl/core';
+import { SimpleMeshLayer } from '@deck.gl/mesh-layers';
+import { Deckgl } from '@deckgl-fiber-renderer/dom';
+import { PLYLoader } from '@loaders.gl/ply';
 
 const COLOR = [255, 255, 255] as const;
 
@@ -24,8 +24,8 @@ export function DeckglExample(props) {
         layer={
           new OrbitView({
             controller: true,
-            id: "main",
-            orbitAxis: "Y",
+            id: 'main',
+            orbitAxis: 'Y',
           })
         }
       >
@@ -34,9 +34,9 @@ export function DeckglExample(props) {
             new SimpleMeshLayer({
               data: [0],
               getColor: COLOR,
-              id: "mesh",
+              id: 'mesh',
               loaders: [PLYLoader],
-              mesh: "https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/point-cloud-ply/lucy100k.ply",
+              mesh: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/examples/point-cloud-ply/lucy100k.ply',
             })
           }
         />

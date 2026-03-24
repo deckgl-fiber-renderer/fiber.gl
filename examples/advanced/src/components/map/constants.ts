@@ -5,18 +5,18 @@ export const INITIAL_VIEW_STATE = {
 };
 
 export const MAP_STYLE =
-  "https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
+  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 export const PARAMETERS = {
   blend: true,
-  blendAlphaDstFactor: "one-minus-src-alpha",
-  blendAlphaOperation: "add",
-  blendAlphaSrcFactor: "one",
-  blendColorDstFactor: "one-minus-src-alpha",
-  blendColorOperation: "add",
-  blendColorSrcFactor: "src-alpha",
+  blendAlphaDstFactor: 'one-minus-src-alpha',
+  blendAlphaOperation: 'add',
+  blendAlphaSrcFactor: 'one',
+  blendColorDstFactor: 'one-minus-src-alpha',
+  blendColorOperation: 'add',
+  blendColorSrcFactor: 'src-alpha',
   depthBias: 0,
-  depthCompare: "always",
+  depthCompare: 'always',
   depthTest: false,
   depthWriteEnabled: true,
 };

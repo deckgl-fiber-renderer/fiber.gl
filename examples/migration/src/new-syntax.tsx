@@ -11,8 +11,8 @@
  * - Works with custom layers out of the box
  */
 
-import { GeoJsonLayer, ScatterplotLayer } from "@deck.gl/layers";
-import { Deckgl } from "@deckgl-fiber-renderer/dom";
+import { GeoJsonLayer, ScatterplotLayer } from '@deck.gl/layers';
+import { Deckgl } from '@deckgl-fiber-renderer/dom';
 
 const INITIAL_VIEW_STATE = {
   latitude: 37.7749,
@@ -35,13 +35,13 @@ const SAMPLE_DATA: DataPoint[] = [
 
 export function NewSyntaxExample() {
   return (
-    <div style={{ height: "100vh", width: "100vw" }}>
+    <div style={{ height: '100vh', width: '100vw' }}>
       <Deckgl controller initialViewState={INITIAL_VIEW_STATE}>
         {/* New syntax: single <layer> element with pre-instantiated layers */}
         <layer
           layer={
             new ScatterplotLayer<DataPoint>({
-              id: "scatter-new",
+              id: 'scatter-new',
               data: SAMPLE_DATA,
               getPosition: (d) => d.position, // ✅ TypeScript knows 'd' is DataPoint
               getRadius: (d) => d.size,
@@ -55,11 +55,11 @@ export function NewSyntaxExample() {
         <layer
           layer={
             new GeoJsonLayer({
-              data: "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson",
+              data: 'https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_admin_0_countries.geojson',
               filled: true,
               getFillColor: [160, 160, 180, 50],
               getLineColor: [255, 255, 255, 100],
-              id: "geojson-new",
+              id: 'geojson-new',
               lineWidthMinPixels: 1,
               stroked: true,
             })

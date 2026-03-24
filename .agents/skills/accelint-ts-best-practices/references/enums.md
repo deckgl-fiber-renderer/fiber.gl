@@ -6,15 +6,15 @@ Never use TypeScript's `enum` keyword. Use `as const` objects instead. This prev
 
 ```ts
 enum Direction {
-  Up = "UP",
-  Down = "DOWN",
+  Up = 'UP',
+  Down = 'DOWN',
 }
 
 // TypeScript compiles this to JavaScript:
 var Direction;
 (function (Direction) {
-  Direction["Up"] = "UP";
-  Direction["Down"] = "DOWN";
+  Direction['Up'] = 'UP';
+  Direction['Down'] = 'DOWN';
 })(Direction || (Direction = {}));
 // Adds ~5 lines of runtime code per enum
 ```
@@ -23,16 +23,16 @@ var Direction;
 
 ```ts
 const Direction = {
-  Up: "UP",
-  Down: "DOWN",
+  Up: 'UP',
+  Down: 'DOWN',
 } as const;
 
 type Direction = (typeof Direction)[keyof typeof Direction]; // 'UP' | 'DOWN'
 
 // TypeScript compiles to:
 const Direction = {
-  Up: "UP",
-  Down: "DOWN",
+  Up: 'UP',
+  Down: 'DOWN',
 };
 // No extra runtime code
 ```
@@ -48,7 +48,7 @@ const x = Direction.Up; // Type: 'UP' (literal)
 
 // vs enum:
 enum DirectionEnum {
-  Up = "UP",
+  Up = 'UP',
 }
 const y = DirectionEnum.Up; // Type: DirectionEnum.Up (enum member, wider)
 ```
@@ -70,17 +70,17 @@ NumericEnum[0]; // "A" - unexpected reverse lookup
 5. **Easier to extend**: You can spread `as const` objects:
 
 ```ts
-const Base = { A: "a", B: "b" } as const;
-const Extended = { ...Base, C: "c" } as const;
+const Base = { A: 'a', B: 'b' } as const;
+const Extended = { ...Base, C: 'c' } as const;
 ```
 
 ## Extracting the Union Type
 
 ```ts
 const Status = {
-  Pending: "pending",
-  Active: "active",
-  Complete: "complete",
+  Pending: 'pending',
+  Active: 'active',
+  Complete: 'complete',
 } as const;
 
 // Extract union type from values
@@ -92,6 +92,6 @@ function setStatus(status: Status) {
 }
 
 setStatus(Status.Active); // ✅
-setStatus("active"); // ✅
-setStatus("invalid"); // ❌ TypeScript error
+setStatus('active'); // ✅
+setStatus('invalid'); // ❌ TypeScript error
 ```

@@ -20,13 +20,13 @@ Understanding when to use getBy*, findBy*, or queryBy\* is critical for reliable
 
 ```tsx
 // Element renders immediately, no need for async
-const heading = await screen.findByRole("heading", { name: /welcome/i });
+const heading = await screen.findByRole('heading', { name: /welcome/i });
 
 // Static text doesn't need waiting
-const button = await screen.findByRole("button", { name: /click me/i });
+const button = await screen.findByRole('button', { name: /click me/i });
 
 // queryBy hides missing element error
-const title = screen.queryByText("Dashboard");
+const title = screen.queryByText('Dashboard');
 expect(title).toBeInTheDocument();
 ```
 
@@ -40,13 +40,13 @@ expect(title).toBeInTheDocument();
 
 ```tsx
 // Element in initial render
-const heading = screen.getByRole("heading", { name: /welcome/i });
+const heading = screen.getByRole('heading', { name: /welcome/i });
 
 // Button rendered immediately
-const button = screen.getByRole("button", { name: /click me/i });
+const button = screen.getByRole('button', { name: /click me/i });
 
 // Descriptive error if missing
-const title = screen.getByText("Dashboard");
+const title = screen.getByText('Dashboard');
 ```
 
 **Benefits:**
@@ -65,15 +65,15 @@ const title = screen.getByText("Dashboard");
 
 ```tsx
 // useEffect loads data - might not be ready
-const item = screen.getByText("Loaded item"); // ❌ Throws before data loads
+const item = screen.getByText('Loaded item'); // ❌ Throws before data loads
 
 // Timeout not guaranteed to finish
 await new Promise((r) => setTimeout(r, 100));
-const result = screen.getByText("Result"); // ❌ Race condition
+const result = screen.getByText('Result'); // ❌ Race condition
 
 // Manual waiting less clear than findBy
 await waitFor(() => {
-  expect(screen.getByText("Loaded")).toBeInTheDocument();
+  expect(screen.getByText('Loaded')).toBeInTheDocument();
 }); // ❌ Verbose, less intention-revealing
 ```
 
@@ -87,10 +87,10 @@ await waitFor(() => {
 
 ```tsx
 // Waits for element loaded in useEffect
-const item = await screen.findByText("Loaded item");
+const item = await screen.findByText('Loaded item');
 
 // API call returns data
-const result = await screen.findByRole("heading", { name: /success/i });
+const result = await screen.findByRole('heading', { name: /success/i });
 
 // User action triggers async state update
 await userEvent.click(button);
@@ -113,14 +113,14 @@ const message = await screen.findByText(/saved successfully/i);
 
 ```tsx
 // getBy throws, can't catch in expect
-expect(() => screen.getByText("Hidden")).toThrow(); // ❌ Awkward
+expect(() => screen.getByText('Hidden')).toThrow(); // ❌ Awkward
 
 // findBy waits full timeout before failing
-await expect(screen.findByText("Hidden")).rejects.toThrow(); // ❌ Slow
+await expect(screen.findByText('Hidden')).rejects.toThrow(); // ❌ Slow
 
 // Using try/catch obscures intent
 try {
-  screen.getByText("Error message");
+  screen.getByText('Error message');
   // Not reached if found
 } catch {
   // Element absent - success?
@@ -137,16 +137,16 @@ try {
 
 ```tsx
 // Element not present initially
-const error = screen.queryByText("Error message");
+const error = screen.queryByText('Error message');
 expect(error).not.toBeInTheDocument();
 
 // Element removed after action
 await userEvent.click(closeButton);
-expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
 // Conditional rendering based on props
 render(<Component showDetails={false} />);
-expect(screen.queryByText("Details")).toBeNull();
+expect(screen.queryByText('Details')).toBeNull();
 ```
 
 **Benefits:**
@@ -166,17 +166,17 @@ expect(screen.queryByText("Details")).toBeNull();
 ```tsx
 // Verbose and less clear
 await waitFor(() => {
-  expect(screen.queryByText("Loading...")).not.toBeInTheDocument();
+  expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
 });
 
 // Manual polling
-while (screen.queryByRole("progressbar")) {
+while (screen.queryByRole('progressbar')) {
   await new Promise((r) => setTimeout(r, 50));
 } // ❌ Reimplementing waitFor
 
 // No waiting - might still be present
 await userEvent.click(button);
-expect(screen.queryByRole("dialog")).toBeNull(); // ❌ Race condition
+expect(screen.queryByRole('dialog')).toBeNull(); // ❌ Race condition
 ```
 
 **Problems:**
@@ -189,16 +189,16 @@ expect(screen.queryByRole("dialog")).toBeNull(); // ❌ Race condition
 
 ```tsx
 // Wait for loading spinner to disappear
-const spinner = screen.getByRole("progressbar");
+const spinner = screen.getByRole('progressbar');
 await waitForElementToBeRemoved(spinner);
 
 // Wait for modal to close
-const modal = screen.getByRole("dialog");
+const modal = screen.getByRole('dialog');
 await userEvent.click(closeButton);
 await waitForElementToBeRemoved(modal);
 
 // Or get + wait in one line
-await waitForElementToBeRemoved(() => screen.getByText("Saving..."));
+await waitForElementToBeRemoved(() => screen.getByText('Saving...'));
 ```
 
 **Benefits:**
@@ -217,13 +217,13 @@ Same patterns apply for multiple elements:
 
 ```tsx
 // getAll for async list
-const items = screen.getAllByRole("listitem"); // ❌ Throws if loading
+const items = screen.getAllByRole('listitem'); // ❌ Throws if loading
 
 // findAll for sync list
-const items = await screen.findAllByRole("listitem"); // ❌ Unnecessary wait
+const items = await screen.findAllByRole('listitem'); // ❌ Unnecessary wait
 
 // queryAll without length check
-const errors = screen.queryAllByRole("alert");
+const errors = screen.queryAllByRole('alert');
 // ❌ Empty array if absent - need to check length
 ```
 
@@ -231,15 +231,15 @@ const errors = screen.queryAllByRole("alert");
 
 ```tsx
 // getAllBy for synchronous lists
-const items = screen.getAllByRole("listitem");
+const items = screen.getAllByRole('listitem');
 expect(items).toHaveLength(5);
 
 // findAllBy for async loaded lists
-const items = await screen.findAllByRole("listitem");
+const items = await screen.findAllByRole('listitem');
 expect(items.length).toBeGreaterThan(0);
 
 // queryAllBy to assert no elements
-const errors = screen.queryAllByRole("alert");
+const errors = screen.queryAllByRole('alert');
 expect(errors).toHaveLength(0);
 ```
 
@@ -253,13 +253,13 @@ expect(errors).toHaveLength(0);
 
 ```tsx
 // ❌ Unhelpful error: "Expected null to be in document"
-const button = screen.queryByRole("button", { name: /submitt/i }); // Typo
+const button = screen.queryByRole('button', { name: /submitt/i }); // Typo
 expect(button).toBeInTheDocument();
 
 // ❌ Extra boilerplate with queryBy
-const heading = screen.queryByRole("heading");
+const heading = screen.queryByRole('heading');
 expect(heading).toBeInTheDocument();
-expect(heading).toHaveTextContent("Welcome");
+expect(heading).toHaveTextContent('Welcome');
 ```
 
 **Problems:**
@@ -273,14 +273,14 @@ expect(heading).toHaveTextContent("Welcome");
 ```tsx
 // ✅ Helpful error: "Unable to find button with name /submitt/i
 //    Did you mean 'submit'? Here are the available roles..."
-const button = screen.getByRole("button", { name: /submitt/i });
+const button = screen.getByRole('button', { name: /submitt/i });
 
 // ✅ Concise and clear
-const heading = screen.getByRole("heading");
-expect(heading).toHaveTextContent("Welcome");
+const heading = screen.getByRole('heading');
+expect(heading).toHaveTextContent('Welcome');
 
 // ✅ queryBy only when asserting absence
-expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 expect(screen.queryByText(/error/i)).toBeNull();
 ```
 
@@ -300,10 +300,10 @@ expect(screen.queryByText(/error/i)).toBeNull();
 
 ```tsx
 // ❌ Trying random queries until one works
-screen.getByTestId("submit");
-screen.getByClassName("submit-button");
-screen.getByRole("submit");
-container.querySelector(".btn-primary");
+screen.getByTestId('submit');
+screen.getByClassName('submit-button');
+screen.getByRole('submit');
+container.querySelector('.btn-primary');
 ```
 
 **Problems:**
@@ -325,7 +325,7 @@ screen.logTestingPlaygroundURL();
 // Click element → see suggested queries
 
 // Then use the suggested query
-const button = screen.getByRole("button", { name: /submit form/i });
+const button = screen.getByRole('button', { name: /submit form/i });
 ```
 
 **Benefits:**
@@ -361,28 +361,28 @@ Does element disappear after action?
 
 ```tsx
 render(<Component />);
-const heading = screen.getByRole("heading"); // Synchronous
+const heading = screen.getByRole('heading'); // Synchronous
 ```
 
 **After async data load:**
 
 ```tsx
 render(<UserProfile id={123} />);
-const name = await screen.findByText("John Doe"); // Async
+const name = await screen.findByText('John Doe'); // Async
 ```
 
 **Conditional rendering:**
 
 ```tsx
 render(<Alert show={false} />);
-expect(screen.queryByRole("alert")).toBeNull(); // Absence
+expect(screen.queryByRole('alert')).toBeNull(); // Absence
 ```
 
 **Element removal:**
 
 ```tsx
 await userEvent.click(dismissButton);
-await waitForElementToBeRemoved(screen.getByRole("alert")); // Disappearance
+await waitForElementToBeRemoved(screen.getByRole('alert')); // Disappearance
 ```
 
 ---

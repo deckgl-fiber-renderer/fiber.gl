@@ -11,8 +11,8 @@ function Form() {
 
   useEffect(() => {
     if (submitted) {
-      post("/api/register");
-      showToast("Registered", theme);
+      post('/api/register');
+      showToast('Registered', theme);
     }
   }, [submitted, theme]);
 
@@ -27,8 +27,8 @@ function Form() {
   const theme = useContext(ThemeContext);
 
   function handleSubmit() {
-    post("/api/register");
-    showToast("Registered", theme);
+    post('/api/register');
+    showToast('Registered', theme);
   }
 
   return <button onClick={handleSubmit}>Submit</button>;

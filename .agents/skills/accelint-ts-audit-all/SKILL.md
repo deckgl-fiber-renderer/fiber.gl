@@ -4,7 +4,7 @@ description: Comprehensive TypeScript file audit system. Command-only skill (no 
 license: Apache-2.0
 metadata:
   author: accelint
-  version: "1.1.0"
+  version: '1.1.0'
 ---
 
 # Audit All
@@ -441,7 +441,7 @@ function getUsername(user: User | null) {
 
 ```typescript
 function getUsername(user: User | null) {
-  return user?.name ?? "Anonymous";
+  return user?.name ?? 'Anonymous';
 }
 ```
 

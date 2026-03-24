@@ -1,7 +1,7 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from 'vitest';
 
-import { createRoot } from "../renderer";
-import type { RootElement } from "../types";
+import { createRoot } from '../renderer';
+import type { RootElement } from '../types';
 
 // Mock reportError for tests
 beforeAll(() => {
@@ -10,9 +10,9 @@ beforeAll(() => {
   };
 });
 
-describe("renderer", () => {
-  describe("createRoot", () => {
-    it("calling createRoot twice on same node returns same root", () => {
+describe('renderer', () => {
+  describe('createRoot', () => {
+    it('calling createRoot twice on same node returns same root', () => {
       const node = {} as RootElement;
 
       const root1 = createRoot(node);
@@ -21,7 +21,7 @@ describe("renderer", () => {
       expect(root2).toBe(root1);
     });
 
-    it("root reuse preserves store and container", () => {
+    it('root reuse preserves store and container', () => {
       const node = {} as RootElement;
 
       const root1 = createRoot(node);
@@ -31,7 +31,7 @@ describe("renderer", () => {
       expect(root2.container).toBe(root1.container);
     });
 
-    it("different nodes get different roots", () => {
+    it('different nodes get different roots', () => {
       const node1 = {} as RootElement;
       const node2 = {} as RootElement;
 

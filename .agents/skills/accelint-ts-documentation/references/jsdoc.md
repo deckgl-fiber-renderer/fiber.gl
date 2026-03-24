@@ -205,7 +205,7 @@ export function AccordionGroup({
   ref,
   children,
   className,
-  variant = "cozy",
+  variant = 'cozy',
   isDisabled,
   ...rest
 }: AccordionGroupProps) {
@@ -231,7 +231,7 @@ export function AccordionGroup({
   ref,
   children,
   className,
-  variant = "cozy",
+  variant = 'cozy',
   isDisabled,
   ...rest
 }: AccordionGroupProps) {
@@ -268,7 +268,7 @@ export function AccordionGroup({
   ref,
   children,
   className,
-  variant = "cozy",
+  variant = 'cozy',
   isDisabled,
   ...rest
 }: AccordionGroupProps) {

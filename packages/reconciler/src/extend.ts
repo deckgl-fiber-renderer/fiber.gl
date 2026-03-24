@@ -1,9 +1,9 @@
-import type { Instance } from "./types";
+import type { Instance } from './types';
 
 export type Catalogue = Record<
   string,
   {
-    new (...args: unknown[]): Instance["node"];
+    new (...args: unknown[]): Instance['node'];
   }
 >;
 

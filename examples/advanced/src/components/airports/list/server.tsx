@@ -1,9 +1,9 @@
-import "server-only";
-import { airports } from "@/dal/airports";
+import 'server-only';
+import { airports } from '@/dal/airports';
 
-import { AirportsListClient } from "./client";
+import { AirportsListClient } from './client';
 
-import styles from "./styles.module.css";
+import styles from './styles.module.css';
 
 export async function AirportsListServer() {
   const data = await airports();

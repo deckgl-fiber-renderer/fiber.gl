@@ -1,7 +1,6 @@
 import { ScatterplotLayer } from '@deck.gl/layers';
 import { createElement, Fragment } from 'react';
-import type { vi } from 'vitest';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fixtures } from '../__fixtures__/layers';
 import { createMockDeckInstance } from '../__fixtures__/mock-deck-instance';
@@ -41,7 +40,7 @@ describe('Reconciler Integration Tests', () => {
     }
   });
 
-  it('should render single ScatterplotLayer via React', async () => {
+  it('renders single ScatterplotLayer via React', async () => {
     // Arrange
     const layer = fixtures.scatterplotLayer({ id: 'test-scatterplot' });
 
@@ -55,7 +54,7 @@ describe('Reconciler Integration Tests', () => {
     expect(mockDeck.setProps).toHaveBeenCalled();
   });
 
-  it('should render multiple layers in hierarchy', async () => {
+  it('renders multiple layers in hierarchy', async () => {
     // Arrange
     const scatterplot = fixtures.scatterplotLayer({ id: 'scatterplot-1' });
     const path = fixtures.pathLayer({ id: 'path-1' });
@@ -75,7 +74,7 @@ describe('Reconciler Integration Tests', () => {
     expect(mockDeck.setProps).toHaveBeenCalled();
   });
 
-  it('should update layer props triggers new instance', async () => {
+  it('triggers new instance when layer props update', async () => {
     // Arrange
     const initialLayer = fixtures.scatterplotLayer({
       id: 'test',
@@ -100,7 +99,7 @@ describe('Reconciler Integration Tests', () => {
     expect(callCountAfter).toBeGreaterThan(callCountBefore);
   });
 
-  it('should update preserves layer ID', async () => {
+  it('preserves layer ID when updating', async () => {
     // Arrange
     const layerId = 'persistent-id';
     const initialLayer = fixtures.scatterplotLayer({
@@ -126,7 +125,7 @@ describe('Reconciler Integration Tests', () => {
     expect(layers[0]?.id).toBe(layerId);
   });
 
-  it('should unmount removes all layers', async () => {
+  it('removes all layers when unmounting', async () => {
     // Arrange
     const layer = fixtures.scatterplotLayer({ id: 'to-remove' });
     root.render(createElement('layer', { layer }));
@@ -139,7 +138,7 @@ describe('Reconciler Integration Tests', () => {
     expect(mockDeck.finalize).toHaveBeenCalled();
   });
 
-  it('should unmount with nested layers', async () => {
+  it('unmounts cleanly with nested layers', async () => {
     // Arrange
     const layer1 = fixtures.scatterplotLayer({ id: 'nested-1' });
     const layer2 = fixtures.pathLayer({ id: 'nested-2' });

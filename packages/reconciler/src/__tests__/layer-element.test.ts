@@ -37,9 +37,13 @@ import {
 import { ScenegraphLayer, SimpleMeshLayer } from '@deck.gl/mesh-layers';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  createMockContainer,
+  createMockHostContext,
+} from '../__fixtures__/mock-deck-instance';
 import { createInstance } from '../config';
 import { extend } from '../extend';
-import type { Container, HostContext, Props } from '../types';
+import type { Props } from '../types';
 
 // Register layers for backwards compatibility testing
 extend({
@@ -83,25 +87,31 @@ extend({
 });
 
 // Mock container and fiber for testing
-const mockContainer = {} as Container;
-const mockHostContext = {} as HostContext;
-const mockFiber = {} as any;
+const mockContainer = createMockContainer();
+const mockHostContext = createMockHostContext();
+const mockFiber = null;
+
+// Helper to run code in a specific NODE_ENV
+function withNodeEnv<T>(env: string, fn: () => T): T {
+  const originalEnv = process.env.NODE_ENV;
+  process.env.NODE_ENV = env;
+  try {
+    return fn();
+  } finally {
+    process.env.NODE_ENV = originalEnv;
+  }
+}
 
 describe('layer element', () => {
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
-  let originalNodeEnv: string | undefined;
 
   beforeEach(() => {
     // Spy on console.warn to verify deprecation warnings
     consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    // Save original NODE_ENV
-    originalNodeEnv = process.env.NODE_ENV;
   });
 
   afterEach(() => {
     consoleWarnSpy.mockRestore();
-    // Restore original NODE_ENV
-    process.env.NODE_ENV = originalNodeEnv;
   });
 
   describe('new <layer> element', () => {
@@ -194,15 +204,21 @@ describe('layer element', () => {
     });
 
     it('warns when layer is missing explicit id in development', () => {
-      process.env.NODE_ENV = 'development';
-
       const layer = new ScatterplotLayer({
         data: [],
         id: 'unknown',
       });
 
       const props: Props = { layer };
-      createInstance('layer', props, mockContainer, mockHostContext, mockFiber);
+      withNodeEnv('development', () => {
+        createInstance(
+          'layer',
+          props,
+          mockContainer,
+          mockHostContext,
+          mockFiber
+        );
+      });
 
       expect(consoleWarnSpy).toHaveBeenCalled();
       const calls = consoleWarnSpy.mock.calls.flat().join(' ');
@@ -210,7 +226,6 @@ describe('layer element', () => {
     });
 
     it('does not warn when layer has explicit id in development', () => {
-      process.env.NODE_ENV = 'development';
       consoleWarnSpy.mockClear();
 
       const layer = new ScatterplotLayer({
@@ -219,21 +234,35 @@ describe('layer element', () => {
       });
 
       const props: Props = { layer };
-      createInstance('layer', props, mockContainer, mockHostContext, mockFiber);
+      withNodeEnv('development', () => {
+        createInstance(
+          'layer',
+          props,
+          mockContainer,
+          mockHostContext,
+          mockFiber
+        );
+      });
 
       const calls = consoleWarnSpy.mock.calls.flat().join(' ');
       expect(calls).not.toContain('Layer missing explicit "id" prop');
     });
 
     it('does not warn about missing id in production', () => {
-      process.env.NODE_ENV = 'production';
-
       const layer = new ScatterplotLayer({
         data: [],
       });
 
       const props: Props = { layer };
-      createInstance('layer', props, mockContainer, mockHostContext, mockFiber);
+      withNodeEnv('production', () => {
+        createInstance(
+          'layer',
+          props,
+          mockContainer,
+          mockHostContext,
+          mockFiber
+        );
+      });
 
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
@@ -275,20 +304,20 @@ describe('layer element', () => {
     });
 
     it('shows deprecation warning for legacy elements in development', () => {
-      process.env.NODE_ENV = 'development';
-
       const props: Props = {
         data: [],
         id: 'test',
       };
 
-      createInstance(
-        'scatterplotLayer',
-        props,
-        mockContainer,
-        mockHostContext,
-        mockFiber
-      );
+      withNodeEnv('development', () => {
+        createInstance(
+          'scatterplotLayer',
+          props,
+          mockContainer,
+          mockHostContext,
+          mockFiber
+        );
+      });
 
       expect(consoleWarnSpy).toHaveBeenCalled();
       const calls = consoleWarnSpy.mock.calls.flat().join(' ');
@@ -297,20 +326,20 @@ describe('layer element', () => {
     });
 
     it('does not show deprecation warning in production', () => {
-      process.env.NODE_ENV = 'production';
-
       const props: Props = {
         data: [],
         id: 'test',
       };
 
-      createInstance(
-        'scatterplotLayer',
-        props,
-        mockContainer,
-        mockHostContext,
-        mockFiber
-      );
+      withNodeEnv('production', () => {
+        createInstance(
+          'scatterplotLayer',
+          props,
+          mockContainer,
+          mockHostContext,
+          mockFiber
+        );
+      });
 
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });

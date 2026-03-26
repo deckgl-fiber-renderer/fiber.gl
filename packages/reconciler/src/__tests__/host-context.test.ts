@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
+import { createMockContainer } from '../__fixtures__/mock-deck-instance';
 import { getChildHostContext, getRootHostContext } from '../config';
-import type { Container, HostContext } from '../types';
+import type { HostContext } from '../types';
 
 describe('host context', () => {
   describe('getChildHostContext', () => {
-    const mockContainer: Container = { store: {} as any };
+    const mockContainer = createMockContainer();
     const rootContext: HostContext = getRootHostContext(mockContainer);
 
     it('sets insideView flag to true when entering View', () => {

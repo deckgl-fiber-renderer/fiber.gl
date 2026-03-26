@@ -2,8 +2,23 @@ import { MapView } from '@deck.gl/core';
 import { ScatterplotLayer } from '@deck.gl/layers';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import {
+  createMockContainer,
+  createMockHostContext,
+} from '../__fixtures__/mock-deck-instance';
 import { createInstance, finalizeContainerChildren } from '../config';
-import type { Container, HostContext, Instance } from '../types';
+import type { Instance } from '../types';
+
+// Helper to run code in a specific NODE_ENV
+function withNodeEnv<T>(env: string, fn: () => T): T {
+  const originalEnv = process.env.NODE_ENV;
+  process.env.NODE_ENV = env;
+  try {
+    return fn();
+  } finally {
+    process.env.NODE_ENV = originalEnv;
+  }
+}
 
 describe('validation', () => {
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
@@ -20,8 +35,8 @@ describe('validation', () => {
   });
 
   describe('layer ID validation', () => {
-    const mockContainer: Container = { store: {} as any };
-    const mockHostContext: HostContext = { store: {} as any };
+    const mockContainer = createMockContainer();
+    const mockHostContext = createMockHostContext();
 
     it("shows warning when layer ID is 'unknown'", () => {
       const layer = new ScatterplotLayer({
@@ -29,12 +44,15 @@ describe('validation', () => {
         id: 'unknown',
       });
 
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
-
-      createInstance('layer', { layer }, mockContainer, mockHostContext, null);
-
-      process.env.NODE_ENV = originalEnv;
+      withNodeEnv('development', () => {
+        createInstance(
+          'layer',
+          { layer },
+          mockContainer,
+          mockHostContext,
+          null
+        );
+      });
 
       expect(consoleWarnSpy).toHaveBeenCalledWith(
         expect.stringContaining('Layer missing explicit "id" prop')
@@ -42,45 +60,48 @@ describe('validation', () => {
     });
 
     it("doesn't show warning when layer has valid ID", () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
-
       const layer = new ScatterplotLayer({
         data: [],
         id: 'valid-id',
       });
 
-      createInstance('layer', { layer }, mockContainer, mockHostContext, null);
-
-      process.env.NODE_ENV = originalEnv;
+      withNodeEnv('development', () => {
+        createInstance(
+          'layer',
+          { layer },
+          mockContainer,
+          mockHostContext,
+          null
+        );
+      });
 
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
 
     it('only runs validation in development mode', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
-
       const layer = new ScatterplotLayer({
         data: [],
         id: 'unknown',
       });
 
-      createInstance('layer', { layer }, mockContainer, mockHostContext, null);
-
-      process.env.NODE_ENV = originalEnv;
+      withNodeEnv('production', () => {
+        createInstance(
+          'layer',
+          { layer },
+          mockContainer,
+          mockHostContext,
+          null
+        );
+      });
 
       expect(consoleWarnSpy).not.toHaveBeenCalled();
     });
   });
 
   describe('duplicate ID detection', () => {
-    const mockContainer: Container = { store: {} as any };
+    const mockContainer = createMockContainer();
 
     it('triggers error when duplicate IDs are present', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
-
       const layer1: Instance = {
         children: [],
         node: new ScatterplotLayer({ data: [], id: 'duplicate-id' }),
@@ -90,9 +111,9 @@ describe('validation', () => {
         node: new ScatterplotLayer({ data: [], id: 'duplicate-id' }),
       };
 
-      finalizeContainerChildren(mockContainer, [layer1, layer2]);
-
-      process.env.NODE_ENV = originalEnv;
+      withNodeEnv('development', () => {
+        finalizeContainerChildren(mockContainer, [layer1, layer2]);
+      });
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         expect.stringContaining('Duplicate layer IDs detected')
@@ -103,9 +124,6 @@ describe('validation', () => {
     });
 
     it("doesn't trigger error when IDs are unique", () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
-
       const layer1: Instance = {
         children: [],
         node: new ScatterplotLayer({ data: [], id: 'unique-id-1' }),
@@ -115,17 +133,14 @@ describe('validation', () => {
         node: new ScatterplotLayer({ data: [], id: 'unique-id-2' }),
       };
 
-      finalizeContainerChildren(mockContainer, [layer1, layer2]);
-
-      process.env.NODE_ENV = originalEnv;
+      withNodeEnv('development', () => {
+        finalizeContainerChildren(mockContainer, [layer1, layer2]);
+      });
 
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
 
     it('only runs validation in development mode', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'production';
-
       const layer1: Instance = {
         children: [],
         node: new ScatterplotLayer({ data: [], id: 'duplicate-id' }),
@@ -135,17 +150,14 @@ describe('validation', () => {
         node: new ScatterplotLayer({ data: [], id: 'duplicate-id' }),
       };
 
-      finalizeContainerChildren(mockContainer, [layer1, layer2]);
-
-      process.env.NODE_ENV = originalEnv;
+      withNodeEnv('production', () => {
+        finalizeContainerChildren(mockContainer, [layer1, layer2]);
+      });
 
       expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
 
     it('excludes Views from duplicate ID check', () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = 'development';
-
       const view1: Instance = {
         children: [],
         node: new MapView({ id: 'map-view' }),
@@ -155,9 +167,9 @@ describe('validation', () => {
         node: new MapView({ id: 'map-view' }),
       };
 
-      finalizeContainerChildren(mockContainer, [view1, view2]);
-
-      process.env.NODE_ENV = originalEnv;
+      withNodeEnv('development', () => {
+        finalizeContainerChildren(mockContainer, [view1, view2]);
+      });
 
       // Views should not trigger duplicate ID errors
       expect(consoleErrorSpy).not.toHaveBeenCalled();
@@ -165,8 +177,8 @@ describe('validation', () => {
   });
 
   describe('enhanced error messages', () => {
-    const mockContainer: Container = { store: {} as any };
-    const mockHostContext: HostContext = { store: {} as any };
+    const mockContainer = createMockContainer();
+    const mockHostContext = createMockHostContext();
 
     it('includes available elements in error message', () => {
       expect(() => {

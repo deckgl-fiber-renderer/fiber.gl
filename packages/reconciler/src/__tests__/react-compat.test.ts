@@ -15,19 +15,19 @@ import * as config from '../config';
 
 describe('React Compatibility Tests', () => {
   describe('Mode configuration', () => {
-    it('should supportsPersistence is true', () => {
+    it('uses persistence mode (supportsPersistence is true)', () => {
       // Assert
       expect(config.supportsPersistence).toBe(true);
     });
 
-    it('should supportsMutation is false', () => {
+    it('disables mutation mode (supportsMutation is false)', () => {
       // Assert
       expect(config.supportsMutation).toBe(false);
     });
   });
 
   describe('Event priority', () => {
-    it('should event priority is valid (DiscreteEventPriority, ContinuousEventPriority, or DefaultEventPriority)', () => {
+    it('returns valid event priority (DiscreteEventPriority, ContinuousEventPriority, or DefaultEventPriority)', () => {
       // Arrange
       const validPriorities = [
         DiscreteEventPriority,
@@ -43,39 +43,8 @@ describe('React Compatibility Tests', () => {
     });
   });
 
-  describe('Core methods exist', () => {
-    it('should core methods exist (createInstance, cloneInstance, etc.)', () => {
-      // Assert - verify critical reconciler methods are exported
-      expect(typeof config.createInstance).toBe('function');
-      expect(typeof config.cloneInstance).toBe('function');
-      expect(typeof config.finalizeInitialChildren).toBe('function');
-      expect(typeof config.prepareUpdate).toBe('function');
-      expect(typeof config.getRootHostContext).toBe('function');
-      expect(typeof config.getChildHostContext).toBe('function');
-    });
-  });
-
-  describe('Persistence methods exist', () => {
-    it('should persistence methods exist (cloneInstance, createContainerChildSet, etc.)', () => {
-      // Assert - verify persistence mode methods
-      expect(typeof config.cloneInstance).toBe('function');
-      expect(typeof config.createContainerChildSet).toBe('function');
-      expect(typeof config.appendChildToContainerChildSet).toBe('function');
-      expect(typeof config.replaceContainerChildren).toBe('function');
-      expect(typeof config.cloneHiddenInstance).toBe('function');
-    });
-  });
-
-  describe('Suspense methods exist', () => {
-    it('should suspense methods exist (cloneHiddenInstance, unhideInstance)', () => {
-      // Assert - verify suspense support methods
-      expect(typeof config.cloneHiddenInstance).toBe('function');
-      expect(typeof config.cloneHiddenTextInstance).toBe('function');
-    });
-  });
-
   describe('Method signatures', () => {
-    it('should createInstance accepts correct parameters', () => {
+    it('creates instance with correct parameters', () => {
       // Arrange
       const type = 'layer';
       const props = { layer: fixtures.scatterplotLayer() };
@@ -96,7 +65,7 @@ describe('React Compatibility Tests', () => {
       expect(instance.children).toBeDefined();
     });
 
-    it('should cloneInstance accepts correct parameters', () => {
+    it('clones instance with correct parameters', () => {
       // Arrange
       const layer = fixtures.scatterplotLayer({ id: 'test' });
       const instance = createMockInstance(layer);

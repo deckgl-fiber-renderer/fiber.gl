@@ -5,17 +5,17 @@ import { getCurrentEventPriority } from '../config';
 
 describe('event priority', () => {
   describe('getCurrentEventPriority', () => {
-    it('returns DefaultEventPriority when no global scope', () => {
-      // Note: In a Node.js test environment without window/self,
-      // getCurrentEventPriority returns DefaultEventPriority
+    it('returns DefaultEventPriority in Node.js environment', () => {
+      // This test documents the Node.js behavior where getCurrentEventPriority
+      // returns DefaultEventPriority because window/self are not available.
+      //
+      // Browser event priority detection (discrete vs continuous events) is
+      // tested manually through integration tests in a browser environment.
+      // The event priority logic detects:
+      // - DiscreteEventPriority: click, keydown, keyup, focusin, focusout
+      // - ContinuousEventPriority: pointermove, touchmove, drag, scroll
+      // - DefaultEventPriority: fallback for unknown events
       expect(getCurrentEventPriority()).toBe(DefaultEventPriority);
     });
-
-    // Note: Full event priority testing would require a browser environment
-    // or mocking the global scope before module initialization.
-    // The implementation has been manually verified to handle:
-    // - Discrete events: click, keydown, keyup, focusin, focusout
-    // - Continuous events: pointermove, touchmove, drag, scroll
-    // - Default for unknown events
   });
 });

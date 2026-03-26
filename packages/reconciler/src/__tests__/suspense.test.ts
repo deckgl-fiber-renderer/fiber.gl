@@ -36,7 +36,9 @@ describe('suspense', () => {
   });
 
   describe('unhideInstance', () => {
-    it("doesn't throw", () => {
+    it('is a no-op that maintains API compatibility with React reconciler', () => {
+      // deck.gl layers don't have a concept of "hidden" state
+      // This function exists for React reconciler API compatibility
       const layer = new ScatterplotLayer({
         data: [],
         id: 'test-layer',
@@ -46,9 +48,14 @@ describe('suspense', () => {
         node: layer,
       };
 
+      // Verify function exists and doesn't throw
       expect(() => {
         unhideInstance(instance, { layer });
       }).not.toThrow();
+
+      // Verify instance structure is unchanged (no-op behavior)
+      expect(instance.node).toBe(layer);
+      expect(instance.children).toEqual([]);
     });
   });
 

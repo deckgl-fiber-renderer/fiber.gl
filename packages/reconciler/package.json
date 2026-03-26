@@ -62,6 +62,7 @@
     "@deck.gl/test-utils": "^9.2.11",
     "@types/react": "catalog:",
     "@types/react-reconciler": "catalog:",
+    "fast-check": "^4.6.0",
     "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

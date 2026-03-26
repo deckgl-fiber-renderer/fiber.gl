@@ -12,7 +12,7 @@ import { flattenTree, organizeList } from '../utils';
 
 describe('Deck.gl Lifecycle Tests', () => {
   describe('Layer ID preservation', () => {
-    it('should layer ID preserved on creation', () => {
+    it('preserves layer ID on creation', () => {
       // Arrange
       const layerId = 'stable-id';
       const layer = fixtures.scatterplotLayer({ id: layerId });
@@ -30,7 +30,7 @@ describe('Deck.gl Lifecycle Tests', () => {
       expect(instance.node.id).toBe(layerId);
     });
 
-    it('should layer ID preserved through updates', () => {
+    it('preserves layer ID through updates', () => {
       // Arrange
       const layerId = 'persistent-id';
       const originalLayer = fixtures.scatterplotLayer({
@@ -53,7 +53,7 @@ describe('Deck.gl Lifecycle Tests', () => {
   });
 
   describe('View context', () => {
-    it('should View sets child host context', () => {
+    it('sets child host context when entering View', () => {
       // Arrange
       const view = fixtures.mapView({ id: 'map-view' });
       const hostContext = createMockHostContext({ insideView: false });
@@ -69,7 +69,7 @@ describe('Deck.gl Lifecycle Tests', () => {
       expect(childContext.insideView).toBe(true);
     });
 
-    it('should layer inherits parent View context', () => {
+    it('inherits parent View context for layers', () => {
       // Arrange
       const parentContext = createMockHostContext({ insideView: true });
 
@@ -86,7 +86,7 @@ describe('Deck.gl Lifecycle Tests', () => {
   });
 
   describe('List organization', () => {
-    it('should mixed list organized correctly (views/layers)', () => {
+    it('organizes mixed list correctly (views/layers)', () => {
       // Arrange
       const view = new MapView({ id: 'view-1' });
       const layer = new ScatterplotLayer({ data: [], id: 'layer-1' });
@@ -102,7 +102,7 @@ describe('Deck.gl Lifecycle Tests', () => {
       expect(organized.layers[0]).toBe(layer);
     });
 
-    it('should all layers list has no views', () => {
+    it('has no views in all-layers list', () => {
       // Arrange
       const layer1 = new ScatterplotLayer({ data: [], id: 'layer-1' });
       const layer2 = new ScatterplotLayer({ data: [], id: 'layer-2' });
@@ -118,7 +118,7 @@ describe('Deck.gl Lifecycle Tests', () => {
   });
 
   describe('Tree flattening', () => {
-    it('should flatten three-level hierarchy', () => {
+    it('flattens three-level hierarchy', () => {
       // Arrange
       const layer1 = createTestLayer('scatterplot', { id: 'level-1' });
       const layer2 = createTestLayer('scatterplot', { id: 'level-2' });
@@ -138,7 +138,7 @@ describe('Deck.gl Lifecycle Tests', () => {
       expect(flattened[2].id).toBe('level-3');
     });
 
-    it('should flatten handles empty children', () => {
+    it('handles empty children when flattening', () => {
       // Arrange
       const layer = createTestLayer('scatterplot', { id: 'solo' });
       const instance = createMockInstance(layer, []);

@@ -142,12 +142,9 @@ function createDeckglObject(type: Type, props: Props): Instance {
 
     // Development-mode warning for missing or default layer ID
     if (process.env.NODE_ENV === 'development') {
-      const layer = props.layer as {
-        id?: string;
-        constructor?: { name?: string };
-      };
+      const layer = props.layer as Layer;
       if (!layer.id || layer.id === 'unknown') {
-        const layerName = layer.constructor?.name ?? 'Layer';
+        const layerName = layer.constructor.name;
         console.warn(
           `⚠️  Layer missing explicit "id" prop. This causes expensive ` +
             `reinitialization on every render.\n\n` +
@@ -642,16 +639,20 @@ export function finalizeContainerChildren(
 
     const layerIds = layers
       .map((layer) => layer.id)
-      .filter((id) => id !== undefined);
+      .filter((id): id is string => id !== undefined);
 
-    const duplicates = layerIds.filter(
-      (id, index) => layerIds.indexOf(id) !== index
-    );
+    const idCounts = new Map<string, number>();
+    for (const id of layerIds) {
+      idCounts.set(id, (idCounts.get(id) ?? 0) + 1);
+    }
+
+    const duplicates = [...idCounts.entries()]
+      .filter(([, count]) => count > 1)
+      .map(([id]) => id);
 
     if (duplicates.length > 0) {
-      const uniqueDuplicates = [...new Set(duplicates)];
       console.error(
-        `❌ Duplicate layer IDs detected: ${uniqueDuplicates.join(', ')}\n\n` +
+        `❌ Duplicate layer IDs detected: ${duplicates.join(', ')}\n\n` +
           `Deck.gl uses layer IDs for diffing. Duplicate IDs cause incorrect updates.\n` +
           `Each layer must have a unique ID.\n`
       );
@@ -736,14 +737,17 @@ export function replaceContainerChildren(
       })
       .debug('deck.setProps views and layers');
 
-    // @ts-expect-error challenging to type accurately
-    deckgl.setProps({
+    const propsUpdate: { layers: Layer[]; views?: View[] } = {
       layers: combinedLayers,
+    };
 
-      // NOTE: for interleaved mode we cannot pass a `views` prop
-      // IDEA: perhaps also do a props check for `interleaved`
-      ...(types.views.length > 0 && { views: types.views }),
-    });
+    // NOTE: for interleaved mode we cannot pass a `views` prop
+    // IDEA: perhaps also do a props check for `interleaved`
+    if (types.views.length > 0) {
+      propsUpdate.views = types.views;
+    }
+
+    deckgl.setProps(propsUpdate);
   }
 }
 

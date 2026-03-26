@@ -6,12 +6,14 @@ export default defineConfig({
     clearMocks: true,
     mockReset: true,
     restoreMocks: true,
+    watch: false,
 
     // Test environment
     environment: 'node',
 
     // Coverage thresholds (80%+ for shared)
     coverage: {
+      enabled: true,
       exclude: [
         '**/__tests__/**',
         '**/dist/**',

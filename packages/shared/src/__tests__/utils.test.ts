@@ -1,87 +1,108 @@
 import { describe, expect, it } from 'vitest';
 
-import { isDefined, isFn, toPascal, isBrowserEnvironment } from '../utils';
+import {
+  isDefined,
+  isFn,
+  isBrowserEnvironment,
+  noop,
+  toPascal,
+} from '../utils';
 
 describe('Utility Functions Tests', () => {
   describe('isDefined', () => {
-    it('should isDefined returns false for undefined', () => {
-      // Act
-      const result = isDefined();
-
-      // Assert
-      expect(result).toBe(false);
-    });
-
-    it('should isDefined returns true for null', () => {
-      // Act
-      const result = isDefined(null);
-
-      // Assert
-      expect(result).toBe(true);
-    });
-
-    it('should isDefined returns true for falsy values (0, "", false)', () => {
-      // Act & Assert
-      expect(isDefined(0)).toBe(true);
-      expect(isDefined('')).toBe(true);
-      expect(isDefined(false)).toBe(true);
+    it.each([
+      { description: 'undefined', expected: false, value: undefined },
+      { description: 'null', expected: true, value: null },
+      { description: '0', expected: true, value: 0 },
+      { description: 'empty string', expected: true, value: '' },
+      { description: 'false', expected: true, value: false },
+    ])('should return $expected for $description', ({ value, expected }) => {
+      expect(isDefined(value)).toBe(expected);
     });
   });
 
   describe('isFn', () => {
-    it('should isFn returns true for functions', () => {
-      // Arrange
-      const func = () => {};
-      const arrowFunc = () => {};
-      // biome-ignore lint/complexity/useArrowFunction: testing function declaration
-      function namedFunc() {}
-
-      // Act & Assert
-      expect(isFn(func)).toBe(true);
-      expect(isFn(arrowFunc)).toBe(true);
-      expect(isFn(namedFunc)).toBe(true);
+    it.each([
+      { description: 'arrow function', value: () => {} },
+      {
+        // biome-ignore lint/complexity/useArrowFunction: testing function declaration
+        description: 'function expression',
+        value: function value() {},
+      },
+      {
+        // biome-ignore lint/complexity/useArrowFunction: testing function declaration
+        description: 'named function',
+        value: function named() {},
+      },
+      { description: 'built-in function', value: Math.max },
+    ])('should return true for $description', ({ value }) => {
+      expect(isFn(value)).toBe(true);
     });
 
-    it('should isFn returns false for non-functions', () => {
-      // Act & Assert
-      expect(isFn(123)).toBe(false);
-      expect(isFn('string')).toBe(false);
-      expect(isFn({})).toBe(false);
-      expect(isFn([])).toBe(false);
-      expect(isFn(null)).toBe(false);
-      expect(isFn()).toBe(false);
+    it.each([
+      { description: 'number', value: 123 },
+      { description: 'string', value: 'string' },
+      { description: 'object', value: {} },
+      { description: 'array', value: [] },
+      { description: 'null', value: null },
+      { description: 'undefined', value: undefined },
+    ])('should return false for $description', ({ value }) => {
+      expect(isFn(value)).toBe(false);
     });
   });
 
   describe('toPascal', () => {
-    it('should toPascal capitalizes first letter', () => {
-      // Act
-      const result = toPascal('hello');
+    it.each([
+      { description: 'lowercase word', expected: 'Hello', input: 'hello' },
+      {
+        description: 'camelCase',
+        expected: 'HelloWorld',
+        input: 'helloWorld',
+      },
+      { description: 'empty string', expected: '', input: '' },
+      {
+        description: 'already capitalized',
+        expected: 'Already',
+        input: 'Already',
+      },
+    ])('should return "$expected" for $description', ({ input, expected }) => {
+      expect(toPascal(input)).toBe(expected);
+    });
+  });
+
+  describe('noop', () => {
+    it('should return undefined when called', () => {
+      // Arrange & Act
+      const result = noop();
 
       // Assert
-      expect(result).toBe('Hello');
+      expect(result).toBeUndefined();
     });
 
-    it('should toPascal handles empty string', () => {
-      // Act
-      const result = toPascal('');
-
-      // Assert
-      expect(result).toBe('');
+    it('should be callable without throwing errors', () => {
+      // Arrange & Act & Assert
+      expect(() => noop()).not.toThrow();
     });
 
-    it('should toPascal preserves rest of string', () => {
-      // Act
-      const result = toPascal('helloWorld');
+    it('should be usable as a default callback', () => {
+      // Arrange
+      const callback = noop;
 
-      // Assert
-      expect(result).toBe('HelloWorld');
+      // Act & Assert - should be safe to call
+      expect(() => callback()).not.toThrow();
+      expect(callback()).toBeUndefined();
     });
   });
 
   describe('isBrowserEnvironment', () => {
-    it('should isBrowserEnvironment returns false in Node test environment', () => {
-      // Assert - in Node.js/vitest environment, should be false
+    it('should be a boolean value', () => {
+      // Arrange & Act & Assert
+      expect(typeof isBrowserEnvironment).toBe('boolean');
+    });
+
+    it('should be false in Node.js test environment', () => {
+      // Arrange & Act & Assert
+      // vitest.config.ts uses environment: 'node', so no document exists
       expect(isBrowserEnvironment).toBe(false);
     });
   });

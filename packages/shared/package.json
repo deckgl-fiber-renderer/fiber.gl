@@ -53,6 +53,7 @@
   "devDependencies": {
     "@deck.gl/core": "catalog:",
     "@deck.gl/mapbox": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

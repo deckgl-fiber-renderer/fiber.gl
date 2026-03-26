@@ -6,12 +6,14 @@ export default defineConfig({
     clearMocks: true,
     mockReset: true,
     restoreMocks: true,
+    watch: false,
 
     // Test environment
     environment: 'jsdom',
 
     // Coverage thresholds (80%+ for reconciler)
     coverage: {
+      enabled: true,
       exclude: [
         '**/__tests__/**',
         '**/__fixtures__/**',

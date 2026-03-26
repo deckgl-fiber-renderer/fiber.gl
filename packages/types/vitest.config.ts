@@ -6,6 +6,7 @@ export default defineConfig({
     clearMocks: true,
     mockReset: true,
     restoreMocks: true,
+    watch: false,
 
     // Test environment
     environment: 'jsdom',

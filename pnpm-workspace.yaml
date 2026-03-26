@@ -1,6 +1,40 @@
 packages:
   - packages/*
   - examples/*
+
+catalog:
+  # React
+
+  # Deck.gl
+  '@deck.gl/core': '>=9.1'
+  '@deck.gl/extensions': '>=9.1'
+  '@deck.gl/geo-layers': '>=9.1'
+  '@deck.gl/layers': '>=9.1'
+  '@deck.gl/mapbox': '>=9.1'
+  '@deck.gl/mesh-layers': '>=9.1'
+  '@deck.gl/widgets': '>=9.1'
+  '@types/react': ^19
+  '@types/react-dom': ^19
+  '@types/react-reconciler': 0.31.0
+  '@vitest/coverage-v8': ^4.1.2
+  jsdom: ^29
+  loglayer: ^9
+
+  # Maplibre
+  maplibre-gl: ^5
+  react: ^19
+  react-dom: ^19
+
+  # React Reconciler (pinned to exact versions)
+  react-reconciler: 0.31.0
+  tsdown: ^0.21.4
+
+  # Build Tools
+  typescript: ^6.0.2
+  vitest: ^4.1.2
+
+  # Misc
+  zustand: ^5
 onlyBuiltDependencies:
   - '@biomejs/biome'
   - '@fission-ai/openspec'
@@ -12,36 +46,3 @@ onlyBuiltDependencies:
   - lmdb
   - msgpackr-extract
   - sharp
-
-catalog:
-  # React
-  react: ^19
-  react-dom: ^19
-  '@types/react': ^19
-  '@types/react-dom': ^19
-
-  # React Reconciler (pinned to exact versions)
-  react-reconciler: 0.31.0
-  '@types/react-reconciler': 0.31.0
-
-  # Deck.gl
-  '@deck.gl/core': '>=9.1'
-  '@deck.gl/extensions': '>=9.1'
-  '@deck.gl/geo-layers': '>=9.1'
-  '@deck.gl/layers': '>=9.1'
-  '@deck.gl/mapbox': '>=9.1'
-  '@deck.gl/mesh-layers': '>=9.1'
-  '@deck.gl/widgets': '>=9.1'
-
-  # Maplibre
-  maplibre-gl: ^5
-
-  # Misc
-  zustand: ^5
-  loglayer: ^9
-  jsdom: ^29
-
-  # Build Tools
-  typescript: ^6.0.2
-  tsdown: ^0.21.4
-  vitest: ^4.1.1

@@ -22,8 +22,25 @@ import { flattenTree, organizeList } from './utils';
 
 type EventPriority = number;
 
+/**
+ * Current priority level for the active update batch.
+ *
+ * React sets this via `setCurrentUpdatePriority` to control update scheduling.
+ * Higher priorities interrupt lower-priority work.
+ *
+ * @see {@link setCurrentUpdatePriority}
+ * @see {@link getCurrentUpdatePriority}
+ */
 let currentUpdatePriority = DefaultEventPriority;
-// NOTE: in some Meta host configs this is mutated
+
+/**
+ * Priority level for the currently executing event.
+ *
+ * In some Meta host configs this is mutated, but in this implementation
+ * it remains constant at DefaultEventPriority.
+ *
+ * @see {@link getCurrentEventPriority}
+ */
 const currentEventPriority = DefaultEventPriority;
 
 /**
@@ -275,6 +292,15 @@ export function createInstance(
  * text as part of the WebGL scene, not as React text nodes.
  *
  * @throws {Error} Always throws because text nodes are not supported in Deck.gl renderer
+ *
+ * @example
+ * ```typescript
+ * // ❌ This will throw an error in Deck.gl renderer:
+ * // <layer>Some text</layer>
+ *
+ * // ✅ Instead, use TextLayer for labels:
+ * // <layer layer={new TextLayer({ id: 'labels', data: [...] })} />
+ * ```
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCompleteWork.js Text Node Creation}
  * @see {@link https://deck.gl/docs/api-reference/layers/text-layer TextLayer for rendering text in Deck.gl}
@@ -614,12 +640,11 @@ export function appendChildToSet(
  * layer ID detection. Runs before the tree is committed to the renderer,
  * making it safe to check for structural issues.
  *
- * @param container - Root container being updated
- * @param newChildren - New child set that will replace current children
- *
- * @remarks
  * In development mode, validates that no two layers share the same ID,
  * as duplicate IDs break Deck.gl's layer diffing algorithm.
+ *
+ * @param container - Root container being updated
+ * @param newChildren - New child set that will replace current children
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/README.md#persistence-mode React Persistence Mode}
  */
@@ -1173,14 +1198,13 @@ export function getRootHostContext(rootContainer: Container): HostContext {
  * Similar to how DOM tracks whether you're inside SVG vs HTML context, we track
  * whether we're inside a View element.
  *
- * @param parentHostContext - Context from parent element
- * @param type - Type of element being created
- * @returns Context for children of this element
- *
- * @remarks
  * Currently detects Views by checking if type name includes "view".
  * Future enhancement: After single-layer-element implementation lands,
  * add runtime `instanceof View` check for the `<layer>` element case.
+ *
+ * @param parentHostContext - Context from parent element
+ * @param type - Type of element being created
+ * @returns Context for children of this element
  *
  * @example
  * ```tsx
@@ -1232,9 +1256,19 @@ export function getChildHostContext(
  *
  * @example
  * ```tsx
+ * // User code - accessing layer instance via ref
  * const layerRef = useRef<ScatterplotLayer>(null);
- * // layerRef.current will be the actual ScatterplotLayer instance
+ *
+ * // After render, layerRef.current contains the actual ScatterplotLayer
  * <layer ref={layerRef} layer={new ScatterplotLayer({ id: "points" })} />
+ *
+ * // Access Deck.gl layer properties and methods
+ * useEffect(() => {
+ *   if (layerRef.current) {
+ *     console.log(layerRef.current.id); // "points"
+ *     console.log(layerRef.current.props); // Layer props
+ *   }
+ * }, []);
  * ```
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/README.md#getpublicinstance React Reconciler Docs}

@@ -2,8 +2,14 @@
   "$schema": "vscode://schemas/settings/user",
   "editor.formatOnSave": true,
   "npm.packageManager": "pnpm",
+  "biome.enabled": false,
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "explorer.fileNesting.patterns": {
     "package.json": "pnpm-workspace.yaml, pnpm-lock.yaml"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "explicit"
   },
   "search.exclude": {
     "pnpm-lock.yaml": true
@@ -23,10 +29,6 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
-  "cSpell.words": ["accelint", "latlon", "LONLAT", "mgrs"],
-  "editor.formatOnPaste": true,
-  "emmet.showExpandedAbbreviation": "never",
-  "typescript.tsdk": "node_modules/typescript/lib",
   "[css]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
   },
@@ -59,8 +61,5 @@
   },
   "[yaml]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
-  },
-  "editor.codeActionsOnSave": {
-    "source.fixAll.oxc": "explicit"
   }
 }

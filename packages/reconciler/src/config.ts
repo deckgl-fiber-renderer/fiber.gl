@@ -1,5 +1,6 @@
 import type { Layer, View } from '@deck.gl/core';
 import { log, toPascal } from '@deckgl-fiber-renderer/shared';
+import { globalScope } from '@deckgl-fiber-renderer/shared/constants';
 import type { Fiber } from 'react-reconciler';
 import {
   ContinuousEventPriority,
@@ -20,16 +21,6 @@ import type {
 import { flattenTree, organizeList } from './utils';
 
 type EventPriority = number;
-
-// TODO: check to see if we can hoist this out of function
-const globalScope =
-  (typeof self !== 'undefined' && self) ||
-  (typeof window !== 'undefined' && window);
-
-/**
- * Rough host API flow chart
- * https://mermaid.live/edit#pako:eNqNVcGOmzAQ_RXkY5WkgRA2cNhLVlUjtVLVbC9berDwbLAWbDSYaLMR_15jk10I0IYDwvPeM-Pn8fhMEsmARKRUVMEDpwek-fzoxcLRz-9Pf5z5_N5BKGV2hF8F06QfyCVydbKUUciIDqB-Sqm-ylJtpVDwqqxiGDf0Z446kPKMfZOyiIUl96ORUwA6STP8bN4IwuHCUQhg-WYZVyrnbLHuinQSBh9k12Z4DRpRmcoqY3tQjzpiANFRjaFGliDopHZC5yYS-BD04yMm7IQAvDgxdMPAHUsaJy6udNIaccQou7Z0raFFAYLtBFecZtvBfPV_EmrXIWjG32BylgmCEef0tK_KJomtzHOuWokV1-OV0TG6sZ5ynYkB9X5Y_gRoNxYSqf_2UXz2f21J9UFrOOoKdjI4QnZDOV7NMFaP1nRDeZQTK6gnMuo53te-ez4JG7FKObLB2etHbz17fdXU2atQy9VYQ7kcwDFGu1n_ktfj2RtlgVBQhC8SbWFZ4nW07XhFRpMpN6dQuxOyQpUOO1k_bO1kkIECdktL68vHfGWgmUn6YOe89JWy9YXMSA6YU850tzfqmKgUcohJpD8ZxZeYxKLh0UrJ_UkkJFJYwYygrA4piZ5pVupRZVxvr4r3aEHFk5T5RaKHJDqTVxKtfHex8u8CfxWu_TDYeOsZOZFo7gcLPXa98C5cb1zXd-sZeTMzLBehvwz80HO9jdZ5y2BGgHEl8bu9q8yVVf8FQR5BEA
- */
 
 let currentUpdatePriority = DefaultEventPriority;
 // NOTE: in some Meta host configs this is mutated
@@ -374,11 +365,7 @@ export function cloneInstance(
   const cloned = createDeckglObject(type, newProps);
 
   // Handle children based on keepChildren flag
-  if (keepChildren) {
-    cloned.children = instance.children;
-  } else {
-    cloned.children = newChildSet ?? [];
-  }
+  cloned.children = keepChildren ? instance.children : (newChildSet ?? []);
 
   return cloned;
 }
@@ -1275,6 +1262,7 @@ export function detachDeletedInstance(instance: Instance): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactEventPriorities.js Priority Constants}
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/events/ReactDOMEventListener.js DOM Event Handling}
  */
+// oxlint-disable-next-line complexity
 export function getCurrentEventPriority(): number {
   log.debug('getCurrentEventPriority');
 

@@ -13,7 +13,6 @@ import { ConcurrentRoot } from 'react-reconciler/constants';
 import * as config from './config';
 import type { ReconcilerRoot, RootElement } from './types';
 
-// @ts-expect-error @types/react-reconciler is incorrect
 export const renderer: ReturnType<typeof reactReconciler> =
   reactReconciler(config);
 

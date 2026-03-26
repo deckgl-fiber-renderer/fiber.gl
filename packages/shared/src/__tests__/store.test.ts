@@ -9,7 +9,7 @@ describe('Store Tests', () => {
     // Arrange & Act
     const store = create<State>()((set) => ({
       _passedLayers: [],
-      deckgl: undefined!,
+      deckgl: null,
       setDeckgl: (instance) => {
         set(() => ({
           deckgl: instance,
@@ -20,7 +20,7 @@ describe('Store Tests', () => {
     const state = store.getState();
 
     // Assert
-    expect(state.deckgl).toBeUndefined();
+    expect(state.deckgl).toBeNull();
     expect(state._passedLayers).toEqual([]);
   });
 
@@ -28,7 +28,7 @@ describe('Store Tests', () => {
     // Arrange
     const store = create<State>()((set) => ({
       _passedLayers: [],
-      deckgl: undefined!,
+      deckgl: null,
       setDeckgl: (instance) => {
         set(() => ({
           deckgl: instance,
@@ -66,7 +66,7 @@ describe('Store Tests', () => {
     const setDeckglFn = vi.fn();
     const state: State = {
       _passedLayers: [],
-      deckgl: undefined!,
+      deckgl: null,
       setDeckgl: setDeckglFn,
     };
 
@@ -81,7 +81,7 @@ describe('Store Tests', () => {
     // Arrange & Act
     const store1 = create<State>()((set) => ({
       _passedLayers: [],
-      deckgl: undefined!,
+      deckgl: null,
       setDeckgl: (instance) => {
         set(() => ({
           deckgl: instance,
@@ -91,7 +91,7 @@ describe('Store Tests', () => {
 
     const store2 = create<State>()((set) => ({
       _passedLayers: [],
-      deckgl: undefined!,
+      deckgl: null,
       setDeckgl: (instance) => {
         set(() => ({
           deckgl: instance,

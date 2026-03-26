@@ -1,6 +1,7 @@
 import { ScatterplotLayer } from '@deck.gl/layers';
 import { createElement, Fragment } from 'react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { fixtures } from '../__fixtures__/layers';
 import { createMockDeckInstance } from '../__fixtures__/mock-deck-instance';

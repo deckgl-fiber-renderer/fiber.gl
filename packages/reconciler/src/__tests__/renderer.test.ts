@@ -1,7 +1,8 @@
 import { ScatterplotLayer } from '@deck.gl/layers';
-import { beforeAll, describe, expect, it } from 'vitest';
+import React from 'react';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { createRoot } from '../renderer';
+import { createRoot, roots, unmountAtNode } from '../renderer';
 import type { RootElement } from '../types';
 
 // Mock reportError for tests
@@ -110,6 +111,60 @@ describe('renderer', () => {
       const state = root.store.getState();
       // MapboxOverlay should be created instead of Deck
       expect(state.deckgl).toBeDefined();
+    });
+  });
+
+  describe('unmountAtNode', () => {
+    it('should finalize deckgl and remove root from map', () => {
+      const node = {} as RootElement;
+      const root = createRoot(node);
+
+      // Configure to create deckgl instance
+      root.configure({ views: [] });
+      const { deckgl } = root.store.getState();
+
+      // Spy on finalize method
+      const finalizeSpy = vi.spyOn(deckgl, 'finalize');
+
+      // Verify root exists in map
+      expect(roots.has(node)).toBe(true);
+
+      // Act: unmount
+      unmountAtNode(node);
+
+      // Assert: finalize called, root removed, state cleared
+      expect(finalizeSpy).toHaveBeenCalledTimes(1);
+      expect(roots.has(node)).toBe(false);
+      expect(root.store.getState().deckgl).toBeUndefined();
+    });
+
+    it('should handle unmounting non-existent node gracefully', () => {
+      const node = {} as RootElement;
+
+      // Should not throw when unmounting node without root
+      expect(() => unmountAtNode(node)).not.toThrow();
+
+      // Map should remain empty
+      expect(roots.has(node)).toBe(false);
+    });
+  });
+
+  describe('render', () => {
+    it('should update container with provided children', () => {
+      const node = {} as RootElement;
+      const root = createRoot(node);
+
+      // Configure first
+      root.configure({ views: [] });
+
+      // Create test children
+      const children = React.createElement('div', null, 'test content');
+
+      // Should not throw when rendering
+      expect(() => root.render(children)).not.toThrow();
+
+      // Basic smoke test - render executes successfully
+      // Detailed behavior tested in integration tests
     });
   });
 });

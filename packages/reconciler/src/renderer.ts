@@ -13,11 +13,45 @@ import { ConcurrentRoot } from 'react-reconciler/constants';
 import * as config from './config';
 import type { ReconcilerRoot, RootElement } from './types';
 
+/**
+ * React reconciler instance configured for deck.gl rendering
+ *
+ * Internal reconciler used by createRoot/unmountAtNode. Generally not used directly
+ * by consumers - use the higher-level createRoot API instead.
+ */
 export const renderer: ReturnType<typeof reactReconciler> =
   reactReconciler(config);
 
+/**
+ * Active reconciler roots registry
+ *
+ * Maps RootElement containers to their ReconcilerRoot instances. Used internally
+ * to ensure root idempotency and proper cleanup.
+ */
 export const roots = new Map<RootElement, ReconcilerRoot>();
 
+/**
+ * Unmounts and cleans up a reconciler root
+ *
+ * Performs complete cleanup including:
+ * - Unmounting React tree from the container
+ * - Finalizing deck.gl instance (releases WebGL resources)
+ * - Clearing internal state
+ * - Removing root from registry
+ *
+ * Safe to call multiple times or on non-existent nodes (no-op if not found).
+ *
+ * @param node - Root element container to unmount
+ *
+ * @example
+ * ```typescript
+ * const root = createRoot(container);
+ * root.render(<MyApp />);
+ *
+ * // Later: cleanup
+ * unmountAtNode(container);
+ * ```
+ */
 export function unmountAtNode(node: RootElement) {
   const root = roots.get(node);
 
@@ -34,11 +68,46 @@ export function unmountAtNode(node: RootElement) {
     const state = root.store.getState();
 
     state.deckgl.finalize();
-    state.setDeckgl(undefined!);
+    state.setDeckgl(undefined as any);
     roots.delete(node);
   }
 }
 
+/**
+ * Creates a reconciler root for deck.gl rendering
+ *
+ * Returns a ReconcilerRoot with methods to configure deck.gl and render React
+ * elements. Calling createRoot multiple times with the same node returns the
+ * existing root (idempotent).
+ *
+ * The returned root provides:
+ * - `configure(props)` - Initialize deck.gl instance with props
+ * - `render(children)` - Render React elements into deck.gl
+ * - `container` - Internal reconciler container
+ * - `store` - Shared state store
+ *
+ * @param node - Root element to attach the reconciler to
+ * @returns ReconcilerRoot instance with configure/render methods
+ *
+ * @example
+ * ```typescript
+ * import { createRoot } from '@deckgl-fiber-renderer/reconciler';
+ * import { ScatterplotLayer } from '@deck.gl/layers';
+ *
+ * const root = createRoot(container);
+ *
+ * // Configure deck.gl
+ * root.configure({
+ *   views: [new MapView()],
+ *   initialViewState: { longitude: 0, latitude: 0, zoom: 1 }
+ * });
+ *
+ * // Render layers
+ * root.render(
+ *   <layer layer={new ScatterplotLayer({ id: 'points', data })} />
+ * );
+ * ```
+ */
 export function createRoot(node: RootElement): ReconcilerRoot {
   log
     .withMetadata({
@@ -75,7 +144,7 @@ export function createRoot(node: RootElement): ReconcilerRoot {
   function configure(props: DeckglProps) {
     // NOTE: we want to support a "mix-mode" of sorts where a user can pass an explicit `layers` prop alongside
     // traditional usage of creating layers as JSX children.
-    if (props?.layers?.length) {
+    if (props?.layers && props.layers.length > 0) {
       // IDEA: we could do some complex diffing logic here but since we don't expose the full store there are
       // no footguns to just updating it all the time.
       store.setState({ _passedLayers: props.layers });

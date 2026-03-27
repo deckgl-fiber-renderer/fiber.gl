@@ -2,22 +2,17 @@
 
 ### Requirement: Single layer JSX element
 
-The `@deckgl-fiber-renderer/types` package SHALL define a single `layer` intrinsic element in the JSX namespace that accepts pre-instantiated Deck.gl Layer or View instances.
+The `@deckgl-fiber-renderer/types` package SHALL define a single `layer` intrinsic element in the JSX namespace that accepts pre-instantiated Deck.gl Layer instances only.
 
 #### Scenario: Layer instance accepted
 
 - **WHEN** user provides a `<layer layer={layerInstance} />` element with a valid Deck.gl Layer instance
 - **THEN** the element SHALL render the layer without errors
 
-#### Scenario: View instance accepted
+#### Scenario: TypeScript error for View instance
 
-- **WHEN** user provides a `<layer layer={viewInstance} />` element with a valid Deck.gl View instance
-- **THEN** the element SHALL render the view without errors
-
-#### Scenario: Children supported for views
-
-- **WHEN** user provides a `<layer layer={viewInstance}>` element with child layers
-- **THEN** the children SHALL be rendered within the view's context
+- **WHEN** user attempts `<layer layer={new MapView({...})} />` with a View instance
+- **THEN** TypeScript SHALL show a compile-time error "MapView is not assignable to type Layer"
 
 #### Scenario: Missing layer prop error
 
@@ -51,6 +46,28 @@ The `@deckgl-fiber-renderer/reconciler` package SHALL extract the pre-instantiat
 
 - **WHEN** user provides a layer with `id: 'my-layer'`
 - **THEN** the ID SHALL be preserved through reconciliation to Deck.gl
+
+### Requirement: Reconciler layer validation
+
+The reconciler SHALL validate that Layer instances (not Views) are passed to `<layer>` element in development mode.
+
+#### Scenario: No warning for Layer instance
+
+- **WHEN** user provides `<layer layer={new ScatterplotLayer({ id: 'points', data: [] })} />`
+- **AND** rendered in development mode
+- **THEN** no type-related warnings SHALL be emitted (only ID validation)
+
+#### Scenario: Error for View instance in development
+
+- **WHEN** user provides `<layer layer={new MapView({ id: 'main' })} />` (TypeScript bypassed)
+- **AND** rendered in development mode
+- **THEN** console.error SHALL warn "View instance passed to <layer> element. Use <view view={...} /> instead."
+
+#### Scenario: No errors in production
+
+- **WHEN** any instance passed to `<layer>` (even if View)
+- **AND** rendered in production mode
+- **THEN** no type-checking warnings SHALL be emitted (performance optimization)
 
 ### Requirement: Backwards compatibility
 

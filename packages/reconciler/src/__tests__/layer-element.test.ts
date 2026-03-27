@@ -167,21 +167,32 @@ describe('layer element', () => {
       expect(instance.node).toBe(layer);
     });
 
-    it('works with View instances', () => {
+    it('shows error when View instance passed to layer in development', () => {
       const view = new MapView({
         id: 'map-view',
       });
 
       const props: Props = { layer: view };
-      const instance = createInstance(
-        'layer',
-        props,
-        mockContainer,
-        mockHostContext,
-        mockFiber
-      );
 
-      expect(instance.node).toBe(view);
+      let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
+      consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+      withNodeEnv('development', () => {
+        createInstance(
+          'layer',
+          props,
+          mockContainer,
+          mockHostContext,
+          mockFiber
+        );
+      });
+
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      const calls = consoleErrorSpy.mock.calls.flat().join(' ');
+      expect(calls).toContain('View instance passed to <layer> element');
+      expect(calls).toContain('Use <view view={...} /> instead');
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('preserves layer ID through reconciliation', () => {
@@ -374,6 +385,38 @@ describe('layer element', () => {
       expect(legacyInstance.node).toBeInstanceOf(ScatterplotLayer);
       expect(newInstance.node.id).toBe('new-style');
       expect(legacyInstance.node.id).toBe('legacy-style');
+    });
+
+    it('view and layer elements work in same tree', () => {
+      // View element
+      const view = new MapView({
+        id: 'main-view',
+      });
+      const viewInstance = createInstance(
+        'view',
+        { view },
+        mockContainer,
+        mockHostContext,
+        mockFiber
+      );
+
+      // Layer element
+      const layer = new ScatterplotLayer({
+        data: [],
+        id: 'scatter',
+      });
+      const layerInstance = createInstance(
+        'layer',
+        { layer },
+        mockContainer,
+        mockHostContext,
+        mockFiber
+      );
+
+      expect(viewInstance.node).toBeInstanceOf(MapView);
+      expect(layerInstance.node).toBeInstanceOf(ScatterplotLayer);
+      expect(viewInstance.node.id).toBe('main-view');
+      expect(layerInstance.node.id).toBe('scatter');
     });
   });
 

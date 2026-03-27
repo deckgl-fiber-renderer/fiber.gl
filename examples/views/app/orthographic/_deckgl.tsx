@@ -26,8 +26,8 @@ const nodes = (async () => {
 export function DeckglExample(props) {
   return (
     <Deckgl debug initialViewState={INITIAL_VIEW_STATE}>
-      <layer
-        layer={
+      <view
+        view={
           new OrthographicView({
             controller: true,
             flipY: false,
@@ -49,7 +49,7 @@ export function DeckglExample(props) {
             })
           }
         />
-      </layer>
+      </view>
     </Deckgl>
   );
 }

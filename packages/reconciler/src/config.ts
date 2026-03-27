@@ -18,7 +18,7 @@ import type {
   Type,
   UpdatePayload,
 } from './types';
-import { flattenTree, organizeList } from './utils';
+import { flattenTree, isView, organizeList } from './utils';
 
 type EventPriority = number;
 
@@ -151,7 +151,33 @@ export const scheduleMicrotask = queueMicrotask;
  * @see {@link extend} For registering custom layers in the catalogue
  */
 function createDeckglObject(type: Type, props: Props): Instance {
-  // New <layer> element (v2+): pass-through pre-instantiated Layer/View
+  // New <view> element (v2+): pass-through pre-instantiated View
+  if (type === 'view') {
+    if (!props.view) {
+      throw new Error("<view> element requires a 'view' prop");
+    }
+
+    // Development-mode warning for missing or default view ID
+    if (process.env.NODE_ENV === 'development') {
+      const view = props.view as View;
+      if (!view.id || view.id === 'unknown') {
+        const viewName = view.constructor.name;
+        console.warn(
+          `⚠️  View missing explicit "id" prop. deck.gl requires stable IDs ` +
+            `for efficient diffing.\n\n` +
+            `Add a stable ID:\n` +
+            `<view view={new ${viewName}({ id: "my-view", ... })} />\n`
+        );
+      }
+    }
+
+    return {
+      children: [],
+      node: props.view as View,
+    };
+  }
+
+  // New <layer> element (v2+): pass-through pre-instantiated Layer
   if (type === 'layer') {
     if (!props.layer) {
       throw new Error("<layer> element requires a 'layer' prop");
@@ -169,11 +195,22 @@ function createDeckglObject(type: Type, props: Props): Instance {
             `<layer layer={new ${layerName}({ id: "my-layer", ... })} />\n`
         );
       }
+
+      // Development-mode error if View passed to <layer>
+      if (isView(props.layer)) {
+        console.error(
+          `❌  View instance passed to <layer> element. Use <view view={...} /> instead.\n\n` +
+            `Change:\n` +
+            `<layer layer={new ${layer.constructor.name}(...)} />\n\n` +
+            `To:\n` +
+            `<view view={new ${layer.constructor.name}(...)} />\n`
+        );
+      }
     }
 
     return {
       children: [],
-      node: props.layer as Layer | View,
+      node: props.layer as Layer,
     };
   }
 
@@ -184,8 +221,13 @@ function createDeckglObject(type: Type, props: Props): Instance {
   const name = toPascal(type);
 
   if (process.env.NODE_ENV === 'development') {
+    // Detect if this is a view-related element
+    const isViewType = /view/i.test(type);
+    const elementName = isViewType ? 'view' : 'layer';
+    const propName = isViewType ? 'view' : 'layer';
+
     console.warn(
-      `Using deprecated <${type}> element. Migrate to <layer layer={new ${name}({...})} /> for better type safety and code-splitting. This syntax will be removed in v3.`
+      `Using deprecated <${type}> element. Migrate to <${elementName} ${propName}={new ${name}({...})} /> for better type safety and code-splitting. This syntax will be removed in v3.`
     );
   }
 

@@ -32,8 +32,8 @@ export function DeckglExample(props) {
 
   return (
     <Deckgl debug parameters={PARAMETERS} initialViewState={INITIAL_VIEW_STATE}>
-      <layer
-        layer={
+      <view
+        view={
           new GlobeView({
             controller: true,
             id: 'main',
@@ -70,7 +70,7 @@ export function DeckglExample(props) {
             })
           }
         />
-      </layer>
+      </view>
     </Deckgl>
   );
 }

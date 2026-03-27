@@ -20,8 +20,8 @@ const INITIAL_VIEW_STATE = {
 export function DeckglExample(props) {
   return (
     <Deckgl debug initialViewState={INITIAL_VIEW_STATE}>
-      <layer
-        layer={
+      <view
+        view={
           new OrbitView({
             controller: true,
             id: 'main',
@@ -40,7 +40,7 @@ export function DeckglExample(props) {
             })
           }
         />
-      </layer>
+      </view>
     </Deckgl>
   );
 }

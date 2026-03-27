@@ -47,22 +47,28 @@ type ExtractViewProps<T> = T extends View<any, infer P> ? P : never;
 export interface DeckglElements {
   // Universal layer element (new in v2)
   layer: {
-    layer: Layer | View;
+    layer: Layer;
+    children?: ReactNode;
+  };
+
+  // View element (new in v2)
+  view: {
+    view: View;
     children?: ReactNode;
   };
 
   // @deck.gl/core
-  /** @deprecated Use <layer layer={new MapView({...})} /> instead */
+  /** @deprecated Use <view view={new MapView({...})} /> instead */
   mapView: ExtractViewProps<MapView> & { children: ReactNode };
-  /** @deprecated Use <layer layer={new OrthographicView({...})} /> instead */
+  /** @deprecated Use <view view={new OrthographicView({...})} /> instead */
   orthographicView: ExtractViewProps<OrthographicView> & {
     children: ReactNode;
   };
-  /** @deprecated Use <layer layer={new OrbitView({...})} /> instead */
+  /** @deprecated Use <view view={new OrbitView({...})} /> instead */
   orbitView: ExtractViewProps<OrbitView> & { children: ReactNode };
-  /** @deprecated Use <layer layer={new FirstPersonView({...})} /> instead */
+  /** @deprecated Use <view view={new FirstPersonView({...})} /> instead */
   firstPersonView: ExtractViewProps<FirstPersonView> & { children: ReactNode };
-  /** @deprecated Use <layer layer={new GlobeView({...})} /> instead */
+  /** @deprecated Use <view view={new GlobeView({...})} /> instead */
   globeView: ExtractViewProps<GlobeView> & { children: ReactNode };
 
   // @deck.gl/layers

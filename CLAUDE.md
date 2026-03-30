@@ -178,4 +178,9 @@ Oxlint + Oxfmt's linter will catch most issues automatically. Focus your attenti
 
 ---
 
+- When you run opsx or openspec commands, use `pnpm exec openspec`. When in doubt, use the `pnpm` skill.
+- When you install packages, make sure to pass a `--filter` to `pnpm` since this is a monorepo. When in doubt, use the `pnpm` skill.
+
+---
+
 Most formatting and common issues are automatically fixed by Oxlint + Oxfmt. Run `pnpm dlx ultracite fix` before committing to ensure compliance.

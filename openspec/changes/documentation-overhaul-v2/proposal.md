@@ -5,22 +5,22 @@ The current documentation is fragmented and doesn't effectively communicate the 
 ## What Changes
 
 - **Restructure main `README.md`** as a marketing landing page (~200 lines) that clearly differentiates from official deck.gl React bindings and funnels to comprehensive docs
-- **Expand `packages/dom/README.md`** into a comprehensive reference (~1200-1500 lines) by inlining content from `docs/REACT_PATTERNS.md`, `docs/MIGRATION.md`, and `docs/VALIDATION.md`
+- **Expand `packages/dom/README.md`** into a focused reference (~600-800 lines) by inlining essential content from `docs/REACT_PATTERNS.md`, `docs/MIGRATION.md`, and `docs/VALIDATION.md`
 - **Rewrite `packages/reconciler/README.md`** (~250-300 lines) to explain reconciler architecture, persistence mode, and development features for users interested in internals
 - **Rewrite `packages/types/README.md`** (~150-200 lines) to showcase TypeScript generic support and type system features
 - **Delete** `docs/REACT_PATTERNS.md`, `docs/MIGRATION.md`, and `docs/VALIDATION.md` after inlining their content
 - **Position v2 syntax prominently** throughout docs with v1 legacy syntax relegated to bottom sections marked deprecated
 - **Add comparison table** showing feature differences between official deck.gl React bindings and deckgl-fiber-renderer
-- **Use placeholder examples** marked with `[TODO: Update after examples overhaul]` to be replaced when examples are overhauled
+- **Keep examples concise** - link to examples directory for pattern exploration, let TypeScript guide API discovery
 
 ## Capabilities
 
 ### New Capabilities
 
-- `main-readme`: Marketing-focused landing page that differentiates from official bindings and showcases v2 features
-- `dom-package-readme`: Comprehensive API reference and guide consolidating all scattered documentation
-- `reconciler-package-readme`: Architecture deep-dive explaining reconciler internals and persistence mode
-- `types-package-readme`: TypeScript type system guide showcasing generic type parameter support
+- `main-readme`: Marketing-focused landing page that differentiates from official bindings and showcases v2 features (~200 lines)
+- `dom-package-readme`: Focused API reference consolidating essential patterns, letting TypeScript and examples teach the rest (~600-800 lines)
+- `reconciler-package-readme`: Architecture deep-dive explaining reconciler internals and persistence mode (~250-300 lines)
+- `types-package-readme`: TypeScript type system guide showcasing generic type parameter support (~150-200 lines)
 
 ### Modified Capabilities
 

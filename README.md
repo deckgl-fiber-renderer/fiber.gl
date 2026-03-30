@@ -2,144 +2,246 @@
 
 # Deckgl Fiber Renderer
 
-A React renderer for [deck.gl](https://deck.gl/).
+A React renderer for [deck.gl](https://deck.gl/) that brings the full power of React to geospatial visualization.
+
+Use deck.gl layers as React components with hooks, context, composition, and all the patterns you already know. No compromises.
 
 > [!IMPORTANT]
-> Requires `react`: `19.0.0` and `@deck.gl/*`: `^9.1.0`
+> Requires React `19.0.0` and deck.gl `^9.1.0`
 
-[See documentation here](./packages/dom/README.md)
+**[Get Started](#quick-start)** · **[Documentation](./packages/dom/README.md)** · **[Examples](#examples)**
 
-### Getting Started
+---
 
-Install `@deckgl-fiber-renderer`:
+## Why This Exists
 
-```bash
-npm i @deckgl-fiber-renderer/dom
-```
+The official deck.gl React bindings have significant limitations. This library removes them.
 
-Install peer dependencies:
+| Feature                 | Official Bindings                           | deckgl-fiber-renderer                              |
+| ----------------------- | ------------------------------------------- | -------------------------------------------------- |
+| **Component Nesting**   | ❌ Layers must be direct children only      | ✅ Nest layers anywhere in your tree               |
+| **Hooks Support**       | ❌ Can't use hooks in layer components      | ✅ Full hooks support (useState, useContext, etc.) |
+| **TypeScript Generics** | ❌ No type inference for accessor functions | ✅ Full generic support with autocomplete          |
+| **Custom Layers**       | ⚠️ Requires registration                    | ✅ Works out of the box, no setup                  |
+| **Code Splitting**      | ❌ Bundles all layers together              | ✅ Automatic tree-shaking                          |
+| **Composition**         | ❌ Limited to DeckGL wrapper                | ✅ Use anywhere in React tree                      |
 
-```bash
-npm i react react-dom @deck.gl/core @deck.gl/layers @deck.gl/geo-layers @deck.gl/mesh-layers @deck.gl/mapbox react-map-gl
-```
+**The short version:** If you want to build deck.gl visualizations like you build React apps, this is for you.
 
-Create a standalone map:
+---
+
+## What It Looks Like
 
 ```tsx
 import { ScatterplotLayer } from '@deck.gl/layers';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { Map, useControl } from 'react-map-gl/maplibre';
+import { Deckgl } from '@deckgl-fiber-renderer/dom';
 
-const INITIAL_VIEW_STATE = {
-  longitude: -77.0369,
-  latitude: 38.9072,
-  zoom: 4,
-};
+function MyMap() {
+  // ✅ Use hooks anywhere
+  const [radius, setRadius] = useState(100);
+  const theme = useContext(ThemeContext);
 
-const MAP_STYLE =
-  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
-
-function BasemapSync() {
-  const deckglInstance = useDeckgl();
-  useControl(() => deckglInstance);
-
-  return null;
-}
-
-function DeckglMap() {
   return (
-    <Deckgl interleaved>
-      <BasemapSync />
+    <Deckgl>
+      {/* ✅ Nest layers in any component structure */}
       <layer
         layer={
           new ScatterplotLayer({
             id: 'points',
             data: myData,
             getPosition: (d) => d.coordinates,
-            getRadius: 100,
+            getRadius: radius,
+            getFillColor: theme.colors.primary,
+          })
+        }
+      />
+    </Deckgl>
+  );
+}
+```
+
+Layers update when your props change. The reconciler handles efficient diffing with deck.gl. You just write React.
+
+---
+
+## Features
+
+- 🎯 **Full React Integration** - Hooks, context, suspense, concurrent features all work
+- 🏗️ **Flexible Composition** - Render layers at any depth, wrap them in your components
+- 🚀 **Automatic Code Splitting** - Only bundle the layers you import
+- 📦 **Zero Configuration** - Custom layers work immediately, no registration
+- 🔒 **Type Safe** - Full TypeScript support with generic type parameters
+- ⚡ **Development Mode** - Helpful warnings for missing IDs and common mistakes
+- 🗺️ **Multi-View Support** - Render Views as React components
+- 🎨 **Basemap Integration** - Works with Mapbox, MapLibre via react-map-gl
+- ♻️ **Automatic Cleanup** - Resources released when components unmount
+
+No performance penalties - this is a thin reconciler layer over deck.gl's native API.
+
+---
+
+## Quick Start
+
+### Install
+
+```bash
+npm install @deckgl-fiber-renderer/dom
+```
+
+Install peer dependencies:
+
+```bash
+npm install react react-dom @deck.gl/core @deck.gl/layers
+```
+
+### Basic Example
+
+[TODO: Update after examples overhaul]
+
+```tsx
+import { ScatterplotLayer } from '@deck.gl/layers';
+import { Deckgl } from '@deckgl-fiber-renderer/dom';
+import { createRoot } from 'react-dom/client';
+
+const INITIAL_VIEW_STATE = {
+  longitude: -122.45,
+  latitude: 37.78,
+  zoom: 12,
+};
+
+function App() {
+  return (
+    <Deckgl initialViewState={INITIAL_VIEW_STATE}>
+      <layer
+        layer={
+          new ScatterplotLayer({
+            id: 'scatterplot',
+            data: [
+              { position: [-122.45, 37.78], size: 100 },
+              { position: [-122.46, 37.79], size: 150 },
+            ],
+            getPosition: (d) => d.position,
+            getRadius: (d) => d.size,
             getFillColor: [255, 140, 0],
           })
         }
       />
     </Deckgl>
-}
-
-function Basemap({ children }) {
-  return (
-    <Map initialViewState={INITIAL_VIEW_STATE} mapStyle={MAP_STYLE}>
-      {children}
-    </Map>
-  )
-}
-
-function App() {
-  return (
-    <Basemap>
-      <DeckglMap />
-    </Basemap>
-  )
+  );
 }
 
 createRoot(document.getElementById('root')).render(<App />);
 ```
 
-### Documentation
+### With Basemap
 
-- **[React Integration Patterns](docs/REACT_PATTERNS.md)** - Learn best practices for using Deck.gl with React
-- **[Migration Guide](docs/MIGRATION.md)** - Step-by-step guide for upgrading from v1 to v2
-- **[Package Documentation](packages/dom/README.md)** - Detailed API reference
-
-### Key Concepts
-
-**New in v2:** The universal `<layer>` element replaces layer-specific elements, bringing:
-
-- Full TypeScript generic support for type-safe accessor functions
-- Automatic code-splitting - only bundle the layers you import
-- Zero configuration - no registration required, even for custom layers
-- Backwards compatible - v1 syntax still works during migration
-
-**Important:** Always provide explicit `id` props on your layers for optimal performance.
+[TODO: Update after examples overhaul]
 
 ```tsx
-// ✅ Good - explicit ID
-<layer layer={new ScatterplotLayer({ id: 'points', data })} />
+import { ScatterplotLayer } from '@deck.gl/layers';
+import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
+import { Map, useControl } from 'react-map-gl/maplibre';
 
-// ❌ Bad - missing ID causes performance issues
-<layer layer={new ScatterplotLayer({ data })} />
+const MAP_STYLE =
+  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+
+function BasemapSync() {
+  const deckgl = useDeckgl();
+  useControl(() => deckgl);
+  return null;
+}
+
+function App() {
+  return (
+    <Map mapStyle={MAP_STYLE}>
+      <Deckgl interleaved>
+        <BasemapSync />
+        <layer
+          layer={
+            new ScatterplotLayer({
+              id: 'points',
+              data: myData,
+              getPosition: (d) => d.coordinates,
+              getRadius: 100,
+            })
+          }
+        />
+      </Deckgl>
+    </Map>
+  );
+}
+```
+
+**📖 For complete API documentation, patterns, and guides, see [packages/dom/README.md](./packages/dom/README.md)**
+
+---
+
+## Examples
+
+Explore the examples to see different integration patterns:
+
+**Getting Started:**
+
+- [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone) - Basic setup without basemap
+- [MapLibre Integration](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/react-map-gl) - Using react-map-gl
+- [Migration Examples](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/migration) - Side-by-side v1 vs v2 syntax
+
+**Framework Integration:**
+
+- [Next.js](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs)
+- [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix)
+- [Vite](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/vite)
+- [Rsbuild](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/rsbuild)
+
+**Advanced:**
+
+- [Custom Layers](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer) - No registration needed!
+- [Multiple Views](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/views) - Split-screen and minimap patterns
+- [Widgets](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/widgets) - Integrating deck.gl widgets
+- [Advanced with RSC](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/advanced) - React Server Components
+
+Run any example:
+
+```bash
+pnpm --filter examples-<name> run dev
 ```
 
 ---
 
-### Examples
+## Requirements
 
-- [Migration Examples](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/migration): Side-by-side v1 vs v2 syntax comparison - `pnpm --filter examples-migration run dev`
-- [Standalone](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/standalone): `pnpm --filter examples-standalone run dev`
-- [MapLibre via `react-map-gl`](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/react-map-gl): `pnpm --filter examples-react-map-gl run dev`
-- [Custom Layer](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/custom-layer): No registration needed! `pnpm --filter examples-custom-layer run dev`
-- [Advanced with RSC](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/advanced): `pnpm --filter examples-advanced run dev`
-- [Nextjs](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/nextjs): `pnpm --filter examples-nextjs run dev`
-- [Remix/React Router](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/remix): `pnpm --filter examples-remix run dev`
-- [Rsbuild](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/rsbuild): `pnpm --filter examples-rsbuild run dev`
-- [Vite](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/vite): `pnpm --filter examples-vite run dev`
-- [Views](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/views): `pnpm --filter examples-views run dev`
-- [Widgets](https://github.com/deckgl-fiber-renderer/fiber.gl/tree/main/examples/widgets): `pnpm --filter examples-widgets run dev`
+- **React:** `19.0.0` or higher
+- **deck.gl:** `^9.1.0` (core and layer packages)
+- **Modern bundler** with tree-shaking support (Vite, Next.js, Webpack 5+, Rsbuild, etc.)
 
-## 💡 Contributing
+---
 
-Read the [contributing](CONTRIBUTING.md) guidelines file if you are interested in contributing.
+## Contributing
 
-## ✨ Versioning
+Read the [contributing guidelines](CONTRIBUTING.md) if you're interested in contributing.
 
-A traditional [Semver](https://semver.org/) is followed for versioning of packages.
+---
 
-## 🔍 License
+## Versioning
 
-Licensed under the [MIT License](https://opensource.org/license/mit). Read the [license instructions](LICENSE) if you are interested in contributing or using any of the packages.
+This project follows [Semantic Versioning](https://semver.org/).
 
-## 🚀 Special Thanks
+**Current Status:** v2 is stable. The v1 syntax (layer-specific elements like `<scatterplotLayer>`) is deprecated and will be removed in v3.
 
-A special thanks to the following projects:
+---
 
-- [deck.gl](https://github.com/visgl/deck.gl)
-- [react-three-fiber](https://github.com/pmndrs/react-three-fiber)
-- [react-pdf](https://github.com/diegomura/react-pdf)
+## License
+
+Licensed under the [MIT License](https://opensource.org/license/mit). See [LICENSE](LICENSE) for details.
+
+---
+
+## Acknowledgments
+
+This project builds on the excellent work of:
+
+- [deck.gl](https://github.com/visgl/deck.gl) - The foundational WebGL visualization framework
+- [react-three-fiber](https://github.com/pmndrs/react-three-fiber) - Inspiration for the reconciler architecture
+- [react-pdf](https://github.com/diegomura/react-pdf) - Additional reconciler patterns
+
+Special thanks to the deck.gl team at Vis.gl and the wider geospatial visualization community.

@@ -72,63 +72,66 @@ With v2's significant improvements (TypeScript generics, no layer registration, 
 - Keep comprehensive: Rejected - creates duplication, wrong audience
 - Remove entirely: Rejected - GitHub landing page is critical for discovery
 
-### Decision 2: Dom Package README as Comprehensive Reference (~1200-1500 lines)
+### Decision 2: Dom Package README as Focused Reference (~600-800 lines)
 
-**Choice:** Expand `packages/dom/README.md` to be the single source of truth by inlining all content from `docs/REACT_PATTERNS.md`, `docs/MIGRATION.md`, and `docs/VALIDATION.md`.
+**Choice:** Expand `packages/dom/README.md` to cover essentials by inlining critical patterns from `docs/REACT_PATTERNS.md`, `docs/MIGRATION.md`, and `docs/VALIDATION.md`. Focus on what developers need to know upfront; let TypeScript and examples teach the rest.
 
 **Rationale:**
 
-- npm visitors have already decided to try it - they need complete documentation
+- npm visitors have already decided to try it - they need essential documentation
 - Three separate guides are hard to discover and navigate
 - Pattern guides (IDs, lifecycle, update triggers) are core concepts, not optional reading
 - Consolidation makes content searchable in one place
-- Easier to maintain single comprehensive document than syncing multiple files
+- TypeScript provides discovery for props and types
+- Examples directory provides pattern exploration
+- Documentation should be reference, not tutorial
 
 **Structure:**
 
 ```
 - Installation & Requirements
-- Getting Started (4 quick examples with placeholders)
-- Core Concepts (~300 lines) ← Inline from REACT_PATTERNS
+- Quick Start (single example)
+- Core Concepts (~200 lines) ← Key patterns from REACT_PATTERNS
   - <Deckgl> component
   - <layer> element (why this syntax?)
   - <view> element
-  - Layer IDs Are Critical ⚠️
-  - Layer Lifecycle Pattern
-  - Update Triggers
+  - Layer IDs Are Critical
   - Development Mode Validation ← From VALIDATION.md
-- API Reference (~200 lines)
-- Common Patterns (~400 lines) ← Inline from REACT_PATTERNS
-- Migration from v1 (~200 lines) ← Inline from MIGRATION.md
-- Troubleshooting (~150 lines)
-- Comparison with Official Bindings (~100 lines)
-- Advanced Topics (~100 lines)
-- Backwards Compatibility (v1 Syntax) (~100 lines) ← At bottom, deprecated
+- API Reference (~150 lines)
+  - <Deckgl /> props
+  - useDeckgl() hook
+  - <layer> and <view> props
+- Common Patterns (~150 lines) ← Essential patterns only
+  - Basemap Integration
+  - Multiple Views
+  - Custom Layers
+- Migration from v1 (~100 lines) ← Inline from MIGRATION.md
+- Backwards Compatibility (v1 Syntax) (~50 lines) ← At bottom, deprecated
 ```
 
 **Alternatives considered:**
 
 - Keep separate guides: Rejected - fragmentation hurts discoverability
-- Create mega-doc with 3000+ lines: Rejected - this is already comprehensive
+- Create mega-doc with 1500+ lines: Rejected - too much, becomes a dissertation
 - Keep links to docs/ guides: Rejected - we're deleting those files
 
-### Decision 3: Use Placeholder Examples with TODO Markers
+### Decision 3: Keep Examples Minimal, Link to Examples Directory
 
-**Choice:** Use placeholder code snippets marked with `[TODO: Update after examples overhaul]` rather than pulling from current examples.
+**Choice:** Use minimal, focused code snippets in documentation and link to the `examples/` directory for comprehensive patterns.
 
 **Rationale:**
 
-- Examples overhaul is planned as follow-up work
-- Pulling current examples creates coupling that breaks when examples change
-- Placeholders make it explicit what needs updating
-- Allows focus on structure and content now, examples later
-- Easier to review documentation structure without being distracted by example code
+- Examples directory is the source of truth for working code
+- Documentation should show essential patterns only
+- TypeScript IntelliSense provides prop discovery
+- Linking to examples avoids duplication and coupling
+- Developers learn best from working examples they can run
+- Keeps documentation focused on concepts, not exhaustive tutorials
 
-**Format:**
+**Approach:**
 
 ```tsx
-[TODO: Update after examples overhaul]
-// Placeholder: Basic scatterplot layer
+// Minimal example showing the concept
 <layer
   layer={
     new ScatterplotLayer({
@@ -139,12 +142,14 @@ With v2's significant improvements (TypeScript generics, no layer registration, 
     })
   }
 />
+
+// See examples/basic-app for complete working example
 ```
 
 **Alternatives considered:**
 
-- Use current examples: Rejected - creates maintenance burden when examples change
-- Write complete new examples: Rejected - duplicates future examples work
+- Use placeholder examples with TODOs: Rejected - creates maintenance burden
+- Embed complete examples: Rejected - makes docs too long, creates duplication
 - Use no examples: Rejected - code snippets are essential for understanding
 
 ### Decision 4: Reconciler README as Architecture Deep-Dive (~250-300 lines)
@@ -221,32 +226,20 @@ With v2's significant improvements (TypeScript generics, no layer registration, 
 
 ## Risks / Trade-offs
 
-### Risk: Very Long Dom Package README
+### Risk: Dom Package README May Feel Incomplete
 
-**Impact:** `packages/dom/README.md` becomes 1200-1500 lines, which may feel overwhelming.
+**Impact:** `packages/dom/README.md` at 600-800 lines may not cover every edge case or pattern.
 
 **Mitigation:**
 
 - Clear table of contents with anchor links
-- Logical section progression (concepts → API → patterns → troubleshooting)
-- Users can search within page (Cmd+F) for specific topics
-- npm renders markdown well with collapsible sections
-- Alternative would be more fragmentation, which is worse
+- Focus on essential patterns that developers need immediately
+- TypeScript provides prop discovery and type safety
+- Examples directory demonstrates advanced patterns
+- Users can explore through IntelliSense and examples
+- Documentation should be reference, not tutorial
 
-**Trade-off accepted:** Single comprehensive document is better than scattered guides.
-
-### Risk: Placeholder Examples May Not Match Future Examples
-
-**Impact:** When examples are overhauled, inline placeholders may diverge from actual example code.
-
-**Mitigation:**
-
-- TODO markers make it explicit what needs updating
-- Examples overhaul task will include doc sync step
-- Placeholders use minimal, clear patterns that are unlikely to change drastically
-- Git diff will show exactly what needs updating
-
-**Trade-off accepted:** Better to have structure now, examples later, than to couple them.
+**Trade-off accepted:** Focused documentation that guides to TypeScript and examples is better than exhaustive documentation that becomes a dissertation.
 
 ### Risk: Deleting docs/ Guides Loses Discoverability
 

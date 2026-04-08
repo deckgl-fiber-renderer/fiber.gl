@@ -65,7 +65,7 @@ export interface Instance {
  * React reconciler requires this type, but deck.gl doesn't support text nodes.
  * Text rendering is handled through layer data and text properties instead.
  */
-export type TextInstance = void;
+export type TextInstance = void | never;
 
 /**
  * Collection of child instances in persistence mode.
@@ -91,6 +91,18 @@ export type TimeoutHandle = number;
  * so no payload is needed.
  */
 export type UpdatePayload = null;
+
+/**
+ * State object tracking pending suspensions during commit phase.
+ *
+ * React reconciler passes this state through Suspense lifecycle functions
+ * (startSuspendingCommit, suspendInstance, waitForCommitToBeReady). For
+ * deck.gl renderer, pendingCount is always 0 since layers never suspend.
+ */
+export interface SuspendedState {
+  /** Number of pending suspended instances (always 0 for deck.gl layers) */
+  pendingCount: number;
+}
 
 /**
  * Valid DOM elements for mounting the reconciler root.

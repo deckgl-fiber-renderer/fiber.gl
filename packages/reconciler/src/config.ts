@@ -15,6 +15,8 @@ import type {
   HostContext,
   Instance,
   Props,
+  SuspendedState,
+  TextInstance,
   Type,
   UpdatePayload,
 } from './types';
@@ -527,7 +529,7 @@ export function cloneHiddenInstance(
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCompleteWork.js Suspense Implementation}
  */
-export function cloneHiddenTextInstance(instance: void): void {
+export function cloneHiddenTextInstance(instance: TextInstance): void {
   log
     .withMetadata({
       instance,
@@ -585,7 +587,10 @@ export function unhideInstance(instance: Instance, props: Props): void {
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js Commit Phase Implementation}
  */
-export function unhideTextInstance(textInstance: void, text: string): void {
+export function unhideTextInstance(
+  textInstance: TextInstance,
+  text: string
+): void {
   log
     .withMetadata({
       text,
@@ -1543,6 +1548,304 @@ export function maySuspendCommit(type: Type, props: Props): boolean {
     .debug('maySuspendCommit');
 
   return false;
+}
+
+/**
+ * Called at the start of a commit that may suspend.
+ *
+ * React calls this when beginning a commit phase that might involve suspended
+ * components. The returned state object is passed to subsequent Suspense lifecycle
+ * functions (`suspendInstance`, `waitForCommitToBeReady`) to track pending resources.
+ *
+ * **Suspense Lifecycle:**
+ * This is the first function in the Suspense commit flow:
+ * 1. `startSuspendingCommit()` - Initialize state
+ * 2. `suspendInstance()` - Register suspended instances
+ * 3. `waitForCommitToBeReady()` - Check if commit can proceed
+ * 4. `getSuspendedCommitReason()` - Provide diagnostic info (if needed)
+ *
+ * **Deck.gl Implementation:**
+ * Returns minimal state with `pendingCount: 0` since deck.gl layers are synchronous
+ * descriptor objects that never suspend. Even when `layer.data` is async, deck.gl
+ * manages loading internally - layer creation is always synchronous.
+ *
+ * @returns SuspendedState object with pendingCount set to 0
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js#L363 React Noop Renderer implementation}
+ * @see {@link suspendInstance}
+ * @see {@link waitForCommitToBeReady}
+ */
+export function startSuspendingCommit(): SuspendedState {
+  log.debug('startSuspendingCommit');
+
+  return { pendingCount: 0 };
+}
+
+/**
+ * Registers an instance that may suspend during commit.
+ *
+ * React calls this for each instance that might suspend (based on `maySuspendCommit`
+ * returning true or other Suspense predicates). The host renderer can track these
+ * instances in the suspended state to coordinate resource loading.
+ *
+ * **Suspense Lifecycle:**
+ * Called during the commit phase after `startSuspendingCommit()`, once per instance
+ * that may suspend. The state is mutated to track pending resources.
+ *
+ * **Deck.gl Implementation:**
+ * No-op because deck.gl layers never suspend. Layer instances are synchronous
+ * descriptors - even layers with async data (e.g., `GeoJsonLayer` with URL) are
+ * created immediately, with deck.gl handling loading internally.
+ *
+ * @param state - Suspended state object from startSuspendingCommit
+ * @param instance - The instance being suspended
+ * @param type - Element type (e.g., "scatterplotLayer")
+ * @param props - Props for the instance
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js#L367 React Noop Renderer implementation}
+ * @see {@link startSuspendingCommit}
+ */
+export function suspendInstance(
+  state: SuspendedState,
+  instance: Instance,
+  type: Type,
+  props: Props
+): void {
+  log
+    .withMetadata({
+      instance,
+      props,
+      state,
+      type,
+    })
+    .debug('suspendInstance');
+
+  // No-op: deck.gl layers never suspend
+}
+
+/**
+ * Checks if the commit is ready to proceed or needs to wait for resources.
+ *
+ * React calls this after visiting all instances to determine if the commit can
+ * complete immediately or needs to defer. Return null to proceed immediately, or
+ * return a function that accepts a commit callback to defer until resources load.
+ *
+ * **Suspense Lifecycle:**
+ * Called after all `suspendInstance()` calls complete. The returned function (if any)
+ * is called with a commit callback that should be invoked when resources are ready.
+ *
+ * **Return Value:**
+ * - `null`: Proceed with commit immediately (resources are ready)
+ * - `(commit) => cancel`: Defer commit, call `commit()` when ready, return cancel function
+ *
+ * **Deck.gl Implementation:**
+ * Returns `null` to proceed immediately since deck.gl layers are synchronous.
+ * No async resources need to load before committing layer descriptors.
+ *
+ * @param state - Suspended state object from startSuspendingCommit
+ * @param timeoutMs - Timeout in milliseconds for waiting (unused)
+ * @returns `null` - Always proceed immediately
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js#L371 React Noop Renderer implementation}
+ * @see {@link startSuspendingCommit}
+ */
+export function waitForCommitToBeReady(
+  state: SuspendedState,
+  timeoutMs: number
+): ((commit: () => void) => () => void) | null {
+  log
+    .withMetadata({
+      state,
+      timeoutMs,
+    })
+    .debug('waitForCommitToBeReady');
+
+  return null;
+}
+
+/**
+ * Checks if an instance might suspend during an update.
+ *
+ * React calls this during the commit phase when updating an existing instance to
+ * determine if the update might trigger Suspense (e.g., new props reference async
+ * resources that aren't ready). Return `true` to enter the Suspense commit flow.
+ *
+ * **When to return true:**
+ * - New props reference images/fonts/data that need to load
+ * - Props changed in a way that requires async resource fetching
+ *
+ * **Deck.gl Implementation:**
+ * Returns `false` because deck.gl layers handle async loading internally. Even when
+ * props reference URLs or Promises, the layer descriptor is created synchronously
+ * and deck.gl manages loading behind the scenes.
+ *
+ * @param type - Element type (e.g., "scatterplotLayer")
+ * @param oldProps - Previous props
+ * @param newProps - New props
+ * @returns `false` - Updates never suspend
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberBeginWork.js Update Suspension Check}
+ * @see {@link maySuspendCommit}
+ */
+export function maySuspendCommitOnUpdate(
+  type: Type,
+  oldProps: Props,
+  newProps: Props
+): boolean {
+  log
+    .withMetadata({
+      newProps,
+      oldProps,
+      type,
+    })
+    .debug('maySuspendCommitOnUpdate');
+
+  return false;
+}
+
+/**
+ * Checks if an instance might suspend during synchronous rendering.
+ *
+ * React calls this to determine if an instance might suspend when rendered in a
+ * synchronous (non-concurrent) context. Synchronous renders can't be interrupted,
+ * so React needs to know upfront if Suspense boundaries should be prepared.
+ *
+ * **When to return true:**
+ * - Instance depends on resources that might not be loaded
+ * - Rendering requires synchronous data fetching
+ *
+ * **Deck.gl Implementation:**
+ * Returns `false` because deck.gl layer creation is always synchronous. Layers are
+ * lightweight descriptor objects that don't block rendering even with async data.
+ *
+ * @param type - Element type (e.g., "scatterplotLayer")
+ * @param props - Props for the instance
+ * @returns `false` - Never suspends in sync renders
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberBeginWork.js Sync Render Check}
+ * @see {@link maySuspendCommit}
+ */
+export function maySuspendCommitInSyncRender(
+  type: Type,
+  props: Props
+): boolean {
+  log
+    .withMetadata({
+      props,
+      type,
+    })
+    .debug('maySuspendCommitInSyncRender');
+
+  return false;
+}
+
+/**
+ * Checks if an instance's resources are preloaded and ready to commit.
+ *
+ * React calls this before committing an instance to verify all required resources
+ * (images, fonts, data) are already loaded. Return `true` if resources are ready,
+ * `false` to trigger Suspense.
+ *
+ * **When to return false:**
+ * - Instance depends on images/fonts that need to load
+ * - Data fetching is still in progress
+ *
+ * **Deck.gl Implementation:**
+ * Returns `true` because deck.gl layers are always "ready" - they're synchronous
+ * descriptors that can be committed immediately. Async loading (if any) happens
+ * after the layer is created, managed by deck.gl internally.
+ *
+ * @param type - Element type (e.g., "scatterplotLayer")
+ * @param props - Props for the instance
+ * @returns `true` - Layers are always ready
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberBeginWork.js Preload Check}
+ * @see {@link maySuspendCommit}
+ */
+export function preloadInstance(type: Type, props: Props): boolean {
+  log
+    .withMetadata({
+      props,
+      type,
+    })
+    .debug('preloadInstance');
+
+  return true;
+}
+
+/**
+ * Provides a diagnostic string explaining why a commit is suspended.
+ *
+ * React DevTools calls this to display suspension reasons to developers, helping
+ * debug why a commit is blocked. Return a human-readable string describing what
+ * resources are pending, or null if not suspended.
+ *
+ * **Example return values:**
+ * - `"Waiting for 3 images to load"`
+ * - `"Fetching data from /api/users"`
+ * - `null` (not suspended)
+ *
+ * **Deck.gl Implementation:**
+ * Returns `null` because deck.gl layers never suspend. Commits always proceed
+ * immediately since layer descriptors are synchronous.
+ *
+ * @param state - Suspended state object from startSuspendingCommit
+ * @param rootContainer - The root container being committed
+ * @returns `null` - No suspension occurs
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberHostConfig.js Suspension Diagnostics}
+ * @see {@link startSuspendingCommit}
+ */
+export function getSuspendedCommitReason(
+  state: SuspendedState,
+  rootContainer: Container
+): string | null {
+  log
+    .withMetadata({
+      rootContainer,
+      state,
+    })
+    .debug('getSuspendedCommitReason');
+
+  return null;
+}
+
+/**
+ * Schedules a callback to run after the browser paints the current frame.
+ *
+ * React calls this to defer non-critical work until after the user sees the visual
+ * update. Useful for analytics, telemetry, or cleanup work that shouldn't block paint.
+ *
+ * **Timing guarantees:**
+ * - Callback fires after `requestAnimationFrame` (which fires before paint)
+ * - Uses `setTimeout(0)` to defer until after paint completes
+ * - Callback receives a timestamp from `performance.now()`
+ *
+ * **Use cases:**
+ * - Sending telemetry/analytics after render
+ * - Non-critical DOM measurements
+ * - Cleanup work that can be deferred
+ *
+ * **Implementation:**
+ * Uses the `requestAnimationFrame` + `setTimeout` pattern to ensure callback runs
+ * after the browser has painted. RAF fires before paint, setTimeout fires after.
+ *
+ * @param callback - Function to call after paint, receives performance.now() timestamp
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js Post-Paint Callback}
+ */
+export function requestPostPaintCallback(
+  callback: (time: number) => void
+): void {
+  log
+    .withMetadata({
+      callback,
+    })
+    .debug('requestPostPaintCallback');
+
+  requestAnimationFrame(() => {
+    setTimeout(() => callback(performance.now()), 0);
+  });
 }
 
 /**

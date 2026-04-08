@@ -20,6 +20,8 @@ import type {
 } from './types';
 import { flattenTree, isView, organizeList } from './utils';
 
+const VIEW_REGEX = /view/i;
+
 type EventPriority = number;
 
 /**
@@ -1298,16 +1300,11 @@ export function getChildHostContext(
 
   // Detect if we are inside of a View instance
   // Note: This currently checks type string. Once single-layer-element lands,
-  // we should also check instance.node instanceof View for runtime detection
-  // Performance: avoid-allocations.md - conditional object creation
-  // Performance: performance-misc.md - avoid string allocation for case check
-  // Issue #5: Object spread allocates on every element during render
-  // Issue #6: toLowerCase() allocates new string on every call
-  // Gain: 1.3-2x speedup (Issue #5) + 1.2-1.5x speedup (Issue #6)
+  // we should also check instance.node instanceof View for runtime detection.
   // Only allocate new context when actually adding insideView flag
-  const isView = /view/i.test(type);
+  const isViewInstance = VIEW_REGEX.test(type);
 
-  if (isView) {
+  if (isViewInstance) {
     return { ...parentHostContext, insideView: true };
   }
 

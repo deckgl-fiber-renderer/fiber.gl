@@ -1,7 +1,7 @@
 import { ScatterplotLayer } from '@deck.gl/layers';
 import * as fc from 'fast-check';
 import React from 'react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { createRoot, roots, unmountAtNode } from '../renderer';
 import type { RootElement } from '../types';
@@ -15,6 +15,17 @@ function createTestRootElement(): RootElement {
 }
 
 describe('renderer', () => {
+  afterEach(() => {
+    // Clean up all roots after each test to prevent worker teardown issues
+    const allRoots = Array.from(roots.keys());
+    for (const node of allRoots) {
+      try {
+        unmountAtNode(node);
+      } catch {
+        // Ignore errors during cleanup
+      }
+    }
+  });
   describe('createRoot', () => {
     it('calling createRoot twice on same node returns same root', () => {
       // Arrange
@@ -124,8 +135,10 @@ describe('renderer', () => {
 
       // Assert
       const state = root.store.getState();
-      expect(state.deckgl).toBeTypeOf('object');
       expect(state.deckgl).not.toBeNull();
+      expect(state.deckgl).toBeTypeOf('object');
+      expect(state.deckgl).toHaveProperty('setProps');
+      expect(state.deckgl).toHaveProperty('finalize');
     });
   });
 
@@ -225,13 +238,22 @@ describe('renderer', () => {
         throw new Error('Finalize failed');
       };
 
-      // Act & Assert
-      // Error propagates to caller
-      expect(() => unmountAtNode(node)).toThrow('Finalize failed');
+      // Suppress console errors during this test to avoid worker teardown issues
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
 
-      // But cleanup still completes (try-finally ensures this)
-      // Root IS removed even when finalize throws
-      expect(roots.has(node)).toBe(false);
+      try {
+        // Act & Assert
+        // Error propagates to caller
+        expect(() => unmountAtNode(node)).toThrow('Finalize failed');
+
+        // But cleanup still completes (try-finally ensures this)
+        // Root IS removed even when finalize throws
+        expect(roots.has(node)).toBe(false);
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
     });
   });
 });

@@ -1,5 +1,5 @@
 import { ScatterplotLayer } from '@deck.gl/layers';
-import { createElement, Suspense, use } from 'react';
+import { createElement, Fragment, Suspense, use } from 'react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { createMockDeckInstance } from '../__fixtures__/mock-deck-instance';
@@ -138,8 +138,8 @@ function Test3NestedSuspense() {
     Suspense,
     { fallback: null },
     createElement(
-      'fragment',
-      {},
+      Fragment,
+      null,
       createElement(
         Suspense,
         {

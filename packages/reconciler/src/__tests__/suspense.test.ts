@@ -233,6 +233,7 @@ describe('suspense', () => {
 
       // Should receive a valid timestamp
       expect(receivedTime).toBeTypeOf('number');
+      expect(Number.isFinite(receivedTime)).toBe(true);
       expect(receivedTime).toBeGreaterThan(0);
       // Should be reasonably close to current time (within 1 second)
       expect(Math.abs(performance.now() - receivedTime!)).toBeLessThan(1000);

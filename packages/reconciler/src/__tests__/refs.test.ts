@@ -26,7 +26,7 @@ describe('refs', () => {
       // Should have deck.gl Layer properties and methods
       expect(publicInstance).toHaveProperty('id');
       expect(publicInstance).toHaveProperty('props');
-      expect(typeof publicInstance.clone).toBe('function');
+      expect(publicInstance.clone).toBeTypeOf('function');
     });
 
     it('returns actual View instance', () => {

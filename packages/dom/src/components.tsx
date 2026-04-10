@@ -11,20 +11,20 @@ import { FiberProvider, useContextBridge } from 'its-fine';
 import type { ContextBridge } from 'its-fine';
 import { useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
-
-import { useIsomorphicLayoutEffect } from './hooks';
+import useIsomorphicLayoutEffect from 'use-isomorphic-layout-effect';
 
 function DeckglComponent(props: DeckglProps) {
-  const { children, ...etc } = props;
+  const { children } = props;
 
   const Bridge: ContextBridge = useContextBridge();
-  const wrapper = useRef<HTMLDivElement>(null!);
-  const canvas = useRef<HTMLCanvasElement>(null!);
-  const interleave = useRef<HTMLDivElement>(null!);
+  const wrapper = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const interleave = useRef<HTMLDivElement>(null);
 
   useIsomorphicLayoutEffect(() => {
     // NOTE: enable/disable logging based on debug prop
-    etc.debug ? log.enableLogging() : log.disableLogging();
+    // oxlint-disable-next-line no-unused-expressions
+    props.debug ? log.enableLogging() : log.disableLogging();
 
     const node = canvas.current || interleave.current;
 
@@ -32,7 +32,7 @@ function DeckglComponent(props: DeckglProps) {
       const root: ReconcilerRoot = roots.get(node) ?? createRoot(node);
 
       root.configure({
-        ...etc,
+        ...props,
         // NOTE: only apply canvas/wrapper if we are not using an external renderer such as Mapbox/Maplibre
         ...(canvas.current && { canvas: canvas.current }),
         ...(wrapper.current && { parent: wrapper.current }),
@@ -40,7 +40,7 @@ function DeckglComponent(props: DeckglProps) {
 
       root.render(<Bridge>{children}</Bridge>);
     }
-  }, [children, etc]);
+  }, [children, props]);
 
   useEffect(() => {
     const node = canvas.current || interleave.current;

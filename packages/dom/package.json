@@ -50,7 +50,8 @@
     "@deckgl-fiber-renderer/shared": "workspace:*",
     "@deckgl-fiber-renderer/types": "workspace:*",
     "client-only": "^0.0.1",
-    "its-fine": "^2.0.0"
+    "its-fine": "^2.0.0",
+    "use-isomorphic-layout-effect": "^1.2.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",

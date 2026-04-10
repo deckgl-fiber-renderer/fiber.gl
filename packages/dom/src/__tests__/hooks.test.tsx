@@ -1,7 +1,7 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { useDeckgl, useIsomorphicLayoutEffect } from '../hooks';
+import { useDeckgl } from '../hooks';
 
 // Mock the shared module
 vi.mock('@deckgl-fiber-renderer/shared', () => {
@@ -56,20 +56,6 @@ describe('Dom Hooks Tests', () => {
 
       // Assert
       expect(result.current).toBe(mockDeckgl2);
-    });
-  });
-
-  describe('useIsomorphicLayoutEffect', () => {
-    it('should useIsomorphicLayoutEffect uses useEffect in Node environment', () => {
-      // Arrange
-      const effectFn = vi.fn();
-
-      // Act
-      renderHook(() => useIsomorphicLayoutEffect(effectFn, []));
-
-      // Assert - in Node environment (isBrowserEnvironment = false),
-      // should use useEffect which runs after render
-      expect(effectFn).toHaveBeenCalled();
     });
   });
 });

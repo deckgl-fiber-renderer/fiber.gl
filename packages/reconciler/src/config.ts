@@ -16,7 +16,6 @@ import type {
   Instance,
   Props,
   SuspendedState,
-  TextInstance,
   Type,
   UpdatePayload,
 } from './types';
@@ -181,10 +180,14 @@ function createDeckglObject(type: Type, props: Props): Instance {
     }
 
     // Development-mode warning for missing or default view ID
+    // TODO: swap this to check for debug flag instead of process.env
     if (process.env.NODE_ENV === 'development') {
       const view = props.view as View;
+
+      // TODO: sanity check why view.id === 'unknown' was added
       if (!view.id || view.id === 'unknown') {
         const viewName = view.constructor.name;
+
         console.warn(
           `⚠️  View missing explicit "id" prop. deck.gl requires stable IDs ` +
             `for efficient diffing.\n\n` +
@@ -207,10 +210,14 @@ function createDeckglObject(type: Type, props: Props): Instance {
     }
 
     // Development-mode warning for missing or default layer ID
+    // TODO: swap this to check for debug flag instead of process.env
     if (process.env.NODE_ENV === 'development') {
       const layer = props.layer as Layer;
+
+      // TODO: sanity check why layer.id === 'unknown' was added
       if (!layer.id || layer.id === 'unknown') {
         const layerName = layer.constructor.name;
+
         console.warn(
           `⚠️  Layer missing explicit "id" prop. This causes expensive ` +
             `reinitialization on every render.\n\n` +
@@ -220,6 +227,7 @@ function createDeckglObject(type: Type, props: Props): Instance {
       }
 
       // Development-mode error if View passed to <layer>
+      // TODO: fix ts error here
       if (isView(props.layer)) {
         console.error(
           `❌  View instance passed to <layer> element. Use <view view={...} /> instead.\n\n` +
@@ -238,14 +246,12 @@ function createDeckglObject(type: Type, props: Props): Instance {
   }
 
   // Legacy path with deprecation warning (v2 backwards compatibility)
-  // Performance: cache-property-access.md - compute once
-  // Issue: toPascal(type) called twice with same input
-  // Gain: 1.5x speedup in legacy element path
   const name = toPascal(type);
 
+  // TODO: swap this to check for debug flag instead of process.env
   if (process.env.NODE_ENV === 'development') {
     // Detect if this is a view-related element
-    const isViewType = /view/i.test(type);
+    const isViewType = VIEW_REGEX.test(type);
     const elementName = isViewType ? 'view' : 'layer';
     const propName = isViewType ? 'view' : 'layer';
 
@@ -255,10 +261,8 @@ function createDeckglObject(type: Type, props: Props): Instance {
   }
 
   if (!catalogue[name]) {
-    // Performance: cache-property-access.md - cache repeated computation
-    // Issue: Object.keys(catalogue).join() computed on every error
-    // Gain: 1.2-1.5x speedup in error path (rare but avoids waste)
     const availableElements = getAvailableElements();
+
     throw new Error(
       `Unsupported element type: "${type}"\n\n` +
         `Available elements: ${availableElements}\n\n` +
@@ -529,12 +533,8 @@ export function cloneHiddenInstance(
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCompleteWork.js Suspense Implementation}
  */
-export function cloneHiddenTextInstance(instance: TextInstance): void {
-  log
-    .withMetadata({
-      instance,
-    })
-    .debug('cloneHiddenTextInstance');
+export function cloneHiddenTextInstance(): void {
+  log.debug('cloneHiddenTextInstance');
 
   throw new Error('Text nodes are not supported in deck.gl renderer');
 }
@@ -587,16 +587,8 @@ export function unhideInstance(instance: Instance, props: Props): void {
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js Commit Phase Implementation}
  */
-export function unhideTextInstance(
-  textInstance: TextInstance,
-  text: string
-): void {
-  log
-    .withMetadata({
-      text,
-      textInstance,
-    })
-    .debug('unhideTextInstance');
+export function unhideTextInstance(): void {
+  log.debug('unhideTextInstance');
 
   throw new Error('Text nodes are not supported in deck.gl renderer');
 }
@@ -731,16 +723,14 @@ export function finalizeContainerChildren(
     .debug('finalizeContainerChildren');
 
   // Development-mode validation: detect duplicate layer IDs
+  // TODO: swap this to check for debug flag instead of process.env
   if (process.env.NODE_ENV === 'development') {
     const flattened = flattenTree(newChildren);
     const { layers } = organizeList(flattened);
 
-    // Performance: reduce-looping.md - single pass instead of .map().filter()
-    // Issue: Array method chaining creates 2 intermediate arrays in dev validation
-    // Gain: 1.5-2x speedup in development mode
     const layerIds: string[] = [];
     for (const layer of layers) {
-      if (layer.id !== undefined) {
+      if (layer.id) {
         layerIds.push(layer.id);
       }
     }
@@ -750,9 +740,6 @@ export function finalizeContainerChildren(
       idCounts.set(id, (idCounts.get(id) ?? 0) + 1);
     }
 
-    // Performance: reduce-looping.md - single pass instead of filter().map()
-    // Issue: Array method chaining creates 3 intermediate arrays
-    // Gain: 2-3x speedup in dev mode validation
     const duplicates: string[] = [];
     for (const [id, count] of idCounts.entries()) {
       if (count > 1) {
@@ -838,12 +825,10 @@ export function replaceContainerChildren(
     const types = organizeList(list);
 
     // NOTE: apply layers passed to the `layers` prop on `<Deckgl />` component
-    // Performance: avoid-allocations.md - pre-allocate array with known size instead of spread
-    // Issue: Spread operator creates new array on every commit
-    // Gain: 1.5-2x speedup
-    const combinedLayers = new Array<Layer>(
-      state._passedLayers.length + types.layers.length
-    );
+    // TODO: fix type for generic here on Array.from
+    const combinedLayers = Array.from<Layer>({
+      length: state._passedLayers.length + types.layers.length,
+    });
 
     let idx = 0;
     for (const layer of state._passedLayers) {
@@ -1835,6 +1820,7 @@ export function getSuspendedCommitReason(
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js Post-Paint Callback}
  */
 export function requestPostPaintCallback(
+  // oxlint-disable-next-line promise/prefer-await-to-callbacks
   callback: (time: number) => void
 ): void {
   log
@@ -1844,6 +1830,7 @@ export function requestPostPaintCallback(
     .debug('requestPostPaintCallback');
 
   requestAnimationFrame(() => {
+    // oxlint-disable-next-line promise/prefer-await-to-callbacks
     setTimeout(() => callback(performance.now()), 0);
   });
 }

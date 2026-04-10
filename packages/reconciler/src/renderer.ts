@@ -102,11 +102,10 @@ export function unmountAtNode(node: RootElement) {
 
     // Ensure cleanup completes even if finalize throws
     try {
-      state.deckgl.finalize();
+      state.deckgl?.finalize();
     } finally {
       // Always clear state and remove from registry, even on error
-      // NOTE: setDeckgl type expects Deck | MapboxOverlay, but undefined is needed
-      // for cleanup. Consider updating store type to allow undefined.
+      // oxlint-disable-next-line typescript/no-explicit-any
       state.setDeckgl(undefined as any);
       roots.delete(node);
     }

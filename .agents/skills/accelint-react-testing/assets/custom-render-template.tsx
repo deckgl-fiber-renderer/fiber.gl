@@ -55,8 +55,8 @@ const defaultQueryClient = getQueryClient({
       retry: false,
     },
     queries: {
-      retry: false,
       cacheTime: 0,
+      retry: false,
       staleTime: 0,
     },
   },
@@ -147,8 +147,8 @@ export function createTestQueryClient() {
         retry: false,
       },
       queries: {
-        retry: false,
         cacheTime: 0,
+        retry: false,
         staleTime: 0,
       },
     },

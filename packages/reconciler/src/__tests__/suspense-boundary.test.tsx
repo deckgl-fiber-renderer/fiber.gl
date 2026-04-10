@@ -9,6 +9,7 @@ import { createRoot, unmountAtNode } from '../renderer';
 let resolvePromise: (() => void) | null = null;
 let promise: Promise<void> | null = null;
 
+// Component defined at module scope to avoid remounting on re-render
 function AsyncDataComponent() {
   if (!promise) {
     promise = new Promise((resolve) => {

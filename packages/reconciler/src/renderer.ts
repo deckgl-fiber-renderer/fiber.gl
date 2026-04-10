@@ -18,6 +18,19 @@ import type { ReconcilerRoot, RootElement } from './types';
  *
  * Internal reconciler used by createRoot/unmountAtNode. Generally not used directly
  * by consumers - use the higher-level createRoot API instead.
+ *
+ * @example
+ * ```typescript
+ * // Advanced usage: direct container access
+ * import { renderer } from '@deckgl-fiber-renderer/reconciler';
+ *
+ * const container = renderer.createContainer(
+ *   hostContext,
+ *   ConcurrentRoot,
+ *   // ... other params
+ * );
+ * renderer.updateContainer(element, container, null, callback);
+ * ```
  */
 export const renderer: ReturnType<typeof reactReconciler> =
   reactReconciler(config);
@@ -27,6 +40,17 @@ export const renderer: ReturnType<typeof reactReconciler> =
  *
  * Maps RootElement containers to their ReconcilerRoot instances. Used internally
  * to ensure root idempotency and proper cleanup.
+ *
+ * @example
+ * ```typescript
+ * // Advanced usage: check if root exists for container
+ * import { roots } from '@deckgl-fiber-renderer/reconciler';
+ *
+ * if (roots.has(containerElement)) {
+ *   const existingRoot = roots.get(containerElement);
+ *   // Work with existing root
+ * }
+ * ```
  */
 export const roots = new Map<RootElement, ReconcilerRoot>();
 
@@ -41,15 +65,24 @@ export const roots = new Map<RootElement, ReconcilerRoot>();
  *
  * Safe to call multiple times or on non-existent nodes (no-op if not found).
  *
+ * Cleanup (state clearing and root removal) always completes even if finalize
+ * throws, but the error is re-thrown to allow proper error handling by callers.
+ *
  * @param node - Root element container to unmount
+ * @throws {Error} When deck.gl finalize() fails (e.g., WebGL context errors)
  *
  * @example
  * ```typescript
  * const root = createRoot(container);
  * root.render(<MyApp />);
  *
- * // Later: cleanup
- * unmountAtNode(container);
+ * // Later: cleanup with error handling
+ * try {
+ *   unmountAtNode(container);
+ * } catch (error) {
+ *   console.error('WebGL cleanup failed:', error);
+ *   // Root is still removed from registry despite error
+ * }
  * ```
  */
 export function unmountAtNode(node: RootElement) {
@@ -67,9 +100,16 @@ export function unmountAtNode(node: RootElement) {
 
     const state = root.store.getState();
 
-    state.deckgl.finalize();
-    state.setDeckgl(undefined as any);
-    roots.delete(node);
+    // Ensure cleanup completes even if finalize throws
+    try {
+      state.deckgl.finalize();
+    } finally {
+      // Always clear state and remove from registry, even on error
+      // NOTE: setDeckgl type expects Deck | MapboxOverlay, but undefined is needed
+      // for cleanup. Consider updating store type to allow undefined.
+      state.setDeckgl(undefined as any);
+      roots.delete(node);
+    }
   }
 }
 

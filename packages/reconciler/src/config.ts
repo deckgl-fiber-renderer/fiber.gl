@@ -1424,6 +1424,65 @@ export function getCurrentEventPriority(): number {
 }
 
 /**
+ * Tracks the current scheduler event for React's event system.
+ *
+ * React calls this before processing events to capture the current browser event.
+ * This enables `resolveEventTimeStamp()` and `resolveEventType()` to access event
+ * metadata during the update cycle.
+ *
+ * For non-DOM renderers like deck.gl, this is a no-op since event handling
+ * happens through deck.gl's own event system rather than React's DOM event system.
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js#L1229 DOM Implementation}
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js Noop Renderer Implementation}
+ * @see {@link resolveEventTimeStamp} Event timestamp resolution
+ * @see {@link resolveEventType} Event type resolution
+ */
+export function trackSchedulerEvent(): void {
+  // No-op: deck.gl renderer doesn't track browser events
+}
+
+/**
+ * Resolves the type of the current event being processed (e.g., 'click', 'keydown').
+ *
+ * React uses this for event-specific optimizations and debugging. For DOM renderers,
+ * this returns `window.event.type`. For non-DOM renderers, returning null signals
+ * "no event type available".
+ *
+ * The deck.gl renderer doesn't need event type information since it doesn't handle
+ * browser events directly - deck.gl layers have their own event handling system.
+ *
+ * @returns Event type string (e.g., 'click', 'keydown') or null if unavailable
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js#L1238 DOM Implementation}
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js Noop Renderer Implementation}
+ * @see {@link trackSchedulerEvent} Related event tracking
+ */
+export function resolveEventType(): string | null {
+  return null;
+}
+
+/**
+ * Resolves the timestamp of the current event being processed.
+ *
+ * React uses this to track event timing for scheduling and analytics purposes.
+ * For DOM renderers, this returns `window.event.timeStamp`. For non-DOM renderers
+ * like deck.gl, returning -1.1 signals "no event timestamp available".
+ *
+ * The special value -1.1 (instead of -1) is used to distinguish "no timestamp"
+ * from potential timeout IDs or other sentinel values.
+ *
+ * @returns Event timestamp in milliseconds, or -1.1 if no event is active
+ *
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js#L1234 DOM Implementation}
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js Noop Renderer Implementation}
+ * @see {@link trackSchedulerEvent} Related event tracking
+ */
+export function resolveEventTimeStamp(): number {
+  return -1.1;
+}
+
+/**
  * Sets the priority for the current update batch.
  *
  * React calls this to control update batching and scheduling. When React batches

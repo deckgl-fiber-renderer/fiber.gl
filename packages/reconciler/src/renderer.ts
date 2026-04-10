@@ -163,19 +163,32 @@ export function createRoot(node: RootElement): ReconcilerRoot {
   // Create new root
   const store = storeInstance;
 
+  /**
+   * Create a new React reconciler container with the following configuration:
+   * - tag: ConcurrentRoot for concurrent mode rendering
+   * - hydration callbacks: null (no SSR hydration)
+   * - isStrictMode: false
+   * - concurrentUpdatesByDefaultOverride: null
+   * - identifierPrefix: empty string
+   * - onUncaughtError: reportError handler
+   * - onCaughtError: reportError handler
+   * - onRecoverableError: reportError handler
+   * - transitionCallbacks: null
+   *
+   * @see https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js#L1159
+   */
   const container = renderer.createContainer(
     { store },
-    ConcurrentRoot, // tag
-    null, // hydration callbacks
-    false, // isStrictMode
-    null, // concurrentUpdatesByDefaultOverride
-    '', // identifierPrefix
-    reportError, // onUncaughtError
-    reportError, // onCaughtError
-    // https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js#L1159
+    ConcurrentRoot,
+    null,
+    false,
+    null,
+    '',
+    reportError,
+    reportError,
     // @ts-expect-error @types/react-reconciler is incorrect
-    reportError, // onRecoverableError
-    null // transitionCallbacks
+    reportError,
+    null
   );
 
   let configured = false;

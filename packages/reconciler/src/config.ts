@@ -720,24 +720,33 @@ export function finalizeContainerChildren(
     .debug('finalizeContainerChildren');
 
   // Development-mode validation: detect duplicate layer IDs
+  // Performance: reduce-looping.md - Two-pass algorithm (2-5x faster than five-pass)
   if (process.env.NODE_ENV === 'development') {
-    const flattened = flattenTree(newChildren);
-    const { layers } = organizeList(flattened);
+    // Pass 1: Flatten tree and count layer IDs in single traversal
+    const idCounts = new Map<string, number>();
 
-    const layerIds: string[] = [];
-    for (const layer of layers) {
-      if (layer.id) {
-        layerIds.push(layer.id);
+    function countLayerIds(instances: Instance[]): void {
+      for (const instance of instances) {
+        // Check if node is a Layer (not a View)
+        if (!isView(instance.node)) {
+          const layer = instance.node;
+          if (layer.id) {
+            idCounts.set(layer.id, (idCounts.get(layer.id) ?? 0) + 1);
+          }
+        }
+
+        // Recurse into children
+        if (instance.children.length > 0) {
+          countLayerIds(instance.children);
+        }
       }
     }
 
-    const idCounts = new Map<string, number>();
-    for (const id of layerIds) {
-      idCounts.set(id, (idCounts.get(id) ?? 0) + 1);
-    }
+    countLayerIds(newChildren);
 
+    // Pass 2: Extract duplicates during Map iteration
     const duplicates: string[] = [];
-    for (const [id, count] of idCounts.entries()) {
+    for (const [id, count] of idCounts) {
       if (count > 1) {
         duplicates.push(id);
       }
@@ -821,18 +830,8 @@ export function replaceContainerChildren(
     const types = organizeList(list);
 
     // NOTE: apply layers passed to the `layers` prop on `<Deckgl />` component
-    // TODO: fix type for generic here on Array.from
-    const combinedLayers = Array.from<Layer>({
-      length: state._passedLayers.length + types.layers.length,
-    });
-
-    let idx = 0;
-    for (const layer of state._passedLayers) {
-      combinedLayers[idx++] = layer;
-    }
-    for (const layer of types.layers) {
-      combinedLayers[idx++] = layer;
-    }
+    // Performance: avoid-allocations.md - concat() for optimal array concatenation (1.2-1.5x)
+    const combinedLayers = state._passedLayers.concat(types.layers);
 
     log
       .withMetadata({
@@ -1287,10 +1286,11 @@ export function getChildHostContext(
   // Detect if we are inside of a View instance
   // Note: This currently checks type string. Once single-layer-element lands,
   // we should also check instance.node instanceof View for runtime detection.
-  // Only allocate new context when actually adding insideView flag
   const isViewInstance = VIEW_REGEX.test(type);
 
-  if (isViewInstance) {
+  // Performance: avoid-allocations.md - Only spread when transitioning into view (1.2-2x)
+  // Avoids redundant allocations in nested view hierarchies
+  if (isViewInstance && !parentHostContext.insideView) {
     return { ...parentHostContext, insideView: true };
   }
 

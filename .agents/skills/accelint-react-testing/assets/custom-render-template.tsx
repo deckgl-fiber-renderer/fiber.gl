@@ -3,10 +3,9 @@
 // Customize this template based on your project's needs
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { RenderOptions, RenderResult } from '@testing-library/react';
-import { render } from '@testing-library/react';
+import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 
 import { getQueryClient } from '~/configs/query-client';
 // import { ThemeProvider } from '~/configs/theme'; // Uncomment if using themes
@@ -51,13 +50,13 @@ interface CustomRenderResult extends RenderResult {
 
 const defaultQueryClient = getQueryClient({
   defaultOptions: {
+    queries: {
+      retry: false,
+      cacheTime: 0,
+      staleTime: 0,
+    },
     mutations: {
       retry: false,
-    },
-    queries: {
-      cacheTime: 0,
-      retry: false,
-      staleTime: 0,
     },
   },
 });
@@ -129,9 +128,9 @@ export { renderWithProviders as render };
  */
 export function createTestUser(overrides = {}) {
   return {
-    email: 'test@example.com',
     id: '123',
     name: 'Test User',
+    email: 'test@example.com',
     role: 'user',
     ...overrides,
   };
@@ -143,19 +142,19 @@ export function createTestUser(overrides = {}) {
 export function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
+      queries: {
+        retry: false,
+        cacheTime: 0,
+        staleTime: 0,
+      },
       mutations: {
         retry: false,
       },
-      queries: {
-        cacheTime: 0,
-        retry: false,
-        staleTime: 0,
-      },
     },
     logger: {
-      error: () => {},
       log: console.log,
-      warn: console.warn, // Silence errors in tests
+      warn: console.warn,
+      error: () => {}, // Silence errors in tests
     },
   });
 }

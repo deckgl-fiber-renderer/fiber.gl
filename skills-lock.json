@@ -1,6 +1,16 @@
 {
   "version": 1,
   "skills": {
+    "accelint-onboard-agents": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "31b4a2db414a46f28b3a856f823e0f069d33f068dd46182b196cd4a3eebde12e"
+    },
+    "accelint-onboard-openspec": {
+      "source": "gohypergiant/agent-skills",
+      "sourceType": "github",
+      "computedHash": "eeb7ed219f1e5ea5c1ae68cbb6e3979ca9ad12717c44e0d60b03751c212cb6ef"
+    },
     "accelint-react-best-practices": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",

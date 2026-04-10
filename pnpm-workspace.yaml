@@ -13,28 +13,30 @@ catalog:
   '@deck.gl/mapbox': '>=9.1'
   '@deck.gl/mesh-layers': '>=9.1'
   '@deck.gl/widgets': '>=9.1'
-  '@types/react': ^19
-  '@types/react-dom': ^19
-  '@types/react-reconciler': 0.31.0
-  '@vitest/coverage-v8': ^4.1.2
-  jsdom: ^29
-  loglayer: ^9
 
   # Maplibre
   maplibre-gl: ^5
+
+  # React
   react: ^19
   react-dom: ^19
-
+  '@types/react': ^19
+  '@types/react-dom': ^19
   # React Reconciler (pinned to exact versions)
-  react-reconciler: 0.31.0
-  tsdown: ^0.21.4
+  react-reconciler: 0.33.0
+  '@types/react-reconciler': 0.33.0
 
-  # Build Tools
+  # Build/Test Tools
+  tsdown: ^0.21.4
   typescript: ^6.0.2
   vitest: ^4.1.2
+  '@vitest/coverage-v8': ^4.1.2
+  jsdom: ^29
 
   # Misc
   zustand: ^5
+  loglayer: ^9
+
 onlyBuiltDependencies:
   - '@biomejs/biome'
   - '@fission-ai/openspec'

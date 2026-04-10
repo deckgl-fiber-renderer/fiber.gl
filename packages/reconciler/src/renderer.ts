@@ -186,9 +186,8 @@ export function createRoot(node: RootElement): ReconcilerRoot {
     '',
     reportError,
     reportError,
-    // @ts-expect-error @types/react-reconciler is incorrect
     reportError,
-    null
+    () => null
   );
 
   let configured = false;

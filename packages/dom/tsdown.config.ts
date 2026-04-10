@@ -1,3 +1,4 @@
+import pluginBabel from '@rolldown/plugin-babel';
 import { defineConfig } from 'tsdown';
 
 export default defineConfig({
@@ -14,7 +15,15 @@ export default defineConfig({
   format: 'esm',
   minify: false,
   platform: 'neutral',
-  plugins: [],
+  plugins: [
+    pluginBabel({
+      parserOpts: {
+        sourceType: 'module',
+        plugins: ['jsx', 'typescript'],
+      },
+      plugins: ['babel-plugin-react-compiler'],
+    }),
+  ],
   sourcemap: true,
   treeshake: true,
   unbundle: true,

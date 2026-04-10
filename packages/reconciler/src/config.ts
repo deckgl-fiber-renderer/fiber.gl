@@ -180,7 +180,6 @@ function createDeckglObject(type: Type, props: Props): Instance {
     }
 
     // Development-mode warning for missing or default view ID
-    // TODO: swap this to check for debug flag instead of process.env
     if (process.env.NODE_ENV === 'development') {
       const view = props.view as View;
 
@@ -210,7 +209,6 @@ function createDeckglObject(type: Type, props: Props): Instance {
     }
 
     // Development-mode warning for missing or default layer ID
-    // TODO: swap this to check for debug flag instead of process.env
     if (process.env.NODE_ENV === 'development') {
       const layer = props.layer as Layer;
 
@@ -248,7 +246,6 @@ function createDeckglObject(type: Type, props: Props): Instance {
   // Legacy path with deprecation warning (v2 backwards compatibility)
   const name = toPascal(type);
 
-  // TODO: swap this to check for debug flag instead of process.env
   if (process.env.NODE_ENV === 'development') {
     // Detect if this is a view-related element
     const isViewType = VIEW_REGEX.test(type);
@@ -723,7 +720,6 @@ export function finalizeContainerChildren(
     .debug('finalizeContainerChildren');
 
   // Development-mode validation: detect duplicate layer IDs
-  // TODO: swap this to check for debug flag instead of process.env
   if (process.env.NODE_ENV === 'development') {
     const flattened = flattenTree(newChildren);
     const { layers } = organizeList(flattened);

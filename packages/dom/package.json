@@ -54,11 +54,18 @@
     "use-isomorphic-layout-effect": "^1.2.1"
   },
   "devDependencies": {
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
+    "@rolldown/plugin-babel": "^0.2.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
     "jsdom": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -67,20 +74,12 @@
     "vitest": "catalog:"
   },
   "peerDependencies": {
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:"
-  },
-  "inlinedDependencies": {
-    "@deck.gl/core": "9.2.11",
-    "@deck.gl/mapbox": "9.2.11",
-    "@loaders.gl/loader-utils": "4.3.4",
-    "@luma.gl/core": "9.2.6",
-    "@luma.gl/engine": "9.2.6",
-    "@luma.gl/shadertools": "9.2.6",
-    "@math.gl/core": "4.1.0",
-    "@math.gl/types": "4.1.0",
-    "@probe.gl/log": "4.1.1",
-    "@probe.gl/stats": "4.1.1",
-    "mjolnir.js": "3.0.0"
   }
 }

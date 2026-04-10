@@ -1,23 +1,7 @@
 import type { Deck } from '@deck.gl/core';
-import { describe, expect, it, vi } from 'vitest';
-import { create } from 'zustand';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { State } from '../store';
-
-/**
- * Creates a test store with initial state
- */
-function createTestStore() {
-  return create<State>()((set) => ({
-    _passedLayers: [],
-    deckgl: null,
-    setDeckgl: (instance) => {
-      set(() => ({
-        deckgl: instance,
-      }));
-    },
-  }));
-}
+import { selectors, useStore } from '../store';
 
 /**
  * Creates a properly typed mock Deck.gl instance
@@ -33,43 +17,58 @@ function createMockDeckgl(
 }
 
 describe('Store Tests', () => {
-  it('should have correct initial state (deckgl null, _passedLayers empty)', () => {
-    // Arrange & Act
-    const store = createTestStore();
-    const state = store.getState();
+  // Reset store state after each test to prevent test pollution
+  afterEach(() => {
+    useStore.setState({ _passedLayers: [], deckgl: null });
+  });
 
-    // Assert
+  it('should have correct initial state (deckgl null, _passedLayers empty)', () => {
+    const state = useStore.getState();
+
     expect(state.deckgl).toBeNull();
     expect(state._passedLayers).toEqual([]);
   });
 
   it('should update state when setDeckgl is called', () => {
-    // Arrange
-    const store = createTestStore();
     const mockDeckgl = createMockDeckgl();
 
-    // Act
-    store.getState().setDeckgl(mockDeckgl as never);
+    useStore.getState().setDeckgl(mockDeckgl as never);
 
-    // Assert
-    expect(store.getState().deckgl).toBe(mockDeckgl);
+    expect(useStore.getState().deckgl).toBe(mockDeckgl);
   });
 
-  it('should maintain independent state across multiple stores', () => {
-    // Arrange & Act
-    const store1 = createTestStore();
-    const store2 = createTestStore();
+  it('should maintain _passedLayers as empty array by default', () => {
+    const state = useStore.getState();
 
-    const mockDeckgl1 = createMockDeckgl();
-    const mockDeckgl2 = createMockDeckgl();
+    expect(state._passedLayers).toEqual([]);
+    expect(Array.isArray(state._passedLayers)).toBe(true);
+  });
+});
 
-    // Act
-    store1.getState().setDeckgl(mockDeckgl1 as never);
-    store2.getState().setDeckgl(mockDeckgl2 as never);
+describe('selectors', () => {
+  afterEach(() => {
+    useStore.setState({ _passedLayers: [], deckgl: null });
+  });
 
-    // Assert
-    expect(store1.getState().deckgl).toBe(mockDeckgl1);
-    expect(store2.getState().deckgl).toBe(mockDeckgl2);
-    expect(store1.getState().deckgl).not.toBe(store2.getState().deckgl);
+  it('should select deckgl from state', () => {
+    const mockDeckgl = createMockDeckgl();
+    useStore.setState({ deckgl: mockDeckgl as never });
+
+    const selected = selectors.deckgl(useStore.getState());
+
+    expect(selected).toBe(mockDeckgl);
+  });
+
+  it('should select null deckgl when not set', () => {
+    const selected = selectors.deckgl(useStore.getState());
+
+    expect(selected).toBeNull();
+  });
+
+  it('should select setDeckgl function from state', () => {
+    const selected = selectors.setDeckgl(useStore.getState());
+
+    expect(selected).toBeTypeOf('function');
+    expect(selected).toBe(useStore.getState().setDeckgl);
   });
 });

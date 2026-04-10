@@ -54,6 +54,7 @@
     "@deck.gl/core": "catalog:",
     "@deck.gl/mapbox": "catalog:",
     "@vitest/coverage-v8": "catalog:",
+    "fast-check": "^4.6.0",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

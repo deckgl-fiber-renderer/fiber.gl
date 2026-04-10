@@ -18,6 +18,7 @@ export function noop(): void {}
  *
  * Does NOT check for null - use strict equality if null checking is needed.
  *
+ * @template T - The type of the value being checked
  * @param value - Value to check for definition
  * @returns True if value is not undefined, false otherwise
  *

@@ -728,6 +728,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: 'catalog:'
         version: 4.1.2(vitest@4.1.2(@types/node@25.5.0)(jsdom@29.0.1)(vite@6.4.1(@types/node@25.5.0)(jiti@2.6.1)(yaml@2.8.3)))
+      fast-check:
+        specifier: ^4.6.0
+        version: 4.6.0
       tsdown:
         specifier: 'catalog:'
         version: 0.21.4(typescript@6.0.2)

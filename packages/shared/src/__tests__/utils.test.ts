@@ -1,3 +1,4 @@
+import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -52,6 +53,35 @@ describe('Utility Functions Tests', () => {
   });
 
   describe('toPascal', () => {
+    // Property-based tests
+    it('property: idempotent for non-empty strings', () => {
+      fc.assert(
+        fc.property(fc.string({ maxLength: 100, minLength: 1 }), (str) => {
+          expect(toPascal(toPascal(str))).toBe(toPascal(str));
+        })
+      );
+    });
+
+    it('property: first character always uppercase for non-empty strings', () => {
+      fc.assert(
+        fc.property(fc.string({ maxLength: 100, minLength: 1 }), (str) => {
+          const result = toPascal(str);
+          if (result.length > 0) {
+            expect(result[0]).toBe(result[0].toUpperCase());
+          }
+        })
+      );
+    });
+
+    it('property: preserves length', () => {
+      fc.assert(
+        fc.property(fc.string({ maxLength: 100 }), (str) => {
+          expect(toPascal(str)).toHaveLength(str.length);
+        })
+      );
+    });
+
+    // Example-based tests for specific cases
     it.each([
       { description: 'lowercase word', expected: 'Hello', input: 'hello' },
       {
@@ -65,6 +95,19 @@ describe('Utility Functions Tests', () => {
         expected: 'Already',
         input: 'Already',
       },
+      { description: 'single character', expected: 'A', input: 'a' },
+      {
+        description: 'starts with number',
+        expected: '123abc',
+        input: '123abc',
+      },
+      { description: 'Unicode character', expected: 'Über', input: 'über' },
+      {
+        description: 'starts with whitespace',
+        expected: ' hello',
+        input: ' hello',
+      },
+      { description: 'special characters', expected: '_test', input: '_test' },
     ])('should return "$expected" for $description', ({ input, expected }) => {
       expect(toPascal(input)).toBe(expected);
     });
@@ -72,36 +115,28 @@ describe('Utility Functions Tests', () => {
 
   describe('noop', () => {
     it('should return undefined when called', () => {
-      // Arrange & Act
       const result = noop();
 
-      // Assert
       expect(result).toBeUndefined();
     });
 
     it('should be callable without throwing errors', () => {
-      // Arrange & Act & Assert
       expect(() => noop()).not.toThrow();
     });
 
     it('should be usable as a default callback', () => {
-      // Arrange
       const callback = noop;
 
-      // Act & Assert - should be safe to call
-      expect(() => callback()).not.toThrow();
       expect(callback()).toBeUndefined();
     });
   });
 
   describe('isBrowserEnvironment', () => {
     it('should be a boolean value', () => {
-      // Arrange & Act & Assert
       expect(typeof isBrowserEnvironment).toBe('boolean');
     });
 
     it('should be false in Node.js test environment', () => {
-      // Arrange & Act & Assert
       // vitest.config.ts uses environment: 'node', so no document exists
       expect(isBrowserEnvironment).toBe(false);
     });

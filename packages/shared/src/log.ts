@@ -6,7 +6,6 @@ import { ConsoleTransport, LogLayer } from 'loglayer';
  * Provides structured logging with automatic object serialization and
  * consistent prefixing. Logging is disabled by default and controlled
  * via the `debug` prop on the Deckgl component.
- * ```
  */
 export const log = new LogLayer({
   transport: new ConsoleTransport({

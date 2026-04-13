@@ -1,7 +1,8 @@
-import type { Layer, View } from '@deck.gl/core';
+import type { Layer, LayersList, View } from '@deck.gl/core';
 import { log, toPascal } from '@deckgl-fiber-renderer/shared';
 import { globalScope } from '@deckgl-fiber-renderer/shared/constants';
-import type { Fiber } from 'react-reconciler';
+import { createContext } from 'react';
+import type { Fiber, ReactContext } from 'react-reconciler';
 import {
   ContinuousEventPriority,
   DefaultEventPriority,
@@ -12,10 +13,12 @@ import { catalogue } from './extend';
 import type {
   ChildSet,
   Container,
+  FormInstance,
   HostContext,
   Instance,
   Props,
   SuspendedState,
+  TransitionStatus,
   Type,
   UpdatePayload,
 } from './types';
@@ -225,8 +228,7 @@ function createDeckglObject(type: Type, props: Props): Instance {
       }
 
       // Development-mode error if View passed to <layer>
-      // TODO: fix ts error here
-      if (isView(props.layer)) {
+      if (isView(props.layer as Layer | View)) {
         console.error(
           `❌  View instance passed to <layer> element. Use <view view={...} /> instead.\n\n` +
             `Change:\n` +
@@ -438,28 +440,40 @@ export function createTextInstance() {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/README.md#persistence Persistence Mode Documentation}
  */
 export function cloneInstance(
-  instance: Instance,
+  instance: Instance | undefined,
   type: string,
   oldProps: Props,
   newProps: Props,
   keepChildren: boolean,
-  newChildSet?: ChildSet
-): Instance {
+  recyclableInstance: Instance | null | undefined
+): Instance | undefined {
   log
     .withMetadata({
       instance,
       keepChildren,
-      newChildSet,
       newProps,
       oldProps,
+      recyclableInstance,
       type,
     })
     .debug('cloneInstance');
 
+  // If instance is undefined, we can't clone it
+  if (!instance) {
+    return undefined;
+  }
+
   const cloned = createDeckglObject(type, newProps);
 
   // Handle children based on keepChildren flag
-  cloned.children = keepChildren ? instance.children : (newChildSet ?? []);
+  // If we're not keeping children and there's a recyclable instance with children, use those
+  if (keepChildren) {
+    cloned.children = instance.children;
+  } else if (recyclableInstance?.children) {
+    cloned.children = recyclableInstance.children;
+  } else {
+    cloned.children = [];
+  }
 
   return cloned;
 }
@@ -840,7 +854,7 @@ export function replaceContainerChildren(
       })
       .debug('deck.setProps views and layers');
 
-    const propsUpdate: { layers: Layer[]; views?: View[] } = {
+    const propsUpdate: { layers: LayersList; views?: View[] } = {
       layers: combinedLayers,
     };
 
@@ -850,7 +864,15 @@ export function replaceContainerChildren(
       propsUpdate.views = types.views;
     }
 
-    deckgl.setProps(propsUpdate);
+    // Type assertion: The deckgl instance is typed as Deck<null> | MapboxOverlay, where the
+    // generic ViewsT defaults to null, making views?: null. However, deck.gl's runtime
+    // implementation (view-manager.ts) accepts ViewOrViews = View | View[] | null.
+    // When instantiating without specifying the type parameter, the type system is overly
+    // restrictive. This assertion is safe because:
+    // 1. deck.gl's ViewManager.setProps accepts Partial<ViewManagerProps<ViewsT>> where views: ViewsT
+    // 2. ViewsT extends ViewOrViews which includes View[]
+    // 3. Our tests in replace-container-children.test.ts confirm this works at runtime
+    deckgl.setProps(propsUpdate as Parameters<typeof deckgl.setProps>[0]);
   }
 }
 
@@ -1645,17 +1667,10 @@ export function startSuspendingCommit(): SuspendedState {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js#L367 React Noop Renderer implementation}
  * @see {@link startSuspendingCommit}
  */
-export function suspendInstance(
-  state: SuspendedState,
-  instance: Instance,
-  type: Type,
-  props: Props
-): void {
+export function suspendInstance(type: Type, props: Props): void {
   log
     .withMetadata({
-      instance,
       props,
-      state,
       type,
     })
     .debug('suspendInstance');
@@ -2054,4 +2069,46 @@ export function shouldAttemptEagerTransition(): boolean {
   log.debug('shouldAttemptEagerTransition');
 
   return false;
+}
+
+/**
+ * Constant representing "not pending transition" state.
+ *
+ * Required by React reconciler for transition tracking (React 19+).
+ * Deck.gl doesn't use transitions, so this is always null.
+ *
+ * @see {@link https://github.com/facebook/react/pull/26722 PR Adding Transition Context}
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js React DOM Reference Implementation}
+ */
+export const NotPendingTransition: TransitionStatus | null = null;
+
+/**
+ * React context for tracking transition status.
+ *
+ * Required by React reconciler for transition state management (React 19+).
+ * Following React Noop Renderer pattern: set to null for custom reconcilers
+ * that don't need transition tracking.
+ *
+ * React DOM manually constructs a full context object because it needs specific
+ * internal behavior, but custom reconcilers should use null.
+ *
+ * @see {@link https://github.com/facebook/react/pull/26722 PR Adding Transition Context}
+ * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js React Noop Renderer Reference}
+ */
+export const HostTransitionContext = createContext<TransitionStatus>(
+  null
+) as unknown as ReactContext<TransitionStatus>;
+
+/**
+ * Resets form instance state.
+ *
+ * Required by React reconciler for form actions support (React 19+).
+ * Deck.gl doesn't support forms, so this is a no-op.
+ *
+ * @param _form - Form instance to reset (unused)
+ *
+ * @see {@link https://github.com/facebook/react/pull/28804 PR Adding Form Support}
+ */
+export function resetFormInstance(_form: FormInstance): void {
+  log.debug('resetFormInstance');
 }

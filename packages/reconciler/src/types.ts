@@ -105,6 +105,22 @@ export interface SuspendedState {
 }
 
 /**
+ * Form instance type (not supported).
+ *
+ * React reconciler requires this type for React 19 form actions support.
+ * Deck.gl doesn't support forms, so this is stubbed as never.
+ */
+export type FormInstance = never;
+
+/**
+ * Transition status type (not supported).
+ *
+ * React reconciler requires this type for transition tracking.
+ * Deck.gl doesn't use transitions, so this is stubbed as null.
+ */
+export type TransitionStatus = null;
+
+/**
  * Valid DOM elements for mounting the reconciler root.
  *
  * The reconciler can mount to either a canvas (for standalone deck.gl)

@@ -1,3 +1,4 @@
+import type { Layer, View } from '@deck.gl/core';
 import { Deck } from '@deck.gl/core';
 import { MapboxOverlay } from '@deck.gl/mapbox';
 import {
@@ -8,16 +9,42 @@ import {
 import type { DeckglProps } from '@deckgl-fiber-renderer/types';
 import type { ReactNode } from 'react';
 import reactReconciler from 'react-reconciler';
+import type { HostConfig } from 'react-reconciler';
 import { ConcurrentRoot } from 'react-reconciler/constants';
 
 import * as config from './config';
-import type { ReconcilerRoot, RootElement } from './types';
+import type {
+  ChildSet,
+  Container,
+  HostContext,
+  Instance,
+  Props,
+  ReconcilerRoot,
+  RootElement,
+} from './types';
 
 /**
  * React reconciler instance configured for deck.gl rendering
  *
  * Internal reconciler used by createRoot/unmountAtNode. Generally not used directly
  * by consumers - use the higher-level createRoot API instead.
+ *
+ * **Type Assertion Note:**
+ * The `as unknown as HostConfig` assertion is necessary because @types/react-reconciler@0.33.0
+ * has an incorrect type definition for `waitForCommitToBeReady`:
+ *
+ * - **@types definition (INCORRECT):** `waitForCommitToBeReady(): ...`
+ *   - Takes 0 parameters
+ *
+ * - **Actual react-reconciler implementation (CORRECT):** `waitForCommitToBeReady(state, timeoutOffset): ...`
+ *   - Takes 2 parameters: SuspendedState and timeout number
+ *   - See: ReactFiberWorkLoop.js line `const schedulePendingCommit = waitForCommitToBeReady(suspendedState, timeoutOffset);`
+ *
+ * Our implementation follows the actual react-reconciler@0.33.0 source code.
+ * The assertion only affects this renderer creation - the config module itself
+ * remains fully typed and will catch other errors.
+ *
+ * **Related Issue:** https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/70858
  *
  * @example
  * ```typescript
@@ -32,8 +59,24 @@ import type { ReconcilerRoot, RootElement } from './types';
  * renderer.updateContainer(element, container, null, callback);
  * ```
  */
-export const renderer: ReturnType<typeof reactReconciler> =
-  reactReconciler(config);
+export const renderer: ReturnType<typeof reactReconciler> = reactReconciler(
+  config as unknown as HostConfig<
+    string,
+    Props,
+    Container,
+    Instance | undefined,
+    void,
+    unknown,
+    unknown,
+    never,
+    Layer | View,
+    HostContext,
+    ChildSet,
+    number,
+    -1,
+    null
+  >
+);
 
 /**
  * Active reconciler roots registry

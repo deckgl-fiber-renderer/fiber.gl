@@ -1,4 +1,4 @@
-import type { Instance } from './types';
+import type { Instance } from "./types";
 
 /**
  * Registry mapping element type names to Deck.gl layer/view constructors.
@@ -11,7 +11,7 @@ import type { Instance } from './types';
 export type Catalogue = Record<
   string,
   {
-    new (...args: unknown[]): Instance['node'];
+    new (...args: unknown[]): Instance["node"];
   }
 >;
 

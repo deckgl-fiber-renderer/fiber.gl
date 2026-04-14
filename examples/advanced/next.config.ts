@@ -1,4 +1,4 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   eslint: {
@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
 
   experimental: {
     dynamicIO: true,
-    ppr: 'incremental',
+    ppr: "incremental",
     reactCompiler: true,
     useCache: true,
   },

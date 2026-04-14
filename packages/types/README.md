@@ -43,7 +43,7 @@ v2's type system supports generic type parameters. Pass a data type to deck.gl l
 <layer
   layer={
     new ScatterplotLayer({
-      id: 'points',
+      id: "points",
       data: myData,
       getPosition: (d) => d.coordinates, // d is 'any' - no autocomplete
       getRadius: (d) => d.value, // d is 'any' - no type safety
@@ -64,7 +64,7 @@ type DataPoint = {
 <layer
   layer={
     new ScatterplotLayer<DataPoint>({
-      id: 'points',
+      id: "points",
       data: myData,
       getPosition: (d) => d.coordinates, // d is DataPoint - full autocomplete!
       getRadius: (d) => d.value, // TypeScript validates property access
@@ -133,8 +133,8 @@ declare namespace JSX {
 Custom layers work with the universal `<layer>` element without type declarations:
 
 ```tsx
-import { CompositeLayer } from '@deck.gl/core';
-import { ScatterplotLayer } from '@deck.gl/layers';
+import { CompositeLayer } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
 
 class CustomLayer extends CompositeLayer<{ customRadius: number }> {
   renderLayers() {
@@ -147,7 +147,7 @@ class CustomLayer extends CompositeLayer<{ customRadius: number }> {
 }
 
 // Just works - no type declaration needed
-<layer layer={new CustomLayer({ id: 'custom', data, customRadius: 200 })} />;
+<layer layer={new CustomLayer({ id: "custom", data, customRadius: 200 })} />;
 ```
 
 ### Adding Custom JSX Elements (Optional)
@@ -155,7 +155,7 @@ class CustomLayer extends CompositeLayer<{ customRadius: number }> {
 If you want a dedicated JSX element (not recommended in v2), extend `IntrinsicElements`:
 
 ```tsx
-import type { CompositeLayer } from '@deck.gl/core';
+import type { CompositeLayer } from "@deck.gl/core";
 
 type CustomLayerProps = {
   id: string;

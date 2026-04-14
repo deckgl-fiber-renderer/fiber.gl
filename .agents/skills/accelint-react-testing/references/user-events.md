@@ -17,16 +17,16 @@ Real users trigger sequences of events (focus → mousedown → mouseup → clic
 \*\*❌ Incorrect: fireEvent for user interactions
 
 ```tsx
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen } from "@testing-library/react";
 
 // Single click event, missing focus/mousedown/mouseup
-fireEvent.click(screen.getByRole('button'));
+fireEvent.click(screen.getByRole("button"));
 
 // Direct input change without typing simulation
-fireEvent.change(screen.getByRole('textbox'), { target: { value: 'test' } });
+fireEvent.change(screen.getByRole("textbox"), { target: { value: "test" } });
 
 // Hover without proper mouse events
-fireEvent.mouseOver(screen.getByRole('tooltip'));
+fireEvent.mouseOver(screen.getByRole("tooltip"));
 ```
 
 **Problems:**
@@ -39,16 +39,16 @@ fireEvent.mouseOver(screen.getByRole('tooltip'));
 \*\*✅ Correct: userEvent for realistic simulation
 
 ```tsx
-import userEvent from '@testing-library/user-event';
+import userEvent from "@testing-library/user-event";
 
 // Full click sequence: focus → mousedown → mouseup → click
-await userEvent.click(screen.getByRole('button'));
+await userEvent.click(screen.getByRole("button"));
 
 // Realistic typing with per-character events
-await userEvent.type(screen.getByRole('textbox'), 'test');
+await userEvent.type(screen.getByRole("textbox"), "test");
 
 // Proper hover simulation
-await userEvent.hover(screen.getByRole('button'));
+await userEvent.hover(screen.getByRole("button"));
 ```
 
 **Benefits:**
@@ -69,11 +69,11 @@ await userEvent.hover(screen.getByRole('button'));
 ```tsx
 // No await - test continues before interaction completes
 userEvent.click(button); // ❌ Promise ignored
-expect(screen.getByText('Clicked')).toBeInTheDocument(); // ❌ Might not be rendered yet
+expect(screen.getByText("Clicked")).toBeInTheDocument(); // ❌ Might not be rendered yet
 
 // Interaction happens after assertion
-userEvent.type(input, 'text'); // ❌ No await
-expect(input).toHaveValue('text'); // ❌ Input still empty
+userEvent.type(input, "text"); // ❌ No await
+expect(input).toHaveValue("text"); // ❌ Input still empty
 ```
 
 **Problems:**
@@ -88,16 +88,16 @@ expect(input).toHaveValue('text'); // ❌ Input still empty
 ```tsx
 // Wait for click to complete
 await userEvent.click(button);
-expect(screen.getByText('Clicked')).toBeInTheDocument();
+expect(screen.getByText("Clicked")).toBeInTheDocument();
 
 // Wait for typing to finish
-await userEvent.type(input, 'text');
-expect(input).toHaveValue('text');
+await userEvent.type(input, "text");
+expect(input).toHaveValue("text");
 
 // Chain interactions with await
 await userEvent.click(button1);
 await userEvent.click(button2);
-expect(screen.getByText('Both clicked')).toBeInTheDocument();
+expect(screen.getByText("Both clicked")).toBeInTheDocument();
 ```
 
 **Benefits:**
@@ -117,22 +117,22 @@ expect(screen.getByText('Both clicked')).toBeInTheDocument();
 
 ```tsx
 // Default import skips setup
-import userEvent from '@testing-library/user-event';
+import userEvent from "@testing-library/user-event";
 
-test('button click', async () => {
+test("button click", async () => {
   render(<Button />);
-  await userEvent.click(screen.getByRole('button')); // Works but not isolated
+  await userEvent.click(screen.getByRole("button")); // Works but not isolated
 });
 ```
 
 \*\*❌ Incorrect: Calling setup() after render
 
 ```tsx
-test('button click', async () => {
+test("button click", async () => {
   render(<Button />); // ❌ render before setup
   const user = userEvent.setup(); // ❌ too late
 
-  await user.click(screen.getByRole('button'));
+  await user.click(screen.getByRole("button"));
 });
 ```
 
@@ -146,21 +146,21 @@ test('button click', async () => {
 \*\*✅ Correct: setup() before render in each test
 
 ```tsx
-import userEvent from '@testing-library/user-event';
+import userEvent from "@testing-library/user-event";
 
-test('button click', async () => {
+test("button click", async () => {
   const user = userEvent.setup();
   render(<Button />);
 
-  await user.click(screen.getByRole('button'));
-  expect(screen.getByText('Clicked')).toBeInTheDocument();
+  await user.click(screen.getByRole("button"));
+  expect(screen.getByText("Clicked")).toBeInTheDocument();
 });
 
-test('with custom delay', async () => {
+test("with custom delay", async () => {
   const user = userEvent.setup({ delay: 100 }); // 100ms between keystrokes
   render(<Input />);
 
-  await user.type(screen.getByRole('textbox'), 'slow typing');
+  await user.type(screen.getByRole("textbox"), "slow typing");
 });
 ```
 
@@ -182,34 +182,34 @@ test('with custom delay', async () => {
 const user = userEvent.setup();
 
 // Single click
-await user.click(screen.getByRole('button'));
+await user.click(screen.getByRole("button"));
 
 // Double click
-await user.dblClick(screen.getByRole('button'));
+await user.dblClick(screen.getByRole("button"));
 
 // Right click
-await user.pointer({ keys: '[MouseRight]', target: element });
+await user.pointer({ keys: "[MouseRight]", target: element });
 ```
 
 ### Type and Keyboard
 
 ```tsx
 const user = userEvent.setup();
-const input = screen.getByRole('textbox');
+const input = screen.getByRole("textbox");
 
 // Type text (triggers focus, keydown, keypress, input, keyup)
-await user.type(input, 'Hello world');
+await user.type(input, "Hello world");
 
 // Clear input
 await user.clear(input);
 
 // Type with special keys
-await user.type(input, 'Test{Enter}'); // Press Enter
-await user.type(input, '{Shift}hello{/Shift}'); // HELLO
+await user.type(input, "Test{Enter}"); // Press Enter
+await user.type(input, "{Shift}hello{/Shift}"); // HELLO
 
 // Keyboard shortcuts
-await user.keyboard('{Control>}a{/Control}'); // Ctrl+A
-await user.keyboard('{Alt>}{Shift>}k{/Shift}{/Alt}'); // Alt+Shift+K
+await user.keyboard("{Control>}a{/Control}"); // Ctrl+A
+await user.keyboard("{Alt>}{Shift>}k{/Shift}{/Alt}"); // Alt+Shift+K
 ```
 
 ### Select/Dropdown
@@ -218,13 +218,13 @@ await user.keyboard('{Alt>}{Shift>}k{/Shift}{/Alt}'); // Alt+Shift+K
 const user = userEvent.setup();
 
 // Select by label text
-await user.selectOptions(screen.getByRole('combobox'), 'Option Label');
+await user.selectOptions(screen.getByRole("combobox"), "Option Label");
 
 // Select by value
-await user.selectOptions(screen.getByRole('combobox'), 'option-value');
+await user.selectOptions(screen.getByRole("combobox"), "option-value");
 
 // Multi-select
-await user.selectOptions(screen.getByRole('listbox'), ['Option 1', 'Option 2']);
+await user.selectOptions(screen.getByRole("listbox"), ["Option 1", "Option 2"]);
 ```
 
 ### Checkbox/Radio
@@ -233,23 +233,23 @@ await user.selectOptions(screen.getByRole('listbox'), ['Option 1', 'Option 2']);
 const user = userEvent.setup();
 
 // Check checkbox
-await user.click(screen.getByRole('checkbox'));
+await user.click(screen.getByRole("checkbox"));
 
 // Or more explicit
-const checkbox = screen.getByRole('checkbox');
+const checkbox = screen.getByRole("checkbox");
 if (!checkbox.checked) {
   await user.click(checkbox);
 }
 
 // Radio button
-await user.click(screen.getByRole('radio', { name: /option a/i }));
+await user.click(screen.getByRole("radio", { name: /option a/i }));
 ```
 
 ### Upload File
 
 ```tsx
 const user = userEvent.setup();
-const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+const file = new File(["content"], "test.txt", { type: "text/plain" });
 
 const input = screen.getByLabelText(/upload file/i);
 await user.upload(input, file);
@@ -264,12 +264,12 @@ await user.upload(input, [file1, file2]);
 const user = userEvent.setup();
 
 // Hover over element
-await user.hover(screen.getByRole('button'));
-expect(screen.getByRole('tooltip')).toBeInTheDocument();
+await user.hover(screen.getByRole("button"));
+expect(screen.getByRole("tooltip")).toBeInTheDocument();
 
 // Unhover
-await user.unhover(screen.getByRole('button'));
-expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+await user.unhover(screen.getByRole("button"));
+expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
 ```
 
 ### Copy/Paste
@@ -281,7 +281,7 @@ const user = userEvent.setup();
 await user.copy();
 
 // Paste
-await user.paste('pasted text');
+await user.paste("pasted text");
 
 // Cut
 await user.cut();
@@ -337,19 +337,19 @@ But even for these, check if userEvent has added support in newer versions.
 ### Form submission
 
 ```tsx
-test('submits form', async () => {
+test("submits form", async () => {
   const user = userEvent.setup();
   const handleSubmit = vi.fn();
 
   render(<Form onSubmit={handleSubmit} />);
 
-  await user.type(screen.getByLabelText(/username/i), 'john');
-  await user.type(screen.getByLabelText(/password/i), 'secret123');
-  await user.click(screen.getByRole('button', { name: /submit/i }));
+  await user.type(screen.getByLabelText(/username/i), "john");
+  await user.type(screen.getByLabelText(/password/i), "secret123");
+  await user.click(screen.getByRole("button", { name: /submit/i }));
 
   expect(handleSubmit).toHaveBeenCalledWith({
-    username: 'john',
-    password: 'secret123',
+    username: "john",
+    password: "secret123",
   });
 });
 ```
@@ -357,23 +357,23 @@ test('submits form', async () => {
 ### Keyboard navigation
 
 ```tsx
-test('navigates with keyboard', async () => {
+test("navigates with keyboard", async () => {
   const user = userEvent.setup();
   render(<Menu />);
 
-  const menu = screen.getByRole('menu');
+  const menu = screen.getByRole("menu");
   menu.focus();
 
   // Arrow down to first item
-  await user.keyboard('{ArrowDown}');
-  expect(screen.getByRole('menuitem', { name: /first/i })).toHaveFocus();
+  await user.keyboard("{ArrowDown}");
+  expect(screen.getByRole("menuitem", { name: /first/i })).toHaveFocus();
 
   // Arrow down to second item
-  await user.keyboard('{ArrowDown}');
-  expect(screen.getByRole('menuitem', { name: /second/i })).toHaveFocus();
+  await user.keyboard("{ArrowDown}");
+  expect(screen.getByRole("menuitem", { name: /second/i })).toHaveFocus();
 
   // Enter to select
-  await user.keyboard('{Enter}');
+  await user.keyboard("{Enter}");
   expect(screen.getByText(/selected: second/i)).toBeInTheDocument();
 });
 ```
@@ -381,11 +381,11 @@ test('navigates with keyboard', async () => {
 ### Async state updates
 
 ```tsx
-test('shows loading then success', async () => {
+test("shows loading then success", async () => {
   const user = userEvent.setup();
   render(<AsyncButton />);
 
-  await user.click(screen.getByRole('button', { name: /save/i }));
+  await user.click(screen.getByRole("button", { name: /save/i }));
 
   // Loading state
   expect(screen.getByText(/saving/i)).toBeInTheDocument();

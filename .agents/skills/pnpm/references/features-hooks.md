@@ -39,10 +39,10 @@ Called for every package before resolution. Use to modify dependencies, add miss
 
 ```js
 function readPackage(pkg, context) {
-  if (pkg.name === 'some-broken-package') {
+  if (pkg.name === "some-broken-package") {
     pkg.peerDependencies = {
       ...pkg.peerDependencies,
-      react: '*',
+      react: "*",
     };
     context.log(`Added react peer dep to ${pkg.name}`);
   }
@@ -56,10 +56,10 @@ function readPackage(pkg, context) {
 function readPackage(pkg, context) {
   // Fix all lodash versions
   if (pkg.dependencies?.lodash) {
-    pkg.dependencies.lodash = '^4.17.21';
+    pkg.dependencies.lodash = "^4.17.21";
   }
   if (pkg.devDependencies?.lodash) {
-    pkg.devDependencies.lodash = '^4.17.21';
+    pkg.devDependencies.lodash = "^4.17.21";
   }
   return pkg;
 }
@@ -82,9 +82,9 @@ function readPackage(pkg, context) {
 ```js
 function readPackage(pkg, context) {
   // Replace deprecated package
-  if (pkg.dependencies?.['old-package']) {
-    pkg.dependencies['new-package'] = pkg.dependencies['old-package'];
-    delete pkg.dependencies['old-package'];
+  if (pkg.dependencies?.["old-package"]) {
+    pkg.dependencies["new-package"] = pkg.dependencies["old-package"];
+    delete pkg.dependencies["old-package"];
   }
   return pkg;
 }
@@ -95,11 +95,11 @@ function readPackage(pkg, context) {
 ```js
 function readPackage(pkg, context) {
   // Fix incorrect exports field
-  if (pkg.name === 'broken-esm-package') {
+  if (pkg.name === "broken-esm-package") {
     pkg.exports = {
-      '.': {
-        import: './dist/index.mjs',
-        require: './dist/index.cjs',
+      ".": {
+        import: "./dist/index.mjs",
+        require: "./dist/index.cjs",
       },
     };
   }
@@ -114,9 +114,7 @@ Called after the lockfile is generated. Use for post-resolution modifications.
 ```js
 function afterAllResolved(lockfile, context) {
   // Log all resolved packages
-  context.log(
-    `Resolved ${Object.keys(lockfile.packages || {}).length} packages`
-  );
+  context.log(`Resolved ${Object.keys(lockfile.packages || {}).length} packages`);
 
   // Modify lockfile if needed
   return lockfile;
@@ -130,7 +128,7 @@ The `context` object provides utilities:
 ```js
 function readPackage(pkg, context) {
   // Log messages
-  context.log('Processing package...');
+  context.log("Processing package...");
 
   return pkg;
 }
@@ -166,10 +164,10 @@ module.exports = {
 ```js
 function readPackage(pkg, context) {
   switch (pkg.name) {
-    case 'package-a':
-      pkg.dependencies.foo = '^2.0.0';
+    case "package-a":
+      pkg.dependencies.foo = "^2.0.0";
       break;
-    case 'package-b':
+    case "package-b":
       delete pkg.optionalDependencies.bar;
       break;
   }
@@ -195,7 +193,7 @@ function readPackage(pkg, context) {
 function readPackage(pkg, context) {
   if (process.env.DEBUG_PNPM) {
     context.log(`${pkg.name}@${pkg.version}`);
-    context.log(`  deps: ${Object.keys(pkg.dependencies || {}).join(', ')}`);
+    context.log(`  deps: ${Object.keys(pkg.dependencies || {}).join(", ")}`);
   }
   return pkg;
 }

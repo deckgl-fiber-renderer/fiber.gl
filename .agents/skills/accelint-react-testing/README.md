@@ -55,17 +55,17 @@ npm install -D @testing-library/react @testing-library/user-event @testing-libra
 ### Example Test
 
 ```tsx
-import { render, screen } from './test-utils';
+import { render, screen } from "./test-utils";
 
-test('user can submit form', async () => {
+test("user can submit form", async () => {
   const { user } = render(<ContactForm />);
 
   // Query by accessible labels
-  await user.type(screen.getByLabelText(/email/i), 'user@example.com');
-  await user.type(screen.getByLabelText(/message/i), 'Hello world');
+  await user.type(screen.getByLabelText(/email/i), "user@example.com");
+  await user.type(screen.getByLabelText(/message/i), "Hello world");
 
   // Interact realistically
-  await user.click(screen.getByRole('button', { name: /submit/i }));
+  await user.click(screen.getByRole("button", { name: /submit/i }));
 
   // Assert on user-visible outcomes
   expect(await screen.findByText(/thank you/i)).toBeInTheDocument();
@@ -105,14 +105,14 @@ Vitest setup:
 
 ```ts
 // vitest.setup.ts
-import '@testing-library/jest-dom/vitest';
+import "@testing-library/jest-dom/vitest";
 ```
 
 Jest setup:
 
 ```ts
 // jest.setup.ts
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 ```
 
 ## License

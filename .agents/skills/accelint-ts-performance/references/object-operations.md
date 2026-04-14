@@ -42,7 +42,7 @@ for (const item of items) {
 **❌ Incorrect: deep clone for simple update**
 
 ```ts
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from "lodash";
 
 function updateUser(user, name) {
   const updated = cloneDeep(user);

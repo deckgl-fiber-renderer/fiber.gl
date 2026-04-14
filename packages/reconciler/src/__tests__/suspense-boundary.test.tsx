@@ -1,9 +1,9 @@
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { createElement, Suspense } from 'react';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { createElement, Suspense } from "react";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { createMockDeckInstance } from '../__fixtures__/mock-deck-instance';
-import { createRoot, unmountAtNode } from '../renderer';
+import { createMockDeckInstance } from "../__fixtures__/mock-deck-instance";
+import { createRoot, unmountAtNode } from "../renderer";
 
 // Simulate an async component that suspends
 let resolvePromise: (() => void) | null = null;
@@ -17,12 +17,12 @@ function AsyncDataComponent() {
     });
     throw promise;
   }
-  return createElement('layer', {
-    layer: new ScatterplotLayer({ data: [], id: 'async-layer' }),
+  return createElement("layer", {
+    layer: new ScatterplotLayer({ data: [], id: "async-layer" }),
   });
 }
 
-describe('Suspense boundary integration', () => {
+describe("Suspense boundary integration", () => {
   let mockDeck: ReturnType<typeof createMockDeckInstance>;
   let rootElement: HTMLDivElement;
   let root: ReturnType<typeof createRoot>;
@@ -34,7 +34,7 @@ describe('Suspense boundary integration', () => {
 
     // Create mock Deck.gl instance and root element
     mockDeck = createMockDeckInstance();
-    rootElement = document.createElement('div');
+    rootElement = document.createElement("div");
     root = createRoot(rootElement);
 
     // Configure the root with mock deck instance
@@ -54,37 +54,37 @@ describe('Suspense boundary integration', () => {
     }
   });
 
-  it('should handle Suspense boundaries without error', () => {
+  it("should handle Suspense boundaries without error", () => {
     // This should not throw when a Suspense boundary wraps async components
     expect(() => {
       root.render(
         createElement(
           Suspense,
           {
-            fallback: createElement('layer', {
-              layer: new ScatterplotLayer({ data: [], id: 'fallback' }),
+            fallback: createElement("layer", {
+              layer: new ScatterplotLayer({ data: [], id: "fallback" }),
             }),
           },
-          createElement(AsyncDataComponent)
-        )
+          createElement(AsyncDataComponent),
+        ),
       );
     }).not.toThrow();
   });
 
-  it('should handle nested Suspense with non-suspending layers', () => {
+  it("should handle nested Suspense with non-suspending layers", () => {
     // Even if nothing suspends, Suspense boundary should work
     expect(() => {
       root.render(
         createElement(
           Suspense,
           { fallback: null },
-          createElement('layer', {
-            layer: new ScatterplotLayer({ data: [], id: 'layer-1' }),
+          createElement("layer", {
+            layer: new ScatterplotLayer({ data: [], id: "layer-1" }),
           }),
-          createElement('layer', {
-            layer: new ScatterplotLayer({ data: [], id: 'layer-2' }),
-          })
-        )
+          createElement("layer", {
+            layer: new ScatterplotLayer({ data: [], id: "layer-2" }),
+          }),
+        ),
       );
     }).not.toThrow();
   });

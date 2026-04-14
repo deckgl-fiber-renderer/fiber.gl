@@ -11,12 +11,12 @@
  * the need for manual layer registration.
  */
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   console.warn(
-    '@deckgl-fiber-renderer/reconciler/side-effects is deprecated and will be removed in v3.\n' +
-      'Layer registration is no longer needed. Remove this import and use:\n' +
+    "@deckgl-fiber-renderer/reconciler/side-effects is deprecated and will be removed in v3.\n" +
+      "Layer registration is no longer needed. Remove this import and use:\n" +
       '  import { ScatterplotLayer } from "@deck.gl/layers";\n' +
       '  <layer layer={new ScatterplotLayer({ id: "points", data })} />\n' +
-      'See migration guide for more details.'
+      "See migration guide for more details.",
   );
 }

@@ -85,9 +85,9 @@ Only document exports that are accessible to package consumers:
 
 ```typescript
 // src/index.ts
-export { parse } from './parser';
-export { validate } from './validator';
-export type { Config, Options } from './types';
+export { parse } from "./parser";
+export { validate } from "./validator";
+export type { Config, Options } from "./types";
 ```
 
 **❌ Internal (don't document)**
@@ -104,7 +104,7 @@ Follow the export chain to find the actual implementation:
 
 ```typescript
 // src/index.ts
-export { parse } from './parser';
+export { parse } from "./parser";
 
 // src/parser.ts
 export function parse(path: string): Promise<Config> {
@@ -119,14 +119,14 @@ Document the function as it appears in `parser.ts`, but note it's accessed via t
 ```typescript
 // Named exports
 export function foo() {}
-export const bar = 'bar';
+export const bar = "bar";
 export type Baz = string;
 
 // Re-exports
-export { foo } from './foo';
-export { foo as bar } from './foo';
-export * from './types';
-export * as utils from './utils';
+export { foo } from "./foo";
+export { foo as bar } from "./foo";
+export * from "./types";
+export * as utils from "./utils";
 
 // Default exports (discourage in documentation)
 export default function foo() {}
@@ -266,16 +266,16 @@ Tests often show real usage:
 
 ```typescript
 // src/parser.test.ts
-describe('parse', () => {
-  it('reads JSON config', async () => {
-    const config = await parse('./fixtures/config.json');
-    expect(config.database.host).toBe('localhost');
+describe("parse", () => {
+  it("reads JSON config", async () => {
+    const config = await parse("./fixtures/config.json");
+    expect(config.database.host).toBe("localhost");
   });
 
-  it('interpolates environment variables', async () => {
-    process.env.DB_HOST = 'production.db';
-    const config = await parse('./fixtures/config.yaml');
-    expect(config.database.host).toBe('production.db');
+  it("interpolates environment variables", async () => {
+    process.env.DB_HOST = "production.db";
+    const config = await parse("./fixtures/config.yaml");
+    expect(config.database.host).toBe("production.db");
   });
 });
 ```
@@ -339,9 +339,9 @@ Flag documentation as potentially stale when:
 When `index.ts` re-exports everything:
 
 ```typescript
-export * from './parser';
-export * from './validator';
-export * from './types';
+export * from "./parser";
+export * from "./validator";
+export * from "./types";
 ```
 
 Trace each `export *` to find actual definitions.
@@ -369,8 +369,8 @@ Document the default behavior, note environment-specific differences.
 When exports are grouped:
 
 ```typescript
-export * as parsers from './parsers';
-export * as validators from './validators';
+export * as parsers from "./parsers";
+export * as validators from "./validators";
 ```
 
 Document as namespaced API:

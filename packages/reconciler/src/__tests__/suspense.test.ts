@@ -1,5 +1,5 @@
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { describe, expect, it } from 'vitest';
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { describe, expect, it } from "vitest";
 
 import {
   cloneHiddenInstance,
@@ -14,42 +14,42 @@ import {
   unhideInstance,
   unhideTextInstance,
   waitForCommitToBeReady,
-} from '../config';
-import type { Container, Instance } from '../types';
+} from "../config";
+import type { Container, Instance } from "../types";
 
-describe('suspense', () => {
-  describe('cloneHiddenInstance', () => {
-    it('returns instance with same structure', () => {
+describe("suspense", () => {
+  describe(cloneHiddenInstance, () => {
+    it("returns instance with same structure", () => {
       const layer = new ScatterplotLayer({
         data: [],
-        id: 'test-layer',
+        id: "test-layer",
       });
       const child: Instance = {
         children: [],
-        node: new ScatterplotLayer({ data: [], id: 'child' }),
+        node: new ScatterplotLayer({ data: [], id: "child" }),
       };
       const instance: Instance = {
         children: [child],
         node: layer,
       };
 
-      const hidden = cloneHiddenInstance(instance, 'layer', { layer });
+      const hidden = cloneHiddenInstance(instance, "layer", { layer });
 
       // Should preserve node and children references
       expect(hidden.node).toBe(layer);
       expect(hidden.children).toBe(instance.children);
-      expect(hidden.children.length).toBe(1);
+      expect(hidden.children).toHaveLength(1);
       expect(hidden.children[0]).toBe(child);
     });
   });
 
-  describe('unhideInstance', () => {
-    it('is a no-op that maintains API compatibility with React reconciler', () => {
+  describe(unhideInstance, () => {
+    it("is a no-op that maintains API compatibility with React reconciler", () => {
       // deck.gl layers don't have a concept of "hidden" state
       // This function exists for React reconciler API compatibility
       const layer = new ScatterplotLayer({
         data: [],
-        id: 'test-layer',
+        id: "test-layer",
       });
       const instance: Instance = {
         children: [],
@@ -63,47 +63,47 @@ describe('suspense', () => {
 
       // Verify instance structure is unchanged (no-op behavior)
       expect(instance.node).toBe(layer);
-      expect(instance.children).toEqual([]);
+      expect(instance.children).toStrictEqual([]);
     });
   });
 
-  describe('text instance methods', () => {
-    it('cloneHiddenTextInstance throws with helpful error', () => {
+  describe("text instance methods", () => {
+    it("cloneHiddenTextInstance throws with helpful error", () => {
       const instance: Instance = {
         children: [],
-        node: new ScatterplotLayer({ data: [], id: 'test' }),
+        node: new ScatterplotLayer({ data: [], id: "test" }),
       };
 
       expect(() => {
         cloneHiddenTextInstance(instance);
-      }).toThrow('Text nodes are not supported in deck.gl renderer');
+      }).toThrow("Text nodes are not supported in deck.gl renderer");
     });
 
-    it('unhideTextInstance throws with helpful error', () => {
+    it("unhideTextInstance throws with helpful error", () => {
       const instance: Instance = {
         children: [],
-        node: new ScatterplotLayer({ data: [], id: 'test' }),
+        node: new ScatterplotLayer({ data: [], id: "test" }),
       };
 
       expect(() => {
-        unhideTextInstance(instance, 'text');
-      }).toThrow('Text nodes are not supported in deck.gl renderer');
+        unhideTextInstance(instance, "text");
+      }).toThrow("Text nodes are not supported in deck.gl renderer");
     });
   });
 
-  describe('Suspense lifecycle functions', () => {
-    it('startSuspendingCommit returns correct state shape', () => {
+  describe("Suspense lifecycle functions", () => {
+    it("startSuspendingCommit returns correct state shape", () => {
       const state = startSuspendingCommit();
 
-      expect(state).toEqual({ pendingCount: 0 });
+      expect(state).toStrictEqual({ pendingCount: 0 });
       expect(state.pendingCount).toBe(0);
     });
 
-    it('suspendInstance is callable and does not throw', () => {
+    it("suspendInstance is callable and does not throw", () => {
       const state = startSuspendingCommit();
       const layer = new ScatterplotLayer({
         data: [],
-        id: 'test-layer',
+        id: "test-layer",
       });
       const instance: Instance = {
         children: [],
@@ -111,11 +111,11 @@ describe('suspense', () => {
       };
 
       expect(() => {
-        suspendInstance(state, instance, 'scatterplotLayer', { id: 'test' });
+        suspendInstance(state, instance, "scatterplotLayer", { id: "test" });
       }).not.toThrow();
     });
 
-    it('waitForCommitToBeReady returns null for no-op behavior', () => {
+    it("waitForCommitToBeReady returns null for no-op behavior", () => {
       const state = startSuspendingCommit();
 
       const result = waitForCommitToBeReady(state, 5000);
@@ -123,10 +123,10 @@ describe('suspense', () => {
       expect(result).toBeNull();
     });
 
-    it('getSuspendedCommitReason returns null', () => {
+    it("getSuspendedCommitReason returns null", () => {
       const state = startSuspendingCommit();
       const container: Container = {
-        store: {} as Container['store'],
+        store: {} as Container["store"],
       };
 
       const reason = getSuspendedCommitReason(state, container);
@@ -135,40 +135,40 @@ describe('suspense', () => {
     });
   });
 
-  describe('Suspense predicate functions', () => {
-    it('maySuspendCommitOnUpdate returns false', () => {
+  describe("Suspense predicate functions", () => {
+    it("maySuspendCommitOnUpdate returns false", () => {
       const result = maySuspendCommitOnUpdate(
-        'scatterplotLayer',
-        { data: [], id: 'test' },
-        { data: [1, 2, 3], id: 'test' }
+        "scatterplotLayer",
+        { data: [], id: "test" },
+        { data: [1, 2, 3], id: "test" },
       );
 
-      expect(result).toBe(false);
+      expect(result).toBeFalsy();
     });
 
-    it('maySuspendCommitInSyncRender returns false', () => {
-      const result = maySuspendCommitInSyncRender('scatterplotLayer', {
-        id: 'test',
+    it("maySuspendCommitInSyncRender returns false", () => {
+      const result = maySuspendCommitInSyncRender("scatterplotLayer", {
+        id: "test",
       });
 
-      expect(result).toBe(false);
+      expect(result).toBeFalsy();
     });
 
-    it('preloadInstance returns true', () => {
-      const result = preloadInstance('scatterplotLayer', { id: 'test' });
+    it("preloadInstance returns true", () => {
+      const result = preloadInstance("scatterplotLayer", { id: "test" });
 
-      expect(result).toBe(true);
+      expect(result).toBeTruthy();
     });
   });
 
-  describe('requestPostPaintCallback', () => {
-    it('is callable and does not throw', () => {
+  describe(requestPostPaintCallback, () => {
+    it("is callable and does not throw", () => {
       expect(() => {
         requestPostPaintCallback(() => {});
       }).not.toThrow();
     });
 
-    it('callback is called after scheduling', async () => {
+    it("callback is called after scheduling", async () => {
       let callbackCalled = false;
 
       requestPostPaintCallback(() => {
@@ -176,7 +176,7 @@ describe('suspense', () => {
       });
 
       // Initially not called
-      expect(callbackCalled).toBe(false);
+      expect(callbackCalled).toBeFalsy();
 
       // Wait for RAF + setTimeout to complete
       await new Promise((resolve) => {
@@ -188,18 +188,18 @@ describe('suspense', () => {
       });
 
       // Should be called by now
-      expect(callbackCalled).toBe(true);
+      expect(callbackCalled).toBeTruthy();
     });
 
-    it('callback fires after requestAnimationFrame', async () => {
+    it("callback fires after requestAnimationFrame", async () => {
       const callOrder: string[] = [];
 
       requestAnimationFrame(() => {
-        callOrder.push('raf');
+        callOrder.push("raf");
       });
 
       requestPostPaintCallback(() => {
-        callOrder.push('postPaint');
+        callOrder.push("postPaint");
       });
 
       // Wait for both to complete
@@ -212,10 +212,10 @@ describe('suspense', () => {
       });
 
       // RAF should fire first, then post-paint callback
-      expect(callOrder).toEqual(['raf', 'postPaint']);
+      expect(callOrder).toStrictEqual(["raf", "postPaint"]);
     });
 
-    it('callback receives performance.now() timestamp', async () => {
+    it("callback receives performance.now() timestamp", async () => {
       let receivedTime: number | undefined;
 
       requestPostPaintCallback((time) => {
@@ -232,8 +232,8 @@ describe('suspense', () => {
       });
 
       // Should receive a valid timestamp
-      expect(receivedTime).toBeTypeOf('number');
-      expect(Number.isFinite(receivedTime)).toBe(true);
+      expect(receivedTime).toBeTypeOf("number");
+      expect(Number.isFinite(receivedTime)).toBeTruthy();
       expect(receivedTime).toBeGreaterThan(0);
       // Should be reasonably close to current time (within 1 second)
       expect(Math.abs(performance.now() - receivedTime!)).toBeLessThan(1000);

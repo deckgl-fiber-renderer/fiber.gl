@@ -31,10 +31,7 @@ const result = arr.filter(predicate).map(mapper);
 **✅ Correct: single pass**
 
 ```ts
-const result = arr.reduce(
-  (acc, curr) => (predicate(curr) ? [...acc, mapper(curr)] : acc),
-  []
-);
+const result = arr.reduce((acc, curr) => (predicate(curr) ? [...acc, mapper(curr)] : acc), []);
 // Single pass: test and transform in one iteration
 ```
 
@@ -195,7 +192,7 @@ When the primary optimization doesn't work, use these alternatives:
 ```ts
 // In configuration loading (runs once at startup)
 const activeUsers = users
-  .filter((u) => u.status === 'active')
+  .filter((u) => u.status === "active")
   .map((u) => u.name)
   .sort();
 ```
@@ -226,7 +223,7 @@ const result = items.reduce(
     }
     return acc;
   },
-  { valid: [], invalid: [] }
+  { valid: [], invalid: [] },
 );
 ```
 
@@ -308,7 +305,7 @@ function contains(id: string): boolean {
 
 ```ts
 // ✅ Array.includes() is fine here
-const ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
+const ALLOWED_METHODS = ["GET", "POST", "PUT", "DELETE"];
 
 if (ALLOWED_METHODS.includes(method)) {
   // Only 4 items - Set overhead not worth it
@@ -337,11 +334,7 @@ function createBuffer(size: number): Uint8Array | number[] {
   }
 }
 
-function setValue(
-  buffer: Uint8Array | number[],
-  index: number,
-  value: number
-): void {
+function setValue(buffer: Uint8Array | number[], index: number, value: number): void {
   buffer[index] = Math.floor(value) & 0xff; // Works for both types
 }
 ```

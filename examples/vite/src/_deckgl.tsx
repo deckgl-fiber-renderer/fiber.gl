@@ -1,23 +1,23 @@
-'use client';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useEffect } from 'react';
+"use client";
+import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
+import { useCallback, useEffect } from "react";
 
-import { connect } from './_maplibre';
-import { useStore, selectors } from './_store';
+import { connect } from "./_maplibre";
+import { useStore, selectors } from "./_store";
 
 const COLOR = [255, 255, 255, 155];
 const HOVER_COLOR = [255, 0, 0, 255];
 
 const PARAMETERS = {
   blend: true,
-  blendAlphaDstFactor: 'one-minus-src-alpha',
-  blendAlphaOperation: 'add',
-  blendAlphaSrcFactor: 'one',
-  blendColorDstFactor: 'one-minus-src-alpha',
-  blendColorOperation: 'add',
-  blendColorSrcFactor: 'src-alpha',
+  blendAlphaDstFactor: "one-minus-src-alpha",
+  blendAlphaOperation: "add",
+  blendAlphaSrcFactor: "one",
+  blendColorDstFactor: "one-minus-src-alpha",
+  blendColorOperation: "add",
+  blendColorSrcFactor: "src-alpha",
   depthBias: 0,
-  depthCompare: 'always',
+  depthCompare: "always",
   depthTest: false,
   depthWriteEnabled: true,
 };

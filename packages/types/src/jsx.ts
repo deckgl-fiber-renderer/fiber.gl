@@ -6,7 +6,7 @@ import type {
   OrbitView,
   OrthographicView,
   View,
-} from '@deck.gl/core';
+} from "@deck.gl/core";
 import type {
   H3ClusterLayerProps,
   H3HexagonLayerProps,
@@ -20,7 +20,7 @@ import type {
   GreatCircleLayerProps,
   TripsLayerProps,
   WMSLayerProps,
-} from '@deck.gl/geo-layers';
+} from "@deck.gl/geo-layers";
 import type {
   ArcLayerProps,
   BitmapLayerProps,
@@ -35,12 +35,9 @@ import type {
   ScatterplotLayerProps,
   SolidPolygonLayerProps,
   TextLayerProps,
-} from '@deck.gl/layers';
-import type {
-  ScenegraphLayerProps,
-  SimpleMeshLayerProps,
-} from '@deck.gl/mesh-layers';
-import type { ReactNode } from 'react';
+} from "@deck.gl/layers";
+import type { ScenegraphLayerProps, SimpleMeshLayerProps } from "@deck.gl/mesh-layers";
+import type { ReactNode } from "react";
 
 type ExtractViewProps<T> = T extends View<any, infer P> ? P : never;
 

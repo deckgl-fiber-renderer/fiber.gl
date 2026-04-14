@@ -33,8 +33,8 @@ The official deck.gl React bindings have significant limitations. This library r
 ## What It Looks Like
 
 ```tsx
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
 
 function MyMap() {
   // ✅ Use hooks anywhere
@@ -47,7 +47,7 @@ function MyMap() {
       <layer
         layer={
           new ScatterplotLayer({
-            id: 'points',
+            id: "points",
             data: myData,
             getPosition: (d) => d.coordinates,
             getRadius: radius,
@@ -99,9 +99,9 @@ npm install react react-dom @deck.gl/core @deck.gl/layers
 [TODO: Update after examples overhaul]
 
 ```tsx
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
-import { createRoot } from 'react-dom/client';
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
+import { createRoot } from "react-dom/client";
 
 const INITIAL_VIEW_STATE = {
   longitude: -122.45,
@@ -115,7 +115,7 @@ function App() {
       <layer
         layer={
           new ScatterplotLayer({
-            id: 'scatterplot',
+            id: "scatterplot",
             data: [
               { position: [-122.45, 37.78], size: 100 },
               { position: [-122.46, 37.79], size: 150 },
@@ -130,7 +130,7 @@ function App() {
   );
 }
 
-createRoot(document.getElementById('root')).render(<App />);
+createRoot(document.getElementById("root")).render(<App />);
 ```
 
 ### With Basemap
@@ -138,12 +138,11 @@ createRoot(document.getElementById('root')).render(<App />);
 [TODO: Update after examples overhaul]
 
 ```tsx
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { Map, useControl } from 'react-map-gl/maplibre';
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
+import { Map, useControl } from "react-map-gl/maplibre";
 
-const MAP_STYLE =
-  'https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
+const MAP_STYLE = "https://tiles.basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json";
 
 function BasemapSync() {
   const deckgl = useDeckgl();
@@ -159,7 +158,7 @@ function App() {
         <layer
           layer={
             new ScatterplotLayer({
-              id: 'points',
+              id: "points",
               data: myData,
               getPosition: (d) => d.coordinates,
               getRadius: 100,

@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { Deckgl } from '../components';
+import { Deckgl } from "../components";
 
 // Mock the reconciler module
-vi.mock('@deckgl-fiber-renderer/reconciler', () => {
+vi.mock(import('@deckgl-fiber-renderer/reconciler'), () => {
   const mockRender = vi.fn();
   const mockConfigure = vi.fn();
   const mockCreateRoot = vi.fn(() => ({
@@ -32,15 +32,10 @@ vi.mock('@deckgl-fiber-renderer/reconciler', () => {
 });
 
 // Get the mocks after they've been set up
-const {
-  mockRender,
-  mockConfigure,
-  mockCreateRoot,
-  mockUnmountAtNode,
-  mockRoots,
-} = (await import('@deckgl-fiber-renderer/reconciler')) as never;
+const { mockRender, mockConfigure, mockCreateRoot, mockUnmountAtNode, mockRoots } =
+  (await import("@deckgl-fiber-renderer/reconciler")) as never;
 
-describe('Deckgl Component Tests', () => {
+describe("Deckgl Component Tests", () => {
   beforeEach(() => {
     // Clear all mocks before each test
     vi.clearAllMocks();
@@ -52,19 +47,19 @@ describe('Deckgl Component Tests', () => {
     vi.clearAllMocks();
   });
 
-  it('should creates reconciler root on mount', () => {
+  it("should creates reconciler root on mount", () => {
     // Act
     render(
       <Deckgl>
         <div>Test content</div>
-      </Deckgl>
+      </Deckgl>,
     );
 
     // Assert
-    expect(mockCreateRoot).toHaveBeenCalled();
+    expect(mockCreateRoot).toHaveBeenCalledWith();
   });
 
-  it('should passes props to root.configure', () => {
+  it("should passes props to root.configure", () => {
     // Arrange
     const props = {
       initialViewState: {
@@ -78,57 +73,57 @@ describe('Deckgl Component Tests', () => {
     render(
       <Deckgl {...props}>
         <div>Test</div>
-      </Deckgl>
+      </Deckgl>,
     );
 
     // Assert
     expect(mockConfigure).toHaveBeenCalledWith(
       expect.objectContaining({
         initialViewState: props.initialViewState,
-      })
+      }),
     );
   });
 
-  it('should renders canvas in standalone mode (follow accelint-react-testing query priority: getByRole > getByLabelText > getByText)', () => {
+  it("should renders canvas in standalone mode (follow accelint-react-testing query priority: getByRole > getByLabelText > getByText)", () => {
     // Act
     render(
       <Deckgl>
         <div>Content</div>
-      </Deckgl>
+      </Deckgl>,
     );
 
     // Assert - Query by element presence (canvas doesn't have role by default)
-    const canvas = document.querySelector('#deckgl-fiber-canvas');
+    const canvas = document.querySelector("#deckgl-fiber-canvas");
     expect(canvas).toBeTruthy();
-    expect(canvas?.tagName).toBe('CANVAS');
+    expect(canvas?.tagName).toBe("CANVAS");
   });
 
-  it('should renders hidden div in interleaved mode', () => {
+  it("should renders hidden div in interleaved mode", () => {
     // Act
     render(
       <Deckgl interleaved>
         <div>Content</div>
-      </Deckgl>
+      </Deckgl>,
     );
 
     // Assert - Check that interleave div is rendered with hidden attribute
-    const interleaveDiv = document.querySelector('#deckgl-fiber-interleave');
+    const interleaveDiv = document.querySelector("#deckgl-fiber-interleave");
     expect(interleaveDiv).toBeTruthy();
-    expect(interleaveDiv?.hasAttribute('hidden')).toBe(true);
+    expect(interleaveDiv?.hasAttribute("hidden")).toBeTruthy();
   });
 
-  it('should unmounts cleanly', () => {
+  it("should unmounts cleanly", () => {
     // Arrange
     const { unmount } = render(
       <Deckgl>
         <div>Test</div>
-      </Deckgl>
+      </Deckgl>,
     );
 
     // Act
     unmount();
 
     // Assert
-    expect(mockUnmountAtNode).toHaveBeenCalled();
+    expect(mockUnmountAtNode).toHaveBeenCalledWith();
   });
 });

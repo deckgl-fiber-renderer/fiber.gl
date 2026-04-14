@@ -10,8 +10,8 @@ function ScrollTracker() {
 
   useEffect(() => {
     const handler = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handler, { passive: true });
-    return () => window.removeEventListener('scroll', handler);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
   }, []);
 }
 ```
@@ -19,7 +19,7 @@ function ScrollTracker() {
 **✅ Correct: non-blocking updates**
 
 ```tsx
-import { startTransition } from 'react';
+import { startTransition } from "react";
 
 function ScrollTracker() {
   const [scrollY, setScrollY] = useState(0);
@@ -28,8 +28,8 @@ function ScrollTracker() {
     const handler = () => {
       startTransition(() => setScrollY(window.scrollY));
     };
-    window.addEventListener('scroll', handler, { passive: true });
-    return () => window.removeEventListener('scroll', handler);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
   }, []);
 }
 ```

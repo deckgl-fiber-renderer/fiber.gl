@@ -41,7 +41,7 @@ However, the current implementation has gaps in the persistence mode API that ca
 **Implementation:**
 
 ```ts
-export function getPublicInstance(instance: Instance): Instance['node'] {
+export function getPublicInstance(instance: Instance): Instance["node"] {
   return instance.node; // Expose the actual Layer/View
 }
 ```
@@ -64,11 +64,8 @@ export function getPublicInstance(instance: Instance): Instance['node'] {
 **Implementation:**
 
 ```ts
-export function appendChildToSet(
-  childSet: ChildSet,
-  child: Instance
-): ChildSet {
-  log.withMetadata({ childSet, child }).debug('appendChildToSet');
+export function appendChildToSet(childSet: ChildSet, child: Instance): ChildSet {
+  log.withMetadata({ childSet, child }).debug("appendChildToSet");
   return [...childSet, child]; // Immutable update
 }
 ```
@@ -91,11 +88,7 @@ export function appendChildToSet(
 **Implementation:**
 
 ```ts
-export function cloneHiddenInstance(
-  instance: Instance,
-  type: Type,
-  props: Props
-): Instance {
+export function cloneHiddenInstance(instance: Instance, type: Type, props: Props): Instance {
   // Return same instance structure
   // Deck.gl handles visibility through its `visible` prop
   return {
@@ -105,7 +98,7 @@ export function cloneHiddenInstance(
 }
 
 export function cloneHiddenTextInstance(instance: Instance): Instance {
-  throw new Error('Text nodes are not supported');
+  throw new Error("Text nodes are not supported");
 }
 
 export function unhideInstance(instance: Instance, props: Props): void {
@@ -113,7 +106,7 @@ export function unhideInstance(instance: Instance, props: Props): void {
 }
 
 export function unhideTextInstance(textInstance: Instance, text: string): void {
-  throw new Error('Text nodes are not supported');
+  throw new Error("Text nodes are not supported");
 }
 ```
 
@@ -135,14 +128,14 @@ export function unhideTextInstance(textInstance: Instance, text: string): void {
 **Implementation:**
 
 ```ts
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   const layer = props.layer as Layer;
-  if (!layer.id || layer.id === 'unknown') {
+  if (!layer.id || layer.id === "unknown") {
     console.warn(
       `⚠️  Layer missing explicit "id" prop. This causes expensive ` +
         `reinitialization on every render.\n\n` +
         `Add a stable ID:\n` +
-        `<layer layer={new ${layer.constructor.name}({ id: "my-layer", ... })} />\n`
+        `<layer layer={new ${layer.constructor.name}({ id: "my-layer", ... })} />\n`,
     );
   }
 }
@@ -166,11 +159,8 @@ if (process.env.NODE_ENV === 'development') {
 **Implementation:**
 
 ```ts
-export function finalizeContainerChildren(
-  container: Container,
-  newChildren: ChildSet
-): void {
-  if (process.env.NODE_ENV === 'development') {
+export function finalizeContainerChildren(container: Container, newChildren: ChildSet): void {
+  if (process.env.NODE_ENV === "development") {
     const flatList = flattenTree(newChildren);
     const ids = flatList
       .filter((node): node is Layer => !isView(node))
@@ -180,8 +170,8 @@ export function finalizeContainerChildren(
 
     if (duplicates.length > 0) {
       console.error(
-        `❌ Duplicate layer IDs detected: ${[...new Set(duplicates)].join(', ')}\n` +
-          `Each layer must have a unique ID for deck.gl's diffing to work correctly.`
+        `❌ Duplicate layer IDs detected: ${[...new Set(duplicates)].join(", ")}\n` +
+          `Each layer must have a unique ID for deck.gl's diffing to work correctly.`,
       );
     }
   }
@@ -211,14 +201,11 @@ export interface HostContext {
 }
 
 // config.ts
-export function getChildHostContext(
-  parentHostContext: HostContext,
-  type: Type
-): HostContext {
+export function getChildHostContext(parentHostContext: HostContext, type: Type): HostContext {
   const isView =
-    type === 'layer'
+    type === "layer"
       ? false // Runtime check needed after single-layer-element lands
-      : type.toLowerCase().includes('view');
+      : type.toLowerCase().includes("view");
 
   return {
     ...parentHostContext,
@@ -251,7 +238,7 @@ export function cloneInstance(
   oldProps: Props,
   newProps: Props,
   keepChildren: boolean,
-  newChildSet?: ChildSet
+  newChildSet?: ChildSet,
 ): Instance {
   const newNode = createDeckglObject(type, newProps);
 
@@ -284,8 +271,8 @@ const name = toPascal(type);
 if (!catalogue[name]) {
   throw new Error(
     `Unsupported element type: "${type}"\n\n` +
-      `Available elements: ${Object.keys(catalogue).join(', ')}\n\n` +
-      `Did you forget to import "@deckgl-fiber-renderer/reconciler/side-effects"?`
+      `Available elements: ${Object.keys(catalogue).join(", ")}\n\n` +
+      `Did you forget to import "@deckgl-fiber-renderer/reconciler/side-effects"?`,
   );
 }
 ```
@@ -308,28 +295,28 @@ if (!catalogue[name]) {
 ```ts
 switch (globalScope.event?.type) {
   // Discrete events
-  case 'click':
-  case 'contextmenu':
-  case 'dblclick':
-  case 'pointercancel':
-  case 'pointerdown':
-  case 'pointerup':
-  case 'keydown':
-  case 'keyup':
-  case 'focusin':
-  case 'focusout':
+  case "click":
+  case "contextmenu":
+  case "dblclick":
+  case "pointercancel":
+  case "pointerdown":
+  case "pointerup":
+  case "keydown":
+  case "keyup":
+  case "focusin":
+  case "focusout":
     return DiscreteEventPriority;
 
   // Continuous events
-  case 'pointermove':
-  case 'pointerout':
-  case 'pointerover':
-  case 'pointerenter':
-  case 'pointerleave':
-  case 'wheel':
-  case 'touchmove':
-  case 'drag':
-  case 'scroll':
+  case "pointermove":
+  case "pointerout":
+  case "pointerover":
+  case "pointerenter":
+  case "pointerleave":
+  case "wheel":
+  case "touchmove":
+  case "drag":
+  case "scroll":
     return ContinuousEventPriority;
 
   default:
@@ -359,7 +346,7 @@ export interface Instance {
 }
 
 // utils.ts
-export function organizeList(list: Instance['node'][]) {
+export function organizeList(list: Instance["node"][]) {
   return list.reduce<{ views: View[]; layers: Layer[] }>(
     (acc, curr) => {
       if (isView(curr)) {
@@ -369,7 +356,7 @@ export function organizeList(list: Instance['node'][]) {
       }
       return acc;
     },
-    { layers: [], views: [] }
+    { layers: [], views: [] },
   );
 }
 ```
@@ -390,7 +377,7 @@ export function organizeList(list: Instance['node'][]) {
 
 ```ts
 export function detachDeletedInstance(instance: Instance): void {
-  log.withMetadata({ instance }).debug('detachDeletedInstance');
+  log.withMetadata({ instance }).debug("detachDeletedInstance");
   instance.children = [];
 }
 ```
@@ -515,7 +502,7 @@ export function createInstance(
   props: Props,
   rootContainerInfo: Container,
   hostContext: HostContext,
-  fiber: Fiber
+  fiber: Fiber,
 ): Instance {
   // implementation
 }

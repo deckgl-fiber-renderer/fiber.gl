@@ -1,24 +1,24 @@
-'use client';
-import { GeoJsonLayer } from '@deck.gl/layers';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useCallback, useEffect } from 'react';
+"use client";
+import { GeoJsonLayer } from "@deck.gl/layers";
+import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
+import { useCallback, useEffect } from "react";
 
-import { connect } from './_maplibre';
-import { selectors, useStore } from './_store';
+import { connect } from "./_maplibre";
+import { selectors, useStore } from "./_store";
 
 const COLOR = [255, 255, 255, 155] as const;
 const HOVER_COLOR = [255, 0, 0, 255] as const;
 
 const PARAMETERS = {
   blend: true,
-  blendAlphaDstFactor: 'one-minus-src-alpha',
-  blendAlphaOperation: 'add',
-  blendAlphaSrcFactor: 'one',
-  blendColorDstFactor: 'one-minus-src-alpha',
-  blendColorOperation: 'add',
-  blendColorSrcFactor: 'src-alpha',
+  blendAlphaDstFactor: "one-minus-src-alpha",
+  blendAlphaOperation: "add",
+  blendAlphaSrcFactor: "one",
+  blendColorDstFactor: "one-minus-src-alpha",
+  blendColorOperation: "add",
+  blendColorSrcFactor: "src-alpha",
   depthBias: 0,
-  depthCompare: 'always',
+  depthCompare: "always",
   depthTest: false,
   depthWriteEnabled: true,
 } as const;
@@ -33,7 +33,7 @@ export function DeckglExample(props) {
     (pickInfo) => {
       pickInfo.picked ? setIndex(pickInfo.index) : setIndex(-1);
     },
-    [setIndex]
+    [setIndex],
   );
 
   useEffect(() => {
@@ -57,11 +57,11 @@ export function DeckglExample(props) {
               getPointRadius: 16,
               highlightColor: HOVER_COLOR,
               highlightedObjectIndex: index,
-              id: 'data',
+              id: "data",
               onHover,
               pickable: true,
-              pointRadiusUnits: 'pixels',
-              pointType: 'circle',
+              pointRadiusUnits: "pixels",
+              pointType: "circle",
               stroked: false,
             })
           }

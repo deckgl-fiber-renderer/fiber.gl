@@ -63,7 +63,7 @@ export function suspendInstance(
   state: SuspendedState,
   instance: Instance,
   type: Type,
-  props: Props
+  props: Props,
 ): void {
   // deck.gl layers are synchronous, nothing to suspend
 }
@@ -71,7 +71,7 @@ export function suspendInstance(
 // Null: proceed immediately
 export function waitForCommitToBeReady(
   state: SuspendedState,
-  timeoutMs: number
+  timeoutMs: number,
 ): ((commit: () => void) => () => void) | null {
   return null;
 }
@@ -79,7 +79,7 @@ export function waitForCommitToBeReady(
 // Null: no suspension reason
 export function getSuspendedCommitReason(
   state: SuspendedState,
-  rootContainer: Container
+  rootContainer: Container,
 ): string | null {
   return null;
 }
@@ -104,18 +104,11 @@ export function maySuspendCommit(type: Type, props: Props): boolean {
 }
 
 // New variants for specific scenarios
-export function maySuspendCommitOnUpdate(
-  type: Type,
-  oldProps: Props,
-  newProps: Props
-): boolean {
+export function maySuspendCommitOnUpdate(type: Type, oldProps: Props, newProps: Props): boolean {
   return false;
 }
 
-export function maySuspendCommitInSyncRender(
-  type: Type,
-  props: Props
-): boolean {
+export function maySuspendCommitInSyncRender(type: Type, props: Props): boolean {
   return false;
 }
 
@@ -145,9 +138,7 @@ export function preloadInstance(type: Type, props: Props): boolean {
 **Implementation:**
 
 ```typescript
-export function requestPostPaintCallback(
-  callback: (time: number) => void
-): void {
+export function requestPostPaintCallback(callback: (time: number) => void): void {
   requestAnimationFrame(() => {
     setTimeout(() => callback(performance.now()), 0);
   });

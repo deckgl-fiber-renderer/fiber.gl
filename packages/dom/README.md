@@ -52,8 +52,8 @@ pnpm add @deck.gl/core @deck.gl/layers
 Here's a minimal example to get you started:
 
 ```tsx
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
 
 function App() {
   const data = [
@@ -74,7 +74,7 @@ function App() {
       <layer
         layer={
           new ScatterplotLayer({
-            id: 'scatterplot',
+            id: "scatterplot",
             data,
             getPosition: (d) => d.position,
             getRadius: (d) => d.size,
@@ -134,12 +134,12 @@ When integrating with a basemap (like MapLibre or Mapbox), use the `interleaved`
 The universal `<layer>` element is the core of v2. Instead of creating a JSX element for each layer type, you pass a layer instance to the `layer` prop:
 
 ```tsx
-import { ScatterplotLayer } from '@deck.gl/layers';
+import { ScatterplotLayer } from "@deck.gl/layers";
 
 <layer
   layer={
     new ScatterplotLayer({
-      id: 'my-layer',
+      id: "my-layer",
       data: myData,
       getPosition: (d) => d.coordinates,
       getRadius: 100,
@@ -298,7 +298,7 @@ For complete prop documentation, see the [deck.gl Deck class reference](https://
 The `useDeckgl()` hook provides access to the deck.gl instance from anywhere in your React tree (not just children of `<Deckgl>`):
 
 ```tsx
-import { useDeckgl } from '@deckgl-fiber-renderer/dom';
+import { useDeckgl } from "@deckgl-fiber-renderer/dom";
 
 function MyComponent() {
   const deckInstance = useDeckgl();
@@ -306,7 +306,7 @@ function MyComponent() {
   useEffect(() => {
     // Always check for null - instance is not available until Deckgl mounts
     if (deckInstance) {
-      console.log('Current view state:', deckInstance.viewState);
+      console.log("Current view state:", deckInstance.viewState);
     }
   }, [deckInstance]);
 
@@ -329,7 +329,7 @@ function MyComponent() {
 <layer
   layer={
     new ScatterplotLayer({
-      id: 'points',
+      id: "points",
       data: myData,
       getPosition: (d) => d.coordinates,
     })
@@ -348,9 +348,9 @@ function MyComponent() {
 <view
   view={
     new MapView({
-      id: 'main',
-      width: '100%',
-      height: '100%',
+      id: "main",
+      width: "100%",
+      height: "100%",
     })
   }
 />
@@ -366,7 +366,7 @@ type DataPoint = { coordinates: [number, number]; value: number };
 <layer
   layer={
     new ScatterplotLayer<DataPoint>({
-      id: 'points',
+      id: "points",
       data: myData,
       getPosition: (d) => d.coordinates, // d is typed as DataPoint
       getRadius: (d) => d.value * 10, // Full autocomplete support
@@ -382,8 +382,8 @@ type DataPoint = { coordinates: [number, number]; value: number };
 To integrate with a basemap like MapLibre or Mapbox, wrap the `<Deckgl>` component with your map component and use the `interleaved` prop:
 
 ```tsx
-import { Map, useControl } from 'react-map-gl/maplibre';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
+import { Map, useControl } from "react-map-gl/maplibre";
+import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
 
 function DeckglOverlay() {
   const deck = useDeckgl();
@@ -399,7 +399,7 @@ function App() {
     >
       <Deckgl interleaved>
         <DeckglOverlay />
-        <layer layer={new ScatterplotLayer({ id: 'points', data })} />
+        <layer layer={new ScatterplotLayer({ id: "points", data })} />
       </Deckgl>
     </Map>
   );
@@ -415,8 +415,8 @@ See the [react-map-gl example](../../examples/react-map-gl) for a complete imple
 Render multiple views with different cameras using the `<view>` element:
 
 ```tsx
-import { MapView, OrthographicView } from '@deck.gl/core';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
+import { MapView, OrthographicView } from "@deck.gl/core";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
 
 function App() {
   return (
@@ -424,29 +424,29 @@ function App() {
       <view
         view={
           new MapView({
-            id: 'main',
+            id: "main",
             x: 0,
             y: 0,
-            width: '70%',
-            height: '100%',
+            width: "70%",
+            height: "100%",
           })
         }
       >
-        <layer layer={new ScatterplotLayer({ id: 'main-points', data })} />
+        <layer layer={new ScatterplotLayer({ id: "main-points", data })} />
       </view>
 
       <view
         view={
           new OrthographicView({
-            id: 'minimap',
-            x: '70%',
+            id: "minimap",
+            x: "70%",
             y: 0,
-            width: '30%',
-            height: '100%',
+            width: "30%",
+            height: "100%",
           })
         }
       >
-        <layer layer={new ScatterplotLayer({ id: 'mini-points', data })} />
+        <layer layer={new ScatterplotLayer({ id: "mini-points", data })} />
       </view>
     </Deckgl>
   );
@@ -462,11 +462,11 @@ See the [views example](../../examples/views) for more patterns.
 Custom layers work with no setup using the universal `<layer>` element:
 
 ```tsx
-import { CompositeLayer } from '@deck.gl/core';
-import { ScatterplotLayer } from '@deck.gl/layers';
+import { CompositeLayer } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
 
 class CustomLayer extends CompositeLayer {
-  static layerName = 'CustomLayer';
+  static layerName = "CustomLayer";
 
   renderLayers() {
     return new ScatterplotLayer({
@@ -479,7 +479,7 @@ class CustomLayer extends CompositeLayer {
 }
 
 // Use immediately - no registration needed
-<layer layer={new CustomLayer({ id: 'custom', data, customRadius: 200 })} />;
+<layer layer={new CustomLayer({ id: "custom", data, customRadius: 200 })} />;
 ```
 
 #### TypeScript Support
@@ -487,7 +487,7 @@ class CustomLayer extends CompositeLayer {
 For TypeScript intellisense with custom layers, extend the `IntrinsicElements` interface:
 
 ```tsx
-import type { CustomLayerProps } from './CustomLayer';
+import type { CustomLayerProps } from "./CustomLayer";
 
 declare global {
   namespace React {
@@ -507,8 +507,8 @@ With this declaration, you get full type safety and autocomplete for custom laye
 The v1 `extend()` function still works but is deprecated:
 
 ```tsx
-import { extend } from '@deckgl-fiber-renderer/dom';
-import { CustomLayer } from './CustomLayer';
+import { extend } from "@deckgl-fiber-renderer/dom";
+import { CustomLayer } from "./CustomLayer";
 
 extend({ CustomLayer });
 
@@ -550,10 +550,10 @@ pnpm add @deckgl-fiber-renderer/dom@latest
 
 ```tsx
 // Old
-import '@deckgl-fiber-renderer/reconciler/side-effects';
+import "@deckgl-fiber-renderer/reconciler/side-effects";
 
 // New
-import { ScatterplotLayer } from '@deck.gl/layers';
+import { ScatterplotLayer } from "@deck.gl/layers";
 ```
 
 3. **Replace element syntax:**

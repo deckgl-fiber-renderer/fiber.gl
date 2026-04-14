@@ -1,4 +1,4 @@
-import { ConsoleTransport, LogLayer } from 'loglayer';
+import { ConsoleTransport, LogLayer } from "loglayer";
 
 /**
  * Centralized logger for deckgl-fiber internal operations
@@ -15,5 +15,5 @@ export const log = new LogLayer({
 
   // Dynamically controlled via prop on Deckgl React component
   enabled: false,
-  prefix: '[deckgl-fiber]',
+  prefix: "[deckgl-fiber]",
 });

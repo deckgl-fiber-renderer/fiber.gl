@@ -27,9 +27,7 @@ while (!queue.isEmpty() && iterations < MAX_ITERATIONS) {
 }
 
 if (iterations >= MAX_ITERATIONS) {
-  throw new Error(
-    `Loop exceeded ${MAX_ITERATIONS} iterations - possible infinite loop`
-  );
+  throw new Error(`Loop exceeded ${MAX_ITERATIONS} iterations - possible infinite loop`);
 }
 ```
 
@@ -104,9 +102,7 @@ function traverse(node: Node, depth = 0): void {
   if (!node) return;
 
   if (depth >= MAX_DEPTH) {
-    throw new Error(
-      `Recursion exceeded ${MAX_DEPTH} levels - possible cycle or excessive depth`
-    );
+    throw new Error(`Recursion exceeded ${MAX_DEPTH} levels - possible cycle or excessive depth`);
   }
 
   process(node);
@@ -142,7 +138,7 @@ async function processAll(items: Item[]): Promise<void> {
 
     if (elapsed > TIMEOUT_MS) {
       throw new Error(
-        `Operation exceeded ${TIMEOUT_MS}ms timeout after processing ${items.indexOf(item)} items`
+        `Operation exceeded ${TIMEOUT_MS}ms timeout after processing ${items.indexOf(item)} items`,
       );
     }
 
@@ -199,9 +195,7 @@ for (const item of items) {
   const processed = processItem(item);
 
   if (results.length + processed.length > MAX_RESULTS) {
-    throw new Error(
-      `Results exceeded ${MAX_RESULTS} items - possible memory issue`
-    );
+    throw new Error(`Results exceeded ${MAX_RESULTS} items - possible memory issue`);
   }
 
   results.push(...processed);
@@ -248,10 +242,7 @@ interface BoundedLoopConfig {
   onLimitExceeded?: (reason: string) => void;
 }
 
-async function processWithLimits(
-  items: Item[],
-  config: BoundedLoopConfig = {}
-): Promise<void> {
+async function processWithLimits(items: Item[], config: BoundedLoopConfig = {}): Promise<void> {
   const maxIterations = config.maxIterations ?? 10000;
   const timeout = config.timeout ?? 30000;
   const startTime = Date.now();
@@ -279,9 +270,7 @@ while (condition && iterations < MAX_ITERATIONS) {
   iterations++;
 
   if (iterations === Math.floor(MAX_ITERATIONS * WARN_THRESHOLD)) {
-    console.warn(
-      `Loop approaching limit: ${iterations}/${MAX_ITERATIONS} iterations`
-    );
+    console.warn(`Loop approaching limit: ${iterations}/${MAX_ITERATIONS} iterations`);
   }
 
   process();

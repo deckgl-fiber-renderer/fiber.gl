@@ -16,7 +16,7 @@ function useWindowEvent(event: string, handler: (e) => void) {
 **✅ Correct: stable subscription**
 
 ```tsx
-import { useEffectEvent } from 'react';
+import { useEffectEvent } from "react";
 
 function useWindowEvent(event: string, handler: (e) => void) {
   const onEvent = useEffectEvent(handler);

@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-import './_global.css';
+import "./_global.css";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (

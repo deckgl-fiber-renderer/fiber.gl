@@ -1,25 +1,25 @@
-import { MapView } from '@deck.gl/core';
-import { PathLayer, ScatterplotLayer } from '@deck.gl/layers';
+import { MapView } from "@deck.gl/core";
+import { PathLayer, ScatterplotLayer } from "@deck.gl/layers";
 
 /**
  * Helper to create a test layer with default props
  * Use this when you need a generic Layer for testing reconciler behavior
  */
 export function createTestLayer(
-  type: 'scatterplot' | 'path',
-  overrides: Record<string, unknown> = {}
+  type: "scatterplot" | "path",
+  overrides: Record<string, unknown> = {},
 ) {
   const baseProps = {
     data: [],
-    id: 'test-layer',
+    id: "test-layer",
     ...overrides,
   };
 
-  if (type === 'scatterplot') {
+  if (type === "scatterplot") {
     return new ScatterplotLayer(baseProps);
   }
 
-  if (type === 'path') {
+  if (type === "path") {
     return new PathLayer(baseProps);
   }
 
@@ -42,7 +42,7 @@ export const fixtures = {
       ],
       getPosition: (d: { position: number[] }) => d.position,
       getRadius: (d: { radius: number }) => d.radius,
-      id: 'scatterplot-test',
+      id: "scatterplot-test",
       ...overrides,
     }),
 
@@ -60,7 +60,7 @@ export const fixtures = {
         },
       ],
       getPath: (d: { path: number[][] }) => d.path,
-      id: 'path-test',
+      id: "path-test",
       ...overrides,
     }),
 
@@ -70,7 +70,7 @@ export const fixtures = {
   mapView: (overrides: Record<string, unknown> = {}) =>
     new MapView({
       controller: true,
-      id: 'map-view-test',
+      id: "map-view-test",
       ...overrides,
     }),
 };

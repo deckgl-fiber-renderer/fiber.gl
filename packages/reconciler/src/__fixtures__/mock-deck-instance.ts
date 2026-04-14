@@ -1,8 +1,8 @@
-import type { Layer, View } from '@deck.gl/core';
-import type { createStore } from '@deckgl-fiber-renderer/shared';
-import { vi } from 'vitest';
+import type { Layer, View } from "@deck.gl/core";
+import type { createStore } from "@deckgl-fiber-renderer/shared";
+import { vi } from "vitest";
 
-import type { Container, HostContext, Instance } from '../types';
+import type { Container, HostContext, Instance } from "../types";
 
 /**
  * Creates a mock Deck.gl instance for testing
@@ -44,9 +44,7 @@ export function createMockContainer(): Container {
 /**
  * Creates a mock host context for testing
  */
-export function createMockHostContext(
-  overrides: Partial<HostContext> = {}
-): HostContext {
+export function createMockHostContext(overrides: Partial<HostContext> = {}): HostContext {
   return {
     insideView: false,
     store: createMockContainer().store,
@@ -57,10 +55,7 @@ export function createMockHostContext(
 /**
  * Creates a mock Instance for testing
  */
-export function createMockInstance(
-  node: Layer | View,
-  children: Instance[] = []
-): Instance {
+export function createMockInstance(node: Layer | View, children: Instance[] = []): Instance {
   return {
     children,
     node,

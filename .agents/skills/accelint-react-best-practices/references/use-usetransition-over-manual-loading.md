@@ -6,7 +6,7 @@ Use `useTransition` instead of manual `useState` for loading states. This provid
 
 ```tsx
 function SearchResults() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -32,7 +32,7 @@ function SearchResults() {
 
 ```tsx
 function SearchResults() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isPending, startTransition] = useTransition();
 

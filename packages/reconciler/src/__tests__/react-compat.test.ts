@@ -2,32 +2,32 @@ import {
   ContinuousEventPriority,
   DefaultEventPriority,
   DiscreteEventPriority,
-} from 'react-reconciler/constants';
-import { describe, expect, it } from 'vitest';
+} from "react-reconciler/constants";
+import { describe, expect, it } from "vitest";
 
-import { fixtures } from '../__fixtures__/layers';
+import { fixtures } from "../__fixtures__/layers";
 import {
   createMockContainer,
   createMockHostContext,
   createMockInstance,
-} from '../__fixtures__/mock-deck-instance';
-import * as config from '../config';
+} from "../__fixtures__/mock-deck-instance";
+import * as config from "../config";
 
-describe('React Compatibility Tests', () => {
-  describe('Mode configuration', () => {
-    it('uses persistence mode (supportsPersistence is true)', () => {
+describe("React Compatibility Tests", () => {
+  describe("Mode configuration", () => {
+    it("uses persistence mode (supportsPersistence is true)", () => {
       // Assert
-      expect(config.supportsPersistence).toBe(true);
+      expect(config.supportsPersistence).toBeTruthy();
     });
 
-    it('disables mutation mode (supportsMutation is false)', () => {
+    it("disables mutation mode (supportsMutation is false)", () => {
       // Assert
-      expect(config.supportsMutation).toBe(false);
+      expect(config.supportsMutation).toBeFalsy();
     });
   });
 
-  describe('Event priority', () => {
-    it('returns valid event priority (DiscreteEventPriority, ContinuousEventPriority, or DefaultEventPriority)', () => {
+  describe("Event priority", () => {
+    it("returns valid event priority (DiscreteEventPriority, ContinuousEventPriority, or DefaultEventPriority)", () => {
       // Arrange
       const validPriorities = [
         DiscreteEventPriority,
@@ -43,21 +43,16 @@ describe('React Compatibility Tests', () => {
     });
   });
 
-  describe('Method signatures', () => {
-    it('creates instance with correct parameters', () => {
+  describe("Method signatures", () => {
+    it("creates instance with correct parameters", () => {
       // Arrange
-      const type = 'layer';
+      const type = "layer";
       const props = { layer: fixtures.scatterplotLayer() };
       const container = createMockContainer();
       const hostContext = createMockHostContext();
 
       // Act
-      const instance = config.createInstance(
-        type,
-        props,
-        container.store,
-        hostContext
-      );
+      const instance = config.createInstance(type, props, container.store, hostContext);
 
       // Assert
       expect(instance).toBeDefined();
@@ -65,13 +60,13 @@ describe('React Compatibility Tests', () => {
       expect(instance.children).toBeDefined();
     });
 
-    it('clones instance with correct parameters', () => {
+    it("clones instance with correct parameters", () => {
       // Arrange
-      const layer = fixtures.scatterplotLayer({ id: 'test' });
+      const layer = fixtures.scatterplotLayer({ id: "test" });
       const instance = createMockInstance(layer);
-      const type = 'layer';
+      const type = "layer";
       const oldProps = { layer };
-      const newProps = { layer: fixtures.scatterplotLayer({ id: 'test' }) };
+      const newProps = { layer: fixtures.scatterplotLayer({ id: "test" }) };
       const keepChildren = false;
       const newChildSet = null;
 
@@ -82,7 +77,7 @@ describe('React Compatibility Tests', () => {
         oldProps,
         newProps,
         keepChildren,
-        newChildSet
+        newChildSet,
       );
 
       // Assert

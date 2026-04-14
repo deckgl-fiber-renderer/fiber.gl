@@ -6,13 +6,13 @@ catalog:
   # React
 
   # Deck.gl
-  '@deck.gl/core': '>=9.1'
-  '@deck.gl/extensions': '>=9.1'
-  '@deck.gl/geo-layers': '>=9.1'
-  '@deck.gl/layers': '>=9.1'
-  '@deck.gl/mapbox': '>=9.1'
-  '@deck.gl/mesh-layers': '>=9.1'
-  '@deck.gl/widgets': '>=9.1'
+  "@deck.gl/core": ">=9.1"
+  "@deck.gl/extensions": ">=9.1"
+  "@deck.gl/geo-layers": ">=9.1"
+  "@deck.gl/layers": ">=9.1"
+  "@deck.gl/mapbox": ">=9.1"
+  "@deck.gl/mesh-layers": ">=9.1"
+  "@deck.gl/widgets": ">=9.1"
 
   # Maplibre
   maplibre-gl: ^5
@@ -20,27 +20,27 @@ catalog:
   # React
   react: ^19
   react-dom: ^19
-  '@types/react': ^19
-  '@types/react-dom': ^19
+  "@types/react": ^19
+  "@types/react-dom": ^19
   # React Reconciler (pinned to exact versions)
   react-reconciler: 0.33.0
-  '@types/react-reconciler': 0.33.0
+  "@types/react-reconciler": 0.33.0
 
   # Build/Test Tools
-  tsdown: ^0.21.4
+  tsdown: ^0.21.8
   typescript: ^6.0.2
-  vitest: ^4.1.2
-  '@vitest/coverage-v8': ^4.1.2
-  jsdom: ^29
+  vitest: ^4.1.4
+  "@vitest/coverage-v8": ^4.1.4
+  jsdom: ^29.0.2
 
   # Misc
   zustand: ^5
   loglayer: ^9
 
 onlyBuiltDependencies:
-  - '@fission-ai/openspec'
-  - '@parcel/watcher'
-  - '@swc/core'
+  - "@fission-ai/openspec"
+  - "@parcel/watcher"
+  - "@swc/core"
   - core-js
   - esbuild
   - lefthook

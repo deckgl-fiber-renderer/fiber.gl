@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
@@ -9,10 +9,10 @@ export default defineConfig({
     watch: false,
 
     // Test environment
-    environment: 'jsdom',
+    environment: "jsdom",
 
     // Include .test-d.ts files for type tests
-    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)', '**/*.test-d.ts'],
+    include: ["**/*.{test,spec}.?(c|m)[jt]s?(x)", "**/*.test-d.ts"],
 
     // No coverage thresholds needed for type tests
     // Type tests use expectTypeOf and run at compile-time

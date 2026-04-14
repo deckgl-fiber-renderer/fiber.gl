@@ -49,9 +49,9 @@ TypeScript types are included.
 ## Quick Start
 
 ```typescript
-import { mainFunction } from 'package-name';
+import { mainFunction } from "package-name";
 
-const result = mainFunction('input');
+const result = mainFunction("input");
 console.log(result);
 // Expected output here
 ```
@@ -88,7 +88,7 @@ Description of what this function does.
 **Example:**
 
 ```typescript
-const result = mainFunction('input', { option: true });
+const result = mainFunction("input", { option: true });
 ```
 
 ---
@@ -113,7 +113,7 @@ new SecondaryClass(config: Config)
 **Example:**
 
 ```typescript
-const instance = new SecondaryClass({ setting: 'value' });
+const instance = new SecondaryClass({ setting: "value" });
 const result = instance.process(data);
 ```
 
@@ -137,32 +137,32 @@ interface HelperType {
 ### Basic Usage
 
 ```typescript
-import { mainFunction } from 'package-name';
+import { mainFunction } from "package-name";
 
-const result = mainFunction('simple input');
+const result = mainFunction("simple input");
 ```
 
 ### With Configuration
 
 ```typescript
-import { mainFunction } from 'package-name';
+import { mainFunction } from "package-name";
 
-const result = mainFunction('input', {
+const result = mainFunction("input", {
   verbose: true,
-  format: 'json',
+  format: "json",
 });
 ```
 
 ### Error Handling
 
 ```typescript
-import { mainFunction, PackageError } from 'package-name';
+import { mainFunction, PackageError } from "package-name";
 
 try {
-  const result = mainFunction('input');
+  const result = mainFunction("input");
 } catch (error) {
   if (error instanceof PackageError) {
-    console.error('Package error:', error.message);
+    console.error("Package error:", error.message);
   }
   throw error;
 }

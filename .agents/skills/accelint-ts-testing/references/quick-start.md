@@ -9,9 +9,9 @@ This example demonstrates how to transform an unclear test into a clear, maintai
 **❌ Incorrect: unclear test**
 
 ```ts
-test('product test', () => {
-  const p = new ProductService().add({ name: 'Widget' });
-  expect(p.status).toBe('pendingApproval');
+test("product test", () => {
+  const p = new ProductService().add({ name: "Widget" });
+  expect(p.status).toBe("pendingApproval");
 });
 ```
 
@@ -27,17 +27,17 @@ test('product test', () => {
 **✅ Correct: optimized with vitest best practices**
 
 ```ts
-describe('ProductService', () => {
-  describe('Add new product', () => {
+describe("ProductService", () => {
+  describe("Add new product", () => {
     it('should have status "pending approval" when no price is specified', () => {
       // Arrange
       const productService = new ProductService();
 
       // Act
-      const newProduct = productService.add({ name: 'Widget' });
+      const newProduct = productService.add({ name: "Widget" });
 
       // Assert
-      expect(newProduct.status).toEqual('pendingApproval');
+      expect(newProduct.status).toEqual("pendingApproval");
     });
   });
 });

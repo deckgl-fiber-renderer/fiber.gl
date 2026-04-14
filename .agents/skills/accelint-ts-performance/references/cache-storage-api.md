@@ -6,7 +6,7 @@
 
 ```ts
 function getTheme() {
-  return localStorage.getItem('theme') ?? 'light';
+  return localStorage.getItem("theme") ?? "light";
 }
 // Called 10 times = 10 storage reads
 ```
@@ -49,14 +49,14 @@ function getCookie(name: string) {
 **Important**: invalidate on external changes
 
 ```ts
-window.addEventListener('storage', (e) => {
+window.addEventListener("storage", (e) => {
   if (e.key) {
     storageCache.delete(e.key);
   }
 });
 
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') {
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
     storageCache.clear();
   }
 });

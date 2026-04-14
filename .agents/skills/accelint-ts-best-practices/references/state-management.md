@@ -8,13 +8,13 @@ Use `const` for all declarations unless the variable genuinely needs reassignmen
 
 ```ts
 let color = src.substring(start + 1, end - 1);
-color = color.replace(/\s/g, '');
+color = color.replace(/\s/g, "");
 ```
 
 **✅ Correct: single assignment with const**
 
 ```ts
-const color = src.substring(start + 1, end - 1).replace(/\s/g, '');
+const color = src.substring(start + 1, end - 1).replace(/\s/g, "");
 ```
 
 **Why this matters**: `const` signals immutability at the binding level. Readers know the identifier won't be reassigned, reducing cognitive load. It doesn't prevent object mutation (use `Object.freeze()` for that), but eliminates entire classes of bugs from variable shadowing and temporal dead zones.

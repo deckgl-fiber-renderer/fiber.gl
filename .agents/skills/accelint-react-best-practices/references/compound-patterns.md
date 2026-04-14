@@ -23,7 +23,7 @@ Real-world scenarios often require multiple optimization patterns working togeth
 ```tsx
 function SearchComponent({ items }: { items: Item[] }) {
   const searchParams = useSearchParams(); // ❌ Subscribes to all URL changes
-  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const [query, setQuery] = useState(searchParams.get("q") || "");
   const [results, setResults] = useState(items);
 
   // ❌ Callback recreated on every query/results change
@@ -32,11 +32,11 @@ function SearchComponent({ items }: { items: Item[] }) {
       setQuery(newQuery);
       // ❌ Blocks UI during expensive filtering
       const filtered = items.filter((item) =>
-        item.name.toLowerCase().includes(newQuery.toLowerCase())
+        item.name.toLowerCase().includes(newQuery.toLowerCase()),
       );
       setResults(filtered); // ❌ Direct state reference, not functional
     },
-    [query, results, items]
+    [query, results, items],
   );
 
   // ❌ Effect re-runs on handleSearch changes
@@ -57,13 +57,13 @@ function SearchComponent({ items }: { items: Item[] }) {
 **✅ After: Optimized with Multiple Patterns**
 
 ```tsx
-import { useEffectEvent, useTransition } from 'react'; // React 19.2+
+import { useEffectEvent, useTransition } from "react"; // React 19.2+
 
 function SearchComponent({ items }: { items: Item[] }) {
   const [query, setQuery] = useState(() => {
     // ✅ 1.1: Read URL params on demand, no subscription
     const params = new URLSearchParams(window.location.search);
-    return params.get('q') || '';
+    return params.get("q") || "";
   });
   const [results, setResults] = useState(items);
   const [isPending, startTransition] = useTransition(); // ✅ 2.8: Built-in pending state
@@ -74,7 +74,7 @@ function SearchComponent({ items }: { items: Item[] }) {
       setQuery(newQuery);
 
       const filtered = items.filter((item) =>
-        item.name.toLowerCase().includes(newQuery.toLowerCase())
+        item.name.toLowerCase().includes(newQuery.toLowerCase()),
       );
 
       // ✅ 1.7: Transition for non-urgent results update
@@ -82,7 +82,7 @@ function SearchComponent({ items }: { items: Item[] }) {
         setResults(filtered);
       });
     },
-    [items]
+    [items],
   ); // Only depends on items, not query or results
 
   // ✅ 3.2: useEffectEvent for stable effect with fresh callback (React 19.2+)
@@ -111,12 +111,12 @@ For this search use case, `useDeferredValue` is a more specialized alternative t
 
 ```tsx
 function SearchComponent({ items }: { items: Item[] }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const deferredQuery = useDeferredValue(query);
 
   const filtered = useMemo(
     () => items.filter((item) => fuzzyMatch(item, deferredQuery)),
-    [items, deferredQuery]
+    [items, deferredQuery],
   );
 
   const isStale = query !== deferredQuery;
@@ -173,15 +173,15 @@ function InfiniteList({ loadMore }: Props) {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [loadMore, items, scrollY]);
 
   return (
     <div className="overflow-y-auto">
       {items.map((item) => (
         <div key={item.id}>
-          {' '}
+          {" "}
           {/* ❌ No content-visibility */}
           <ItemCard item={item} />
         </div>
@@ -225,8 +225,8 @@ function InfiniteList({ loadMore }: Props) {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []); // ✅ Stable effect, onLoadMore not in dependencies
 
   return (
@@ -236,8 +236,8 @@ function InfiniteList({ loadMore }: Props) {
           key={item.id}
           className="item-card" // ✅ 2.2: CSS content-visibility applied
           style={{
-            contentVisibility: 'auto',
-            containIntrinsicSize: '0 200px',
+            contentVisibility: "auto",
+            containIntrinsicSize: "0 200px",
           }}
         >
           <ItemCard item={item} />
@@ -266,10 +266,10 @@ function InfiniteList({ loadMore }: Props) {
 ```tsx
 function Dashboard() {
   const [userData, setUserData] = useState(
-    parseUserData() // ❌ Runs on every render
+    parseUserData(), // ❌ Runs on every render
   );
   const [analyticsData, setAnalyticsData] = useState(
-    parseAnalyticsData() // ❌ Runs on every render
+    parseAnalyticsData(), // ❌ Runs on every render
   );
   const [loading, setLoading] = useState(false);
 
@@ -348,9 +348,7 @@ const AnalyticsWidget = memo(function AnalyticsWidget({
 function Dashboard() {
   // ✅ 1.6: Lazy initialization - only runs once
   const [userData, setUserData] = useState(() => parseUserData());
-  const [analyticsData, setAnalyticsData] = useState(() =>
-    parseAnalyticsData()
-  );
+  const [analyticsData, setAnalyticsData] = useState(() => parseAnalyticsData());
   const [loading, setLoading] = useState(false);
 
   if (loading) {
@@ -361,10 +359,7 @@ function Dashboard() {
     <div>
       {/* ✅ Widgets only re-render when their own data changes */}
       <UserWidget data={userData} />
-      <AnalyticsWidget
-        revenue={analyticsData.revenue}
-        averageOrder={analyticsData.averageOrder}
-      />
+      <AnalyticsWidget revenue={analyticsData.revenue} averageOrder={analyticsData.averageOrder} />
     </div>
   );
 }
@@ -390,9 +385,9 @@ function Dashboard() {
 ```tsx
 function RegistrationForm() {
   const [formData, setFormData] = useState({
-    email: '',
-    username: '',
-    password: '',
+    email: "",
+    username: "",
+    password: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -400,7 +395,7 @@ function RegistrationForm() {
   // ❌ This is a combined hook - email validation runs when ANY field changes
   useEffect(() => {
     validateEmail(formData.email).then((isValid) => {
-      setErrors({ ...errors, email: isValid ? null : 'Invalid email' });
+      setErrors({ ...errors, email: isValid ? null : "Invalid email" });
     });
   }, [formData, errors]); // ❌ Object dependencies
 
@@ -432,13 +427,13 @@ function RegistrationForm() {
 **✅ After: Optimized with Stable Dependencies**
 
 ```tsx
-import { useEffectEvent } from 'react'; // React 19.2+
+import { useEffectEvent } from "react"; // React 19.2+
 
 function RegistrationForm() {
   const [formData, setFormData] = useState({
-    email: '',
-    username: '',
-    password: '',
+    email: "",
+    username: "",
+    password: "",
   });
   const [errors, setErrors] = useState({});
 
@@ -461,7 +456,7 @@ function RegistrationForm() {
       startTransition(() => {
         setErrors((curr) => ({
           ...curr,
-          email: isValid ? null : 'Invalid email',
+          email: isValid ? null : "Invalid email",
         }));
       });
     };
@@ -489,10 +484,7 @@ function RegistrationForm() {
 
   return (
     <form>
-      <input
-        value={formData.email}
-        onChange={(e) => updateField('email', e.target.value)}
-      />
+      <input value={formData.email} onChange={(e) => updateField("email", e.target.value)} />
       {errors.email && <span className="error">{errors.email}</span>}
       {/* ... */}
       <button type="button" onClick={handleSubmit}>
@@ -520,7 +512,7 @@ function RegistrationForm() {
 ```tsx
 function Dashboard() {
   // ❌ localStorage breaks SSR
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
@@ -556,7 +548,7 @@ function Dashboard() {
       {/* ✅ 2.5: Prevent hydration mismatch with inline script */}
       <div id="dashboard-wrapper">
         {/* ✅ 2.6: Activity preserves sidebar state when hidden */}
-        <Activity mode={sidebarOpen ? 'visible' : 'hidden'}>
+        <Activity mode={sidebarOpen ? "visible" : "hidden"}>
           <Sidebar />
         </Activity>
 
@@ -621,8 +613,8 @@ function AnalyticsTracker({ onTrack, enabled = true }: Props) {
       setMouseY(e.clientY);
     };
 
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
+    window.addEventListener("mousemove", handleMove);
+    return () => window.removeEventListener("mousemove", handleMove);
   }, []);
 
   return (
@@ -666,10 +658,10 @@ const TrackingIndicator = memo(function TrackingIndicator({
   return (
     <div
       style={{
-        position: 'fixed',
+        position: "fixed",
         left: x,
         top: y,
-        pointerEvents: 'none',
+        pointerEvents: "none",
       }}
     >
       Tracking
@@ -706,8 +698,8 @@ function AnalyticsTracker({ onTrack, enabled = true }: Props) {
       }
     };
 
-    window.addEventListener('mousemove', handleMove);
-    return () => window.removeEventListener('mousemove', handleMove);
+    window.addEventListener("mousemove", handleMove);
+    return () => window.removeEventListener("mousemove", handleMove);
   }, [enabled, onTrack]);
 
   return (
@@ -716,11 +708,11 @@ function AnalyticsTracker({ onTrack, enabled = true }: Props) {
         <div
           ref={indicatorRef}
           style={{
-            position: 'fixed',
+            position: "fixed",
             left: 0,
             top: 0,
-            pointerEvents: 'none',
-            transform: 'translate(0px, 0px)',
+            pointerEvents: "none",
+            transform: "translate(0px, 0px)",
           }}
         >
           Tracking

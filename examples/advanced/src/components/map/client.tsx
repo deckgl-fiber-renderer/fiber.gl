@@ -1,13 +1,13 @@
-'use client';
-import 'client-only';
-import { Deckgl, useDeckgl } from '@deckgl-fiber-renderer/dom';
-import { useEffect } from 'react';
-import type { PropsWithChildren } from 'react';
+"use client";
+import "client-only";
+import { Deckgl, useDeckgl } from "@deckgl-fiber-renderer/dom";
+import { useEffect } from "react";
+import type { PropsWithChildren } from "react";
 
-import { useSelected } from '@/hooks/use-selected';
+import { useSelected } from "@/hooks/use-selected";
 
-import { PARAMETERS } from './constants';
-import { connect } from './maplibre';
+import { PARAMETERS } from "./constants";
+import { connect } from "./maplibre";
 
 export function MapClient({ children }: PropsWithChildren) {
   const deckglInstance = useDeckgl();

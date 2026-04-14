@@ -1,15 +1,15 @@
-import type { Layer, LayersList, View } from '@deck.gl/core';
-import { log, toPascal } from '@deckgl-fiber-renderer/shared';
-import { globalScope } from '@deckgl-fiber-renderer/shared/constants';
-import { createContext } from 'react';
-import type { Fiber, ReactContext } from 'react-reconciler';
+import type { Layer, LayersList, View } from "@deck.gl/core";
+import { log, toPascal } from "@deckgl-fiber-renderer/shared";
+import { globalScope } from "@deckgl-fiber-renderer/shared/constants";
+import { createContext } from "react";
+import type { Fiber, ReactContext } from "react-reconciler";
 import {
   ContinuousEventPriority,
   DefaultEventPriority,
   DiscreteEventPriority,
-} from 'react-reconciler/constants';
+} from "react-reconciler/constants";
 
-import { catalogue } from './extend';
+import { catalogue } from "./extend";
 import type {
   ChildSet,
   Container,
@@ -21,8 +21,8 @@ import type {
   TransitionStatus,
   Type,
   UpdatePayload,
-} from './types';
-import { flattenTree, isView, organizeList } from './utils';
+} from "./types";
+import { flattenTree, isView, organizeList } from "./utils";
 
 const VIEW_REGEX = /view/i;
 
@@ -126,7 +126,7 @@ let availableElementsCache: string | null = null;
  */
 function getAvailableElements(): string {
   if (availableElementsCache === null) {
-    availableElementsCache = Object.keys(catalogue).join(', ');
+    availableElementsCache = Object.keys(catalogue).join(", ");
   }
   return availableElementsCache;
 }
@@ -177,24 +177,24 @@ function getAvailableElements(): string {
  */
 function createDeckglObject(type: Type, props: Props): Instance {
   // New <view> element (v2+): pass-through pre-instantiated View
-  if (type === 'view') {
+  if (type === "view") {
     if (!props.view) {
       throw new Error("<view> element requires a 'view' prop");
     }
 
     // Development-mode warning for missing or default view ID
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       const view = props.view as View;
 
       // TODO: sanity check why view.id === 'unknown' was added
-      if (!view.id || view.id === 'unknown') {
+      if (!view.id || view.id === "unknown") {
         const viewName = view.constructor.name;
 
         console.warn(
           `⚠️  View missing explicit "id" prop. deck.gl requires stable IDs ` +
             `for efficient diffing.\n\n` +
             `Add a stable ID:\n` +
-            `<view view={new ${viewName}({ id: "my-view", ... })} />\n`
+            `<view view={new ${viewName}({ id: "my-view", ... })} />\n`,
         );
       }
     }
@@ -206,24 +206,24 @@ function createDeckglObject(type: Type, props: Props): Instance {
   }
 
   // New <layer> element (v2+): pass-through pre-instantiated Layer
-  if (type === 'layer') {
+  if (type === "layer") {
     if (!props.layer) {
       throw new Error("<layer> element requires a 'layer' prop");
     }
 
     // Development-mode warning for missing or default layer ID
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       const layer = props.layer as Layer;
 
       // TODO: sanity check why layer.id === 'unknown' was added
-      if (!layer.id || layer.id === 'unknown') {
+      if (!layer.id || layer.id === "unknown") {
         const layerName = layer.constructor.name;
 
         console.warn(
           `⚠️  Layer missing explicit "id" prop. This causes expensive ` +
             `reinitialization on every render.\n\n` +
             `Add a stable ID:\n` +
-            `<layer layer={new ${layerName}({ id: "my-layer", ... })} />\n`
+            `<layer layer={new ${layerName}({ id: "my-layer", ... })} />\n`,
         );
       }
 
@@ -234,7 +234,7 @@ function createDeckglObject(type: Type, props: Props): Instance {
             `Change:\n` +
             `<layer layer={new ${layer.constructor.name}(...)} />\n\n` +
             `To:\n` +
-            `<view view={new ${layer.constructor.name}(...)} />\n`
+            `<view view={new ${layer.constructor.name}(...)} />\n`,
         );
       }
     }
@@ -248,14 +248,14 @@ function createDeckglObject(type: Type, props: Props): Instance {
   // Legacy path with deprecation warning (v2 backwards compatibility)
   const name = toPascal(type);
 
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     // Detect if this is a view-related element
     const isViewType = VIEW_REGEX.test(type);
-    const elementName = isViewType ? 'view' : 'layer';
-    const propName = isViewType ? 'view' : 'layer';
+    const elementName = isViewType ? "view" : "layer";
+    const propName = isViewType ? "view" : "layer";
 
     console.warn(
-      `Using deprecated <${type}> element. Migrate to <${elementName} ${propName}={new ${name}({...})} /> for better type safety and code-splitting. This syntax will be removed in v3.`
+      `Using deprecated <${type}> element. Migrate to <${elementName} ${propName}={new ${name}({...})} /> for better type safety and code-splitting. This syntax will be removed in v3.`,
     );
   }
 
@@ -266,7 +266,7 @@ function createDeckglObject(type: Type, props: Props): Instance {
       `Unsupported element type: "${type}"\n\n` +
         `Available elements: ${availableElements}\n\n` +
         `Did you forget to import side-effects?\n` +
-        `import "@deckgl-fiber-renderer/reconciler/side-effects";\n`
+        `import "@deckgl-fiber-renderer/reconciler/side-effects";\n`,
     );
   }
 
@@ -333,11 +333,9 @@ export function createInstance(
   props: Props,
   rootContainerInfo: Container,
   hostContext: HostContext,
-  fiber: Fiber
+  fiber: Fiber,
 ): Instance {
-  log
-    .withMetadata({ fiber, hostContext, props, rootContainerInfo, type })
-    .debug('createInstance');
+  log.withMetadata({ fiber, hostContext, props, rootContainerInfo, type }).debug("createInstance");
 
   return createDeckglObject(type, props);
 }
@@ -377,9 +375,9 @@ export function createInstance(
  * @see {@link https://deck.gl/docs/api-reference/layers/text-layer TextLayer for rendering text in Deck.gl}
  */
 export function createTextInstance() {
-  log.debug('createTextInstance');
+  log.debug("createTextInstance");
 
-  throw new Error('Text nodes are not supported');
+  throw new Error("Text nodes are not supported");
 }
 
 /**
@@ -445,7 +443,7 @@ export function cloneInstance(
   oldProps: Props,
   newProps: Props,
   keepChildren: boolean,
-  recyclableInstance: Instance | null | undefined
+  recyclableInstance: Instance | null | undefined,
 ): Instance | undefined {
   log
     .withMetadata({
@@ -456,7 +454,7 @@ export function cloneInstance(
       recyclableInstance,
       type,
     })
-    .debug('cloneInstance');
+    .debug("cloneInstance");
 
   // If instance is undefined, we can't clone it
   if (!instance) {
@@ -512,18 +510,14 @@ export function cloneInstance(
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCompleteWork.js Suspense Implementation}
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-native-renderer/src/ReactFiberConfigFabric.js#L280 Reference Implementation}
  */
-export function cloneHiddenInstance(
-  instance: Instance,
-  type: Type,
-  props: Props
-): Instance {
+export function cloneHiddenInstance(instance: Instance, type: Type, props: Props): Instance {
   log
     .withMetadata({
       instance,
       props,
       type,
     })
-    .debug('cloneHiddenInstance');
+    .debug("cloneHiddenInstance");
 
   return {
     children: instance.children,
@@ -545,9 +539,9 @@ export function cloneHiddenInstance(
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCompleteWork.js Suspense Implementation}
  */
 export function cloneHiddenTextInstance(): void {
-  log.debug('cloneHiddenTextInstance');
+  log.debug("cloneHiddenTextInstance");
 
-  throw new Error('Text nodes are not supported in deck.gl renderer');
+  throw new Error("Text nodes are not supported in deck.gl renderer");
 }
 
 /**
@@ -580,7 +574,7 @@ export function unhideInstance(instance: Instance, props: Props): void {
       instance,
       props,
     })
-    .debug('unhideInstance');
+    .debug("unhideInstance");
 
   // No-op: deck.gl handles visibility through its `visible` prop
 }
@@ -599,9 +593,9 @@ export function unhideInstance(instance: Instance, props: Props): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js Commit Phase Implementation}
  */
 export function unhideTextInstance(): void {
-  log.debug('unhideTextInstance');
+  log.debug("unhideTextInstance");
 
-  throw new Error('Text nodes are not supported in deck.gl renderer');
+  throw new Error("Text nodes are not supported in deck.gl renderer");
 }
 
 /**
@@ -633,7 +627,7 @@ export function unhideTextInstance(): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-native-renderer/src/ReactFiberConfigFabric.js#L237 React Native Fabric Reference}
  */
 export function createContainerChildSet(): ChildSet {
-  log.debug('createContainerChildSet');
+  log.debug("createContainerChildSet");
 
   return [];
 }
@@ -663,16 +657,13 @@ export function createContainerChildSet(): ChildSet {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js#L2904 React Source - Building Container Children}
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-native-renderer/src/ReactFiberConfigFabric.js#L245 React Native Fabric Reference}
  */
-export function appendChildToContainerChildSet(
-  childSet: ChildSet,
-  child: Instance
-): void {
+export function appendChildToContainerChildSet(childSet: ChildSet, child: Instance): void {
   log
     .withMetadata({
       child,
       childSet,
     })
-    .debug('appendChildToContainerChildSet');
+    .debug("appendChildToContainerChildSet");
 
   childSet.push(child);
 }
@@ -693,16 +684,13 @@ export function appendChildToContainerChildSet(
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-native-renderer/src/ReactFiberConfigFabric.js React Native Fabric Implementation}
  */
-export function appendChildToSet(
-  childSet: ChildSet,
-  child: Instance
-): ChildSet {
+export function appendChildToSet(childSet: ChildSet, child: Instance): ChildSet {
   log
     .withMetadata({
       child,
       childSet,
     })
-    .debug('appendChildToSet');
+    .debug("appendChildToSet");
 
   return [...childSet, child];
 }
@@ -722,20 +710,17 @@ export function appendChildToSet(
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/README.md#persistence-mode React Persistence Mode}
  */
-export function finalizeContainerChildren(
-  container: Container,
-  newChildren: ChildSet
-): void {
+export function finalizeContainerChildren(container: Container, newChildren: ChildSet): void {
   log
     .withMetadata({
       container,
       newChildren,
     })
-    .debug('finalizeContainerChildren');
+    .debug("finalizeContainerChildren");
 
   // Development-mode validation: detect duplicate layer IDs
   // Performance: reduce-looping.md - Two-pass algorithm (2-5x faster than five-pass)
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     // Pass 1: Flatten tree and count layer IDs in single traversal
     const idCounts = new Map<string, number>();
 
@@ -768,9 +753,9 @@ export function finalizeContainerChildren(
 
     if (duplicates.length > 0) {
       console.error(
-        `❌ Duplicate layer IDs detected: ${duplicates.join(', ')}\n\n` +
+        `❌ Duplicate layer IDs detected: ${duplicates.join(", ")}\n\n` +
           `Deck.gl uses layer IDs for diffing. Duplicate IDs cause incorrect updates.\n` +
-          `Each layer must have a unique ID.\n`
+          `Each layer must have a unique ID.\n`,
       );
     }
   }
@@ -821,16 +806,13 @@ export function finalizeContainerChildren(
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-native-renderer/src/ReactFiberConfigFabric.js#L270 React Native Fabric Reference}
  * @see {@link https://deck.gl/docs/developer-guide/using-layers Layer Lifecycle in Deck.gl}
  */
-export function replaceContainerChildren(
-  container: Container,
-  newChildren: ChildSet
-): void {
+export function replaceContainerChildren(container: Container, newChildren: ChildSet): void {
   log
     .withMetadata({
       container,
       newChildren,
     })
-    .debug('replaceContainerChildren');
+    .debug("replaceContainerChildren");
 
   const state = container.store.getState();
   const { deckgl } = state;
@@ -852,7 +834,7 @@ export function replaceContainerChildren(
         layers: combinedLayers,
         views: types.views,
       })
-      .debug('deck.setProps views and layers');
+      .debug("deck.setProps views and layers");
 
     const propsUpdate: { layers: LayersList; views?: View[] } = {
       layers: combinedLayers,
@@ -912,16 +894,13 @@ export function replaceContainerChildren(
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCompleteWork.js#L846 React Source - appendAllChildren}
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/README.md#appendinitialchild Official Reconciler Docs}
  */
-export function appendInitialChild(
-  parentInstance: Instance,
-  child: Instance
-): void {
+export function appendInitialChild(parentInstance: Instance, child: Instance): void {
   log
     .withMetadata({
       child,
       parentInstance,
     })
-    .debug('appendInitialChild');
+    .debug("appendInitialChild");
 
   parentInstance.children.push(child);
 }
@@ -975,7 +954,7 @@ export function finalizeInitialChildren(
   type: Type,
   props: Props,
   rootContainer: Container,
-  hostContext: HostContext
+  hostContext: HostContext,
 ): boolean {
   log
     .withMetadata({
@@ -985,7 +964,7 @@ export function finalizeInitialChildren(
       rootContainer,
       type,
     })
-    .debug('finalizeInitialChildren');
+    .debug("finalizeInitialChildren");
 
   return false;
 }
@@ -1032,7 +1011,7 @@ export function prepareUpdate(
   oldProps: Props,
   newProps: Props,
   rootContainer: Container,
-  hostContext: HostContext
+  hostContext: HostContext,
 ): UpdatePayload | null {
   log
     .withMetadata({
@@ -1043,7 +1022,7 @@ export function prepareUpdate(
       rootContainer,
       type,
     })
-    .debug('prepareUpdate');
+    .debug("prepareUpdate");
 
   return null;
 }
@@ -1075,14 +1054,12 @@ export function prepareUpdate(
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js Commit Phase}
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js DOM Implementation Example}
  */
-export function prepareForCommit(
-  container: Container
-): Record<string, unknown> | null {
+export function prepareForCommit(container: Container): Record<string, unknown> | null {
   log
     .withMetadata({
       container,
     })
-    .debug('prepareForCommit');
+    .debug("prepareForCommit");
 
   return null;
 }
@@ -1119,7 +1096,7 @@ export function resetAfterCommit(container: Container): void {
     .withMetadata({
       container,
     })
-    .debug('resetAfterCommit');
+    .debug("resetAfterCommit");
 }
 
 /**
@@ -1149,7 +1126,7 @@ export function resetAfterCommit(container: Container): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js Portal Mounting}
  */
 export function preparePortalMount(): void {
-  log.debug('preparePortalMount');
+  log.debug("preparePortalMount");
 }
 
 /**
@@ -1193,7 +1170,7 @@ export function shouldSetTextContent(type: Type, props: Props): boolean {
       props,
       type,
     })
-    .debug('shouldSetTextContent');
+    .debug("shouldSetTextContent");
 
   return false;
 }
@@ -1251,7 +1228,7 @@ export function getRootHostContext(rootContainer: Container): HostContext {
     .withMetadata({
       rootContainer,
     })
-    .debug('getRootHostContext');
+    .debug("getRootHostContext");
 
   return rootContainer;
 }
@@ -1294,16 +1271,13 @@ export function getRootHostContext(rootContainer: Container): HostContext {
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/README.md#getchildhostcontext React Reconciler Docs}
  */
-export function getChildHostContext(
-  parentHostContext: HostContext,
-  type: Type
-): HostContext {
+export function getChildHostContext(parentHostContext: HostContext, type: Type): HostContext {
   log
     .withMetadata({
       parentHostContext,
       type,
     })
-    .debug('getChildHostContext');
+    .debug("getChildHostContext");
 
   // Detect if we are inside of a View instance
   // Note: This currently checks type string. Once single-layer-element lands,
@@ -1348,12 +1322,12 @@ export function getChildHostContext(
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/README.md#getpublicinstance React Reconciler Docs}
  */
-export function getPublicInstance(instance: Instance): Instance['node'] {
+export function getPublicInstance(instance: Instance): Instance["node"] {
   log
     .withMetadata({
       instance,
     })
-    .debug('getPublicInstance');
+    .debug("getPublicInstance");
 
   return instance.node;
 }
@@ -1374,7 +1348,7 @@ export function detachDeletedInstance(instance: Instance): void {
     .withMetadata({
       instance,
     })
-    .debug('detachDeletedInstance');
+    .debug("detachDeletedInstance");
 
   // Clear children array to help garbage collection
   instance.children.length = 0;
@@ -1407,7 +1381,7 @@ export function detachDeletedInstance(instance: Instance): void {
  */
 // oxlint-disable-next-line complexity
 export function getCurrentEventPriority(): number {
-  log.debug('getCurrentEventPriority');
+  log.debug("getCurrentEventPriority");
 
   if (!globalScope) {
     return DefaultEventPriority;
@@ -1416,27 +1390,27 @@ export function getCurrentEventPriority(): number {
   // NOTE: window.event is technically deprecated but React does not pass the event
   // to this host function for some reason so we have to use it.
   switch (globalScope.event?.type) {
-    case 'click':
-    case 'contextmenu':
-    case 'dblclick':
-    case 'pointercancel':
-    case 'pointerdown':
-    case 'pointerup':
-    case 'keydown':
-    case 'keyup':
-    case 'focusin':
-    case 'focusout': {
+    case "click":
+    case "contextmenu":
+    case "dblclick":
+    case "pointercancel":
+    case "pointerdown":
+    case "pointerup":
+    case "keydown":
+    case "keyup":
+    case "focusin":
+    case "focusout": {
       return DiscreteEventPriority;
     }
-    case 'pointermove':
-    case 'pointerout':
-    case 'pointerover':
-    case 'pointerenter':
-    case 'pointerleave':
-    case 'wheel':
-    case 'touchmove':
-    case 'drag':
-    case 'scroll': {
+    case "pointermove":
+    case "pointerout":
+    case "pointerover":
+    case "pointerenter":
+    case "pointerleave":
+    case "wheel":
+    case "touchmove":
+    case "drag":
+    case "scroll": {
       return ContinuousEventPriority;
     }
     default: {
@@ -1526,7 +1500,7 @@ export function setCurrentUpdatePriority(newPriority: EventPriority): void {
     .withMetadata({
       newPriority,
     })
-    .debug('setCurrentUpdatePriority');
+    .debug("setCurrentUpdatePriority");
 
   currentUpdatePriority = newPriority;
 }
@@ -1544,7 +1518,7 @@ export function setCurrentUpdatePriority(newPriority: EventPriority): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberWorkLoop.js Update Batching}
  */
 export function getCurrentUpdatePriority(): EventPriority {
-  log.debug('getCurrentUpdatePriority');
+  log.debug("getCurrentUpdatePriority");
 
   return currentUpdatePriority;
 }
@@ -1569,7 +1543,7 @@ export function getCurrentUpdatePriority(): EventPriority {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberWorkLoop.js Priority Resolution}
  */
 export function resolveUpdatePriority(): EventPriority {
-  log.debug('resolveUpdatePriority');
+  log.debug("resolveUpdatePriority");
 
   if (currentUpdatePriority !== DefaultEventPriority) {
     return currentUpdatePriority;
@@ -1607,7 +1581,7 @@ export function maySuspendCommit(type: Type, props: Props): boolean {
       props,
       type,
     })
-    .debug('maySuspendCommit');
+    .debug("maySuspendCommit");
 
   return false;
 }
@@ -1638,7 +1612,7 @@ export function maySuspendCommit(type: Type, props: Props): boolean {
  * @see {@link waitForCommitToBeReady}
  */
 export function startSuspendingCommit(): SuspendedState {
-  log.debug('startSuspendingCommit');
+  log.debug("startSuspendingCommit");
 
   return { pendingCount: 0 };
 }
@@ -1673,7 +1647,7 @@ export function suspendInstance(type: Type, props: Props): void {
       props,
       type,
     })
-    .debug('suspendInstance');
+    .debug("suspendInstance");
 
   // No-op: deck.gl layers never suspend
 }
@@ -1706,14 +1680,14 @@ export function suspendInstance(type: Type, props: Props): void {
  */
 export function waitForCommitToBeReady(
   state: SuspendedState,
-  timeoutMs: number
+  timeoutMs: number,
 ): ((commit: () => void) => () => void) | null {
   log
     .withMetadata({
       state,
       timeoutMs,
     })
-    .debug('waitForCommitToBeReady');
+    .debug("waitForCommitToBeReady");
 
   return null;
 }
@@ -1742,18 +1716,14 @@ export function waitForCommitToBeReady(
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberBeginWork.js Update Suspension Check}
  * @see {@link maySuspendCommit}
  */
-export function maySuspendCommitOnUpdate(
-  type: Type,
-  oldProps: Props,
-  newProps: Props
-): boolean {
+export function maySuspendCommitOnUpdate(type: Type, oldProps: Props, newProps: Props): boolean {
   log
     .withMetadata({
       newProps,
       oldProps,
       type,
     })
-    .debug('maySuspendCommitOnUpdate');
+    .debug("maySuspendCommitOnUpdate");
 
   return false;
 }
@@ -1780,16 +1750,13 @@ export function maySuspendCommitOnUpdate(
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberBeginWork.js Sync Render Check}
  * @see {@link maySuspendCommit}
  */
-export function maySuspendCommitInSyncRender(
-  type: Type,
-  props: Props
-): boolean {
+export function maySuspendCommitInSyncRender(type: Type, props: Props): boolean {
   log
     .withMetadata({
       props,
       type,
     })
-    .debug('maySuspendCommitInSyncRender');
+    .debug("maySuspendCommitInSyncRender");
 
   return false;
 }
@@ -1823,7 +1790,7 @@ export function preloadInstance(type: Type, props: Props): boolean {
       props,
       type,
     })
-    .debug('preloadInstance');
+    .debug("preloadInstance");
 
   return true;
 }
@@ -1853,14 +1820,14 @@ export function preloadInstance(type: Type, props: Props): boolean {
  */
 export function getSuspendedCommitReason(
   state: SuspendedState,
-  rootContainer: Container
+  rootContainer: Container,
 ): string | null {
   log
     .withMetadata({
       rootContainer,
       state,
     })
-    .debug('getSuspendedCommitReason');
+    .debug("getSuspendedCommitReason");
 
   return null;
 }
@@ -1891,13 +1858,13 @@ export function getSuspendedCommitReason(
  */
 export function requestPostPaintCallback(
   // oxlint-disable-next-line promise/prefer-await-to-callbacks
-  callback: (time: number) => void
+  callback: (time: number) => void,
 ): void {
   log
     .withMetadata({
       callback,
     })
-    .debug('requestPostPaintCallback');
+    .debug("requestPostPaintCallback");
 
   requestAnimationFrame(() => {
     // oxlint-disable-next-line promise/prefer-await-to-callbacks
@@ -1930,7 +1897,7 @@ export function getInstanceFromNode(node: Fiber): Fiber | null | undefined {
     .withMetadata({
       node,
     })
-    .debug('getInstanceFromNode');
+    .debug("getInstanceFromNode");
 
   return null;
 }
@@ -1953,7 +1920,7 @@ export function getInstanceFromNode(node: Fiber): Fiber | null | undefined {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js DOM Focus Management}
  */
 export function beforeActiveInstanceBlur(): void {
-  log.debug('beforeActiveInstanceBlur');
+  log.debug("beforeActiveInstanceBlur");
 }
 
 /**
@@ -1973,7 +1940,7 @@ export function beforeActiveInstanceBlur(): void {
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-dom-bindings/src/client/ReactFiberConfigDOM.js DOM Focus Management}
  */
 export function afterActiveInstanceBlur(): void {
-  log.debug('afterActiveInstanceBlur');
+  log.debug("afterActiveInstanceBlur");
 }
 
 /**
@@ -2001,7 +1968,7 @@ export function getInstanceFromScope(scopeInstance: Instance): Instance | null {
     .withMetadata({
       scopeInstance,
     })
-    .debug('getInstanceFromScope');
+    .debug("getInstanceFromScope");
 
   return null;
 }
@@ -2024,16 +1991,13 @@ export function getInstanceFromScope(scopeInstance: Instance): Instance | null {
  *
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberHostConfig.js Scope API}
  */
-export function prepareScopeUpdate(
-  scopeInstance: Instance,
-  instance: Instance
-): void {
+export function prepareScopeUpdate(scopeInstance: Instance, instance: Instance): void {
   log
     .withMetadata({
       instance,
       scopeInstance,
     })
-    .debug('prepareScopeUpdate');
+    .debug("prepareScopeUpdate");
 }
 
 /**
@@ -2066,7 +2030,7 @@ export function prepareScopeUpdate(
  * @see {@link https://react.dev/reference/react/startTransition React Transitions Documentation}
  */
 export function shouldAttemptEagerTransition(): boolean {
-  log.debug('shouldAttemptEagerTransition');
+  log.debug("shouldAttemptEagerTransition");
 
   return false;
 }
@@ -2096,7 +2060,7 @@ export const NotPendingTransition: TransitionStatus | null = null;
  * @see {@link https://github.com/facebook/react/blob/main/packages/react-noop-renderer/src/createReactNoop.js React Noop Renderer Reference}
  */
 export const HostTransitionContext = createContext<TransitionStatus>(
-  null
+  null,
 ) as unknown as ReactContext<TransitionStatus>;
 
 /**
@@ -2110,5 +2074,5 @@ export const HostTransitionContext = createContext<TransitionStatus>(
  * @see {@link https://github.com/facebook/react/pull/28804 PR Adding Form Support}
  */
 export function resetFormInstance(_form: FormInstance): void {
-  log.debug('resetFormInstance');
+  log.debug("resetFormInstance");
 }

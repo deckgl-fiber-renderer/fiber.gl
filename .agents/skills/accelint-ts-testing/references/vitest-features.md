@@ -9,22 +9,22 @@ Use `.only`, `.skip`, and `.todo` to control test execution during development.
 **✅ Correct: focusing on specific tests**
 
 ```ts
-describe('UserService', () => {
-  it.only('should create user', () => {
+describe("UserService", () => {
+  it.only("should create user", () => {
     // Only this test runs
-    const user = createUser({ name: 'John' });
-    expect(user.name).toBe('John');
+    const user = createUser({ name: "John" });
+    expect(user.name).toBe("John");
   });
 
-  it('should update user', () => {
+  it("should update user", () => {
     // Skipped while .only is active
   });
 
-  it.skip('should delete user', () => {
+  it.skip("should delete user", () => {
     // Temporarily disabled
   });
 
-  it.todo('should restore deleted user');
+  it.todo("should restore deleted user");
   // Placeholder for future test
 });
 ```
@@ -33,7 +33,7 @@ describe('UserService', () => {
 
 ```ts
 // DON'T commit this!
-it.only('should work', () => {
+it.only("should work", () => {
   // Other tests won't run in CI
 });
 ```
@@ -45,13 +45,13 @@ Run tests conditionally based on environment.
 **✅ Correct: platform-specific tests**
 
 ```ts
-describe('FileSystem', () => {
-  it.runIf(process.platform === 'win32')('should handle Windows paths', () => {
-    expect(normalizePath('C:\\Users\\test')).toBe('C:/Users/test');
+describe("FileSystem", () => {
+  it.runIf(process.platform === "win32")("should handle Windows paths", () => {
+    expect(normalizePath("C:\\Users\\test")).toBe("C:/Users/test");
   });
 
-  it.skipIf(process.platform === 'win32')('should handle Unix paths', () => {
-    expect(normalizePath('/home/test')).toBe('/home/test');
+  it.skipIf(process.platform === "win32")("should handle Unix paths", () => {
+    expect(normalizePath("/home/test")).toBe("/home/test");
   });
 });
 ```
@@ -63,18 +63,18 @@ Run independent tests in parallel for faster execution.
 **✅ Correct: concurrent test execution**
 
 ```ts
-describe.concurrent('API endpoints', () => {
-  it('should fetch users', async () => {
+describe.concurrent("API endpoints", () => {
+  it("should fetch users", async () => {
     const users = await api.getUsers();
     expect(users).toHaveLength(10);
   });
 
-  it('should fetch products', async () => {
+  it("should fetch products", async () => {
     const products = await api.getProducts();
     expect(products).toHaveLength(20);
   });
 
-  it('should fetch orders', async () => {
+  it("should fetch orders", async () => {
     const orders = await api.getOrders();
     expect(orders).toHaveLength(5);
   });
@@ -85,13 +85,13 @@ describe.concurrent('API endpoints', () => {
 **⚠️ Caution: Only use for isolated tests**
 
 ```ts
-describe.concurrent('Database tests', () => {
+describe.concurrent("Database tests", () => {
   // ❌ BAD: These tests share state and will interfere!
-  it('should create user', async () => {
-    await db.insert({ id: 1, name: 'Alice' });
+  it("should create user", async () => {
+    await db.insert({ id: 1, name: "Alice" });
   });
 
-  it('should count users', async () => {
+  it("should count users", async () => {
     const count = await db.count();
     expect(count).toBe(1); // Flaky! Depends on other test
   });
@@ -105,7 +105,7 @@ Use `test.extend` to create custom test fixtures.
 **✅ Correct: reusable test fixtures**
 
 ```ts
-import { test as base, expect } from 'vitest';
+import { test as base, expect } from "vitest";
 
 interface TestContext {
   userService: UserService;
@@ -126,8 +126,8 @@ const test = base.extend<TestContext>({
   },
 });
 
-test('should create user', async ({ userService, db }) => {
-  const user = await userService.create({ name: 'John' });
+test("should create user", async ({ userService, db }) => {
+  const user = await userService.create({ name: "John" });
   const saved = await db.findById(user.id);
   expect(saved).toEqual(user);
 });
@@ -140,18 +140,18 @@ Use `vi.mock()` to mock entire modules.
 **✅ Correct: mocking external dependency**
 
 ```ts
-import { sendEmail } from './email-service';
+import { sendEmail } from "./email-service";
 
-vi.mock('./email-service', () => ({
+vi.mock("./email-service", () => ({
   sendEmail: vi.fn().mockResolvedValue({ success: true }),
 }));
 
-it('should send welcome email', async () => {
-  await onUserSignup({ email: 'user@example.com' });
+it("should send welcome email", async () => {
+  await onUserSignup({ email: "user@example.com" });
 
   expect(sendEmail).toHaveBeenCalledWith({
-    to: 'user@example.com',
-    template: 'welcome',
+    to: "user@example.com",
+    template: "welcome",
   });
 });
 ```
@@ -159,7 +159,7 @@ it('should send welcome email', async () => {
 **✅ Correct: partial module mock**
 
 ```ts
-vi.mock('./utils', async (importOriginal) => {
+vi.mock("./utils", async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
@@ -175,12 +175,12 @@ Use `vi.spyOn()` to spy on object methods.
 **✅ Correct: spying on console methods**
 
 ```ts
-it('should log error message', () => {
-  const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
+it("should log error message", () => {
+  const consoleSpy = vi.spyOn(console, "error").mockImplementation();
 
-  logger.error('Something went wrong');
+  logger.error("Something went wrong");
 
-  expect(consoleSpy).toHaveBeenCalledWith('[ERROR]', 'Something went wrong');
+  expect(consoleSpy).toHaveBeenCalledWith("[ERROR]", "Something went wrong");
 
   consoleSpy.mockRestore();
 });
@@ -193,7 +193,7 @@ Control time in tests using fake timers.
 **✅ Correct: testing debounce**
 
 ```ts
-describe('debounce', () => {
+describe("debounce", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -202,7 +202,7 @@ describe('debounce', () => {
     vi.useRealTimers();
   });
 
-  it('should delay function execution', () => {
+  it("should delay function execution", () => {
     const callback = vi.fn();
     const debounced = debounce(callback, 1000);
 
@@ -213,7 +213,7 @@ describe('debounce', () => {
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
-  it('should reset timer on subsequent calls', () => {
+  it("should reset timer on subsequent calls", () => {
     const callback = vi.fn();
     const debounced = debounce(callback, 1000);
 
@@ -232,7 +232,7 @@ describe('debounce', () => {
 **✅ Correct: testing intervals**
 
 ```ts
-it('should poll every second', () => {
+it("should poll every second", () => {
   vi.useFakeTimers();
 
   const callback = vi.fn();
@@ -260,7 +260,7 @@ test.each([
   { input: 2, expected: 4 },
   { input: 3, expected: 9 },
   { input: 4, expected: 16 },
-])('square($input) should equal $expected', ({ input, expected }) => {
+])("square($input) should equal $expected", ({ input, expected }) => {
   expect(square(input)).toBe(expected);
 });
 ```
@@ -272,7 +272,7 @@ test.each([
   [1, 1],
   [2, 4],
   [3, 9],
-])('square(%i) = %i', (input, expected) => {
+])("square(%i) = %i", (input, expected) => {
   expect(square(input)).toBe(expected);
 });
 ```
@@ -287,9 +287,9 @@ Generate code coverage reports to identify untested code.
 export default {
   test: {
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'html', 'lcov'],
-      exclude: ['node_modules/', 'test/', '**/*.test.ts', '**/*.config.ts'],
+      provider: "v8",
+      reporter: ["text", "html", "lcov"],
+      exclude: ["node_modules/", "test/", "**/*.test.ts", "**/*.config.ts"],
       thresholds: {
         lines: 80,
         functions: 80,
@@ -313,16 +313,16 @@ vitest --coverage
 // Don't chase 100% coverage blindly
 // Focus on testing critical business logic
 
-describe('PaymentProcessor', () => {
-  it('should process valid payment', () => {
+describe("PaymentProcessor", () => {
+  it("should process valid payment", () => {
     // Critical path - must be tested
   });
 
-  it('should reject invalid payment', () => {
+  it("should reject invalid payment", () => {
     // Error path - must be tested
   });
 
-  it('should handle network timeout', () => {
+  it("should handle network timeout", () => {
     // Edge case - important to test
   });
 });
@@ -350,10 +350,10 @@ Use `bench()` to measure performance.
 **✅ Correct: comparing implementations**
 
 ```ts
-import { bench, describe } from 'vitest';
+import { bench, describe } from "vitest";
 
-describe('Array operations', () => {
-  bench('for loop', () => {
+describe("Array operations", () => {
+  bench("for loop", () => {
     const arr = Array.from({ length: 1000 }, (_, i) => i);
     let sum = 0;
     for (let i = 0; i < arr.length; i++) {
@@ -362,14 +362,14 @@ describe('Array operations', () => {
     return sum;
   });
 
-  bench('forEach', () => {
+  bench("forEach", () => {
     const arr = Array.from({ length: 1000 }, (_, i) => i);
     let sum = 0;
     arr.forEach((n) => (sum += n));
     return sum;
   });
 
-  bench('reduce', () => {
+  bench("reduce", () => {
     const arr = Array.from({ length: 1000 }, (_, i) => i);
     return arr.reduce((sum, n) => sum + n, 0);
   });
@@ -390,11 +390,11 @@ export function add(a: number, b: number): number {
 if (import.meta.vitest) {
   const { it, expect } = import.meta.vitest;
 
-  it('should add two numbers', () => {
+  it("should add two numbers", () => {
     expect(add(2, 3)).toBe(5);
   });
 
-  it('should handle negative numbers', () => {
+  it("should handle negative numbers", () => {
     expect(add(-2, 3)).toBe(1);
   });
 }
@@ -405,10 +405,10 @@ if (import.meta.vitest) {
 ```ts
 export default {
   test: {
-    includeSource: ['src/**/*.ts'],
+    includeSource: ["src/**/*.ts"],
   },
   define: {
-    'import.meta.vitest': 'undefined',
+    "import.meta.vitest": "undefined",
   },
 };
 ```
@@ -420,20 +420,20 @@ Test TypeScript types using `expectTypeOf`.
 **✅ Correct: type assertions**
 
 ```ts
-import { expectTypeOf } from 'vitest';
+import { expectTypeOf } from "vitest";
 
-it('should have correct return type', () => {
-  const result = fetchUser('123');
+it("should have correct return type", () => {
+  const result = fetchUser("123");
 
   expectTypeOf(result).toEqualTypeOf<Promise<User>>();
 });
 
-it('should accept correct parameter types', () => {
+it("should accept correct parameter types", () => {
   expectTypeOf(createUser).parameter(0).toMatchTypeOf<UserInput>();
 });
 
-it('should infer correct generic type', () => {
-  const users = [{ id: 1, name: 'Alice' }];
+it("should infer correct generic type", () => {
+  const users = [{ id: 1, name: "Alice" }];
 
   expectTypeOf(users).toEqualTypeOf<Array<{ id: number; name: string }>>();
 });
@@ -455,8 +455,8 @@ export default defineConfig({
     restoreMocks: true, // Mock restore configured?
 
     // Then check for setup files
-    setupFiles: ['./test/setup.ts'],
-    globalSetup: ['./test/global-setup.ts'],
+    setupFiles: ["./test/setup.ts"],
+    globalSetup: ["./test/global-setup.ts"],
   },
 });
 ```
@@ -490,7 +490,7 @@ When you find a setup file, check for:
 
 ```ts
 // test/setup.ts
-import '@testing-library/jest-dom'; // ← Custom matchers loaded
+import "@testing-library/jest-dom"; // ← Custom matchers loaded
 
 // ← Global fetch mock
 global.fetch = vi.fn();
@@ -500,7 +500,7 @@ global.fetch = vi.fn();
 
 ```ts
 // test/setup.ts
-import { beforeEach, afterEach, vi } from 'vitest';
+import { beforeEach, afterEach, vi } from "vitest";
 
 beforeEach(() => {
   vi.clearAllMocks(); // ❌ Move to vitest.config.ts: clearMocks: true
@@ -539,8 +539,8 @@ export default defineConfig({
     restoreMocks: true, // Restore original implementation
 
     // Setup files for non-mock initialization
-    setupFiles: ['./test/setup.ts'],
-    globalSetup: ['./test/global-setup.ts'],
+    setupFiles: ["./test/setup.ts"],
+    globalSetup: ["./test/global-setup.ts"],
   },
 });
 ```
@@ -552,7 +552,7 @@ export default defineConfig({
 // Mock cleanup is handled by vitest.config.ts
 
 // Example: Load custom matchers
-import '@testing-library/jest-dom';
+import "@testing-library/jest-dom";
 
 // Example: Configure global test utilities
 global.TEST_TIMEOUT = 5000;
@@ -562,7 +562,7 @@ global.TEST_TIMEOUT = 5000;
 
 ```ts
 // DON'T DO THIS - Use vitest.config.ts instead
-import { beforeEach, afterEach } from 'vitest';
+import { beforeEach, afterEach } from "vitest";
 
 beforeEach(() => {
   vi.clearAllMocks(); // ❌ Use clearMocks: true in config
@@ -578,12 +578,12 @@ afterEach(() => {
 ```ts
 export async function setup() {
   // Start test database, etc.
-  console.log('Starting test environment...');
+  console.log("Starting test environment...");
 }
 
 export async function teardown() {
   // Clean up global resources
-  console.log('Cleaning up test environment...');
+  console.log("Cleaning up test environment...");
 }
 ```
 
@@ -616,9 +616,9 @@ it('should render component', () => {
  * @vitest-environment node
  */
 
-it('should read file', async () => {
-  const content = await fs.readFile('./test.txt', 'utf-8');
-  expect(content).toContain('test data');
+it("should read file", async () => {
+  const content = await fs.readFile("./test.txt", "utf-8");
+  expect(content).toContain("test data");
 });
 ```
 
@@ -640,7 +640,7 @@ export default {
 **✅ Correct: per-test retry**
 
 ```ts
-it('flaky network test', { retry: 3 }, async () => {
+it("flaky network test", { retry: 3 }, async () => {
   const data = await fetchFromUnreliableAPI();
   expect(data).toBeDefined();
 });
@@ -650,8 +650,8 @@ it('flaky network test', { retry: 3 }, async () => {
 
 ```ts
 // Instead of retrying, mock the unreliable dependency
-it('network test', async () => {
-  const mockFetch = vi.fn().mockResolvedValue({ data: 'test' });
+it("network test", async () => {
+  const mockFetch = vi.fn().mockResolvedValue({ data: "test" });
   const data = await fetchData(mockFetch);
   expect(data).toBeDefined();
 });

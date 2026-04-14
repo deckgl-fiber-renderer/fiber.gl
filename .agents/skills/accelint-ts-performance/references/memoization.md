@@ -23,13 +23,13 @@
 **❌ Incorrect: trivial computation**
 
 ```ts
-const ternMemo = memoize((pred) => (pred ? 'Right!' : 'Wrong'));
+const ternMemo = memoize((pred) => (pred ? "Right!" : "Wrong"));
 ```
 
 **✅ Correct: direct computation**
 
 ```ts
-const result = test ? 'Right!' : 'Wrong';
+const result = test ? "Right!" : "Wrong";
 ```
 
 ### Hoist Loop-Invariant Calculations
@@ -38,7 +38,7 @@ const result = test ? 'Right!' : 'Wrong';
 
 ```ts
 for (let i = 0; i < items.length; i++) {
-  const prefix = config.namespace + '.';
+  const prefix = config.namespace + ".";
   const multiplier = Math.PI * 2;
   process(items[i], prefix, multiplier);
 }
@@ -47,7 +47,7 @@ for (let i = 0; i < items.length; i++) {
 **✅ Correct: hoist outside loop**
 
 ```ts
-const prefix = config.namespace + '.';
+const prefix = config.namespace + ".";
 const multiplier = Math.PI * 2;
 const len = items.length;
 
@@ -407,16 +407,14 @@ function factorial(n: number): number {
 ```ts
 // Precompute factorials for n = 0 to 20
 const FACTORIALS = [
-  1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600,
-  6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000,
-  6402373705728000, 121645100408832000, 2432902008176640000,
+  1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800,
+  87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000,
+  2432902008176640000,
 ];
 
 function factorial(n: number): number {
   if (n < 0 || n >= FACTORIALS.length) {
-    throw new Error(
-      `Factorial(${n}) out of range [0, ${FACTORIALS.length - 1}]`
-    );
+    throw new Error(`Factorial(${n}) out of range [0, ${FACTORIALS.length - 1}]`);
   }
   return FACTORIALS[n];
 }

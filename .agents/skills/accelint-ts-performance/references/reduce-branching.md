@@ -22,15 +22,15 @@
 **❌ Incorrect: conditional checks**
 
 ```ts
-if (thing === 'ONE') {
+if (thing === "ONE") {
   /*...*/
 }
 
-if (thing === 'TWO') {
+if (thing === "TWO") {
   /*...*/
 }
 
-if (thing === 'THREE') {
+if (thing === "THREE") {
   /*...*/
 }
 ```
@@ -115,7 +115,7 @@ if (config.enableFeature) {
 
 ```ts
 function format(value: string | number) {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     return value.toUpperCase();
   } else {
     return value.toFixed(2);

@@ -74,7 +74,7 @@ The reconciler creates internal "instance nodes" for each JSX element:
 
 ```tsx
 type InstanceNode = {
-  type: 'layer' | 'view' | 'root';
+  type: "layer" | "view" | "root";
   props: object;
   payload: Layer | View | null;
   parent: InstanceNode | null;
@@ -214,7 +214,7 @@ The reconciler just extracts the instance - it doesn't care about the specific t
 v1 required importing side-effects to register built-in layers:
 
 ```tsx
-import '@deckgl-fiber-renderer/reconciler/side-effects';
+import "@deckgl-fiber-renderer/reconciler/side-effects";
 ```
 
 This is now a no-op that shows a deprecation warning. It will be removed in v3.
@@ -224,7 +224,7 @@ This is now a no-op that shows a deprecation warning. It will be removed in v3.
 v1 required registering custom layers:
 
 ```tsx
-import { extend } from '@deckgl-fiber-renderer/reconciler';
+import { extend } from "@deckgl-fiber-renderer/reconciler";
 extend({ MyCustomLayer });
 ```
 
@@ -265,7 +265,7 @@ Refs expose the actual deck.gl Layer or View instance, not the internal instance
 ```tsx
 const layerRef = useRef<ScatterplotLayer>(null);
 
-<layer ref={layerRef} layer={new ScatterplotLayer({ id: 'points' })} />;
+<layer ref={layerRef} layer={new ScatterplotLayer({ id: "points" })} />;
 
 // layerRef.current is the ScatterplotLayer instance
 ```

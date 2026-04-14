@@ -1,4 +1,4 @@
-import { globalScope } from './constants';
+import { globalScope } from "./constants";
 
 /**
  * No-operation function that does nothing when called
@@ -51,7 +51,7 @@ export function isDefined<T>(value: T | undefined): value is T {
  * ```
  */
 export function isFn(a: unknown): a is Function {
-  return typeof a === 'function';
+  return typeof a === "function";
 }
 
 /**
@@ -71,7 +71,7 @@ export function isFn(a: unknown): a is Function {
  */
 export function toPascal(str: string): string {
   if (str.length === 0) {
-    return '';
+    return "";
   }
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -93,5 +93,4 @@ export function toPascal(str: string): string {
  * ```
  */
 export const isBrowserEnvironment: boolean =
-  globalScope !== false &&
-  isDefined((globalScope as Window & typeof globalThis).document);
+  globalScope !== false && isDefined((globalScope as Window & typeof globalThis).document);

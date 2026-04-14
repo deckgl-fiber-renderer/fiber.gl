@@ -135,7 +135,7 @@ With v2's significant improvements (TypeScript generics, no layer registration, 
 <layer
   layer={
     new ScatterplotLayer({
-      id: 'points',
+      id: "points",
       data: myData,
       getPosition: (d) => d.coordinates,
       getRadius: 100,

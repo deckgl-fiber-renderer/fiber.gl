@@ -241,7 +241,7 @@ Brief description of what it does.
 **Example:**
 
 ```typescript
-const result = await functionName('input.yaml', { strict: true });
+const result = await functionName("input.yaml", { strict: true });
 ```
 ````
 
@@ -309,14 +309,14 @@ const config = await parse('./app.config.yaml');
 ### Validating Against a Schema
 
 ```typescript
-import { parse, validate } from 'config-parser';
-import { configSchema } from './schema';
+import { parse, validate } from "config-parser";
+import { configSchema } from "./schema";
 
-const config = await parse('./app.config.yaml');
+const config = await parse("./app.config.yaml");
 const result = validate(config, configSchema);
 
 if (!result.success) {
-  console.error('Invalid config:', result.errors);
+  console.error("Invalid config:", result.errors);
   process.exit(1);
 }
 ```
@@ -329,7 +329,7 @@ if (!result.success) {
 //   host: ${DB_HOST}
 //   port: ${DB_PORT:5432}  # with default
 
-const config = await parse('./config.yaml');
+const config = await parse("./config.yaml");
 // Environment variables are interpolated automatically
 ```
 

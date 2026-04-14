@@ -1,12 +1,12 @@
-import { MapView } from '@deck.gl/core';
-import { ScatterplotLayer } from '@deck.gl/layers';
-import type { ReactNode } from 'react';
-import { describe, expectTypeOf, it } from 'vitest';
+import { MapView } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
+import type { ReactNode } from "react";
+import { describe, expectTypeOf, it } from "vitest";
 
-import type { DeckglProps } from '../react';
+import type { DeckglProps } from "../react";
 
-describe('Props Type Tests', () => {
-  it('should DeckglProps accepts initialViewState', () => {
+describe("Props Type Tests", () => {
+  it("should DeckglProps accepts initialViewState", () => {
     // Arrange
     const props: DeckglProps = {
       initialViewState: {
@@ -22,9 +22,9 @@ describe('Props Type Tests', () => {
     >();
   });
 
-  it('should DeckglProps accepts layers array', () => {
+  it("should DeckglProps accepts layers array", () => {
     // Arrange
-    const layer = new ScatterplotLayer({ data: [], id: 'test' });
+    const layer = new ScatterplotLayer({ data: [], id: "test" });
     const props: DeckglProps = {
       layers: [layer],
     };
@@ -33,9 +33,9 @@ describe('Props Type Tests', () => {
     expectTypeOf(props.layers).toEqualTypeOf<unknown[] | undefined>();
   });
 
-  it('should DeckglProps accepts views array', () => {
+  it("should DeckglProps accepts views array", () => {
     // Arrange
-    const view = new MapView({ id: 'map' });
+    const view = new MapView({ id: "map" });
     const props: DeckglProps = {
       views: [view],
     };
@@ -44,17 +44,17 @@ describe('Props Type Tests', () => {
     expectTypeOf(props.views).toEqualTypeOf<unknown[] | undefined>();
   });
 
-  it('should DeckglProps accepts children (ReactNode)', () => {
+  it("should DeckglProps accepts children (ReactNode)", () => {
     // Arrange
     const props: DeckglProps = {
-      children: 'test',
+      children: "test",
     };
 
     // Assert
     expectTypeOf(props.children).toEqualTypeOf<ReactNode | undefined>();
   });
 
-  it('should ScatterplotLayer preserves data generic type', () => {
+  it("should ScatterplotLayer preserves data generic type", () => {
     // Arrange
     interface DataPoint {
       x: number;
@@ -69,33 +69,31 @@ describe('Props Type Tests', () => {
     const layer = new ScatterplotLayer<DataPoint>({
       data,
       getPosition: (d) => [d.x, d.y],
-      id: 'typed',
+      id: "typed",
     });
 
     // Assert - TypeScript should preserve the generic type
     expectTypeOf(layer.props.data).toEqualTypeOf<DataPoint[]>();
-    expectTypeOf(layer.props.getPosition).toEqualTypeOf<
-      ((d: DataPoint) => number[]) | undefined
-    >();
+    expectTypeOf(layer.props.getPosition).toEqualTypeOf<((d: DataPoint) => number[]) | undefined>();
   });
 
-  it('should ReactElement type compatible across React versions', () => {
+  it("should ReactElement type compatible across React versions", () => {
     // This test ensures our types work with both React 18 and 19
     // ReactElement should be compatible regardless of React version
     const element: React.ReactElement = {
       key: null,
       props: {},
-      type: 'div',
+      type: "div",
     };
 
-    expectTypeOf(element).toHaveProperty('type');
-    expectTypeOf(element).toHaveProperty('props');
-    expectTypeOf(element).toHaveProperty('key');
+    expectTypeOf(element).toHaveProperty("type");
+    expectTypeOf(element).toHaveProperty("props");
+    expectTypeOf(element).toHaveProperty("key");
   });
 
-  it('should ReactNode type compatible across React versions', () => {
+  it("should ReactNode type compatible across React versions", () => {
     // Test that ReactNode accepts various types across React versions
-    const stringNode: ReactNode = 'text';
+    const stringNode: ReactNode = "text";
     const numberNode: ReactNode = 123;
     const booleanNode: ReactNode = true;
     const nullNode: ReactNode = null;

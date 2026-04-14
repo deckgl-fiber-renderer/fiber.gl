@@ -1,18 +1,14 @@
-import type { Layer, View } from '@deck.gl/core';
-import { Deck } from '@deck.gl/core';
-import { MapboxOverlay } from '@deck.gl/mapbox';
-import {
-  noop,
-  log,
-  useStore as storeInstance,
-} from '@deckgl-fiber-renderer/shared';
-import type { DeckglProps } from '@deckgl-fiber-renderer/types';
-import type { ReactNode } from 'react';
-import reactReconciler from 'react-reconciler';
-import type { HostConfig } from 'react-reconciler';
-import { ConcurrentRoot } from 'react-reconciler/constants';
+import type { Layer, View } from "@deck.gl/core";
+import { Deck } from "@deck.gl/core";
+import { MapboxOverlay } from "@deck.gl/mapbox";
+import { noop, log, useStore as storeInstance } from "@deckgl-fiber-renderer/shared";
+import type { DeckglProps } from "@deckgl-fiber-renderer/types";
+import type { ReactNode } from "react";
+import reactReconciler from "react-reconciler";
+import type { HostConfig } from "react-reconciler";
+import { ConcurrentRoot } from "react-reconciler/constants";
 
-import * as config from './config';
+import * as config from "./config";
 import type {
   ChildSet,
   Container,
@@ -21,7 +17,7 @@ import type {
   Props,
   ReconcilerRoot,
   RootElement,
-} from './types';
+} from "./types";
 
 /**
  * React reconciler instance configured for deck.gl rendering
@@ -75,7 +71,7 @@ export const renderer: ReturnType<typeof reactReconciler> = reactReconciler(
     number,
     -1,
     null
-  >
+  >,
 );
 
 /**
@@ -136,7 +132,7 @@ export function unmountAtNode(node: RootElement) {
       node,
       root,
     })
-    .debug('renderer.unmountAtNode');
+    .debug("renderer.unmountAtNode");
 
   if (root?.container) {
     renderer.updateContainer(null, root.container, null, noop);
@@ -195,7 +191,7 @@ export function createRoot(node: RootElement): ReconcilerRoot {
     .withMetadata({
       node,
     })
-    .debug('renderer.createRoot');
+    .debug("renderer.createRoot");
 
   // Early return if root already exists for this node
   const existingRoot = roots.get(node);
@@ -226,11 +222,11 @@ export function createRoot(node: RootElement): ReconcilerRoot {
     null,
     false,
     null,
-    '',
+    "",
     reportError,
     reportError,
     reportError,
-    () => null
+    () => null,
   );
 
   let configured = false;
@@ -248,12 +244,12 @@ export function createRoot(node: RootElement): ReconcilerRoot {
       return;
     }
 
-    log.withMetadata(props).debug('renderer.configure');
+    log.withMetadata(props).debug("renderer.configure");
 
     const state = store.getState();
 
     // NOTE: interleaved prop is a hint that we are utilizing an external renderer such as Mapbox/Maplibre
-    const isOverlay = 'interleaved' in props;
+    const isOverlay = "interleaved" in props;
     const deckgl = isOverlay ? new MapboxOverlay(props) : new Deck(props);
 
     state.setDeckgl(deckgl);
@@ -266,7 +262,7 @@ export function createRoot(node: RootElement): ReconcilerRoot {
       .withMetadata({
         children,
       })
-      .debug('renderer.render');
+      .debug("renderer.render");
 
     renderer.updateContainer(children, container, null, noop);
   }

@@ -4,7 +4,6 @@
   "npm.packageManager": "pnpm",
   "biome.enabled": false,
   "editor.formatOnPaste": true,
-  "editor.defaultFormatter": "oxc.oxc-vscode",
   "explorer.fileNesting.patterns": {
     "package.json": "pnpm-workspace.yaml, pnpm-lock.yaml"
   },
@@ -61,5 +60,8 @@
   },
   "[yaml]": {
     "editor.defaultFormatter": "oxc.oxc-vscode"
-  }
+  },
+  "emmet.showExpandedAbbreviation": "never",
+  "js/ts.tsdk.path": "node_modules/typescript/lib",
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true
 }

@@ -13,7 +13,7 @@ Convert functions to curried form when parameters are constant across many calls
 ```ts
 export function round(precision: number, value: number): number {
   if (!Number.isInteger(precision)) {
-    throw new Error('Precision must be an integer.');
+    throw new Error("Precision must be an integer.");
   }
 
   const multiplier = 10 ** precision;
@@ -32,12 +32,9 @@ for (const price of prices) {
 ```ts
 export function round(precision: number): (value: number) => number;
 export function round(precision: number, value: number): number;
-export function round(
-  precision: number,
-  value?: number
-): number | ((value: number) => number) {
+export function round(precision: number, value?: number): number | ((value: number) => number) {
   if (!Number.isInteger(precision)) {
-    throw new Error('Precision must be an integer.');
+    throw new Error("Precision must be an integer.");
   }
 
   const multiplier = 10 ** precision;
@@ -70,7 +67,7 @@ function validate(pattern: string, value: string): boolean {
 }
 
 for (const email of emails) {
-  if (validate('^[a-z]+@[a-z]+\\.[a-z]+$', email)) {
+  if (validate("^[a-z]+@[a-z]+\\.[a-z]+$", email)) {
     validEmails.push(email);
   }
 }
@@ -81,10 +78,7 @@ for (const email of emails) {
 ```ts
 function validate(pattern: string): (value: string) => boolean;
 function validate(pattern: string, value: string): boolean;
-function validate(
-  pattern: string,
-  value?: string
-): boolean | ((value: string) => boolean) {
+function validate(pattern: string, value?: string): boolean | ((value: string) => boolean) {
   const regex = new RegExp(pattern);
 
   if (value === undefined) {
@@ -94,7 +88,7 @@ function validate(
   return regex.test(value);
 }
 
-const isValidEmail = validate('^[a-z]+@[a-z]+\\.[a-z]+$');
+const isValidEmail = validate("^[a-z]+@[a-z]+\\.[a-z]+$");
 for (const email of emails) {
   if (isValidEmail(email)) {
     validEmails.push(email);
@@ -112,9 +106,7 @@ function formatCurrency(config: FormatConfig, amount: number): string {
   const decimals = config.decimalPlaces;
   const multiplier = 10 ** decimals;
 
-  return (
-    symbol + (Math.round(amount * multiplier) / multiplier).toFixed(decimals)
-  );
+  return symbol + (Math.round(amount * multiplier) / multiplier).toFixed(decimals);
 }
 
 // Called thousands of times with same config
@@ -130,7 +122,7 @@ function formatCurrency(config: FormatConfig): (amount: number) => string;
 function formatCurrency(config: FormatConfig, amount: number): string;
 function formatCurrency(
   config: FormatConfig,
-  amount?: number
+  amount?: number,
 ): string | ((amount: number) => string) {
   const symbol = config.currencySymbol;
   const decimals = config.decimalPlaces;
@@ -205,7 +197,7 @@ function validateRange(min: number, max: number, value: number): boolean;
 function validateRange(
   min: number,
   max: number,
-  value?: number
+  value?: number,
 ): boolean | ((value: number) => boolean) {
   const check = (v: number) => v >= min && v <= max;
 
@@ -264,10 +256,7 @@ const doubled = map((x: number) => x * 2, [1, 2, 3]);
 ```ts
 function map<T, U>(fn: (item: T) => U): (items: T[]) => U[];
 function map<T, U>(fn: (item: T) => U, items: T[]): U[];
-function map<T, U>(
-  fn: (item: T) => U,
-  items?: T[]
-): U[] | ((items: T[]) => U[]) {
+function map<T, U>(fn: (item: T) => U, items?: T[]): U[] | ((items: T[]) => U[]) {
   const mapper = (arr: T[]) => arr.map(fn);
 
   if (items === undefined) {

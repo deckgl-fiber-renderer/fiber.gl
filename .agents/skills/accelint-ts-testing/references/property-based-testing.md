@@ -58,11 +58,11 @@ No Exception → Type Preservation → Invariant → Idempotence → Roundtrip
 ## Basic Pattern with Vitest
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
 
-describe('MessageCodec', () => {
-  it('roundtrip: decode(encode(x)) === x', () => {
+describe("MessageCodec", () => {
+  it("roundtrip: decode(encode(x)) === x", () => {
     fc.assert(
       fc.property(
         fc.record({
@@ -74,8 +74,8 @@ describe('MessageCodec', () => {
           const encoded = encode(msg);
           const decoded = decode(encoded);
           expect(decoded).toEqual(msg);
-        }
-      )
+        },
+      ),
     );
   });
 });
@@ -92,7 +92,7 @@ fc.float(); // Floating point
 fc.boolean(); // true/false
 fc.string(); // Any string
 fc.string({ maxLength: 100 }); // Size-limited string
-fc.constantFrom('a', 'b', 'c'); // Enum-like
+fc.constantFrom("a", "b", "c"); // Enum-like
 fc.uuid(); // UUID v4
 fc.emailAddress(); // Email format
 fc.webUrl(); // Valid URLs
@@ -136,7 +136,7 @@ fc.assert(
   fc.property(fc.integer(), (x) => {
     fc.pre(x > 0 && x < 100); // BAD: high rejection rate
     expect(process(x)).toBeGreaterThan(0);
-  })
+  }),
 );
 ```
 
@@ -148,8 +148,8 @@ fc.assert(
     fc.integer({ min: 1, max: 99 }), // GOOD: built-in constraints
     (x) => {
       expect(process(x)).toBeGreaterThan(0);
-    }
-  )
+    },
+  ),
 );
 ```
 
@@ -158,12 +158,12 @@ fc.assert(
 ### Pattern 1: Roundtrip (Encode/Decode)
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
-import { encodeMessage, decodeMessage } from './codec';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
+import { encodeMessage, decodeMessage } from "./codec";
 
-describe('Message codec roundtrip', () => {
-  it('decode(encode(msg)) === msg', () => {
+describe("Message codec roundtrip", () => {
+  it("decode(encode(msg)) === msg", () => {
     fc.assert(
       fc.property(
         fc.record({
@@ -175,13 +175,13 @@ describe('Message codec roundtrip', () => {
           const encoded = encodeMessage(msg);
           const decoded = decodeMessage(encoded);
           expect(decoded).toEqual(msg);
-        }
+        },
       ),
-      { numRuns: 100 } // Run 100 random examples
+      { numRuns: 100 }, // Run 100 random examples
     );
   });
 
-  it('encoding is deterministic', () => {
+  it("encoding is deterministic", () => {
     fc.assert(
       fc.property(
         fc.record({
@@ -190,8 +190,8 @@ describe('Message codec roundtrip', () => {
         }),
         (msg) => {
           expect(encodeMessage(msg)).toEqual(encodeMessage(msg));
-        }
-      )
+        },
+      ),
     );
   });
 });
@@ -200,26 +200,26 @@ describe('Message codec roundtrip', () => {
 ### Pattern 2: Idempotence (Normalization)
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
-import { normalizeEmail } from './validators';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
+import { normalizeEmail } from "./validators";
 
-describe('Email normalization', () => {
-  it('normalize(normalize(email)) === normalize(email)', () => {
+describe("Email normalization", () => {
+  it("normalize(normalize(email)) === normalize(email)", () => {
     fc.assert(
       fc.property(fc.emailAddress(), (email) => {
         const normalized = normalizeEmail(email);
         expect(normalizeEmail(normalized)).toBe(normalized);
-      })
+      }),
     );
   });
 
-  it('normalized emails are always lowercase', () => {
+  it("normalized emails are always lowercase", () => {
     fc.assert(
       fc.property(fc.emailAddress(), (email) => {
         const normalized = normalizeEmail(email);
         expect(normalized).toBe(normalized.toLowerCase());
-      })
+      }),
     );
   });
 });
@@ -228,19 +228,19 @@ describe('Email normalization', () => {
 ### Pattern 3: Validator + Normalizer
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
-import { isValidUsername, normalizeUsername } from './validators';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
+import { isValidUsername, normalizeUsername } from "./validators";
 
-describe('Username validation', () => {
-  it('normalized usernames always pass validation', () => {
+describe("Username validation", () => {
+  it("normalized usernames always pass validation", () => {
     fc.assert(
       fc.property(fc.string({ minLength: 1, maxLength: 50 }), (username) => {
         const normalized = normalizeUsername(username);
         if (normalized !== null) {
           expect(isValidUsername(normalized)).toBe(true);
         }
-      })
+      }),
     );
   });
 });
@@ -249,46 +249,44 @@ describe('Username validation', () => {
 ### Pattern 4: Invariants
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
-import { sort } from './utils';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
+import { sort } from "./utils";
 
-describe('Sort function', () => {
-  it('maintains length', () => {
+describe("Sort function", () => {
+  it("maintains length", () => {
     fc.assert(
       fc.property(fc.array(fc.integer()), (arr) => {
         expect(sort(arr)).toHaveLength(arr.length);
-      })
+      }),
     );
   });
 
-  it('maintains elements', () => {
+  it("maintains elements", () => {
     fc.assert(
       fc.property(fc.array(fc.integer()), (arr) => {
         const sorted = sort(arr);
-        expect([...sorted].sort((a, b) => a - b)).toEqual(
-          [...arr].sort((a, b) => a - b)
-        );
-      })
+        expect([...sorted].sort((a, b) => a - b)).toEqual([...arr].sort((a, b) => a - b));
+      }),
     );
   });
 
-  it('produces ordered output', () => {
+  it("produces ordered output", () => {
     fc.assert(
       fc.property(fc.array(fc.integer()), (arr) => {
         const sorted = sort(arr);
         for (let i = 0; i < sorted.length - 1; i++) {
           expect(sorted[i]).toBeLessThanOrEqual(sorted[i + 1]);
         }
-      })
+      }),
     );
   });
 
-  it('is idempotent', () => {
+  it("is idempotent", () => {
     fc.assert(
       fc.property(fc.array(fc.integer()), (arr) => {
         expect(sort(sort(arr))).toEqual(sort(arr));
-      })
+      }),
     );
   });
 });
@@ -297,12 +295,12 @@ describe('Sort function', () => {
 ### Pattern 5: Oracle (Refactoring)
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
-import { optimizedSearch, referenceSearch } from './search';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
+import { optimizedSearch, referenceSearch } from "./search";
 
-describe('Optimized search matches reference', () => {
-  it('optimizedSearch(q, items) === referenceSearch(q, items)', () => {
+describe("Optimized search matches reference", () => {
+  it("optimizedSearch(q, items) === referenceSearch(q, items)", () => {
     fc.assert(
       fc.property(
         fc.string(),
@@ -311,14 +309,12 @@ describe('Optimized search matches reference', () => {
             id: fc.uuid(),
             title: fc.string(),
             content: fc.string(),
-          })
+          }),
         ),
         (query, items) => {
-          expect(optimizedSearch(query, items)).toEqual(
-            referenceSearch(query, items)
-          );
-        }
-      )
+          expect(optimizedSearch(query, items)).toEqual(referenceSearch(query, items));
+        },
+      ),
     );
   });
 });
@@ -338,7 +334,7 @@ fc.assert(
     seed: 42, // Reproducible randomness
     endOnFailure: false, // Continue after first failure
     verbose: true, // Show counterexamples
-  }
+  },
 );
 ```
 
@@ -366,33 +362,33 @@ fc.assert(
 Always add explicit examples alongside property tests:
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
 
-describe('Process function', () => {
+describe("Process function", () => {
   // Property-based test
-  it('handles all valid inputs', () => {
+  it("handles all valid inputs", () => {
     fc.assert(
       fc.property(fc.array(fc.integer()), (arr) => {
         expect(process(arr)).toBeDefined();
-      })
+      }),
     );
   });
 
   // Explicit edge cases
-  it('handles empty array', () => {
+  it("handles empty array", () => {
     expect(process([])).toEqual([]);
   });
 
-  it('handles single element', () => {
+  it("handles single element", () => {
     expect(process([1])).toEqual([1]);
   });
 
-  it('handles duplicates', () => {
+  it("handles duplicates", () => {
     expect(process([1, 1, 1])).toEqual([1]);
   });
 
-  it('handles negative numbers', () => {
+  it("handles negative numbers", () => {
     expect(process([-1, -2, -3])).toBeDefined();
   });
 });
@@ -406,11 +402,11 @@ Tests that are always true regardless of implementation:
 
 ```typescript
 // BAD - compares function to itself
-it('tautology', () => {
+it("tautology", () => {
   fc.assert(
     fc.property(fc.array(fc.integer()), (arr) => {
       expect(sort(arr)).toEqual(sort(arr)); // Always true!
-    })
+    }),
   );
 });
 ```
@@ -421,22 +417,22 @@ Testing only that function doesn't crash:
 
 ```typescript
 // WEAK - only tests no exception
-it('weak property', () => {
+it("weak property", () => {
   fc.assert(
     fc.property(fc.string(), (s) => {
       process(s); // No assertion!
-    })
+    }),
   );
 });
 
 // BETTER - test actual behavior
-it('stronger property', () => {
+it("stronger property", () => {
   fc.assert(
     fc.property(fc.string(), (s) => {
       const result = process(s);
-      expect(typeof result).toBe('string');
+      expect(typeof result).toBe("string");
       expect(result.length).toBeGreaterThanOrEqual(0);
-    })
+    }),
   );
 });
 ```
@@ -445,21 +441,21 @@ it('stronger property', () => {
 
 ```typescript
 // BAD - just reimplements the logic
-it('reimplementation', () => {
+it("reimplementation", () => {
   fc.assert(
     fc.property(fc.integer(), fc.integer(), (a, b) => {
       expect(add(a, b)).toBe(a + b); // If add is `a + b`, tests nothing
-    })
+    }),
   );
 });
 
 // BETTER - test algebraic properties
-it('algebraic properties', () => {
+it("algebraic properties", () => {
   fc.assert(
     fc.property(fc.integer(), fc.integer(), (a, b) => {
       expect(add(a, 0)).toBe(a); // Identity
       expect(add(a, b)).toBe(add(b, a)); // Commutativity
-    })
+    }),
   );
 });
 ```
@@ -468,24 +464,24 @@ it('algebraic properties', () => {
 
 ```typescript
 // BAD - high rejection rate
-it('over-filtered', () => {
+it("over-filtered", () => {
   fc.assert(
     fc.property(fc.integer(), (x) => {
       fc.pre(x > 0 && x < 100 && x % 2 === 0); // Rejects most inputs
       expect(process(x)).toBeGreaterThan(0);
-    })
+    }),
   );
 });
 
 // GOOD - constraints in arbitrary
-it('constrained properly', () => {
+it("constrained properly", () => {
   fc.assert(
     fc.property(
       fc.integer({ min: 1, max: 99 }).filter((x) => x % 2 === 0),
       (x) => {
         expect(process(x)).toBeGreaterThan(0);
-      }
-    )
+      },
+    ),
   );
 });
 ```
@@ -528,38 +524,36 @@ function transform(input: Input): Output;
 Property-based tests complement example-based tests:
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
 
-describe('Password validation', () => {
+describe("Password validation", () => {
   // Example-based tests for specific cases
-  it('rejects passwords shorter than 8 characters', () => {
-    expect(isValidPassword('abc')).toBe(false);
+  it("rejects passwords shorter than 8 characters", () => {
+    expect(isValidPassword("abc")).toBe(false);
   });
 
-  it('rejects passwords without numbers', () => {
-    expect(isValidPassword('abcdefgh')).toBe(false);
+  it("rejects passwords without numbers", () => {
+    expect(isValidPassword("abcdefgh")).toBe(false);
   });
 
-  it('accepts valid passwords', () => {
-    expect(isValidPassword('abcd1234')).toBe(true);
+  it("accepts valid passwords", () => {
+    expect(isValidPassword("abcd1234")).toBe(true);
   });
 
   // Property-based test for broad coverage
-  it('all valid passwords meet minimum requirements', () => {
+  it("all valid passwords meet minimum requirements", () => {
     fc.assert(
       fc.property(
-        fc
-          .string({ minLength: 8, maxLength: 100 })
-          .filter((s) => /\d/.test(s) && /[a-z]/.test(s)),
+        fc.string({ minLength: 8, maxLength: 100 }).filter((s) => /\d/.test(s) && /[a-z]/.test(s)),
         (password) => {
           if (isValidPassword(password)) {
             expect(password.length).toBeGreaterThanOrEqual(8);
             expect(password).toMatch(/\d/);
             expect(password).toMatch(/[a-z]/);
           }
-        }
-      )
+        },
+      ),
     );
   });
 });
@@ -610,11 +604,11 @@ When fast-check finds a counterexample:
 ## Complete Example
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import fc from 'fast-check';
-import { ConfigParser } from './config-parser';
+import { describe, it, expect } from "vitest";
+import fc from "fast-check";
+import { ConfigParser } from "./config-parser";
 
-describe('ConfigParser properties', () => {
+describe("ConfigParser properties", () => {
   const configArbitrary = fc.record({
     apiUrl: fc.webUrl(),
     timeout: fc.integer({ min: 0, max: 30000 }),
@@ -622,40 +616,40 @@ describe('ConfigParser properties', () => {
     enabled: fc.boolean(),
   });
 
-  it('roundtrip: parse(serialize(config)) === config', () => {
+  it("roundtrip: parse(serialize(config)) === config", () => {
     fc.assert(
       fc.property(configArbitrary, (config) => {
         const serialized = ConfigParser.serialize(config);
         const parsed = ConfigParser.parse(serialized);
         expect(parsed).toEqual(config);
       }),
-      { numRuns: 200 }
+      { numRuns: 200 },
     );
   });
 
-  it('serialization is deterministic', () => {
+  it("serialization is deterministic", () => {
     fc.assert(
       fc.property(configArbitrary, (config) => {
         const first = ConfigParser.serialize(config);
         const second = ConfigParser.serialize(config);
         expect(first).toBe(second);
-      })
+      }),
     );
   });
 
-  it('serialized format is always valid JSON', () => {
+  it("serialized format is always valid JSON", () => {
     fc.assert(
       fc.property(configArbitrary, (config) => {
         const serialized = ConfigParser.serialize(config);
         expect(() => JSON.parse(serialized)).not.toThrow();
-      })
+      }),
     );
   });
 
   // Edge cases as example-based tests
-  it('handles empty timeout (0)', () => {
+  it("handles empty timeout (0)", () => {
     const config = {
-      apiUrl: 'http://api.com',
+      apiUrl: "http://api.com",
       timeout: 0,
       retries: 3,
       enabled: true,
@@ -663,9 +657,9 @@ describe('ConfigParser properties', () => {
     expect(ConfigParser.parse(ConfigParser.serialize(config))).toEqual(config);
   });
 
-  it('handles maximum retries', () => {
+  it("handles maximum retries", () => {
     const config = {
-      apiUrl: 'http://api.com',
+      apiUrl: "http://api.com",
       timeout: 1000,
       retries: 10,
       enabled: false,

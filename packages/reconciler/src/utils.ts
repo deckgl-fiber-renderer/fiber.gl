@@ -1,7 +1,7 @@
-import { View } from '@deck.gl/core';
-import type { Layer } from '@deck.gl/core';
+import { View } from "@deck.gl/core";
+import type { Layer } from "@deck.gl/core";
 
-import type { Instance } from './types';
+import type { Instance } from "./types";
 
 /**
  * Type guard to check if a node is a View instance.
@@ -24,7 +24,7 @@ import type { Instance } from './types';
  * }
  * ```
  */
-export function isView(instance: Instance['node']): instance is View {
+export function isView(instance: Instance["node"]): instance is View {
   return instance instanceof View;
 }
 
@@ -52,11 +52,11 @@ export function isView(instance: Instance['node']): instance is View {
  * // [layer1, layer2] - depth-first order
  * ```
  */
-export function flattenTree(arr: Instance[]): Instance['node'][] {
+export function flattenTree(arr: Instance[]): Instance["node"][] {
   // PERF: avoid-allocations.md - accumulator pattern instead of recursive spread
   // Issue: Recursive spread creates O(N*D) allocations for N nodes at depth D
   // Gain: 5-20x speedup for trees with 100+ nodes
-  const result: Instance['node'][] = [];
+  const result: Instance["node"][] = [];
 
   function flatten(instances: Instance[]): void {
     for (const val of instances) {
@@ -88,7 +88,7 @@ export function flattenTree(arr: Instance[]): Instance['node'][] {
  * // layers: [layer1, layer2]
  * ```
  */
-export function organizeList(list: Instance['node'][]) {
+export function organizeList(list: Instance["node"][]) {
   return list.reduce<{ views: View[]; layers: Layer[] }>(
     (acc, curr) => {
       if (isView(curr)) {
@@ -98,6 +98,6 @@ export function organizeList(list: Instance['node'][]) {
       }
       return acc;
     },
-    { layers: [], views: [] }
+    { layers: [], views: [] },
   );
 }

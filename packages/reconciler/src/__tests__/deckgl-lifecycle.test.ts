@@ -1,38 +1,30 @@
-import { MapView } from '@deck.gl/core';
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { describe, expect, it } from 'vitest';
+import { MapView } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { describe, expect, it } from "vitest";
 
-import { fixtures, createTestLayer } from '../__fixtures__/layers';
-import {
-  createMockInstance,
-  createMockHostContext,
-} from '../__fixtures__/mock-deck-instance';
-import { createInstance, getChildHostContext } from '../config';
-import { flattenTree, organizeList } from '../utils';
+import { fixtures, createTestLayer } from "../__fixtures__/layers";
+import { createMockInstance, createMockHostContext } from "../__fixtures__/mock-deck-instance";
+import { createInstance, getChildHostContext } from "../config";
+import { flattenTree, organizeList } from "../utils";
 
-describe('Deck.gl Lifecycle Tests', () => {
-  describe('Layer ID preservation', () => {
-    it('preserves layer ID on creation', () => {
+describe("Deck.gl Lifecycle Tests", () => {
+  describe("Layer ID preservation", () => {
+    it("preserves layer ID on creation", () => {
       // Arrange
-      const layerId = 'stable-id';
+      const layerId = "stable-id";
       const layer = fixtures.scatterplotLayer({ id: layerId });
       const hostContext = createMockHostContext();
 
       // Act
-      const instance = createInstance(
-        'layer',
-        { layer },
-        hostContext.store,
-        hostContext
-      );
+      const instance = createInstance("layer", { layer }, hostContext.store, hostContext);
 
       // Assert
       expect(instance.node.id).toBe(layerId);
     });
 
-    it('preserves layer ID through updates', () => {
+    it("preserves layer ID through updates", () => {
       // Arrange
-      const layerId = 'persistent-id';
+      const layerId = "persistent-id";
       const originalLayer = fixtures.scatterplotLayer({
         id: layerId,
         radiusScale: 1,
@@ -52,44 +44,36 @@ describe('Deck.gl Lifecycle Tests', () => {
     });
   });
 
-  describe('View context', () => {
-    it('sets child host context when entering View', () => {
+  describe("View context", () => {
+    it("sets child host context when entering View", () => {
       // Arrange
-      const view = fixtures.mapView({ id: 'map-view' });
+      const view = fixtures.mapView({ id: "map-view" });
       const hostContext = createMockHostContext({ insideView: false });
 
       // Act
-      const childContext = getChildHostContext(
-        hostContext,
-        'view',
-        hostContext.store
-      );
+      const childContext = getChildHostContext(hostContext, "view", hostContext.store);
 
       // Assert
-      expect(childContext.insideView).toBe(true);
+      expect(childContext.insideView).toBeTruthy();
     });
 
-    it('inherits parent View context for layers', () => {
+    it("inherits parent View context for layers", () => {
       // Arrange
       const parentContext = createMockHostContext({ insideView: true });
 
       // Act
-      const childContext = getChildHostContext(
-        parentContext,
-        'layer',
-        parentContext.store
-      );
+      const childContext = getChildHostContext(parentContext, "layer", parentContext.store);
 
       // Assert
-      expect(childContext.insideView).toBe(true);
+      expect(childContext.insideView).toBeTruthy();
     });
   });
 
-  describe('List organization', () => {
-    it('organizes mixed list correctly (views/layers)', () => {
+  describe("List organization", () => {
+    it("organizes mixed list correctly (views/layers)", () => {
       // Arrange
-      const view = new MapView({ id: 'view-1' });
-      const layer = new ScatterplotLayer({ data: [], id: 'layer-1' });
+      const view = new MapView({ id: "view-1" });
+      const layer = new ScatterplotLayer({ data: [], id: "layer-1" });
       const mixedList = [view, layer];
 
       // Act
@@ -102,10 +86,10 @@ describe('Deck.gl Lifecycle Tests', () => {
       expect(organized.layers[0]).toBe(layer);
     });
 
-    it('has no views in all-layers list', () => {
+    it("has no views in all-layers list", () => {
       // Arrange
-      const layer1 = new ScatterplotLayer({ data: [], id: 'layer-1' });
-      const layer2 = new ScatterplotLayer({ data: [], id: 'layer-2' });
+      const layer1 = new ScatterplotLayer({ data: [], id: "layer-1" });
+      const layer2 = new ScatterplotLayer({ data: [], id: "layer-2" });
       const layersList = [layer1, layer2];
 
       // Act
@@ -117,12 +101,12 @@ describe('Deck.gl Lifecycle Tests', () => {
     });
   });
 
-  describe('Tree flattening', () => {
-    it('flattens three-level hierarchy', () => {
+  describe("Tree flattening", () => {
+    it("flattens three-level hierarchy", () => {
       // Arrange
-      const layer1 = createTestLayer('scatterplot', { id: 'level-1' });
-      const layer2 = createTestLayer('scatterplot', { id: 'level-2' });
-      const layer3 = createTestLayer('scatterplot', { id: 'level-3' });
+      const layer1 = createTestLayer("scatterplot", { id: "level-1" });
+      const layer2 = createTestLayer("scatterplot", { id: "level-2" });
+      const layer3 = createTestLayer("scatterplot", { id: "level-3" });
 
       const level3Instance = createMockInstance(layer3, []);
       const level2Instance = createMockInstance(layer2, [level3Instance]);
@@ -133,14 +117,14 @@ describe('Deck.gl Lifecycle Tests', () => {
 
       // Assert
       expect(flattened).toHaveLength(3);
-      expect(flattened[0].id).toBe('level-1');
-      expect(flattened[1].id).toBe('level-2');
-      expect(flattened[2].id).toBe('level-3');
+      expect(flattened[0].id).toBe("level-1");
+      expect(flattened[1].id).toBe("level-2");
+      expect(flattened[2].id).toBe("level-3");
     });
 
-    it('handles empty children when flattening', () => {
+    it("handles empty children when flattening", () => {
       // Arrange
-      const layer = createTestLayer('scatterplot', { id: 'solo' });
+      const layer = createTestLayer("scatterplot", { id: "solo" });
       const instance = createMockInstance(layer, []);
 
       // Act
@@ -148,7 +132,7 @@ describe('Deck.gl Lifecycle Tests', () => {
 
       // Assert
       expect(flattened).toHaveLength(1);
-      expect(flattened[0].id).toBe('solo');
+      expect(flattened[0].id).toBe("solo");
     });
   });
 });

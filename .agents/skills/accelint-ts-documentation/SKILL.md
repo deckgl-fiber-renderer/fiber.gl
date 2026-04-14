@@ -4,7 +4,7 @@ description: Audit and improve JavaScript/TypeScript documentation including JSD
 license: Apache-2.0
 metadata:
   author: accelint
-  version: '1.1.0'
+  version: "1.1.0"
 ---
 
 # Code Documentation Skill
@@ -329,7 +329,7 @@ Why this is wrong: "TODO: fix this" creates diffusion of responsibility. After m
  */
 export async function fetchUserProfile(
   userId: string,
-  options?: { includeMetadata?: boolean; timeout?: number }
+  options?: { includeMetadata?: boolean; timeout?: number },
 ): Promise<UserProfile> {
   // implementation
 }

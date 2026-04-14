@@ -2,17 +2,17 @@ import {
   ContinuousEventPriority,
   DefaultEventPriority,
   DiscreteEventPriority,
-} from 'react-reconciler/constants';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+} from "react-reconciler/constants";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import {
   getCurrentEventPriority,
   getCurrentUpdatePriority,
   resolveUpdatePriority,
   setCurrentUpdatePriority,
-} from '../config';
+} from "../config";
 
-describe('event priority', () => {
+describe("event priority", () => {
   // Store original window.event
   let originalEvent: Event | undefined;
 
@@ -26,86 +26,86 @@ describe('event priority', () => {
     window.event = originalEvent;
   });
 
-  describe('getCurrentEventPriority', () => {
-    it('should return DiscreteEventPriority for click events', () => {
+  describe(getCurrentEventPriority, () => {
+    it("should return DiscreteEventPriority for click events", () => {
       // Simulate a click event
-      const clickEvent = new MouseEvent('click');
+      const clickEvent = new MouseEvent("click");
       // @ts-expect-error - window.event is writable for testing
       window.event = clickEvent;
 
       expect(getCurrentEventPriority()).toBe(DiscreteEventPriority);
     });
 
-    it('should return DiscreteEventPriority for keyboard events', () => {
+    it("should return DiscreteEventPriority for keyboard events", () => {
       // Test keydown
-      const keydownEvent = new KeyboardEvent('keydown');
+      const keydownEvent = new KeyboardEvent("keydown");
       // @ts-expect-error - window.event is writable for testing
       window.event = keydownEvent;
       expect(getCurrentEventPriority()).toBe(DiscreteEventPriority);
 
       // Test keyup
-      const keyupEvent = new KeyboardEvent('keyup');
+      const keyupEvent = new KeyboardEvent("keyup");
       // @ts-expect-error - window.event is writable for testing
       window.event = keyupEvent;
       expect(getCurrentEventPriority()).toBe(DiscreteEventPriority);
     });
 
-    it('should return DiscreteEventPriority for focus events', () => {
+    it("should return DiscreteEventPriority for focus events", () => {
       // Test focusin
-      const focusinEvent = new FocusEvent('focusin');
+      const focusinEvent = new FocusEvent("focusin");
       // @ts-expect-error - window.event is writable for testing
       window.event = focusinEvent;
       expect(getCurrentEventPriority()).toBe(DiscreteEventPriority);
 
       // Test focusout
-      const focusoutEvent = new FocusEvent('focusout');
+      const focusoutEvent = new FocusEvent("focusout");
       // @ts-expect-error - window.event is writable for testing
       window.event = focusoutEvent;
       expect(getCurrentEventPriority()).toBe(DiscreteEventPriority);
     });
 
-    it('should return ContinuousEventPriority for pointermove events', () => {
-      const pointermoveEvent = new PointerEvent('pointermove');
+    it("should return ContinuousEventPriority for pointermove events", () => {
+      const pointermoveEvent = new PointerEvent("pointermove");
       // @ts-expect-error - window.event is writable for testing
       window.event = pointermoveEvent;
 
       expect(getCurrentEventPriority()).toBe(ContinuousEventPriority);
     });
 
-    it('should return ContinuousEventPriority for scroll events', () => {
-      const scrollEvent = new Event('scroll');
+    it("should return ContinuousEventPriority for scroll events", () => {
+      const scrollEvent = new Event("scroll");
       // @ts-expect-error - window.event is writable for testing
       window.event = scrollEvent;
 
       expect(getCurrentEventPriority()).toBe(ContinuousEventPriority);
     });
 
-    it('should return ContinuousEventPriority for drag events', () => {
+    it("should return ContinuousEventPriority for drag events", () => {
       // Use generic Event for jsdom compatibility
-      const dragEvent = new Event('drag');
+      const dragEvent = new Event("drag");
       // @ts-expect-error - window.event is writable for testing
       window.event = dragEvent;
 
       expect(getCurrentEventPriority()).toBe(ContinuousEventPriority);
     });
 
-    it('should return ContinuousEventPriority for wheel events', () => {
-      const wheelEvent = new WheelEvent('wheel');
+    it("should return ContinuousEventPriority for wheel events", () => {
+      const wheelEvent = new WheelEvent("wheel");
       // @ts-expect-error - window.event is writable for testing
       window.event = wheelEvent;
 
       expect(getCurrentEventPriority()).toBe(ContinuousEventPriority);
     });
 
-    it('should return DefaultEventPriority for unknown events', () => {
-      const customEvent = new Event('customevent');
+    it("should return DefaultEventPriority for unknown events", () => {
+      const customEvent = new Event("customevent");
       // @ts-expect-error - window.event is writable for testing
       window.event = customEvent;
 
       expect(getCurrentEventPriority()).toBe(DefaultEventPriority);
     });
 
-    it('should return DefaultEventPriority when no event is active', () => {
+    it("should return DefaultEventPriority when no event is active", () => {
       // @ts-expect-error - window.event is writable for testing
       window.event = undefined;
 
@@ -113,9 +113,9 @@ describe('event priority', () => {
     });
   });
 
-  describe('update priority management', () => {
-    describe('setCurrentUpdatePriority / getCurrentUpdatePriority', () => {
-      it('should set and retrieve update priority', () => {
+  describe("update priority management", () => {
+    describe("setCurrentUpdatePriority / getCurrentUpdatePriority", () => {
+      it("should set and retrieve update priority", () => {
         setCurrentUpdatePriority(DiscreteEventPriority);
         expect(getCurrentUpdatePriority()).toBe(DiscreteEventPriority);
 
@@ -124,8 +124,8 @@ describe('event priority', () => {
       });
     });
 
-    describe('resolveUpdatePriority', () => {
-      it('should return currentUpdatePriority when set to non-default value', () => {
+    describe(resolveUpdatePriority, () => {
+      it("should return currentUpdatePriority when set to non-default value", () => {
         // Set update priority to DiscreteEventPriority
         setCurrentUpdatePriority(DiscreteEventPriority);
 
@@ -133,7 +133,7 @@ describe('event priority', () => {
         expect(resolveUpdatePriority()).toBe(DiscreteEventPriority);
       });
 
-      it('should return DefaultEventPriority when update priority is default', () => {
+      it("should return DefaultEventPriority when update priority is default", () => {
         // Reset update priority to default
         setCurrentUpdatePriority(DefaultEventPriority);
 

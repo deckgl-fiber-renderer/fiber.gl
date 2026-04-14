@@ -9,10 +9,10 @@ If your application uses React >= 19.2, prefer `useEffectEvent` over `useLatest`
 **✅ Recommended for React 19.2+:**
 
 ```tsx
-import { useEffectEvent } from 'react';
+import { useEffectEvent } from "react";
 
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const onSearchStable = useEffectEvent(onSearch);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ function useLatest<T>(value: T) {
 
 ```tsx
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     const timeout = setTimeout(() => onSearch(query), 300);
@@ -61,7 +61,7 @@ function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
 
 ```tsx
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const onSearchRef = useLatest(onSearch);
 
   useEffect(() => {

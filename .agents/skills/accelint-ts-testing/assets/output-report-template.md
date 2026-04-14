@@ -262,14 +262,14 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 
 ```ts
 // ✅ Property-based test with fast-check
-import fc from 'fast-check';
+import fc from "fast-check";
 
-it('[property description]', () => {
+it("[property description]", () => {
   fc.assert(
     fc.property([arbitrary], (input) => {
       // Property verification
       expect([assertion]).toBe([expected]);
-    })
+    }),
   );
 });
 ```

@@ -1,7 +1,7 @@
-import type { Deck, LayersList } from '@deck.gl/core';
-import type { MapboxOverlay } from '@deck.gl/mapbox';
-import { create } from 'zustand';
-import type { StoreApi } from 'zustand';
+import type { Deck, LayersList } from "@deck.gl/core";
+import type { MapboxOverlay } from "@deck.gl/mapbox";
+import { create } from "zustand";
+import type { StoreApi } from "zustand";
 
 /**
  * Global state shape for deckgl-fiber internal state management
@@ -90,6 +90,5 @@ export const useStore = create<State>()((set) => ({
  */
 export const selectors = {
   deckgl: (s: State): Deck | MapboxOverlay | null => s.deckgl,
-  setDeckgl: (s: State): ((instance: Deck | MapboxOverlay) => void) =>
-    s.setDeckgl,
+  setDeckgl: (s: State): ((instance: Deck | MapboxOverlay) => void) => s.setDeckgl,
 } satisfies Record<string, (state: State) => State[keyof State]>;

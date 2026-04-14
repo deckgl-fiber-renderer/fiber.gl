@@ -17,8 +17,8 @@ result.nonExistentProperty; // No error! Bug lurking.
 
 ```ts
 function parseUser(input: unknown): User {
-  if (typeof input !== 'string') {
-    throw new Error('Input must be string');
+  if (typeof input !== "string") {
+    throw new Error("Input must be string");
   }
   const parsed = JSON.parse(input);
   // Validate parsed matches User schema here
@@ -63,7 +63,7 @@ function first<T>(arr: T[]): T | undefined {
 const nums = [1, 2, 3];
 const num = first(nums); // num is inferred as number | undefined
 
-const strs = ['a', 'b'];
+const strs = ["a", "b"];
 const str = first(strs); // str is inferred as string | undefined
 ```
 

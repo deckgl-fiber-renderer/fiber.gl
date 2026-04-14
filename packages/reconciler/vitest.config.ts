@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
@@ -9,19 +9,14 @@ export default defineConfig({
     watch: false,
 
     // Test environment
-    environment: 'jsdom',
+    environment: "jsdom",
 
     // Coverage thresholds (80%+ for reconciler)
     coverage: {
       enabled: true,
-      exclude: [
-        '**/__tests__/**',
-        '**/__fixtures__/**',
-        '**/dist/**',
-        '**/node_modules/**',
-      ],
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      exclude: ["**/__tests__/**", "**/__fixtures__/**", "**/dist/**", "**/node_modules/**"],
+      provider: "v8",
+      reporter: ["text", "json", "html"],
       thresholds: {
         branches: 80,
         functions: 80,
@@ -31,6 +26,6 @@ export default defineConfig({
     },
 
     // Setup file
-    setupFiles: ['./src/__tests__/setup.ts'],
+    setupFiles: ["./src/__tests__/setup.ts"],
   },
 });

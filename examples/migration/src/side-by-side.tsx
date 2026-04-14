@@ -9,9 +9,9 @@
  * ⚠️ In v3, only the new <layer> syntax will be supported.
  */
 
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { Deckgl } from '@deckgl-fiber-renderer/dom';
-import '@deckgl-fiber-renderer/reconciler/side-effects';
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { Deckgl } from "@deckgl-fiber-renderer/dom";
+import "@deckgl-fiber-renderer/reconciler/side-effects";
 
 const INITIAL_VIEW_STATE = {
   latitude: 37.7749,
@@ -38,7 +38,7 @@ const NEW_STYLE_DATA: DataPoint[] = [
 
 export function SideBySideExample() {
   return (
-    <div style={{ height: '100vh', width: '100vw' }}>
+    <div style={{ height: "100vh", width: "100vw" }}>
       <Deckgl controller initialViewState={INITIAL_VIEW_STATE}>
         {/* Old syntax (deprecated) - still works in v2 */}
         <scatterplotLayer
@@ -59,7 +59,7 @@ export function SideBySideExample() {
               getFillColor: (d) => d.color,
               getPosition: (d) => d.position,
               getRadius: (d) => d.size,
-              id: 'new-scatter',
+              id: "new-scatter",
               radiusMaxPixels: 30,
               radiusMinPixels: 3,
             })

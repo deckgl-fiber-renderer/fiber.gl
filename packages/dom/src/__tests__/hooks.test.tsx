@@ -1,10 +1,10 @@
-import { renderHook } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { renderHook } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
-import { useDeckgl } from '../hooks';
+import { useDeckgl } from "../hooks";
 
 // Mock the shared module
-vi.mock('@deckgl-fiber-renderer/shared', () => {
+vi.mock(import('@deckgl-fiber-renderer/shared'), () => {
   const mockUseStore = vi.fn();
   const mockSelectors = {
     deckgl: vi.fn((state) => state.deckgl),
@@ -21,12 +21,11 @@ vi.mock('@deckgl-fiber-renderer/shared', () => {
 });
 
 // Get the mocks after they've been set up
-const { mockUseStore, mockSelectors } =
-  (await import('@deckgl-fiber-renderer/shared')) as never;
+const { mockUseStore, mockSelectors } = (await import("@deckgl-fiber-renderer/shared")) as never;
 
-describe('Dom Hooks Tests', () => {
-  describe('useDeckgl', () => {
-    it('should useDeckgl returns deckgl instance from store', () => {
+describe("Dom Hooks Tests", () => {
+  describe(useDeckgl, () => {
+    it("should useDeckgl returns deckgl instance from store", () => {
       // Arrange
       const mockDeckgl = {
         finalize: vi.fn(),
@@ -42,10 +41,10 @@ describe('Dom Hooks Tests', () => {
       expect(mockUseStore).toHaveBeenCalledWith(mockSelectors.deckgl);
     });
 
-    it('should useDeckgl updates when store changes', () => {
+    it("should useDeckgl updates when store changes", () => {
       // Arrange
-      const mockDeckgl1 = { finalize: vi.fn(), id: 'deck1', setProps: vi.fn() };
-      const mockDeckgl2 = { finalize: vi.fn(), id: 'deck2', setProps: vi.fn() };
+      const mockDeckgl1 = { finalize: vi.fn(), id: "deck1", setProps: vi.fn() };
+      const mockDeckgl2 = { finalize: vi.fn(), id: "deck2", setProps: vi.fn() };
 
       mockUseStore.mockReturnValue(mockDeckgl1);
       const { result, rerender } = renderHook(() => useDeckgl());

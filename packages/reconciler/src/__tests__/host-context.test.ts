@@ -1,42 +1,42 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it } from "vitest";
 
-import { createMockContainer } from '../__fixtures__/mock-deck-instance';
-import { getChildHostContext, getRootHostContext } from '../config';
-import type { HostContext } from '../types';
+import { createMockContainer } from "../__fixtures__/mock-deck-instance";
+import { getChildHostContext, getRootHostContext } from "../config";
+import type { HostContext } from "../types";
 
-describe('host context', () => {
-  describe('getChildHostContext', () => {
+describe("host context", () => {
+  describe(getChildHostContext, () => {
     const mockContainer = createMockContainer();
     const rootContext: HostContext = getRootHostContext(mockContainer);
 
-    it('sets insideView flag to true when entering View', () => {
-      const childContext = getChildHostContext(rootContext, 'mapView');
+    it("sets insideView flag to true when entering View", () => {
+      const childContext = getChildHostContext(rootContext, "mapView");
 
-      expect(childContext.insideView).toBe(true);
+      expect(childContext.insideView).toBeTruthy();
     });
 
-    it('propagates insideView flag to nested children', () => {
-      const viewContext = getChildHostContext(rootContext, 'orbitView');
-      const nestedContext = getChildHostContext(viewContext, 'layer');
+    it("propagates insideView flag to nested children", () => {
+      const viewContext = getChildHostContext(rootContext, "orbitView");
+      const nestedContext = getChildHostContext(viewContext, "layer");
 
-      expect(viewContext.insideView).toBe(true);
-      expect(nestedContext.insideView).toBe(true);
+      expect(viewContext.insideView).toBeTruthy();
+      expect(nestedContext.insideView).toBeTruthy();
     });
 
-    it('remains false for non-View elements', () => {
-      const childContext = getChildHostContext(rootContext, 'layer');
+    it("remains false for non-View elements", () => {
+      const childContext = getChildHostContext(rootContext, "layer");
 
       expect(childContext.insideView).toBeUndefined();
     });
 
-    it('detects various View type names', () => {
-      const mapViewContext = getChildHostContext(rootContext, 'mapView');
-      const orbitViewContext = getChildHostContext(rootContext, 'OrbitView');
-      const globeViewContext = getChildHostContext(rootContext, 'globeview');
+    it("detects various View type names", () => {
+      const mapViewContext = getChildHostContext(rootContext, "mapView");
+      const orbitViewContext = getChildHostContext(rootContext, "OrbitView");
+      const globeViewContext = getChildHostContext(rootContext, "globeview");
 
-      expect(mapViewContext.insideView).toBe(true);
-      expect(orbitViewContext.insideView).toBe(true);
-      expect(globeViewContext.insideView).toBe(true);
+      expect(mapViewContext.insideView).toBeTruthy();
+      expect(orbitViewContext.insideView).toBeTruthy();
+      expect(globeViewContext.insideView).toBeTruthy();
     });
   });
 });

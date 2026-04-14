@@ -84,12 +84,12 @@ export interface DeckglElements {
 // packages/reconciler/src/config.ts
 function createDeckglObject(type: Type, props: Props): Instance {
   // New view element
-  if (type === 'view') {
+  if (type === "view") {
     if (!props.view) {
       throw new Error("<view> element requires a 'view' prop");
     }
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       validateViewId(props.view);
     }
 
@@ -100,19 +100,17 @@ function createDeckglObject(type: Type, props: Props): Instance {
   }
 
   // Updated layer element (Layer only)
-  if (type === 'layer') {
+  if (type === "layer") {
     if (!props.layer) {
       throw new Error("<layer> element requires a 'layer' prop");
     }
 
-    if (process.env.NODE_ENV === 'development') {
+    if (process.env.NODE_ENV === "development") {
       validateLayerId(props.layer);
 
       // Optional: warn if View passed (should be caught by TS)
       if (isView(props.layer)) {
-        console.error(
-          'View instance passed to <layer> element. Use <view view={...} /> instead.'
-        );
+        console.error("View instance passed to <layer> element. Use <view view={...} /> instead.");
       }
     }
 
@@ -187,9 +185,9 @@ Runtime warnings updated similarly:
 
 ```typescript
 // In createDeckglObject for legacy view elements
-if (process.env.NODE_ENV === 'development' && isViewType(type)) {
+if (process.env.NODE_ENV === "development" && isViewType(type)) {
   console.warn(
-    `Using deprecated <${type}> element. Migrate to <view view={new ${toPascal(type)}({...})} />`
+    `Using deprecated <${type}> element. Migrate to <view view={new ${toPascal(type)}({...})} />`,
   );
 }
 ```
@@ -209,10 +207,10 @@ if (process.env.NODE_ENV === 'development' && isViewType(type)) {
 
 ```typescript
 function validateViewId(view: View): void {
-  if (!view.id || view.id === 'unknown') {
+  if (!view.id || view.id === "unknown") {
     console.warn(
       'View missing explicit "id" prop. deck.gl requires stable IDs for efficient diffing.',
-      view
+      view,
     );
   }
 }

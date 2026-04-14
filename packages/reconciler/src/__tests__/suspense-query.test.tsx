@@ -1,9 +1,9 @@
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { createElement, Fragment, Suspense, use } from 'react';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { createElement, Fragment, Suspense, use } from "react";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-import { createMockDeckInstance } from '../__fixtures__/mock-deck-instance';
-import { createRoot, unmountAtNode } from '../renderer';
+import { createMockDeckInstance } from "../__fixtures__/mock-deck-instance";
+import { createRoot, unmountAtNode } from "../renderer";
 
 /**
  * Reproduction test for GitHub issue #15
@@ -31,12 +31,12 @@ function Test1ClientComponent() {
     { position: [1, 1], radius: 200 },
   ];
 
-  return createElement('layer', {
+  return createElement("layer", {
     layer: new ScatterplotLayer({
       data,
       getPosition: (d: any) => d.position,
       getRadius: (d: any) => d.radius,
-      id: 'async-data-layer',
+      id: "async-data-layer",
     }),
   });
 }
@@ -49,23 +49,19 @@ function Test1LoadingComponent({ children }: { children: React.ReactNode }) {
   return createElement(
     Suspense,
     {
-      fallback: createElement('layer', {
+      fallback: createElement("layer", {
         layer: new ScatterplotLayer({
           data: [],
-          id: 'loading-fallback',
+          id: "loading-fallback",
         }),
       }),
     },
-    children
+    children,
   );
 }
 
 function Test1Component() {
-  return createElement(
-    Test1LoadingComponent,
-    {},
-    createElement(Test1ServerComponent)
-  );
+  return createElement(Test1LoadingComponent, {}, createElement(Test1ServerComponent));
 }
 
 // Test 2: React 19 use() hook pattern
@@ -75,18 +71,18 @@ function Test2ClientComponentWithUse() {
   let data: any[];
   try {
     if (!test2DataPromise) {
-      throw new Error('Test setup incomplete');
+      throw new Error("Test setup incomplete");
     }
     data = use(test2DataPromise);
   } catch (error) {
     throw error;
   }
 
-  return createElement('layer', {
+  return createElement("layer", {
     layer: new ScatterplotLayer({
       data,
       getPosition: (d: any) => d.position,
-      id: 'use-hook-layer',
+      id: "use-hook-layer",
     }),
   });
 }
@@ -95,11 +91,11 @@ function Test2AppWithSuspense() {
   return createElement(
     Suspense,
     {
-      fallback: createElement('layer', {
-        layer: new ScatterplotLayer({ data: [], id: 'fallback' }),
+      fallback: createElement("layer", {
+        layer: new ScatterplotLayer({ data: [], id: "fallback" }),
       }),
     },
-    createElement(Test2ClientComponentWithUse)
+    createElement(Test2ClientComponentWithUse),
   );
 }
 
@@ -116,8 +112,8 @@ function Test3AsyncLayer1() {
       throw test3Promise1;
     }
   }
-  return createElement('layer', {
-    layer: new ScatterplotLayer({ data: [], id: 'layer-1' }),
+  return createElement("layer", {
+    layer: new ScatterplotLayer({ data: [], id: "layer-1" }),
   });
 }
 
@@ -128,8 +124,8 @@ function Test3AsyncLayer2() {
       throw test3Promise2;
     }
   }
-  return createElement('layer', {
-    layer: new ScatterplotLayer({ data: [], id: 'layer-2' }),
+  return createElement("layer", {
+    layer: new ScatterplotLayer({ data: [], id: "layer-2" }),
   });
 }
 
@@ -143,26 +139,26 @@ function Test3NestedSuspense() {
       createElement(
         Suspense,
         {
-          fallback: createElement('layer', {
-            layer: new ScatterplotLayer({ data: [], id: 'fallback-1' }),
+          fallback: createElement("layer", {
+            layer: new ScatterplotLayer({ data: [], id: "fallback-1" }),
           }),
         },
-        createElement(Test3AsyncLayer1)
+        createElement(Test3AsyncLayer1),
       ),
       createElement(
         Suspense,
         {
-          fallback: createElement('layer', {
-            layer: new ScatterplotLayer({ data: [], id: 'fallback-2' }),
+          fallback: createElement("layer", {
+            layer: new ScatterplotLayer({ data: [], id: "fallback-2" }),
           }),
         },
-        createElement(Test3AsyncLayer2)
-      )
-    )
+        createElement(Test3AsyncLayer2),
+      ),
+    ),
   );
 }
 
-describe('Suspense with async queries (issue #15)', () => {
+describe("Suspense with async queries (issue #15)", () => {
   let mockDeck: ReturnType<typeof createMockDeckInstance>;
   let rootElement: HTMLDivElement;
   let root: ReturnType<typeof createRoot>;
@@ -178,7 +174,7 @@ describe('Suspense with async queries (issue #15)', () => {
     test3Suspended2 = false;
 
     mockDeck = createMockDeckInstance();
-    rootElement = document.createElement('div');
+    rootElement = document.createElement("div");
     root = createRoot(rootElement);
 
     root.configure({
@@ -195,7 +191,7 @@ describe('Suspense with async queries (issue #15)', () => {
     }
   });
 
-  it('should handle component that suspends while rendering a layer', async () => {
+  it("should handle component that suspends while rendering a layer", async () => {
     // Setup test-specific promise
     let resolveData: ((value: any[]) => void) | null = null;
     test1DataPromise = new Promise<any[]>((resolve) => {
@@ -224,7 +220,7 @@ describe('Suspense with async queries (issue #15)', () => {
     }).not.toThrow();
   });
 
-  it('should handle React 19 use() hook pattern', async () => {
+  it("should handle React 19 use() hook pattern", async () => {
     // Setup test-specific promise
     let resolveData: ((value: any[]) => void) | null = null;
     test2DataPromise = new Promise<any[]>((resolve) => {
@@ -249,7 +245,7 @@ describe('Suspense with async queries (issue #15)', () => {
     }).not.toThrow();
   });
 
-  it('should handle nested Suspense boundaries with async components', async () => {
+  it("should handle nested Suspense boundaries with async components", async () => {
     // Setup test-specific promises
     let resolve1: ((value: any[]) => void) | null = null;
     let resolve2: ((value: any[]) => void) | null = null;

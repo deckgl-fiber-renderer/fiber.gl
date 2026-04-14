@@ -40,7 +40,7 @@
   background-color: hsla(var(--border), 0.75);
 }
 
-.itemContainer[data-active='true'] {
+.itemContainer[data-active="true"] {
   background-color: hsl(var(--foreground));
   color: hsl(var(--background));
 }

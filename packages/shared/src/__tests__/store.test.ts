@@ -1,14 +1,14 @@
-import type { Deck } from '@deck.gl/core';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import type { Deck } from "@deck.gl/core";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { selectors, useStore } from '../store';
+import { selectors, useStore } from "../store";
 
 /**
  * Creates a properly typed mock Deck.gl instance
  */
 function createMockDeckgl(
-  overrides?: Partial<Pick<Deck, 'finalize' | 'setProps'>>
-): Pick<Deck, 'finalize' | 'setProps'> {
+  overrides?: Partial<Pick<Deck, "finalize" | "setProps">>,
+): Pick<Deck, "finalize" | "setProps"> {
   return {
     finalize: vi.fn(),
     setProps: vi.fn(),
@@ -16,20 +16,20 @@ function createMockDeckgl(
   };
 }
 
-describe('Store Tests', () => {
+describe("Store Tests", () => {
   // Reset store state after each test to prevent test pollution
   afterEach(() => {
     useStore.setState({ _passedLayers: [], deckgl: null });
   });
 
-  it('should have correct initial state (deckgl null, _passedLayers empty)', () => {
+  it("should have correct initial state (deckgl null, _passedLayers empty)", () => {
     const state = useStore.getState();
 
     expect(state.deckgl).toBeNull();
-    expect(state._passedLayers).toEqual([]);
+    expect(state._passedLayers).toStrictEqual([]);
   });
 
-  it('should update state when setDeckgl is called', () => {
+  it("should update state when setDeckgl is called", () => {
     const mockDeckgl = createMockDeckgl();
 
     useStore.getState().setDeckgl(mockDeckgl as never);
@@ -37,20 +37,20 @@ describe('Store Tests', () => {
     expect(useStore.getState().deckgl).toBe(mockDeckgl);
   });
 
-  it('should maintain _passedLayers as empty array by default', () => {
+  it("should maintain _passedLayers as empty array by default", () => {
     const state = useStore.getState();
 
-    expect(state._passedLayers).toEqual([]);
-    expect(Array.isArray(state._passedLayers)).toBe(true);
+    expect(state._passedLayers).toStrictEqual([]);
+    expect(Array.isArray(state._passedLayers)).toBeTruthy();
   });
 });
 
-describe('selectors', () => {
+describe(selectors, () => {
   afterEach(() => {
     useStore.setState({ _passedLayers: [], deckgl: null });
   });
 
-  it('should select deckgl from state', () => {
+  it("should select deckgl from state", () => {
     const mockDeckgl = createMockDeckgl();
     useStore.setState({ deckgl: mockDeckgl as never });
 
@@ -59,16 +59,16 @@ describe('selectors', () => {
     expect(selected).toBe(mockDeckgl);
   });
 
-  it('should select null deckgl when not set', () => {
+  it("should select null deckgl when not set", () => {
     const selected = selectors.deckgl(useStore.getState());
 
     expect(selected).toBeNull();
   });
 
-  it('should select setDeckgl function from state', () => {
+  it("should select setDeckgl function from state", () => {
     const selected = selectors.setDeckgl(useStore.getState());
 
-    expect(selected).toBeTypeOf('function');
+    expect(selected).toBeTypeOf("function");
     expect(selected).toBe(useStore.getState().setDeckgl);
   });
 });

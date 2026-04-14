@@ -1,13 +1,10 @@
-import { MapView, OrbitView } from '@deck.gl/core';
-import { ScatterplotLayer } from '@deck.gl/layers';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { MapView, OrbitView } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  createMockContainer,
-  createMockHostContext,
-} from '../__fixtures__/mock-deck-instance';
-import { createInstance } from '../config';
-import type { Props } from '../types';
+import { createMockContainer, createMockHostContext } from "../__fixtures__/mock-deck-instance";
+import { createInstance } from "../config";
+import type { Props } from "../types";
 
 // Mock container and fiber for testing
 const mockContainer = createMockContainer();
@@ -25,13 +22,13 @@ function withNodeEnv<T>(env: string, fn: () => T): T {
   }
 }
 
-describe('view element', () => {
+describe("view element", () => {
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -39,142 +36,100 @@ describe('view element', () => {
     consoleErrorSpy.mockRestore();
   });
 
-  describe('new <view> element', () => {
-    it('creates instance from passed view', () => {
+  describe("new <view> element", () => {
+    it("creates instance from passed view", () => {
       const view = new MapView({
-        id: 'test-view',
+        id: "test-view",
       });
 
       const props: Props = { view };
-      const instance = createInstance(
-        'view',
-        props,
-        mockContainer,
-        mockHostContext,
-        mockFiber
-      );
+      const instance = createInstance("view", props, mockContainer, mockHostContext, mockFiber);
 
       expect(instance.node).toBe(view);
-      expect(instance.children).toEqual([]);
+      expect(instance.children).toStrictEqual([]);
     });
 
-    it('throws error when view prop is missing', () => {
+    it("throws error when view prop is missing", () => {
       const props: Props = {};
 
       expect(() =>
-        createInstance('view', props, mockContainer, mockHostContext, mockFiber)
+        createInstance("view", props, mockContainer, mockHostContext, mockFiber),
       ).toThrow("<view> element requires a 'view' prop");
     });
 
-    it('works with MapView instances', () => {
+    it("works with MapView instances", () => {
       const view = new MapView({
-        id: 'map-view',
+        id: "map-view",
       });
 
       const props: Props = { view };
-      const instance = createInstance(
-        'view',
-        props,
-        mockContainer,
-        mockHostContext,
-        mockFiber
-      );
+      const instance = createInstance("view", props, mockContainer, mockHostContext, mockFiber);
 
       expect(instance.node).toBeInstanceOf(MapView);
       expect(instance.node).toBe(view);
     });
 
-    it('works with OrbitView instances', () => {
+    it("works with OrbitView instances", () => {
       const view = new OrbitView({
-        id: 'orbit-view',
+        id: "orbit-view",
       });
 
       const props: Props = { view };
-      const instance = createInstance(
-        'view',
-        props,
-        mockContainer,
-        mockHostContext,
-        mockFiber
-      );
+      const instance = createInstance("view", props, mockContainer, mockHostContext, mockFiber);
 
       expect(instance.node).toBeInstanceOf(OrbitView);
       expect(instance.node).toBe(view);
     });
 
-    it('preserves view ID through reconciliation', () => {
-      const viewId = 'my-unique-view-id';
+    it("preserves view ID through reconciliation", () => {
+      const viewId = "my-unique-view-id";
       const view = new MapView({
         id: viewId,
       });
 
       const props: Props = { view };
-      const instance = createInstance(
-        'view',
-        props,
-        mockContainer,
-        mockHostContext,
-        mockFiber
-      );
+      const instance = createInstance("view", props, mockContainer, mockHostContext, mockFiber);
 
       expect(instance.node.id).toBe(viewId);
     });
 
-    it('warns when view is missing explicit id in development', () => {
+    it("warns when view is missing explicit id in development", () => {
       const view = new MapView({
-        id: 'unknown',
+        id: "unknown",
       });
 
       const props: Props = { view };
-      withNodeEnv('development', () => {
-        createInstance(
-          'view',
-          props,
-          mockContainer,
-          mockHostContext,
-          mockFiber
-        );
+      withNodeEnv("development", () => {
+        createInstance("view", props, mockContainer, mockHostContext, mockFiber);
       });
 
-      expect(consoleWarnSpy).toHaveBeenCalled();
-      const calls = consoleWarnSpy.mock.calls.flat().join(' ');
+      expect(consoleWarnSpy).toHaveBeenCalledWith();
+      const calls = consoleWarnSpy.mock.calls.flat().join(" ");
       expect(calls).toContain('View missing explicit "id" prop');
     });
 
-    it('does not warn when view has explicit id in development', () => {
+    it("does not warn when view has explicit id in development", () => {
       consoleWarnSpy.mockClear();
 
       const view = new MapView({
-        id: 'test-view',
+        id: "test-view",
       });
 
       const props: Props = { view };
-      withNodeEnv('development', () => {
-        createInstance(
-          'view',
-          props,
-          mockContainer,
-          mockHostContext,
-          mockFiber
-        );
+      withNodeEnv("development", () => {
+        createInstance("view", props, mockContainer, mockHostContext, mockFiber);
       });
 
-      const calls = consoleWarnSpy.mock.calls.flat().join(' ');
+      const calls = consoleWarnSpy.mock.calls.flat().join(" ");
       expect(calls).not.toContain('View missing explicit "id" prop');
     });
 
-    it('does not warn about missing id in production', () => {
+    it("does not warn about missing id in production", () => {
       const view = new MapView({});
 
       const props: Props = { view };
-      withNodeEnv('production', () => {
-        createInstance(
-          'view',
-          props,
-          mockContainer,
-          mockHostContext,
-          mockFiber
-        );
+      withNodeEnv("production", () => {
+        createInstance("view", props, mockContainer, mockHostContext, mockFiber);
       });
 
       expect(consoleWarnSpy).not.toHaveBeenCalled();

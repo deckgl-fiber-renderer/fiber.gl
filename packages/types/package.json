@@ -45,7 +45,8 @@
   "scripts": {
     "build": "pnpm tsc",
     "dev": "pnpm tsc --watch",
-    "lint": "pnpm ultracite check",
+    "format": "pnpm dlx ultracite fix",
+    "lint": "pnpm dlx ultracite check",
     "test": "pnpm vitest --dir=src"
   },
   "devDependencies": {

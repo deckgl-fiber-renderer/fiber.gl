@@ -1,7 +1,3 @@
 {
-  "recommendations": [
-    "editorconfig.editorconfig",
-    "redhat.vscode-yaml",
-    "biomejs.biome"
-  ]
+  "recommendations": ["editorconfig.editorconfig"]
 }

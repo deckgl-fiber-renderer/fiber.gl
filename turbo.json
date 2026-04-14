@@ -3,14 +3,16 @@
   "tasks": {
     "lint": {},
 
-    "test": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
-    },
+    "format": {},
 
     "dev": {
       "persistent": true,
       "cache": false
+    },
+
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
 
     "build": {

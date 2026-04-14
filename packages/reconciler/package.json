@@ -45,7 +45,8 @@
   "scripts": {
     "build": "pnpm tsdown",
     "dev": "pnpm tsdown --watch",
-    "lint": "pnpm ultracite check",
+    "format": "pnpm dlx ultracite fix",
+    "lint": "pnpm dlx ultracite check",
     "test": "pnpm vitest --dir=src"
   },
   "dependencies": {

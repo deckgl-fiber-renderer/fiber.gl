@@ -38,7 +38,6 @@ catalog:
   loglayer: ^9
 
 onlyBuiltDependencies:
-  - '@biomejs/biome'
   - '@fission-ai/openspec'
   - '@parcel/watcher'
   - '@swc/core'

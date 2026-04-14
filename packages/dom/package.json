@@ -42,7 +42,8 @@
   "scripts": {
     "build": "pnpm tsdown",
     "dev": "pnpm tsdown --watch",
-    "lint": "pnpm biome lint",
+    "format": "pnpm dlx ultracite fix",
+    "lint": "pnpm dlx ultracite check",
     "test": "pnpm vitest --dir=src"
   },
   "dependencies": {

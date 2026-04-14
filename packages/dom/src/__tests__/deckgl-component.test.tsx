@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Deckgl } from "../components";
 
 // Mock the reconciler module
-vi.mock(import('@deckgl-fiber-renderer/reconciler'), () => {
+vi.mock(import("@deckgl-fiber-renderer/reconciler"), () => {
   const mockRender = vi.fn();
   const mockConfigure = vi.fn();
   const mockCreateRoot = vi.fn(() => ({

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { useDeckgl } from "../hooks";
 
 // Mock the shared module
-vi.mock(import('@deckgl-fiber-renderer/shared'), () => {
+vi.mock(import("@deckgl-fiber-renderer/shared"), () => {
   const mockUseStore = vi.fn();
   const mockSelectors = {
     deckgl: vi.fn((state) => state.deckgl),

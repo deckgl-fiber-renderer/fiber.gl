@@ -9,23 +9,29 @@ This is a **Turbo monorepo** with the following structure:
 - `packages/*` - Core library packages
 - `examples/*` - Example applications
 
-Use pnpm as the package manager (not npm or yarn).
+**General guidance:**
+
+- Defer to the `turborepo` skill for guidance on using turborepo/turbo.
+- Use pnpm as the package manager (not npm or yarn).
+- Defer to the `pnpm` skill for guidance on using pnpm.
+- When you install packages, make sure to pass a `--filter` to `pnpm` since this is a monorepo. When in doubt, use the `pnpm` skill.
 
 ## Development Workflow
 
 **Building, testing, and linting:**
 
-- Build: `turbo build --filter=./packages/*`
-- Test: `turbo test --filter=./packages/*`
-- Lint: `turbo lint --filter=./packages/*`
-- Format: `pnpm exec oxfmt` or `pnpm dlx ultracite fix`
+- Build: `pnpm run build`
+- Test: `pnpm run test`
+- Lint: `pnpm run lint`
+- Format: `pnpm run format`
 
 **Working in specific packages:**
 Use Turbo's `--filter` flag to target specific packages:
 
 ```bash
-turbo test --filter=@deckgl-fiber/core
-turbo build --filter=./examples/basic-app
+pnpm exec turbo test --filter=@deckgl-fiber-renderer/core # package.json "name" in packages/*
+pnpm exec turbo build --filter=@deckgl-fiber-renderer/dom # package.json "name" in packages/*
+pnpm exec turbo dev --filter=examples-nextjs # package.json "name" in examples/*
 ```
 
 **Pre-commit hooks:**
@@ -69,7 +75,68 @@ Oxlint + Oxfmt (the underlying engine) provides robust linting and formatting. M
 
 ## Core Principles
 
-Write code that is **accessible, performant, type-safe, and maintainable**. Focus on clarity and explicit intent over brevity.
+Write code that is **accessible, performant, type-safe, and maintainable**. Focus on clarity and explicit intent over brevity. These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+### Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+### Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+### Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
 ### Type Safety & Explicitness
 
@@ -95,21 +162,6 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 - Handle errors appropriately in async code with try-catch blocks
 - Don't use async functions as Promise executors
 
-### React & JSX
-
-- Use function components over class components
-- Call hooks at the top level only, never conditionally
-- Specify all dependencies in hook dependency arrays correctly
-- Use the `key` prop for elements in iterables (prefer unique IDs over array indices)
-- Nest children between opening and closing tags instead of passing as props
-- Don't define components inside other components
-- Use semantic HTML and ARIA attributes for accessibility:
-  - Provide meaningful alt text for images
-  - Use proper heading hierarchy
-  - Add labels for form inputs
-  - Include keyboard event handlers alongside mouse events
-  - Use semantic elements (`<button>`, `<nav>`, etc.) instead of divs with roles
-
 ### Error Handling & Debugging
 
 - Remove `console.log`, `debugger`, and `alert` statements from production code
@@ -125,13 +177,6 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 - Prefer simple conditionals over nested ternary operators
 - Group related code together and separate concerns
 
-### Security
-
-- Add `rel="noopener"` when using `target="_blank"` on links
-- Avoid `dangerouslySetInnerHTML` unless absolutely necessary
-- Don't use `eval()` or assign directly to `document.cookie`
-- Validate and sanitize user input
-
 ### Performance
 
 - Avoid spread syntax in accumulators within loops
@@ -140,47 +185,8 @@ Write code that is **accessible, performant, type-safe, and maintainable**. Focu
 - Avoid barrel files (index files that re-export everything)
 - Use proper image components (e.g., Next.js `<Image>`) over `<img>` tags
 
-### Framework-Specific Guidance
-
-**Next.js:**
-
-- Use Next.js `<Image>` component for images
-- Use `next/head` or App Router metadata API for head elements
-- Use Server Components for async data fetching instead of async Client Components
-
-**React 19+:**
-
-- Use ref as a prop instead of `React.forwardRef`
-
-**Solid/Svelte/Vue/Qwik:**
-
-- Use `class` and `for` attributes (not `className` or `htmlFor`)
-
 ---
 
-## Testing
+## Openspec
 
-- Write assertions inside `it()` or `test()` blocks
-- Avoid done callbacks in async tests - use async/await instead
-- Don't use `.only` or `.skip` in committed code
-- Keep test suites reasonably flat - avoid excessive `describe` nesting
-
-## When Oxlint + Oxfmt Can't Help
-
-Oxlint + Oxfmt's linter will catch most issues automatically. Focus your attention on:
-
-1. **Business logic correctness** - Oxlint + Oxfmt can't validate your algorithms
-2. **Meaningful naming** - Use descriptive names for functions, variables, and types
-3. **Architecture decisions** - Component structure, data flow, and API design
-4. **Edge cases** - Handle boundary conditions and error states
-5. **User experience** - Accessibility, performance, and usability considerations
-6. **Documentation** - Add comments for complex logic, but prefer self-documenting code
-
----
-
-- When you run opsx or openspec commands, use `pnpm exec openspec`. When in doubt, use the `pnpm` skill.
-- When you install packages, make sure to pass a `--filter` to `pnpm` since this is a monorepo. When in doubt, use the `pnpm` skill.
-
----
-
-Most formatting and common issues are automatically fixed by Oxlint + Oxfmt. Run `pnpm dlx ultracite fix` before committing to ensure compliance.
+When you run opsx or openspec commands, use `pnpm exec openspec`. When in doubt, use the `pnpm` skill.

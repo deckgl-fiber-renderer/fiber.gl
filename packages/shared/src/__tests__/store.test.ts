@@ -41,7 +41,6 @@ describe("Store Tests", () => {
     const state = useStore.getState();
 
     expect(state._passedLayers).toStrictEqual([]);
-    expect(Array.isArray(state._passedLayers)).toBeTruthy();
   });
 });
 

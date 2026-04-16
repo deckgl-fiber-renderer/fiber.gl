@@ -11,7 +11,9 @@ import { globalScope } from "./constants";
  * onClick(); // Safe to call even when disabled
  * ```
  */
-export function noop(): void {}
+export function noop(): void {
+  // void
+}
 
 /**
  * Type guard to check if a value is defined (not undefined)
@@ -50,7 +52,7 @@ export function isDefined<T>(value: T | undefined): value is T {
  * }
  * ```
  */
-export function isFn(a: unknown): a is Function {
+export function isFn(a: unknown): a is (...args: unknown[]) => unknown {
   return typeof a === "function";
 }
 

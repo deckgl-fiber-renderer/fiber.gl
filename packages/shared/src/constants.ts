@@ -6,16 +6,6 @@
  * `window` to support Web Workers.
  *
  * NOTE: vendored from React
- *
- * @example
- * ```typescript
- * import { globalScope } from '@deckgl-fiber/shared';
- *
- * // Access global APIs safely
- * if (globalScope?.document) {
- *   // Browser-specific code
- * }
- * ```
  */
 export const globalScope =
   (typeof self !== "undefined" && self) || (typeof window !== "undefined" && window);

@@ -105,4 +105,89 @@ describe("Props Type Tests", () => {
     expectTypeOf(nullNode).toEqualTypeOf<ReactNode>();
     expectTypeOf(undefinedNode).toEqualTypeOf<ReactNode>();
   });
+
+  it("should DeckglProps accept empty object", () => {
+    // Arrange
+    const props: DeckglProps = {};
+
+    // Assert - all props are optional
+    expectTypeOf(props).toEqualTypeOf<DeckglProps>();
+  });
+
+  it("should DeckglProps accept combined props", () => {
+    // Arrange
+    const view = new MapView({ id: "map" });
+    const layer = new ScatterplotLayer({ data: [], id: "test" });
+    const props: DeckglProps = {
+      children: "test",
+      initialViewState: {
+        latitude: 0,
+        longitude: 0,
+        zoom: 1,
+      },
+      layers: [layer],
+      views: [view],
+    };
+
+    // Assert
+    expectTypeOf(props).toEqualTypeOf<DeckglProps>();
+  });
+
+  it("should DeckglProps reject invalid initialViewState (@ts-expect-error)", () => {
+    // Assert - TypeScript should reject invalid initialViewState
+
+    // @ts-expect-error - missing required latitude field
+    const missingLat: DeckglProps = {
+      initialViewState: {
+        longitude: 0,
+        zoom: 1,
+      },
+    };
+    expectTypeOf(missingLat).toEqualTypeOf<DeckglProps>();
+
+    // @ts-expect-error - missing required longitude field
+    const missingLon: DeckglProps = {
+      initialViewState: {
+        latitude: 0,
+        zoom: 1,
+      },
+    };
+    expectTypeOf(missingLon).toEqualTypeOf<DeckglProps>();
+
+    // @ts-expect-error - missing required zoom field
+    const missingZoom: DeckglProps = {
+      initialViewState: {
+        latitude: 0,
+        longitude: 0,
+      },
+    };
+    expectTypeOf(missingZoom).toEqualTypeOf<DeckglProps>();
+  });
+
+  it("should ScatterplotLayer accessor functions receive correct types", () => {
+    // Arrange
+    interface DataPoint {
+      coordinates: [number, number];
+      color: [number, number, number];
+      radius: number;
+    }
+    const data: DataPoint[] = [{ color: [255, 0, 0], coordinates: [0, 0], radius: 10 }];
+
+    const layer = new ScatterplotLayer<DataPoint>({
+      data,
+      getFillColor: (d) => d.color,
+      getPosition: (d) => d.coordinates,
+      getRadius: (d) => d.radius,
+      id: "typed",
+    });
+
+    // Assert - accessors receive DataPoint type
+    expectTypeOf(layer.props.getPosition).toEqualTypeOf<
+      ((d: DataPoint) => [number, number]) | undefined
+    >();
+    expectTypeOf(layer.props.getFillColor).toEqualTypeOf<
+      ((d: DataPoint) => [number, number, number]) | undefined
+    >();
+    expectTypeOf(layer.props.getRadius).toEqualTypeOf<((d: DataPoint) => number) | undefined>();
+  });
 });

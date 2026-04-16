@@ -1,5 +1,5 @@
 import fc from "fast-check";
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 
 import { isDefined, isFn, isBrowserEnvironment, noop, toPascal } from "../utils";
 

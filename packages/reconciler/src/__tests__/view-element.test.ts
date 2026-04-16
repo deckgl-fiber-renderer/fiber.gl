@@ -103,7 +103,7 @@ describe("view element", () => {
         createInstance("view", props, mockContainer, mockHostContext, mockFiber);
       });
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith();
+      expect(consoleWarnSpy).toHaveBeenCalled();
       const calls = consoleWarnSpy.mock.calls.flat().join(" ");
       expect(calls).toContain('View missing explicit "id" prop');
     });

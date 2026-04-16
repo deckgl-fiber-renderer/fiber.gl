@@ -5,38 +5,44 @@ import { log } from "@deckgl-fiber-renderer/shared";
 import type { DeckglProps } from "@deckgl-fiber-renderer/types";
 import { FiberProvider, useContextBridge } from "its-fine";
 import type { ContextBridge } from "its-fine";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { ReactNode } from "react";
 import useIsomorphicLayoutEffect from "use-isomorphic-layout-effect";
 
 function DeckglComponent(props: DeckglProps) {
-  const { children } = props;
+  const { children, debug } = props;
 
   const Bridge: ContextBridge = useContextBridge();
   const wrapper = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const interleave = useRef<HTMLDivElement>(null);
 
-  useIsomorphicLayoutEffect(() => {
-    // NOTE: enable/disable logging based on debug prop
+  // NOTE: enable/disable logging based on debug prop
+  useEffect(() => {
     // oxlint-disable-next-line no-unused-expressions
-    props.debug ? log.enableLogging() : log.disableLogging();
+    debug ? log.enableLogging() : log.disableLogging();
+  }, [debug]);
 
+  // Memoize config to prevent recreation on every render
+  const config = useMemo(
+    () => ({
+      ...props,
+      // NOTE: only apply canvas/wrapper if we are not using an external renderer such as Mapbox/Maplibre
+      ...(canvas.current && { canvas: canvas.current }),
+      ...(wrapper.current && { parent: wrapper.current }),
+    }),
+    [props],
+  );
+
+  useIsomorphicLayoutEffect(() => {
     const node = canvas.current || interleave.current;
 
     if (node) {
       const root: ReconcilerRoot = roots.get(node) ?? createRoot(node);
-
-      root.configure({
-        ...props,
-        // NOTE: only apply canvas/wrapper if we are not using an external renderer such as Mapbox/Maplibre
-        ...(canvas.current && { canvas: canvas.current }),
-        ...(wrapper.current && { parent: wrapper.current }),
-      });
-
+      root.configure(config);
       root.render(<Bridge>{children}</Bridge>);
     }
-  }, [children, props]);
+  }, [children, config, Bridge]);
 
   useEffect(() => {
     const node = canvas.current || interleave.current;

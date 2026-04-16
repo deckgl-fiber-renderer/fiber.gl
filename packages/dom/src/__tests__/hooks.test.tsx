@@ -25,7 +25,7 @@ const { mockUseStore, mockSelectors } = (await import("@deckgl-fiber-renderer/sh
 
 describe("Dom Hooks Tests", () => {
   describe(useDeckgl, () => {
-    it("should useDeckgl returns deckgl instance from store", () => {
+    it("should return deckgl instance from store", () => {
       // Arrange
       const mockDeckgl = {
         finalize: vi.fn(),
@@ -41,7 +41,7 @@ describe("Dom Hooks Tests", () => {
       expect(mockUseStore).toHaveBeenCalledWith(mockSelectors.deckgl);
     });
 
-    it("should useDeckgl updates when store changes", () => {
+    it("should update when store changes", () => {
       // Arrange
       const mockDeckgl1 = { finalize: vi.fn(), id: "deck1", setProps: vi.fn() };
       const mockDeckgl2 = { finalize: vi.fn(), id: "deck2", setProps: vi.fn() };

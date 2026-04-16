@@ -6,5 +6,8 @@ import vitest from "ultracite/oxlint/vitest";
 
 export default defineConfig({
   extends: [core, react, vitest],
-  ignorePatterns: ['**/dist/**', '**/coverage/**']
+  ignorePatterns: ["**/dist/**", "**/coverage/**"],
+  rules: {
+    "func-style": "off",
+  },
 });

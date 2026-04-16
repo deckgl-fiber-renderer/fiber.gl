@@ -186,7 +186,6 @@ function createDeckglObject(type: Type, props: Props): Instance {
     if (process.env.NODE_ENV === "development") {
       const view = props.view as View;
 
-      // TODO: sanity check why view.id === 'unknown' was added
       if (!view.id || view.id === "unknown") {
         const viewName = view.constructor.name;
 
@@ -215,7 +214,6 @@ function createDeckglObject(type: Type, props: Props): Instance {
     if (process.env.NODE_ENV === "development") {
       const layer = props.layer as Layer;
 
-      // TODO: sanity check why layer.id === 'unknown' was added
       if (!layer.id || layer.id === "unknown") {
         const layerName = layer.constructor.name;
 
@@ -719,11 +717,11 @@ export function finalizeContainerChildren(container: Container, newChildren: Chi
     .debug("finalizeContainerChildren");
 
   // Development-mode validation: detect duplicate layer IDs
-  // Performance: reduce-looping.md - Two-pass algorithm (2-5x faster than five-pass)
   if (process.env.NODE_ENV === "development") {
     // Pass 1: Flatten tree and count layer IDs in single traversal
     const idCounts = new Map<string, number>();
 
+    // oxlint-disable-next-line no-inner-declarations
     function countLayerIds(instances: Instance[]): void {
       for (const instance of instances) {
         // Check if node is a Layer (not a View)
@@ -826,7 +824,7 @@ export function replaceContainerChildren(container: Container, newChildren: Chil
     const types = organizeList(list);
 
     // NOTE: apply layers passed to the `layers` prop on `<Deckgl />` component
-    // Performance: avoid-allocations.md - concat() for optimal array concatenation (1.2-1.5x)
+    // oxlint-disable-next-line unicorn/prefer-spread
     const combinedLayers = state._passedLayers.concat(types.layers);
 
     log
@@ -1284,7 +1282,6 @@ export function getChildHostContext(parentHostContext: HostContext, type: Type):
   // we should also check instance.node instanceof View for runtime detection.
   const isViewInstance = VIEW_REGEX.test(type);
 
-  // Performance: avoid-allocations.md - Only spread when transitioning into view (1.2-2x)
   // Avoids redundant allocations in nested view hierarchies
   if (isViewInstance && !parentHostContext.insideView) {
     return { ...parentHostContext, insideView: true };

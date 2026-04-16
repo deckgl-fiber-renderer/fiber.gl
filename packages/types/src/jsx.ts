@@ -1,3 +1,8 @@
+// oxlint-disable typescript/no-empty-object-type
+// oxlint-disable unicorn/require-module-specifiers
+// oxlint-disable import/no-empty-named-blocks
+// oxlint-disable typescript/no-empty-interface
+// oxlint-disable typescript/no-namespace
 import type {
   FirstPersonView,
   _GlobeView as GlobeView,
@@ -38,19 +43,42 @@ import type {
 } from "@deck.gl/layers";
 import type { ScenegraphLayerProps, SimpleMeshLayerProps } from "@deck.gl/mesh-layers";
 import type { ReactNode } from "react";
+import type {} from "react";
+import type {} from "react/jsx-runtime";
+import type {} from "react/jsx-dev-runtime";
 
+/**
+ * Extracts the props type from a deck.gl View class
+ *
+ * Uses conditional type inference to extract the second type parameter
+ * (props) from View<TViewState, TViewProps>.
+ *
+ * @template T - A deck.gl View type to extract props from
+ */
+// oxlint-disable-next-line typescript/no-explicit-any
 type ExtractViewProps<T> = T extends View<any, infer P> ? P : never;
 
+/**
+ * JSX intrinsic elements for deck.gl layers and views
+ *
+ * Defines the custom JSX elements available when using deck.gl with React.
+ * This interface extends React's IntrinsicElements to add deck.gl-specific
+ * elements for layers and views.
+ */
 export interface DeckglElements {
-  // Universal layer element (new in v2)
+  /** Universal layer element that accepts any deck.gl Layer instance (new in v2) */
   layer: {
+    /** The deck.gl Layer instance to render */
     layer: Layer;
+    /** Optional child layer elements to nest within this layer */
     children?: ReactNode;
   };
 
-  // View element (new in v2)
+  /** Universal view element that accepts any deck.gl View instance (new in v2) */
   view: {
+    /** The deck.gl View instance to configure camera and viewport */
     view: View;
+    /** Child elements to render within this view's viewport */
     children?: ReactNode;
   };
 
@@ -120,11 +148,11 @@ export interface DeckglElements {
   /** @deprecated Use <layer layer={new MVTLayer({...})} /> instead */
   mVTLayer: MVTLayerProps;
   /** @deprecated Use <layer layer={new MVTLayer({...})} /> instead */
-  mvtLayer: MVTLayerProps; // alias
+  mvtLayer: MVTLayerProps;
   /** @deprecated Use <layer layer={new WMSLayer({...})} /> instead */
   wMSLayer: WMSLayerProps;
   /** @deprecated Use <layer layer={new WMSLayer({...})} /> instead */
-  wmsLayer: WMSLayerProps; // alias
+  wmsLayer: WMSLayerProps;
 
   // @deck.gl/mesh-layers
   /** @deprecated Use <layer layer={new ScenegraphLayer({...})} /> instead */
@@ -133,12 +161,20 @@ export interface DeckglElements {
   simpleMeshLayer: SimpleMeshLayerProps;
 }
 
-declare global {
-  namespace React {
-    // eslint-disable-next-line @typescript-eslint/no-namespace
-    namespace JSX {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-      interface IntrinsicElements extends DeckglElements {}
-    }
+declare module "react" {
+  namespace JSX {
+    interface IntrinsicElements extends DeckglElements {}
+  }
+}
+
+declare module "react/jsx-runtime" {
+  namespace JSX {
+    interface IntrinsicElements extends DeckglElements {}
+  }
+}
+
+declare module "react/jsx-dev-runtime" {
+  namespace JSX {
+    interface IntrinsicElements extends DeckglElements {}
   }
 }

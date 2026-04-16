@@ -1,2 +1,2 @@
-export type { DeckglProps } from "./react";
 import "./jsx";
+export type { DeckglProps } from "./react";

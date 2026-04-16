@@ -10,7 +10,8 @@ describe("Utility Functions Tests (Browser Environment)", () => {
     it("should be true in jsdom environment (has window and document)", () => {
       // Arrange & Act & Assert
       // In jsdom environment, both window and document exist
-      expect(globalScope).toBeTruthy();
+      expect(globalScope).toBeDefined();
+      expect(globalScope).not.toBeNull();
       expect(globalScope).toHaveProperty("document");
       expect(isBrowserEnvironment).toBeTruthy();
     });

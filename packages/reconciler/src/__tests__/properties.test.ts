@@ -1,3 +1,4 @@
+import { MapView } from "@deck.gl/core";
 import { ScatterplotLayer } from "@deck.gl/layers";
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
@@ -199,23 +200,27 @@ describe("Property-Based Tests", () => {
       );
     });
 
-    it("property: when keepChildren is false with newChildSet, uses newChildSet", () => {
+    it("property: when keepChildren is false with recyclableInstance, uses recyclableInstance.children", () => {
       fc.assert(
         fc.property(
           instanceArbitrary(),
           fc.array(instanceArbitrary(), { maxLength: 5 }),
-          (instance, newChildSet) => {
+          (instance, newChildren) => {
             const layer = instance.node;
+            const recyclableInstance: Instance = {
+              children: newChildren,
+              node: new MapView({ id: "recycled" }),
+            };
             const cloned = cloneInstance(
               instance,
               "layer",
               {},
               { layer },
               false, // keepChildren
-              newChildSet,
+              recyclableInstance,
             );
 
-            expect(cloned.children).toBe(newChildSet);
+            expect(cloned.children).toBe(recyclableInstance.children);
             expect(cloned.children).not.toBe(instance.children);
           },
         ),

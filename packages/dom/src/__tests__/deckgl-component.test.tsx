@@ -3,6 +3,21 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Deckgl } from "../components";
 
+// Mock the shared module for log
+vi.mock(import("@deckgl-fiber-renderer/shared"), () => {
+  const mockEnableLogging = vi.fn();
+  const mockDisableLogging = vi.fn();
+
+  return {
+    log: {
+      disableLogging: mockDisableLogging,
+      enableLogging: mockEnableLogging,
+    },
+    mockDisableLogging,
+    mockEnableLogging,
+  };
+});
+
 // Mock the reconciler module
 vi.mock(import("@deckgl-fiber-renderer/reconciler"), () => {
   const mockRender = vi.fn();
@@ -35,19 +50,16 @@ vi.mock(import("@deckgl-fiber-renderer/reconciler"), () => {
 const { mockRender, mockConfigure, mockCreateRoot, mockUnmountAtNode, mockRoots } =
   (await import("@deckgl-fiber-renderer/reconciler")) as never;
 
+const { mockEnableLogging, mockDisableLogging } =
+  (await import("@deckgl-fiber-renderer/shared")) as never;
+
 describe("Deckgl Component Tests", () => {
   beforeEach(() => {
-    // Clear all mocks before each test
-    vi.clearAllMocks();
+    // Only clear custom state not handled by global config
     mockRoots.clear();
   });
 
-  afterEach(() => {
-    // Cleanup after each test
-    vi.clearAllMocks();
-  });
-
-  it("should creates reconciler root on mount", () => {
+  it("should create reconciler root on mount", () => {
     // Act
     render(
       <Deckgl>
@@ -56,10 +68,10 @@ describe("Deckgl Component Tests", () => {
     );
 
     // Assert
-    expect(mockCreateRoot).toHaveBeenCalledWith();
+    expect(mockCreateRoot).toHaveBeenCalledWith(expect.any(HTMLCanvasElement));
   });
 
-  it("should passes props to root.configure", () => {
+  it("should pass props to root.configure", () => {
     // Arrange
     const props = {
       initialViewState: {
@@ -84,7 +96,7 @@ describe("Deckgl Component Tests", () => {
     );
   });
 
-  it("should renders canvas in standalone mode (follow accelint-react-testing query priority: getByRole > getByLabelText > getByText)", () => {
+  it("should render canvas in standalone mode", () => {
     // Act
     render(
       <Deckgl>
@@ -92,13 +104,13 @@ describe("Deckgl Component Tests", () => {
       </Deckgl>,
     );
 
-    // Assert - Query by element presence (canvas doesn't have role by default)
+    // Assert
     const canvas = document.querySelector("#deckgl-fiber-canvas");
-    expect(canvas).toBeTruthy();
+    expect(canvas).toBeInstanceOf(HTMLCanvasElement);
     expect(canvas?.tagName).toBe("CANVAS");
   });
 
-  it("should renders hidden div in interleaved mode", () => {
+  it("should render hidden div in interleaved mode", () => {
     // Act
     render(
       <Deckgl interleaved>
@@ -106,13 +118,13 @@ describe("Deckgl Component Tests", () => {
       </Deckgl>,
     );
 
-    // Assert - Check that interleave div is rendered with hidden attribute
+    // Assert
     const interleaveDiv = document.querySelector("#deckgl-fiber-interleave");
-    expect(interleaveDiv).toBeTruthy();
-    expect(interleaveDiv?.hasAttribute("hidden")).toBeTruthy();
+    expect(interleaveDiv).toBeInstanceOf(HTMLDivElement);
+    expect(interleaveDiv?.hasAttribute("hidden")).toBe(true);
   });
 
-  it("should unmounts cleanly", () => {
+  it("should unmount cleanly", () => {
     // Arrange
     const { unmount } = render(
       <Deckgl>
@@ -124,6 +136,102 @@ describe("Deckgl Component Tests", () => {
     unmount();
 
     // Assert
-    expect(mockUnmountAtNode).toHaveBeenCalledWith();
+    expect(mockUnmountAtNode).toHaveBeenCalledWith(expect.any(HTMLCanvasElement));
+  });
+
+  it("should unmount cleanly in interleaved mode", () => {
+    // Arrange
+    const { unmount } = render(
+      <Deckgl interleaved>
+        <div>Test</div>
+      </Deckgl>,
+    );
+
+    // Act
+    unmount();
+
+    // Assert
+    expect(mockUnmountAtNode).toHaveBeenCalledWith(expect.any(HTMLDivElement));
+  });
+
+  it("should enable logging when debug prop is true", () => {
+    // Act
+    render(
+      <Deckgl debug>
+        <div>Test</div>
+      </Deckgl>,
+    );
+
+    // Assert
+    expect(mockEnableLogging).toHaveBeenCalled();
+  });
+
+  it("should disable logging when debug prop is false", () => {
+    // Act
+    render(
+      <Deckgl debug={false}>
+        <div>Test</div>
+      </Deckgl>,
+    );
+
+    // Assert
+    expect(mockDisableLogging).toHaveBeenCalled();
+  });
+
+  it("should handle children updates", () => {
+    // Arrange
+    const { rerender } = render(
+      <Deckgl>
+        <div>Initial</div>
+      </Deckgl>,
+    );
+
+    // Act - Update children
+    rerender(
+      <Deckgl>
+        <div>Updated</div>
+      </Deckgl>,
+    );
+
+    // Assert - Should call render again with new children
+    expect(mockRender).toHaveBeenCalledTimes(2);
+  });
+
+  it("should handle prop updates without debug", () => {
+    // Arrange
+    const { rerender } = render(
+      <Deckgl initialViewState={{ longitude: 0, latitude: 0, zoom: 1 }}>
+        <div>Test</div>
+      </Deckgl>,
+    );
+
+    // Act - Update props
+    rerender(
+      <Deckgl initialViewState={{ longitude: 10, latitude: 10, zoom: 2 }}>
+        <div>Test</div>
+      </Deckgl>,
+    );
+
+    // Assert - Should call configure with updated props
+    expect(mockConfigure).toHaveBeenCalled();
+  });
+
+  it("should toggle debug mode", () => {
+    // Arrange
+    const { rerender } = render(
+      <Deckgl debug={false}>
+        <div>Test</div>
+      </Deckgl>,
+    );
+
+    // Act - Toggle debug to true
+    rerender(
+      <Deckgl debug>
+        <div>Test</div>
+      </Deckgl>,
+    );
+
+    // Assert - Should enable logging
+    expect(mockEnableLogging).toHaveBeenCalled();
   });
 });

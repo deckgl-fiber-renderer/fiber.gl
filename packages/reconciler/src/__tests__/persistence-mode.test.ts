@@ -67,7 +67,7 @@ describe("persistence mode", () => {
       expect(cloned.children[0]).toBe(child);
     });
 
-    it("uses newChildSet when keepChildren is false", () => {
+    it("uses recyclableInstance children when keepChildren is false", () => {
       const oldChild: Instance = {
         children: [],
         node: new ScatterplotLayer({ data: [], id: "old" }),
@@ -80,7 +80,10 @@ describe("persistence mode", () => {
         children: [oldChild],
         node: new ScatterplotLayer({ data: [], id: "parent" }),
       };
-      const newChildSet: ChildSet = [newChild];
+      const recyclableInstance: Instance = {
+        children: [newChild],
+        node: new MapView({ id: "recycled" }),
+      };
 
       const cloned = cloneInstance(
         instance,
@@ -88,10 +91,10 @@ describe("persistence mode", () => {
         {},
         { layer: instance.node },
         false, // keepChildren
-        newChildSet,
+        recyclableInstance,
       );
 
-      expect(cloned.children).toBe(newChildSet);
+      expect(cloned.children).toBe(recyclableInstance.children);
       expect(cloned.children).toHaveLength(1);
       expect(cloned.children[0]).toBe(newChild);
     });

@@ -60,14 +60,15 @@ export type Store = StoreApi<State>;
  * ```
  */
 export const useStore = create<State>()((set) => ({
-  deckgl: null,
-  setDeckgl: (instance) => {
-    set({ deckgl: instance });
-  },
-
   // NOTE: we want to support a "mix-mode" of sorts where a user can pass an explicit `layers` prop alongside
   // traditional usage of creating layers as JSX children.
   _passedLayers: [],
+
+  deckgl: null,
+
+  setDeckgl: (instance) => {
+    set({ deckgl: instance });
+  },
 }));
 
 /**

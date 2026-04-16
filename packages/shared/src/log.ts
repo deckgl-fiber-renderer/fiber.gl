@@ -8,12 +8,13 @@ import { ConsoleTransport, LogLayer } from "loglayer";
  * via the `debug` prop on the Deckgl component.
  */
 export const log = new LogLayer({
+  // Dynamically controlled via prop on Deckgl React component
+  enabled: false,
+
+  prefix: "[deckgl-fiber]",
+
   transport: new ConsoleTransport({
     appendObjectData: true,
     logger: console,
   }),
-
-  // Dynamically controlled via prop on Deckgl React component
-  enabled: false,
-  prefix: "[deckgl-fiber]",
 });

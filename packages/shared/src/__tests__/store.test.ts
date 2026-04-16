@@ -10,7 +10,9 @@ function createMockDeckgl(
   overrides?: Partial<Pick<Deck, "finalize" | "setProps">>,
 ): Pick<Deck, "finalize" | "setProps"> {
   return {
+    // oxlint-disable-next-line vitest/require-mock-type-parameters
     finalize: vi.fn(),
+    // oxlint-disable-next-line vitest/require-mock-type-parameters
     setProps: vi.fn(),
     ...overrides,
   };
@@ -44,7 +46,7 @@ describe("Store Tests", () => {
   });
 });
 
-describe(selectors, () => {
+describe("selectors()", () => {
   afterEach(() => {
     useStore.setState({ _passedLayers: [], deckgl: null });
   });

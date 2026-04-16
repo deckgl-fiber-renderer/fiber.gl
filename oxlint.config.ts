@@ -9,5 +9,7 @@ export default defineConfig({
   ignorePatterns: ["**/dist/**", "**/coverage/**"],
   rules: {
     "func-style": "off",
+    "no-inline-comments": "warn",
+    "sort-keys": "warn",
   },
 });

@@ -1,10 +1,10 @@
-import fc from "fast-check";
+import * as fc from "fast-check";
 import { describe, expect, expectTypeOf, it } from "vitest";
 
 import { isDefined, isFn, isBrowserEnvironment, noop, toPascal } from "../utils";
 
 describe("Utility Functions Tests", () => {
-  describe(isDefined, () => {
+  describe("isDefined()", () => {
     it.each([
       { description: "undefined", expected: false, value: undefined },
       { description: "null", expected: true, value: null },
@@ -16,17 +16,17 @@ describe("Utility Functions Tests", () => {
     });
   });
 
-  describe(isFn, () => {
+  describe("isFn()", () => {
     it.each([
       { description: "arrow function", value: () => {} },
       {
-        // biome-ignore lint/complexity/useArrowFunction: testing function declaration
         description: "function expression",
+        // oxlint-disable-next-line unicorn/consistent-function-scoping
         value: function value() {},
       },
       {
-        // biome-ignore lint/complexity/useArrowFunction: testing function declaration
         description: "named function",
+        // oxlint-disable-next-line unicorn/consistent-function-scoping
         value: function named() {},
       },
       { description: "built-in function", value: Math.max },
@@ -46,7 +46,7 @@ describe("Utility Functions Tests", () => {
     });
   });
 
-  describe(toPascal, () => {
+  describe("toPascal()", () => {
     // Property-based tests
     it("property: idempotent for non-empty strings", () => {
       fc.assert(
@@ -60,9 +60,8 @@ describe("Utility Functions Tests", () => {
       fc.assert(
         fc.property(fc.string({ maxLength: 100, minLength: 1 }), (str) => {
           const result = toPascal(str);
-          if (result.length > 0) {
-            expect(result[0]).toBe(result[0].toUpperCase());
-          }
+
+          expect(result[0]).toBe(result[0].toUpperCase());
         }),
       );
     });
@@ -107,7 +106,7 @@ describe("Utility Functions Tests", () => {
     });
   });
 
-  describe(noop, () => {
+  describe("noop()", () => {
     it("should return undefined when called", () => {
       const result = noop();
 
@@ -121,11 +120,12 @@ describe("Utility Functions Tests", () => {
     it("should be usable as a default callback", () => {
       const callback = noop;
 
+      // oxlint-disable-next-line promise/prefer-await-to-callbacks
       expect(callback()).toBeUndefined();
     });
   });
 
-  describe(isBrowserEnvironment, () => {
+  describe("isBrowserEnvironment()", () => {
     it("should be a boolean value", () => {
       expectTypeOf(isBrowserEnvironment).toBeBoolean();
     });

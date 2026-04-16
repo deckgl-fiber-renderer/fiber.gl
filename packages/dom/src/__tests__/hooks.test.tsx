@@ -5,6 +5,7 @@ import { useDeckgl } from "../hooks";
 
 // Mock the shared module
 vi.mock(import("@deckgl-fiber-renderer/shared"), () => {
+  // oxlint-disable-next-line vitest/require-mock-type-parameters
   const mockUseStore = vi.fn();
   const mockSelectors = {
     deckgl: vi.fn((state) => state.deckgl),
@@ -24,7 +25,7 @@ vi.mock(import("@deckgl-fiber-renderer/shared"), () => {
 const { mockUseStore, mockSelectors } = (await import("@deckgl-fiber-renderer/shared")) as never;
 
 describe("Dom Hooks Tests", () => {
-  describe(useDeckgl, () => {
+  describe("useDeckgl()", () => {
     it("should return deckgl instance from store", () => {
       // Arrange
       const mockDeckgl = {

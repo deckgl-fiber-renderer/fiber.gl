@@ -1,11 +1,13 @@
-import { render, screen } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { render } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Deckgl } from "../components";
 
 // Mock the shared module for log
 vi.mock(import("@deckgl-fiber-renderer/shared"), () => {
+  // oxlint-disable-next-line vitest/require-mock-type-parameters
   const mockEnableLogging = vi.fn();
+  // oxlint-disable-next-line vitest/require-mock-type-parameters
   const mockDisableLogging = vi.fn();
 
   return {
@@ -121,7 +123,7 @@ describe("Deckgl Component Tests", () => {
     // Assert
     const interleaveDiv = document.querySelector("#deckgl-fiber-interleave");
     expect(interleaveDiv).toBeInstanceOf(HTMLDivElement);
-    expect(interleaveDiv?.hasAttribute("hidden")).toBe(true);
+    expect(interleaveDiv?.hasAttribute("hidden")).toBeTruthy();
   });
 
   it("should unmount cleanly", () => {
@@ -163,7 +165,7 @@ describe("Deckgl Component Tests", () => {
     );
 
     // Assert
-    expect(mockEnableLogging).toHaveBeenCalled();
+    expect(mockEnableLogging).toHaveBeenCalledWith();
   });
 
   it("should disable logging when debug prop is false", () => {
@@ -175,7 +177,7 @@ describe("Deckgl Component Tests", () => {
     );
 
     // Assert
-    expect(mockDisableLogging).toHaveBeenCalled();
+    expect(mockDisableLogging).toHaveBeenCalledWith();
   });
 
   it("should handle children updates", () => {
@@ -200,20 +202,20 @@ describe("Deckgl Component Tests", () => {
   it("should handle prop updates without debug", () => {
     // Arrange
     const { rerender } = render(
-      <Deckgl initialViewState={{ longitude: 0, latitude: 0, zoom: 1 }}>
+      <Deckgl initialViewState={{ latitude: 0, longitude: 0, zoom: 1 }}>
         <div>Test</div>
       </Deckgl>,
     );
 
     // Act - Update props
     rerender(
-      <Deckgl initialViewState={{ longitude: 10, latitude: 10, zoom: 2 }}>
+      <Deckgl initialViewState={{ latitude: 10, longitude: 10, zoom: 2 }}>
         <div>Test</div>
       </Deckgl>,
     );
 
     // Assert - Should call configure with updated props
-    expect(mockConfigure).toHaveBeenCalled();
+    expect(mockConfigure).toHaveBeenCalledWith();
   });
 
   it("should toggle debug mode", () => {
@@ -232,6 +234,6 @@ describe("Deckgl Component Tests", () => {
     );
 
     // Assert - Should enable logging
-    expect(mockEnableLogging).toHaveBeenCalled();
+    expect(mockEnableLogging).toHaveBeenCalledWith();
   });
 });

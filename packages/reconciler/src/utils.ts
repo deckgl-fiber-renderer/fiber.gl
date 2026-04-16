@@ -89,6 +89,7 @@ export function flattenTree(arr: Instance[]): Instance["node"][] {
  * ```
  */
 export function organizeList(list: Instance["node"][]) {
+  // oxlint-disable-next-line unicorn/no-array-reduce
   return list.reduce<{ views: View[]; layers: Layer[] }>(
     (acc, curr) => {
       if (isView(curr)) {

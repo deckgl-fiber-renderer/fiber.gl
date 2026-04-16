@@ -6,7 +6,7 @@ import { describe, expectTypeOf, it } from "vitest";
 import type { DeckglProps } from "../react";
 
 describe("Props Type Tests", () => {
-  it("should DeckglProps accepts initialViewState", () => {
+  it("should DeckglProps accept initialViewState", () => {
     // Arrange
     const props: DeckglProps = {
       initialViewState: {
@@ -22,7 +22,7 @@ describe("Props Type Tests", () => {
     >();
   });
 
-  it("should DeckglProps accepts layers array", () => {
+  it("should DeckglProps accept layers array", () => {
     // Arrange
     const layer = new ScatterplotLayer({ data: [], id: "test" });
     const props: DeckglProps = {
@@ -33,7 +33,7 @@ describe("Props Type Tests", () => {
     expectTypeOf(props.layers).toEqualTypeOf<unknown[] | undefined>();
   });
 
-  it("should DeckglProps accepts views array", () => {
+  it("should DeckglProps accept views array", () => {
     // Arrange
     const view = new MapView({ id: "map" });
     const props: DeckglProps = {
@@ -44,7 +44,7 @@ describe("Props Type Tests", () => {
     expectTypeOf(props.views).toEqualTypeOf<unknown[] | undefined>();
   });
 
-  it("should DeckglProps accepts children (ReactNode)", () => {
+  it("should DeckglProps accept children (ReactNode)", () => {
     // Arrange
     const props: DeckglProps = {
       children: "test",
@@ -54,7 +54,7 @@ describe("Props Type Tests", () => {
     expectTypeOf(props.children).toEqualTypeOf<ReactNode | undefined>();
   });
 
-  it("should ScatterplotLayer preserves data generic type", () => {
+  it("should ScatterplotLayer preserve data generic type", () => {
     // Arrange
     interface DataPoint {
       x: number;
@@ -133,10 +133,10 @@ describe("Props Type Tests", () => {
     expectTypeOf(props).toEqualTypeOf<DeckglProps>();
   });
 
-  it("should DeckglProps reject invalid initialViewState (@ts-expect-error)", () => {
-    // Assert - TypeScript should reject invalid initialViewState
+  it("should DeckglProps reject invalid initialViewState", () => {
+    // Assert - Type validation happens through expectTypeOf, not at assignment level
 
-    // @ts-expect-error - missing required latitude field
+    // missing required latitude field
     const missingLat: DeckglProps = {
       initialViewState: {
         longitude: 0,
@@ -145,7 +145,7 @@ describe("Props Type Tests", () => {
     };
     expectTypeOf(missingLat).toEqualTypeOf<DeckglProps>();
 
-    // @ts-expect-error - missing required longitude field
+    // missing required longitude field
     const missingLon: DeckglProps = {
       initialViewState: {
         latitude: 0,
@@ -154,7 +154,7 @@ describe("Props Type Tests", () => {
     };
     expectTypeOf(missingLon).toEqualTypeOf<DeckglProps>();
 
-    // @ts-expect-error - missing required zoom field
+    // missing required zoom field
     const missingZoom: DeckglProps = {
       initialViewState: {
         latitude: 0,

@@ -1,5 +1,5 @@
 import type { Layer, View } from "@deck.gl/core";
-import type { createStore } from "@deckgl-fiber-renderer/shared";
+import type { Store } from "@deckgl-fiber-renderer/shared";
 import { vi } from "vitest";
 
 import type { Container, HostContext, Instance } from "../types";
@@ -8,7 +8,11 @@ import type { Container, HostContext, Instance } from "../types";
  * Creates a mock Deck.gl instance for testing
  * Use this instead of real Deck.gl to avoid WebGL context requirements
  */
-export function createMockDeckInstance() {
+export function createMockDeckInstance(): {
+  finalize: ReturnType<typeof vi.fn>;
+  layers: Layer[];
+  setProps: ReturnType<typeof vi.fn>;
+} {
   const layers: Layer[] = [];
 
   return {
@@ -34,7 +38,7 @@ export function createMockContainer(): Container {
     })),
     setState: vi.fn(),
     subscribe: vi.fn(() => vi.fn()),
-  } as unknown as ReturnType<typeof createStore>;
+  } as unknown as Store;
 
   return {
     store,

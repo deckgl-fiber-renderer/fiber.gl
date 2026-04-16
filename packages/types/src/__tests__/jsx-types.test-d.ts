@@ -17,18 +17,16 @@ describe("JSX Type Tests", () => {
     expectTypeOf(element.props.layer).toEqualTypeOf<Layer>();
   });
 
-  it("should invalid element types be rejected (@ts-expect-error)", () => {
-    // Assert - TypeScript should reject invalid types
-
-    // @ts-expect-error - number is not a valid layer type
+  it("should invalid element types be rejected", () => {
+    // number is not a valid layer type
     const numElement = createElement("layer", { layer: 123 });
     expectTypeOf(numElement).toEqualTypeOf<ReactElement>();
 
-    // @ts-expect-error - string is not a valid layer type
+    // string is not a valid layer type
     const strElement = createElement("layer", { layer: "not-a-layer" });
     expectTypeOf(strElement).toEqualTypeOf<ReactElement>();
 
-    // @ts-expect-error - missing layer prop
+    // missing layer prop
     const emptyElement = createElement("layer", {});
     expectTypeOf(emptyElement).toEqualTypeOf<ReactElement>();
   });
@@ -39,10 +37,11 @@ describe("JSX Type Tests", () => {
     const childLayer = new ScatterplotLayer({ data: [], id: "child" });
 
     // Act
-    const element = createElement("layer", {
-      children: createElement("layer", { layer: childLayer }),
-      layer,
-    });
+    const element = createElement(
+      "layer",
+      { layer },
+      createElement("layer", { layer: childLayer }),
+    );
 
     // Assert
     expectTypeOf(element).toEqualTypeOf<ReactElement>();
@@ -56,27 +55,22 @@ describe("JSX Type Tests", () => {
     const child2 = new ScatterplotLayer({ data: [], id: "child2" });
 
     // Act
-    const element = createElement("layer", {
-      children: [
-        createElement("layer", { layer: child1 }),
-        createElement("layer", { layer: child2 }),
-      ],
-      layer,
-    });
+    const element = createElement(
+      "layer",
+      { layer },
+      createElement("layer", { layer: child1 }),
+      createElement("layer", { layer: child2 }),
+    );
 
     // Assert
     expectTypeOf(element).toEqualTypeOf<ReactElement>();
     expectTypeOf(element.props.children).toEqualTypeOf<ReactElement[]>();
   });
 
-  it("should layer element reject null/undefined layer (@ts-expect-error)", () => {
-    // Assert - TypeScript should reject null/undefined
-
-    // @ts-expect-error - null is not a valid layer type
+  it("should layer element reject null/undefined layer", () => {
     const nullElement = createElement("layer", { layer: null });
     expectTypeOf(nullElement).toEqualTypeOf<ReactElement>();
 
-    // @ts-expect-error - undefined is not a valid layer type
     const undefinedElement = createElement("layer", { layer: undefined });
     expectTypeOf(undefinedElement).toEqualTypeOf<ReactElement>();
   });

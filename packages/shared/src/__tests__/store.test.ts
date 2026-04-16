@@ -34,7 +34,7 @@ describe("Store Tests", () => {
   it("should update state when setDeckgl is called", () => {
     const mockDeckgl = createMockDeckgl();
 
-    useStore.getState().setDeckgl(mockDeckgl as never);
+    useStore.getState().setDeckgl(mockDeckgl as unknown as Deck);
 
     expect(useStore.getState().deckgl).toBe(mockDeckgl);
   });
@@ -53,7 +53,7 @@ describe("selectors()", () => {
 
   it("should select deckgl from state", () => {
     const mockDeckgl = createMockDeckgl();
-    useStore.setState({ deckgl: mockDeckgl as never });
+    useStore.setState({ deckgl: mockDeckgl as unknown as Deck });
 
     const selected = selectors.deckgl(useStore.getState());
 

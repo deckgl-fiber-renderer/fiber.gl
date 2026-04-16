@@ -50,10 +50,19 @@ vi.mock(import("@deckgl-fiber-renderer/reconciler"), () => {
 
 // Get the mocks after they've been set up
 const { mockRender, mockConfigure, mockCreateRoot, mockUnmountAtNode, mockRoots } =
-  (await import("@deckgl-fiber-renderer/reconciler")) as never;
+  (await import("@deckgl-fiber-renderer/reconciler")) as unknown as {
+    mockRender: ReturnType<typeof vi.fn>;
+    mockConfigure: ReturnType<typeof vi.fn>;
+    mockCreateRoot: ReturnType<typeof vi.fn>;
+    mockUnmountAtNode: ReturnType<typeof vi.fn>;
+    mockRoots: Map<unknown, unknown>;
+  };
 
 const { mockEnableLogging, mockDisableLogging } =
-  (await import("@deckgl-fiber-renderer/shared")) as never;
+  (await import("@deckgl-fiber-renderer/shared")) as unknown as {
+    mockEnableLogging: ReturnType<typeof vi.fn>;
+    mockDisableLogging: ReturnType<typeof vi.fn>;
+  };
 
 describe("Deckgl Component Tests", () => {
   beforeEach(() => {
@@ -215,7 +224,11 @@ describe("Deckgl Component Tests", () => {
     );
 
     // Assert - Should call configure with updated props
-    expect(mockConfigure).toHaveBeenCalledWith();
+    expect(mockConfigure).toHaveBeenCalledWith(
+      expect.objectContaining({
+        initialViewState: { latitude: 10, longitude: 10, zoom: 2 },
+      }),
+    );
   });
 
   it("should toggle debug mode", () => {

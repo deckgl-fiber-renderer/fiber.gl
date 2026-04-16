@@ -22,7 +22,14 @@ vi.mock(import("@deckgl-fiber-renderer/shared"), () => {
 });
 
 // Get the mocks after they've been set up
-const { mockUseStore, mockSelectors } = (await import("@deckgl-fiber-renderer/shared")) as never;
+const { mockUseStore, mockSelectors } =
+  (await import("@deckgl-fiber-renderer/shared")) as unknown as {
+    mockUseStore: ReturnType<typeof vi.fn>;
+    mockSelectors: {
+      deckgl: ReturnType<typeof vi.fn>;
+      setDeckgl: ReturnType<typeof vi.fn>;
+    };
+  };
 
 describe("Dom Hooks Tests", () => {
   describe("useDeckgl()", () => {

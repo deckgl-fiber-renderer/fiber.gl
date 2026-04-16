@@ -10,6 +10,7 @@ export default defineConfig({
   rules: {
     "func-style": "off",
     "no-inline-comments": "warn",
+    "prefer-to-be-falsy": "off",
     "sort-keys": "warn",
   },
 });

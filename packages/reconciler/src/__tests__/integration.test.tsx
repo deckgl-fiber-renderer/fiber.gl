@@ -10,7 +10,7 @@ import { createRoot, unmountAtNode } from "../renderer";
 
 // Register layers for testing
 extend({
-  ScatterplotLayer,
+  ScatterplotLayer: ScatterplotLayer as never,
 });
 
 describe("Reconciler Integration Tests", () => {
@@ -52,7 +52,7 @@ describe("Reconciler Integration Tests", () => {
     // Assert
     const state = root.store.getState();
     expect(state._passedLayers).toHaveLength(0); // No directly passed layers
-    expect(mockDeck.setProps).toHaveBeenCalledWith();
+    expect(mockDeck.setProps).toHaveBeenCalled();
   });
 
   it("renders multiple layers in hierarchy", async () => {
@@ -72,7 +72,7 @@ describe("Reconciler Integration Tests", () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Assert
-    expect(mockDeck.setProps).toHaveBeenCalledWith();
+    expect(mockDeck.setProps).toHaveBeenCalled();
   });
 
   it("triggers new instance when layer props update", async () => {

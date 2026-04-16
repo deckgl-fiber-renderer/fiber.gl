@@ -160,7 +160,7 @@ describe("layer element", () => {
         createInstance("layer", props, mockContainer, mockHostContext, mockFiber);
       });
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith();
+      expect(consoleErrorSpy).toHaveBeenCalled();
       const calls = consoleErrorSpy.mock.calls.flat().join(" ");
       expect(calls).toContain("View instance passed to <layer> element");
       expect(calls).toContain("Use <view view={...} /> instead");
@@ -192,7 +192,7 @@ describe("layer element", () => {
         createInstance("layer", props, mockContainer, mockHostContext, mockFiber);
       });
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith();
+      expect(consoleWarnSpy).toHaveBeenCalled();
       const calls = consoleWarnSpy.mock.calls.flat().join(" ");
       expect(calls).toContain('Layer missing explicit "id" prop');
     });
@@ -267,7 +267,7 @@ describe("layer element", () => {
         createInstance("scatterplotLayer", props, mockContainer, mockHostContext, mockFiber);
       });
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith();
+      expect(consoleWarnSpy).toHaveBeenCalled();
       const calls = consoleWarnSpy.mock.calls.flat().join(" ");
       expect(calls).toContain("deprecated <scatterplotLayer> element");
       expect(calls).toContain("Migrate to <layer layer={new ScatterplotLayer");

@@ -61,7 +61,7 @@ function Test1LoadingComponent({ children }: { children: React.ReactNode }) {
 }
 
 function Test1Component() {
-  return createElement(Test1LoadingComponent, {}, createElement(Test1ServerComponent));
+  return createElement(Test1LoadingComponent, { children: createElement(Test1ServerComponent) });
 }
 
 // Test 2: React 19 use() hook pattern
@@ -193,7 +193,7 @@ describe("Suspense with async queries (issue #15)", () => {
 
   it("should handle component that suspends while rendering a layer", async () => {
     // Setup test-specific promise
-    let resolveData: ((value: any[]) => void) | null = null;
+    let resolveData!: (value: any[]) => void;
     test1DataPromise = new Promise<any[]>((resolve) => {
       resolveData = resolve;
     });
@@ -204,12 +204,10 @@ describe("Suspense with async queries (issue #15)", () => {
     }).not.toThrow();
 
     // Resolve the data
-    if (resolveData) {
-      resolveData([
-        { position: [0, 0], radius: 100 },
-        { position: [1, 1], radius: 200 },
-      ]);
-    }
+    resolveData([
+      { position: [0, 0], radius: 100 },
+      { position: [1, 1], radius: 200 },
+    ]);
 
     // Allow React to process the resolved promise
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -222,7 +220,7 @@ describe("Suspense with async queries (issue #15)", () => {
 
   it("should handle React 19 use() hook pattern", async () => {
     // Setup test-specific promise
-    let resolveData: ((value: any[]) => void) | null = null;
+    let resolveData!: (value: any[]) => void;
     test2DataPromise = new Promise<any[]>((resolve) => {
       resolveData = resolve;
     });
@@ -233,9 +231,7 @@ describe("Suspense with async queries (issue #15)", () => {
     }).not.toThrow();
 
     // Resolve data
-    if (resolveData) {
-      resolveData([{ position: [0, 0] }]);
-    }
+    resolveData([{ position: [0, 0] }]);
 
     await new Promise((resolve) => setTimeout(resolve, 0));
 
@@ -247,8 +243,8 @@ describe("Suspense with async queries (issue #15)", () => {
 
   it("should handle nested Suspense boundaries with async components", async () => {
     // Setup test-specific promises
-    let resolve1: ((value: any[]) => void) | null = null;
-    let resolve2: ((value: any[]) => void) | null = null;
+    let resolve1!: (value: any[]) => void;
+    let resolve2!: (value: any[]) => void;
     test3Promise1 = new Promise<any[]>((r) => (resolve1 = r));
     test3Promise2 = new Promise<any[]>((r) => (resolve2 = r));
 
@@ -258,12 +254,8 @@ describe("Suspense with async queries (issue #15)", () => {
     }).not.toThrow();
 
     // Resolve both
-    if (resolve1) {
-      resolve1([]);
-    }
-    if (resolve2) {
-      resolve2([]);
-    }
+    resolve1([]);
+    resolve2([]);
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(() => {

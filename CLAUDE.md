@@ -100,6 +100,16 @@ pnpm exec turbo build --filter=@deckgl-fiber-renderer/dom # package.json "name" 
 pnpm exec turbo dev --filter=examples-nextjs # package.json "name" in examples/*
 ```
 
+**Testing TypeScript (tsc) for test Files**
+
+You can find and correct typescript errors in test files by pointing to the appropriate tsconfig:
+
+```bash
+pnpm --filter=@deckgl-fiber-renderer/reconciler exec tsc -p tsconfig.test.json --noEmit
+```
+
+Note this is different than vitest typescript type tests.
+
 **Pre-commit hooks:**
 This project uses lefthook for pre-commit hooks. Changes are automatically formatted and linted before commit.
 

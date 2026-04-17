@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "include": ["./src/**/*.test.ts", "./src/**/*.test-d.ts"],
+  "exclude": ["node_modules", "dist"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "target": "ES2023",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "sourceMap": true,
+    "declaration": true,
+    "lib": ["ESNext", "dom", "dom.iterable"]
+  }
+}

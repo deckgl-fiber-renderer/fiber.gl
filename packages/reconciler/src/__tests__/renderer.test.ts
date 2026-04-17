@@ -5,10 +5,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { createRoot, roots, unmountAtNode } from "../renderer";
 import type { RootElement } from "../types";
+import { createTestRoot } from "./test-renderer";
 
 /**
- * Creates a test RootElement instance
- * Centralizes type assertion for easier maintenance
+ * Creates a lightweight RootElement for testing renderer API
+ * Use createTestRoot() when you need full deck.gl integration
  */
 function createTestRootElement(): RootElement {
   return {} as RootElement;
@@ -26,7 +27,8 @@ describe("renderer", () => {
       }
     }
   });
-  describe(createRoot, () => {
+
+  describe("createRoot()", () => {
     it("calling createRoot twice on same node returns same root", () => {
       // Arrange
       const node = createTestRootElement();
@@ -70,8 +72,7 @@ describe("renderer", () => {
   describe("configure", () => {
     it("should set _passedLayers when layers prop is provided", () => {
       // Arrange
-      const node = createTestRootElement();
-      const root = createRoot(node);
+      const { root } = createTestRoot();
       const passedLayers = [
         new ScatterplotLayer({ data: [], id: "passed-1" }),
         new ScatterplotLayer({ data: [], id: "passed-2" }),
@@ -80,7 +81,6 @@ describe("renderer", () => {
       // Act
       root.configure({
         layers: passedLayers,
-        views: [],
       });
 
       // Assert
@@ -90,14 +90,13 @@ describe("renderer", () => {
 
     it("should not reconfigure when called multiple times", () => {
       // Arrange
-      const node = createTestRootElement();
-      const root = createRoot(node);
+      const { root } = createTestRoot();
 
       // Act
-      root.configure({ views: [] });
+      root.configure({});
       const firstDeckgl = root.store.getState().deckgl;
 
-      root.configure({ views: [] });
+      root.configure({});
       const secondDeckgl = root.store.getState().deckgl;
 
       // Assert
@@ -106,15 +105,12 @@ describe("renderer", () => {
 
     it("should update _passedLayers even when already configured", () => {
       // Arrange
-      const node = createTestRootElement();
-      const root = createRoot(node);
-      root.configure({ views: [] });
+      const { root } = createTestRoot();
       const newLayers = [new ScatterplotLayer({ data: [], id: "new-layer" })];
 
       // Act
       root.configure({
         layers: newLayers,
-        views: [],
       });
 
       // Assert
@@ -130,7 +126,6 @@ describe("renderer", () => {
       // Act
       root.configure({
         interleaved: true,
-        views: [],
       });
 
       // Assert
@@ -142,30 +137,23 @@ describe("renderer", () => {
     });
   });
 
-  describe(unmountAtNode, () => {
+  describe("unmountAtNode()", () => {
     it("should finalize deckgl and remove root from map", () => {
       // Arrange
-      const node = createTestRootElement();
-      const root = createRoot(node);
-      root.configure({ views: [] });
-      const { deckgl } = root.store.getState();
+      const { root, deck } = createTestRoot();
+      const rootElement = [...roots.keys()].find((k) => roots.get(k) === root);
+      if (!rootElement) {
+        throw new Error("Root element not found");
+      }
 
-      // Track finalize behavior without spying on implementation
-      const originalFinalize = deckgl.finalize;
-      let finalizeCalled = false;
-      deckgl.finalize = () => {
-        finalizeCalled = true;
-        originalFinalize.call(deckgl);
-      };
-
-      expect(roots.has(node)).toBeTruthy();
+      expect(roots.has(rootElement)).toBeTruthy();
 
       // Act
-      unmountAtNode(node);
+      unmountAtNode(rootElement);
 
       // Assert
-      expect(finalizeCalled).toBeTruthy();
-      expect(roots.has(node)).toBeFalsy();
+      expect(deck.finalize).toHaveBeenCalledOnce();
+      expect(roots.has(rootElement)).toBeFalsy();
       expect(root.store.getState().deckgl).toBeUndefined();
     });
 
@@ -182,9 +170,7 @@ describe("renderer", () => {
   describe("render", () => {
     it("should update container with provided children", () => {
       // Arrange
-      const node = createTestRootElement();
-      const root = createRoot(node);
-      root.configure({ views: [] });
+      const { root } = createTestRoot();
       const children = React.createElement("div", null, "test content");
 
       // Act & Assert
@@ -200,14 +186,17 @@ describe("renderer", () => {
           const node = createTestRootElement();
 
           // Act
-          const roots = Array.from({ length: callCount }, () => createRoot(node));
+          const allRoots = Array.from({ length: callCount }, () => createRoot(node));
 
           // Assert
-          const firstRoot = roots[0];
+          const [firstRoot] = allRoots;
+          if (firstRoot === undefined) {
+            throw new Error("Expected at least one root");
+          }
           return (
-            roots.every((root) => root === firstRoot) &&
-            roots.every((root) => root.store === firstRoot.store) &&
-            roots.every((root) => root.container === firstRoot.container)
+            allRoots.every((root) => root === firstRoot) &&
+            allRoots.every((root) => root.store === firstRoot.store) &&
+            allRoots.every((root) => root.container === firstRoot.container)
           );
         }),
       );
@@ -227,14 +216,16 @@ describe("renderer", () => {
 
     it("should complete cleanup even when finalize throws", () => {
       // Arrange
-      const node = createTestRootElement();
-      const root = createRoot(node);
-      root.configure({ views: [] });
+      const { root, deck } = createTestRoot();
+      const rootElement = [...roots.keys()].find((k) => roots.get(k) === root);
+      if (!rootElement) {
+        throw new Error("Root element not found");
+      }
 
-      const { deckgl } = root.store.getState();
-      deckgl.finalize = () => {
+      // Make finalize throw
+      deck.finalize.mockImplementation(() => {
         throw new Error("Finalize failed");
-      };
+      });
 
       // Suppress console errors during this test to avoid worker teardown issues
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
@@ -242,11 +233,11 @@ describe("renderer", () => {
       try {
         // Act & Assert
         // Error propagates to caller
-        expect(() => unmountAtNode(node)).toThrow("Finalize failed");
+        expect(() => unmountAtNode(rootElement)).toThrow("Finalize failed");
 
         // But cleanup still completes (try-finally ensures this)
         // Root IS removed even when finalize throws
-        expect(roots.has(node)).toBeFalsy();
+        expect(roots.has(rootElement)).toBeFalsy();
       } finally {
         consoleErrorSpy.mockRestore();
       }

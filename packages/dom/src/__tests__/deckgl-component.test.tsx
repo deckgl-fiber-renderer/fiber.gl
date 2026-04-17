@@ -22,18 +22,18 @@ vi.mock(import("@deckgl-fiber-renderer/shared"), () => {
 
 // Mock the reconciler module
 vi.mock(import("@deckgl-fiber-renderer/reconciler"), () => {
-  const mockRender = vi.fn();
-  const mockConfigure = vi.fn();
-  const mockCreateRoot = vi.fn(() => ({
+  const mockRender = vi.fn<() => void>();
+  const mockConfigure = vi.fn<() => void>();
+  const mockCreateRoot = vi.fn<() => unknown>(() => ({
     configure: mockConfigure,
     render: mockRender,
     store: {
-      getState: vi.fn(),
-      setState: vi.fn(),
-      subscribe: vi.fn(),
+      getState: vi.fn<() => unknown>(),
+      setState: vi.fn<() => void>(),
+      subscribe: vi.fn<() => void>(),
     },
   }));
-  const mockUnmountAtNode = vi.fn();
+  const mockUnmountAtNode = vi.fn<() => void>();
   const mockRoots = new Map();
 
   return {

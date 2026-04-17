@@ -8,8 +8,8 @@ vi.mock(import("@deckgl-fiber-renderer/shared"), () => {
   // oxlint-disable-next-line vitest/require-mock-type-parameters
   const mockUseStore = vi.fn();
   const mockSelectors = {
-    deckgl: vi.fn((state) => state.deckgl),
-    setDeckgl: vi.fn((state) => state.setDeckgl),
+    deckgl: vi.fn<(state: unknown) => unknown>((state) => state.deckgl),
+    setDeckgl: vi.fn<(state: unknown) => unknown>((state) => state.setDeckgl),
   };
 
   return {
@@ -36,8 +36,8 @@ describe("Dom Hooks Tests", () => {
     it("should return deckgl instance from store", () => {
       // Arrange
       const mockDeckgl = {
-        finalize: vi.fn(),
-        setProps: vi.fn(),
+        finalize: vi.fn<() => void>(),
+        setProps: vi.fn<() => void>(),
       };
       mockUseStore.mockReturnValue(mockDeckgl);
 
@@ -51,8 +51,16 @@ describe("Dom Hooks Tests", () => {
 
     it("should update when store changes", () => {
       // Arrange
-      const mockDeckgl1 = { finalize: vi.fn(), id: "deck1", setProps: vi.fn() };
-      const mockDeckgl2 = { finalize: vi.fn(), id: "deck2", setProps: vi.fn() };
+      const mockDeckgl1 = {
+        finalize: vi.fn<() => void>(),
+        id: "deck1",
+        setProps: vi.fn<() => void>(),
+      };
+      const mockDeckgl2 = {
+        finalize: vi.fn<() => void>(),
+        id: "deck2",
+        setProps: vi.fn<() => void>(),
+      };
 
       mockUseStore.mockReturnValue(mockDeckgl1);
       const { result, rerender } = renderHook(() => useDeckgl());

@@ -123,7 +123,7 @@ describe("config-lifecycle", () => {
     it("should fire after requestAnimationFrame completes", async () => {
       // Arrange
       let rafCompleted = false;
-      const callback = vi.fn(() => {
+      const callback = vi.fn<(time: number) => void>(() => {
         // Verify RAF completed before callback
         expect(rafCompleted).toBeTruthy();
       });

@@ -1,17 +1,33 @@
-import { DeckglExample } from "./_deckgl";
-import { Sidebar } from "./_sidebar";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { selectedParser, searchParser } from "@/utils/params";
+import { MapClient } from "@/modules/map";
+import { AirportsLayer } from "@/features/airports-layer";
+import { AirportsList } from "@/features/airports-list";
+import { AirportsCard } from "@/features/airports-card";
+import { SearchBox } from "@/components/search-box";
 
-export default async function Page() {
-  const response = await fetch(
-    "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Stadiums/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson",
-  );
+interface PageProps {
+	searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
 
-  const data = await response.json();
+/**
+ * Home page composing all components
+ */
+export default async function Page({ searchParams }: PageProps) {
+	const params = await searchParams;
 
-  return (
-    <>
-      <DeckglExample data={data} />
-      <Sidebar data={data} />
-    </>
-  );
+	// Parse URL params
+	const selected = selectedParser.parseServerSide(params.selected);
+	const search = searchParser.parseServerSide(params.q);
+
+	return (
+		<NuqsAdapter>
+			<MapClient>
+				<AirportsLayer search={search ?? undefined} />
+			</MapClient>
+			<AirportsList search={search ?? undefined} />
+			<SearchBox />
+			{selected && <AirportsCard id={selected} />}
+		</NuqsAdapter>
+	);
 }

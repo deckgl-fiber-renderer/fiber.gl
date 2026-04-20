@@ -1,21 +1,14 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Suspense, StrictMode } from "react";
+import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { App } from "./app";
 
-import Page from "./page";
+const rootElement = document.querySelector("#root");
+if (!rootElement) {
+  throw new Error("Root element not found");
+}
 
-import "maplibre-gl/dist/maplibre-gl.css";
-import "./_global.css";
-
-// Create a client
-const queryClient = new QueryClient();
-
-createRoot(document.querySelector("#root")).render(
+createRoot(rootElement).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Suspense fallback={null}>
-        <Page />
-      </Suspense>
-    </QueryClientProvider>
+    <App />
   </StrictMode>,
 );

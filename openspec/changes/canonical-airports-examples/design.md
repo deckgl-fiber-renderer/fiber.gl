@@ -138,7 +138,89 @@ https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/US_Airport/Fe
 
 **Rationale**: Users learn framework-appropriate patterns, not generic lowest-common-denominator code.
 
-### 6. Directory Naming Convention
+### 6. Folder Architecture
+
+**Decision**: Follow definitive-react.md import hierarchy and semantic organization for all examples.
+
+**Structure**:
+```
+src/
+├── data-access/    # CRUD/data fetching (domain-based)
+├── utils/          # Pure utility functions
+├── hooks/          # Reusable React hooks  
+├── stores/         # Zustand stores
+├── modules/        # Shared infrastructure (map integration)
+├── features/       # Five-file RSC pattern components (data-fetching)
+└── components/     # Pure UI components (no data fetching)
+```
+
+**Next.js Example Structure**:
+```
+src/
+  data-access/
+    airports/
+      server.ts      # Server-side data access (airports, airportById)
+      types.ts       # TypeScript types (Airport, AirportFeature, etc.)
+  
+  utils/
+    params.ts        # URL param parsers (nuqs)
+  
+  hooks/
+    use-selected.ts  # Selected state hook
+    use-search.ts    # Search state hook
+    use-hover.ts     # Hover state hook
+  
+  stores/
+    hover.ts         # Transient hover state
+  
+  modules/
+    map/
+      constants.ts   # Map view parameters
+      maplibre.ts    # Maplibre integration utility
+      index.tsx      # Map wrapper component
+  
+  features/
+    airports-layer/  # Five-file pattern
+    airports-list/   # Five-file pattern
+    airports-card/   # Five-file pattern
+  
+  components/
+    search-box.tsx   # Pure UI component
+```
+
+**Rationale**:
+- **Clear boundaries**: Features fetch data and use five-file pattern; components are pure UI
+- **Import hierarchy compliance**: Follows the 8-tier system from definitive-react.md, preventing circular dependencies
+- **Modules vs Features**: Map is infrastructure/integration (module), airports are business features
+- **Domain-based data-access**: Airport-related data logic is colocated, enabling independent refactoring
+- **Consistency**: All four examples follow the same organizational principles
+
+**Framework Adaptations**:
+- **Next.js**: `data-access/` uses "use cache" for server-side fetching
+- **Vite**: `data-access/` contains client-side fetch functions, features composed as single files
+- **Tanstack Start**: `data-access/` replaced by server functions in `app/server/`
+- **React Router v7**: `data-access/` provides functions called from loaders, features receive data via props
+
+**Import Hierarchy Tiers** (from definitive-react.md):
+| Tier | Directories | Can Import From |
+|------|-------------|-----------------|
+| 1 | `types/` | Nothing |
+| 2 | `utils/` | Tier 1 |
+| 3 | (configs) | Tiers 1–2 |
+| 4 | `components/`, `stores/`, `hooks/` | Tiers 1–3 |
+| 5 | `modules/` | Tiers 1–4 |
+| 6 | `data-access/` | Tiers 1–5 |
+| 7 | `features/` | Tiers 1–6 |
+| 8 | `app/` | Tiers 1–7 |
+
+This hierarchy prevents circular dependencies and makes the codebase easier to reason about.
+
+**Alternatives Considered**:
+- **Flat components/ directory**: Simpler but loses semantic meaning. Can't tell which components fetch data and which are pure UI.
+- **Feature-based grouping** (all airports code together): Works for single-feature apps but breaks down when features share infrastructure. Map module is used by multiple features.
+- **No modules/ directory**: Colocate map with features. Problem: which feature owns it? Map is infrastructure, not a business feature.
+
+### 7. Directory Naming Convention
 
 **Decision**: Simple framework names without "airports" suffix.
 

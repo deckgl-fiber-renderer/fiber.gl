@@ -44,6 +44,30 @@ function MyMap() {
 
 [→ Get Started](./packages/dom#tutorial)
 
+## Examples
+
+Three canonical examples demonstrate framework-idiomatic integration patterns:
+
+### [Next.js](./examples/nextjs)
+**App Router with React Server Components**  
+Shows the five-file RSC pattern with `"use cache"` data access layer, server/client component separation, and Suspense boundaries. Demonstrates modern Next.js architecture with URL state management via `nuqs`.
+
+### [Vite](./examples/vite)
+**Client-side with TanStack Query**  
+Pure client-side architecture using TanStack Query for data caching, Zustand for state management with manual URL synchronization, and single-file component organization.
+
+### [React Router](./examples/react-router)
+**v7 with Loaders**  
+Server-side rendering with loader functions for data fetching, `nuqs` for URL state management, and typed route patterns. Shows proper separation between server-side data access and client-side rendering.
+
+**Common Features Across Examples:**
+- ✅ Airports scatterplot (20k FAA dataset)
+- ✅ Bidirectional hover/click interactions between map and list
+- ✅ Search with server-side filtering
+- ✅ Detail card on selection
+- ✅ Maplibre base map in interleaved mode
+- ✅ V2 syntax with explicit layer IDs
+
 ## Packages
 
 - **[@deckgl-fiber-renderer/dom](./packages/dom)** - Main package with `<Deckgl>` component and hooks

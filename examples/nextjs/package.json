@@ -1,0 +1,31 @@
+{
+  "name": "examples-nextjs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/widgets": "catalog:",
+    "@deckgl-fiber-renderer/dom": "workspace:*",
+    "client-only": "^0.0.1",
+    "maplibre-gl": "catalog:",
+    "next": "^15.2.0",
+    "nuqs": "^2.2.3",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-error-boundary": "^6.1.1",
+    "server-only": "^0.0.1",
+    "zustand": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
+  }
+}

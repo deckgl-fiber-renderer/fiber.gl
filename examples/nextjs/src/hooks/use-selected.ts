@@ -8,14 +8,17 @@ import { selectedParser } from "@/utils/params";
  * Returns [selected | null, setSelected]
  */
 export function useSelected() {
-	const [selected, setSelected] = useQueryState("selected", selectedParser.withOptions({ shallow: false }));
+  const [selected, setSelected] = useQueryState(
+    "selected",
+    selectedParser.withOptions({ shallow: false }),
+  );
 
-	// Convert empty string to null for easier checking
-	const normalizedSelected = selected === "" ? null : selected;
+  // Convert empty string to null for easier checking
+  const normalizedSelected = selected === "" ? null : selected;
 
-	const setNormalizedSelected = (id: string | null) => {
-		setSelected(id === null ? "" : id);
-	};
+  const setNormalizedSelected = (id: string | null) => {
+    setSelected(id === null ? "" : id);
+  };
 
-	return [normalizedSelected, setNormalizedSelected] as const;
+  return [normalizedSelected, setNormalizedSelected] as const;
 }

@@ -5,18 +5,18 @@ import { AirportsLayerLoading } from "./loading";
 import { AirportsLayerError } from "./error";
 
 interface AirportsLayerProps {
-	search?: string;
+  search?: string;
 }
 
 /**
  * Orchestrator component with Suspense and ErrorBoundary
  */
 export function AirportsLayer({ search }: AirportsLayerProps) {
-	return (
-		<ErrorBoundary FallbackComponent={AirportsLayerError}>
-			<Suspense fallback={<AirportsLayerLoading />}>
-				<AirportsLayerServer search={search} />
-			</Suspense>
-		</ErrorBoundary>
-	);
+  return (
+    <ErrorBoundary FallbackComponent={AirportsLayerError}>
+      <Suspense fallback={<AirportsLayerLoading />}>
+        <AirportsLayerServer search={search} />
+      </Suspense>
+    </ErrorBoundary>
+  );
 }

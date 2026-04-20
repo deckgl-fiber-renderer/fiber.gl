@@ -5,18 +5,18 @@ import { AirportsCardLoading } from "./loading";
 import { AirportsCardError } from "./error";
 
 interface AirportsCardProps {
-	id: string;
+  id: string;
 }
 
 /**
  * Orchestrator component with Suspense and ErrorBoundary
  */
 export function AirportsCard({ id }: AirportsCardProps) {
-	return (
-		<ErrorBoundary FallbackComponent={AirportsCardError}>
-			<Suspense fallback={<AirportsCardLoading />}>
-				<AirportsCardServer id={id} />
-			</Suspense>
-		</ErrorBoundary>
-	);
+  return (
+    <ErrorBoundary FallbackComponent={AirportsCardError}>
+      <Suspense fallback={<AirportsCardLoading />}>
+        <AirportsCardServer id={id} />
+      </Suspense>
+    </ErrorBoundary>
+  );
 }

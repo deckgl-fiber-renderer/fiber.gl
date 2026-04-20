@@ -7,27 +7,27 @@ import { AirportsCard } from "@/features/airports-card";
 import { SearchBox } from "@/components/search-box";
 
 interface PageProps {
-	searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 /**
  * Home page composing all components
  */
 export default async function Page({ searchParams }: PageProps) {
-	const params = await searchParams;
+  const params = await searchParams;
 
-	// Parse URL params
-	const selected = selectedParser.parseServerSide(params.selected);
-	const search = searchParser.parseServerSide(params.q);
+  // Parse URL params
+  const selected = selectedParser.parseServerSide(params.selected);
+  const search = searchParser.parseServerSide(params.q);
 
-	return (
-		<NuqsAdapter>
-			<MapClient>
-				<AirportsLayer search={search ?? undefined} />
-			</MapClient>
-			<AirportsList search={search ?? undefined} />
-			<SearchBox />
-			{selected && <AirportsCard id={selected} />}
-		</NuqsAdapter>
-	);
+  return (
+    <NuqsAdapter>
+      <MapClient>
+        <AirportsLayer search={search ?? undefined} />
+      </MapClient>
+      <AirportsList search={search ?? undefined} />
+      <SearchBox />
+      {selected && <AirportsCard id={selected} />}
+    </NuqsAdapter>
+  );
 }

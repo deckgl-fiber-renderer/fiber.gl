@@ -4,7 +4,7 @@ import { parseAsString } from "nuqs/server";
  * Parser for selected airport ID URL parameter
  */
 export const selectedParser = parseAsString.withDefault("").withOptions({
-	clearOnDefault: true,
+  clearOnDefault: true,
 });
 
 /**

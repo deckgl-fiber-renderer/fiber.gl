@@ -235,37 +235,6 @@ declare global {
 
 **Learn more:** https://deck.gl/docs/developer-guide/custom-layers
 
-### Handle Layer Updates
-
-Optimize re-renders with proper memoization.
-
-**Problem:** Layer recreates on every render
-
-```tsx
-// ❌ Bad - new instance every render
-<layer layer={new ScatterplotLayer({ id: "points", data })} />
-```
-
-**Solution:** Memoize layer creation
-
-```tsx
-// ✅ Good - stable instance
-const pointsLayer = useMemo(
-  () =>
-    new ScatterplotLayer({
-      id: "points",
-      data,
-      getPosition: (d) => d.coordinates,
-      getRadius: radius,
-    }),
-  [data, radius],
-);
-
-<layer layer={pointsLayer} />;
-```
-
-**Why this matters:** deck.gl diffs layers by ID and props. Stable instances enable efficient updates. New instances trigger re-initialization even when props haven't changed.
-
 ---
 
 ## Reference
@@ -446,32 +415,283 @@ The reconciler creates new layer instances on prop changes. deck.gl's diffing al
 
 ### v1 vs v2 Syntax
 
-**v1 (deprecated):**
+#### Understanding v1 Auto-Registration
+
+In v1, importing the side-effects module automatically registered all deck.gl layers:
 
 ```tsx
+// v1 side-effects import (no longer works in v2)
 import "@deckgl-fiber-renderer/reconciler/side-effects";
-
-<scatterplotLayer id="points" data={data} getPosition={(d) => d.coordinates} />;
 ```
 
-**v2 (current):**
+This single import executed code that called `extend()` with 30+ layer constructors:
 
 ```tsx
+// What the v1 side-effects import did internally:
+extend({
+  // Views
+  MapView,
+  OrthographicView,
+  OrbitView,
+  FirstPersonView,
+  GlobeView,
+
+  // @deck.gl/layers (13 layers)
+  ArcLayer,
+  BitmapLayer,
+  IconLayer,
+  LineLayer,
+  PointCloudLayer,
+  ScatterplotLayer,
+  ColumnLayer,
+  GridCellLayer,
+  PathLayer,
+  PolygonLayer,
+  GeoJsonLayer,
+  TextLayer,
+  SolidPolygonLayer,
+
+  // @deck.gl/geo-layers (14 layers)
+  S2Layer,
+  QuadkeyLayer,
+  TileLayer,
+  TripsLayer,
+  H3ClusterLayer,
+  H3HexagonLayer,
+  Tile3DLayer,
+  TerrainLayer,
+  MVTLayer,
+  GeohashLayer,
+  GreatCircleLayer,
+  WMSLayer,
+
+  // @deck.gl/mesh-layers (2 layers)
+  ScenegraphLayer,
+  SimpleMeshLayer,
+});
+```
+
+After this registration, you could use layer-specific JSX elements:
+
+```tsx
+<scatterplotLayer id="points" data={data} getPosition={(d) => d.coordinates} />
+<pathLayer id="routes" data={routes} getPath={(d) => d.path} />
+```
+
+#### ⚠️ The Migration Footgun
+
+**JSX elements still have TypeScript types in v2, but they won't work at runtime without proper registration.**
+
+This is the most common migration error:
+
+```tsx
+// No registration - JSX types exist but runtime catalog is empty
+<scatterplotLayer id="points" data={data} getPosition={(d) => d.coordinates} />
+//              ^^^^^^^^^ TypeScript: ✅  Runtime: ❌ "Unknown element type: scatterplotLayer"
+```
+
+**Why this happens:**
+
+1. **TypeScript types exist:** `@deckgl-fiber-renderer/types` declares JSX elements for all layers for backwards compatibility
+2. **Runtime registry is empty:** Without manual `extend()` calls, the reconciler doesn't know how to instantiate `scatterplotLayer`
+3. **Side-effects import is a no-op in v2:** It only shows a deprecation warning - it doesn't register layers anymore
+4. **TypeScript can't catch this:** Type definitions don't guarantee runtime behavior
+
+**What breaks:**
+
+- Your app renders nothing or shows errors
+- No layers appear on the map
+- Console shows "Unknown element type" errors
+
+#### Migration Strategies
+
+**Option 1: Migrate to v2 syntax (Recommended)**
+
+Replace layer-specific elements with the universal `<layer>` element:
+
+```tsx
+// ✅ v2 - No registration needed
 import { ScatterplotLayer } from "@deck.gl/layers";
 
-<layer layer={new ScatterplotLayer({ id: "points", data, getPosition: (d) => d.coordinates })} />;
+<layer
+  layer={
+    new ScatterplotLayer({
+      id: "points",
+      data,
+      getPosition: (d) => d.coordinates,
+    })
+  }
+/>;
 ```
 
-**Migration benefits:**
+**Benefits:**
 
+- ✅ No registration required - works immediately
 - ✅ Full TypeScript generics with type inference
 - ✅ Automatic code-splitting (only bundle imported layers)
-- ✅ Custom layers work without registration
-- ✅ Explicit layer instances match deck.gl idioms
+- ✅ Custom layers work without setup
+- ✅ Future-proof (v1 syntax removed in v3)
 
-**Backwards compatibility:** v1 syntax still works in v2 but shows deprecation warnings. It will be removed in v3.
+**Option 2: Stay on v1 syntax (Not recommended)**
 
-**Migration:** Replace layer-specific elements with `<layer>` and instantiate layers explicitly. Remove `extend()` calls and side-effects imports.
+If you must stay on v1 syntax temporarily, you need to manually register layers using `extend()`.
+
+**For complete v1 behavior** (all default layers):
+
+```tsx
+// Recreate v1 side-effects behavior manually
+import { extend } from "@deckgl-fiber-renderer/dom";
+import {
+  FirstPersonView,
+  _GlobeView as GlobeView,
+  MapView,
+  OrbitView,
+  OrthographicView,
+} from "@deck.gl/core";
+import {
+  GeohashLayer,
+  GreatCircleLayer,
+  H3ClusterLayer,
+  H3HexagonLayer,
+  MVTLayer,
+  QuadkeyLayer,
+  S2Layer,
+  TerrainLayer,
+  Tile3DLayer,
+  TileLayer,
+  TripsLayer,
+  _WMSLayer as WMSLayer,
+} from "@deck.gl/geo-layers";
+import {
+  ArcLayer,
+  BitmapLayer,
+  ColumnLayer,
+  GeoJsonLayer,
+  GridCellLayer,
+  IconLayer,
+  LineLayer,
+  PathLayer,
+  PointCloudLayer,
+  PolygonLayer,
+  ScatterplotLayer,
+  SolidPolygonLayer,
+  TextLayer,
+} from "@deck.gl/layers";
+import { ScenegraphLayer, SimpleMeshLayer } from "@deck.gl/mesh-layers";
+
+// Register all layers
+extend({
+  // Views
+  MapView,
+  OrthographicView,
+  OrbitView,
+  FirstPersonView,
+  GlobeView,
+  // @deck.gl/layers
+  ArcLayer,
+  BitmapLayer,
+  IconLayer,
+  LineLayer,
+  PointCloudLayer,
+  ScatterplotLayer,
+  ColumnLayer,
+  GridCellLayer,
+  PathLayer,
+  PolygonLayer,
+  GeoJsonLayer,
+  TextLayer,
+  SolidPolygonLayer,
+  // @deck.gl/geo-layers
+  S2Layer,
+  QuadkeyLayer,
+  TileLayer,
+  TripsLayer,
+  H3ClusterLayer,
+  H3HexagonLayer,
+  Tile3DLayer,
+  TerrainLayer,
+  MVTLayer,
+  MvtLayer: MVTLayer,
+  WMSLayer,
+  WmsLayer: WMSLayer,
+  GeohashLayer,
+  GreatCircleLayer,
+  // @deck.gl/mesh-layers
+  ScenegraphLayer,
+  SimpleMeshLayer,
+});
+
+// Now v1 syntax works
+<scatterplotLayer id="points" data={data} />;
+```
+
+**For minimal registration** (only layers you need):
+
+```tsx
+// Register only what you use
+import { extend } from "@deckgl-fiber-renderer/dom";
+import { ScatterplotLayer, PathLayer } from "@deck.gl/layers";
+
+extend({ ScatterplotLayer, PathLayer });
+
+// Now these specific layers work
+<scatterplotLayer id="points" data={data} />
+<pathLayer id="routes" data={routes} />
+```
+
+**Downsides of staying on v1:**
+
+- ⚠️ Shows deprecation warnings in development mode
+- ⚠️ Will break in v3 (complete removal)
+- ⚠️ No TypeScript generics support
+- ⚠️ Bundles all layers if you use complete registration
+- ⚠️ Easy to forget registering a layer (runtime errors)
+
+#### Migration Checklist
+
+Migrating from v1 to v2:
+
+1. **Remove the side-effects import** (it's a no-op in v2):
+
+   ```tsx
+   // ❌ Remove this - doesn't work anymore
+   import "@deckgl-fiber-renderer/reconciler/side-effects";
+   ```
+
+2. **Import layer constructors:**
+
+   ```tsx
+   // ✅ Add explicit imports
+   import { ScatterplotLayer, PathLayer } from "@deck.gl/layers";
+   ```
+
+3. **Replace layer elements:**
+
+   ```tsx
+   // ❌ Old
+   <scatterplotLayer id="points" data={data} getPosition={(d) => d.coordinates} />
+
+   // ✅ New
+   <layer layer={new ScatterplotLayer({ id: "points", data, getPosition: (d) => d.coordinates })} />
+   ```
+
+4. **Remove `extend()` calls** (no longer needed)
+
+5. **Add TypeScript generics** (optional but recommended):
+
+   ```tsx
+   type DataPoint = { coordinates: [number, number]; value: number };
+
+   <layer
+     layer={
+       new ScatterplotLayer<DataPoint>({
+         id: "points",
+         data,
+         getPosition: (d) => d.coordinates, // d typed as DataPoint
+       })
+     }
+   />;
+   ```
 
 ---
 

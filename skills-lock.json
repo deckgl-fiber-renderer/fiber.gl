@@ -51,6 +51,11 @@
       "sourceType": "github",
       "computedHash": "f12959b4420dec47e20becfc6e70d8723347ff0c13a7cb463e1bb9bc6603637d"
     },
+    "documentation-writer": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "ee53d65b163cd7eb953a930c95841cfe398cc2c0bd24c06508bbaa07c432be35"
+    },
     "pnpm": {
       "source": "antfu/skills",
       "sourceType": "github",

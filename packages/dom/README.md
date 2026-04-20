@@ -1,64 +1,39 @@
 # @deckgl-fiber-renderer/dom
 
-A React renderer for deck.gl. Lets you build deck.gl visualizations using React components and hooks, with TypeScript support.
+React renderer for deck.gl. Build geospatial visualizations using React components and hooks with full TypeScript support.
 
 ## Installation
 
 ```bash
-# pnpm
 pnpm add @deckgl-fiber-renderer/dom
-
-# npm
-npm install @deckgl-fiber-renderer/dom
-
-# yarn
-yarn add @deckgl-fiber-renderer/dom
 ```
 
-### Requirements
-
-- **React 19.0.0** or later
-- **deck.gl ^9.1.0** or later
-
-You'll also need to install deck.gl packages for the layers you want to use:
+### Peer Dependencies
 
 ```bash
-pnpm add @deck.gl/core @deck.gl/layers
+pnpm add react react-dom @deck.gl/core @deck.gl/layers
 ```
 
-## Table of Contents
+**Requirements:** React `19.0.0+`, deck.gl `^9.1.0`
 
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Core Concepts](#core-concepts)
-  - [The Deckgl Component](#the-deckgl-component)
-  - [The layer Element](#the-layer-element)
-  - [The view Element](#the-view-element)
-  - [Development Mode Validation](#development-mode-validation)
-- [API Reference](#api-reference)
-  - [Deckgl Props](#deckgl-props)
-  - [useDeckgl Hook](#usedeck gl-hook)
-  - [layer and view Props](#layer-and-view-props)
-- [Common Patterns](#common-patterns)
-  - [Basemap Integration](#basemap-integration)
-  - [Multiple Views](#multiple-views)
-  - [Custom Layers](#custom-layers)
-- [Migration from v1](#migration-from-v1)
-- [Backwards Compatibility](#backwards-compatibility)
-- [Examples](#examples)
+---
 
-## Quick Start
+## Tutorial
 
-Here's a minimal example to get you started:
+### Your First Map
+
+Build a working scatterplot visualization in 3 steps.
+
+**1. Create the component**
 
 ```tsx
-import { ScatterplotLayer } from "@deck.gl/layers";
 import { Deckgl } from "@deckgl-fiber-renderer/dom";
+import { ScatterplotLayer } from "@deck.gl/layers";
 
 function App() {
   const data = [
-    { position: [-122.45, 37.8], size: 100 },
-    { position: [-122.46, 37.81], size: 200 },
+    { position: [-122.45, 37.8], size: 100, name: "Point A" },
+    { position: [-122.46, 37.81], size: 200, name: "Point B" },
   ];
 
   return (
@@ -68,13 +43,12 @@ function App() {
         latitude: 37.8,
         zoom: 12,
       }}
-      width="100%"
-      height="100vh"
+      style={{ width: "100%", height: "100vh" }}
     >
       <layer
         layer={
           new ScatterplotLayer({
-            id: "scatterplot",
+            id: "points",
             data,
             getPosition: (d) => d.position,
             getRadius: (d) => d.size,
@@ -87,299 +61,53 @@ function App() {
 }
 ```
 
-For more examples and patterns, see the [examples directory](../../examples/).
-
-## Core Concepts
-
-### The Deckgl Component
-
-The `<Deckgl>` component is the root container for your deck.gl visualization. It creates the deck.gl instance and provides context to child layers and views.
+**2. Add interactivity**
 
 ```tsx
-<Deckgl
-  initialViewState={{
-    longitude: -122.45,
-    latitude: 37.8,
-    zoom: 12,
-  }}
-  width="100%"
-  height="100vh"
->
-  {/* layers and views go here */}
-</Deckgl>
-```
+import { useState } from "react";
 
-#### The interleaved Prop
+function App() {
+  const [hovered, setHovered] = useState(null);
 
-When integrating with a basemap (like MapLibre or Mapbox), use the `interleaved` prop to enable interleaved rendering. This allows deck.gl layers to render between basemap layers:
-
-```tsx
-<Deckgl interleaved>
-  {/* Your basemap integration component */}
-  <layer layer={...} />
-</Deckgl>
-```
-
-#### Common Props
-
-- `initialViewState` - Sets the initial camera position
-- `width` / `height` - Container dimensions (supports CSS values like "100%")
-- `parameters` - WebGL parameters to pass to deck.gl
-- `interleaved` - Enable interleaved rendering for basemap integration
-- `onLoad` - Callback when deck.gl is initialized
-- `onViewStateChange` - Callback when the view state changes
-
-### The layer Element
-
-The universal `<layer>` element is the core of v2. Instead of creating a JSX element for each layer type, you pass a layer instance to the `layer` prop:
-
-```tsx
-import { ScatterplotLayer } from "@deck.gl/layers";
-
-<layer
-  layer={
-    new ScatterplotLayer({
-      id: "my-layer",
-      data: myData,
-      getPosition: (d) => d.coordinates,
-      getRadius: 100,
-    })
-  }
-/>;
-```
-
-#### Why This Syntax?
-
-The v2 syntax solves several problems:
-
-- **No registration needed** - Import and use any layer immediately
-- **Automatic code-splitting** - Only bundle the layers you import
-- **Full TypeScript support** - Generic type parameters provide type-safe accessor functions
-- **Works with custom layers** - No setup required
-
-#### Layer IDs Are Critical
-
-**Always provide explicit `id` props.** deck.gl uses layer IDs for efficient diffing. Missing or non-stable IDs cause expensive re-initialization on every render:
-
-```tsx
-// ✅ Good - explicit, stable ID
-<layer
-  layer={
-    new ScatterplotLayer({
-      id: 'points',
-      data,
-      getPosition: (d) => d.coordinates,
-    })
-  }
-/>
-
-// ❌ Bad - missing ID
-<layer
-  layer={
-    new ScatterplotLayer({
-      data,
-      getPosition: (d) => d.coordinates,
-    })
-  }
-/>
-
-// ❌ Bad - non-stable ID (changes every render)
-<layer
-  layer={
-    new ScatterplotLayer({
-      id: Math.random().toString(),
-      data,
-      getPosition: (d) => d.coordinates,
-    })
-  }
-/>
-```
-
-#### What Happens When IDs Are Missing
-
-Without an explicit ID:
-
-- deck.gl generates a random ID on each render
-- The layer is treated as "new" every time
-- All GPU resources are destroyed and recreated
-- Performance degrades significantly with complex data
-
-Development mode will warn you about missing IDs.
-
-### The view Element
-
-The `<view>` element lets you render multiple views with different cameras and viewports. Like `<layer>`, you pass a view instance to the `view` prop:
-
-```tsx
-import { MapView, OrthographicView } from '@deck.gl/core';
-
-<Deckgl>
-  <view
-    view={
-      new MapView({
-        id: 'main',
-        width: '50%',
-        height: '100%',
-      })
-    }
-  >
-    <layer layer={...} />
-  </view>
-
-  <view
-    view={
-      new OrthographicView({
-        id: 'minimap',
-        x: '50%',
-        width: '50%',
-        height: '100%',
-      })
-    }
-  >
-    <layer layer={...} />
-  </view>
-</Deckgl>
-```
-
-**Note:** There is no automatic layer filtering based on view hierarchy. All layers render in all views unless you manually filter using the `visible` prop or conditional rendering.
-
-### Development Mode Validation
-
-The reconciler validates layers in development mode to catch common mistakes. These checks run when `process.env.NODE_ENV === "development"` and are stripped from production builds.
-
-#### Missing ID Warning
-
-When a layer lacks an explicit ID, you'll see:
-
-```
-⚠️  Layer missing explicit "id" prop. This causes expensive
-reinitialization on every render.
-```
-
-This warning appears because deck.gl uses IDs for efficient diffing. Without a stable ID, the layer reinitializes on every render, destroying and recreating GPU resources.
-
-#### Duplicate ID Error
-
-When multiple layers share the same ID:
-
-```
-❌ Duplicate layer IDs detected: points, lines
-```
-
-Duplicate IDs break deck.gl's diffing algorithm, causing incorrect prop updates and unpredictable rendering.
-
-#### Production Behavior
-
-All validation is automatically removed from production builds through dead code elimination. No runtime checks occur in production.
-
-## API Reference
-
-### Deckgl Props
-
-| Prop                      | Type                     | Description                                                     |
-| ------------------------- | ------------------------ | --------------------------------------------------------------- |
-| `initialViewState`        | `object`                 | Initial camera position (`longitude`, `latitude`, `zoom`, etc.) |
-| `width`                   | `string \| number`       | Container width (supports CSS values like "100%")               |
-| `height`                  | `string \| number`       | Container height (supports CSS values like "100vh")             |
-| `interleaved`             | `boolean`                | Enable interleaved rendering for basemap integration            |
-| `parameters`              | `object`                 | WebGL parameters to pass to deck.gl                             |
-| `onLoad`                  | `(deck: Deck) => void`   | Callback when deck.gl instance is initialized                   |
-| `onViewStateChange`       | `(params) => void`       | Callback when view state changes                                |
-| `onResize`                | `(size) => void`         | Callback when canvas resizes                                    |
-| `getCursor`               | `(state) => string`      | Custom cursor based on interaction state                        |
-| `gl`                      | `WebGL2RenderingContext` | Custom WebGL context (advanced)                                 |
-| `glOptions`               | `object`                 | WebGL context creation options                                  |
-| `_typedArrayManagerProps` | `object`                 | Advanced: typed array manager configuration                     |
-
-For complete prop documentation, see the [deck.gl Deck class reference](https://deck.gl/docs/api-reference/core/deck).
-
-### useDeckgl Hook
-
-The `useDeckgl()` hook provides access to the deck.gl instance from anywhere in your React tree (not just children of `<Deckgl>`):
-
-```tsx
-import { useDeckgl } from "@deckgl-fiber-renderer/dom";
-
-function MyComponent() {
-  const deckInstance = useDeckgl();
-
-  useEffect(() => {
-    // Always check for null - instance is not available until Deckgl mounts
-    if (deckInstance) {
-      console.log("Current view state:", deckInstance.viewState);
-    }
-  }, [deckInstance]);
-
-  return <div>...</div>;
+  return (
+    <Deckgl
+      initialViewState={{ longitude: -122.45, latitude: 37.8, zoom: 12 }}
+      onHover={(info) => setHovered(info.object)}
+      getCursor={() => (hovered ? "pointer" : "grab")}
+    >
+      <layer
+        layer={
+          new ScatterplotLayer({
+            id: "points",
+            data,
+            getPosition: (d) => d.position,
+            getRadius: (d) => d.size,
+            getFillColor: hovered ? [255, 200, 0] : [255, 140, 0],
+            pickable: true,
+          })
+        }
+      />
+      {hovered && <div className="tooltip">{hovered.name}</div>}
+    </Deckgl>
+  );
 }
 ```
 
-**Important:** The hook returns `null` until the `<Deckgl>` component is mounted and initialized. Always check before using the instance.
+**3. Success criteria**
 
-### layer and view Props
+- ✅ You see orange points on the map
+- ✅ Cursor changes on hover
+- ✅ Tooltip shows point name
 
-#### `<layer>` Element
+**Learn more about deck.gl layers:** https://deck.gl/docs/api-reference/layers
 
-| Prop    | Type     | Required | Description                       |
-| ------- | -------- | -------- | --------------------------------- |
-| `layer` | `Layer`  | Yes      | A deck.gl Layer instance          |
-| `key`   | `string` | No       | React key for list reconciliation |
+---
 
-```tsx
-<layer
-  layer={
-    new ScatterplotLayer({
-      id: "points",
-      data: myData,
-      getPosition: (d) => d.coordinates,
-    })
-  }
-/>
-```
+## How-To Guides
 
-#### `<view>` Element
+### Integrate with MapLibre/Mapbox
 
-| Prop   | Type     | Required | Description                       |
-| ------ | -------- | -------- | --------------------------------- |
-| `view` | `View`   | Yes      | A deck.gl View instance           |
-| `key`  | `string` | No       | React key for list reconciliation |
-
-```tsx
-<view
-  view={
-    new MapView({
-      id: "main",
-      width: "100%",
-      height: "100%",
-    })
-  }
-/>
-```
-
-#### TypeScript Generic Support
-
-For type-safe accessor functions, use TypeScript generics:
-
-```tsx
-type DataPoint = { coordinates: [number, number]; value: number };
-
-<layer
-  layer={
-    new ScatterplotLayer<DataPoint>({
-      id: "points",
-      data: myData,
-      getPosition: (d) => d.coordinates, // d is typed as DataPoint
-      getRadius: (d) => d.value * 10, // Full autocomplete support
-    })
-  }
-/>;
-```
-
-## Common Patterns
-
-### Basemap Integration
-
-To integrate with a basemap like MapLibre or Mapbox, wrap the `<Deckgl>` component with your map component and use the `interleaved` prop:
+Use interleaved rendering to combine deck.gl with basemap layers.
 
 ```tsx
 import { Map, useControl } from "react-map-gl/maplibre";
@@ -406,17 +134,20 @@ function App() {
 }
 ```
 
-**Important:** The `<Map>` component must wrap `<Deckgl>`, not vice versa. The `interleaved` prop enables deck.gl layers to render between basemap layers.
+**Key points:**
 
-See the [react-map-gl example](../../examples/react-map-gl) for a complete implementation.
+- `<Map>` wraps `<Deckgl>`, not vice versa
+- `interleaved` prop enables layer interleaving
+- `useDeckgl()` provides deck instance to `useControl()`
 
-### Multiple Views
+**Learn more:** https://deck.gl/docs/api-reference/mapbox/overview
 
-Render multiple views with different cameras using the `<view>` element:
+### Render Multiple Views
+
+Split screen or minimap with different cameras.
 
 ```tsx
 import { MapView, OrthographicView } from "@deck.gl/core";
-import { Deckgl } from "@deckgl-fiber-renderer/dom";
 
 function App() {
   return (
@@ -453,13 +184,13 @@ function App() {
 }
 ```
 
-See the [views example](../../examples/views) for more patterns.
+**Note:** Layer filtering by view requires manual control via props. All layers render in all views by default.
 
-### Custom Layers
+**Learn more:** https://deck.gl/docs/api-reference/core/deck#views
 
-#### v2 Approach (Recommended)
+### Use Custom Layers
 
-Custom layers work with no setup using the universal `<layer>` element:
+Custom layers work immediately without registration.
 
 ```tsx
 import { CompositeLayer } from "@deck.gl/core";
@@ -482,157 +213,271 @@ class CustomLayer extends CompositeLayer {
 <layer layer={new CustomLayer({ id: "custom", data, customRadius: 200 })} />;
 ```
 
-#### TypeScript Support
-
-For TypeScript intellisense with custom layers, extend the `IntrinsicElements` interface:
+**TypeScript typing (optional):**
 
 ```tsx
-import type { CustomLayerProps } from "./CustomLayer";
+type CustomLayerProps = {
+  id: string;
+  data: unknown[];
+  customRadius?: number;
+};
 
 declare global {
-  namespace React {
-    namespace JSX {
-      interface IntrinsicElements {
-        customLayer: CustomLayerProps;
-      }
+  namespace React.JSX {
+    interface IntrinsicElements {
+      customLayer: CustomLayerProps;
     }
   }
 }
+
+// Now <customLayer> has type checking (but <layer> is recommended)
 ```
 
-With this declaration, you get full type safety and autocomplete for custom layer props.
+**Learn more:** https://deck.gl/docs/developer-guide/custom-layers
 
-#### v1 Approach (Deprecated)
+### Handle Layer Updates
 
-The v1 `extend()` function still works but is deprecated:
+Optimize re-renders with proper memoization.
+
+**Problem:** Layer recreates on every render
+
+```tsx
+// ❌ Bad - new instance every render
+<layer layer={new ScatterplotLayer({ id: "points", data })} />
+```
+
+**Solution:** Memoize layer creation
+
+```tsx
+// ✅ Good - stable instance
+const pointsLayer = useMemo(
+  () =>
+    new ScatterplotLayer({
+      id: "points",
+      data,
+      getPosition: (d) => d.coordinates,
+      getRadius: radius,
+    }),
+  [data, radius],
+);
+
+<layer layer={pointsLayer} />;
+```
+
+**Why this matters:** deck.gl diffs layers by ID and props. Stable instances enable efficient updates. New instances trigger re-initialization even when props haven't changed.
+
+---
+
+## Reference
+
+### API: `<Deckgl>`
+
+Root container for deck.gl visualization.
+
+```tsx
+<Deckgl
+  initialViewState={{ longitude: -122.4, latitude: 37.8, zoom: 12 }}
+  width="100%"
+  height="100vh"
+  onLoad={(deck) => console.log("Ready", deck)}
+>
+  {children}
+</Deckgl>
+```
+
+**Props:**
+
+| Prop                | Type                    | Description                                               |
+| ------------------- | ----------------------- | --------------------------------------------------------- |
+| `initialViewState`  | `object`                | Initial camera position (longitude, latitude, zoom, etc.) |
+| `width`             | `string \| number`      | Container width (CSS values supported)                    |
+| `height`            | `string \| number`      | Container height (CSS values supported)                   |
+| `interleaved`       | `boolean`               | Enable interleaved rendering for basemap integration      |
+| `onLoad`            | `(deck: Deck) => void`  | Callback when deck.gl initializes                         |
+| `onViewStateChange` | `(params) => void`      | Callback when view state changes                          |
+| `onHover`           | `(info, event) => void` | Callback on hover                                         |
+| `onClick`           | `(info, event) => void` | Callback on click                                         |
+| `getCursor`         | `(state) => string`     | Custom cursor based on state                              |
+| `debug`             | `boolean`               | Enable logging (development mode only)                    |
+
+**Inherited props:** All props from deck.gl's [`DeckProps`](https://deck.gl/docs/api-reference/core/deck#properties) and [`MapboxOverlayProps`](https://deck.gl/docs/api-reference/mapbox/mapbox-overlay#properties) are supported.
+
+### API: `useDeckgl()`
+
+Hook to access the deck.gl instance.
+
+```tsx
+import { useDeckgl } from "@deckgl-fiber-renderer/dom";
+
+function MyComponent() {
+  const deck = useDeckgl();
+
+  useEffect(() => {
+    if (deck) {
+      console.log("Current view state:", deck.viewState);
+    }
+  }, [deck]);
+
+  return null;
+}
+```
+
+**Returns:** `Deck | null`
+
+**Note:** Returns `null` until `<Deckgl>` mounts. Always check before use.
+
+### API: `<layer>` and `<view>`
+
+Universal elements for layers and views (v2 syntax).
+
+**`<layer>` element:**
+
+```tsx
+<layer layer={new ScatterplotLayer({ id: "points", data })} key="optional-react-key" />
+```
+
+| Prop    | Type     | Required | Description                  |
+| ------- | -------- | -------- | ---------------------------- |
+| `layer` | `Layer`  | Yes      | deck.gl Layer instance       |
+| `key`   | `string` | No       | React key for list rendering |
+
+**`<view>` element:**
+
+```tsx
+<view view={new MapView({ id: "main" })} key="optional-react-key" />
+```
+
+| Prop   | Type     | Required | Description                  |
+| ------ | -------- | -------- | ---------------------------- |
+| `view` | `View`   | Yes      | deck.gl View instance        |
+| `key`  | `string` | No       | React key for list rendering |
+
+**TypeScript generics:**
+
+```tsx
+type DataPoint = { coordinates: [number, number]; value: number };
+
+<layer
+  layer={
+    new ScatterplotLayer<DataPoint>({
+      id: "points",
+      data,
+      getPosition: (d) => d.coordinates, // d typed as DataPoint
+      getRadius: (d) => d.value, // Full autocomplete
+    })
+  }
+/>;
+```
+
+### API: `extend()` (deprecated)
 
 ```tsx
 import { extend } from "@deckgl-fiber-renderer/dom";
-import { CustomLayer } from "./CustomLayer";
+import { MyCustomLayer } from "./my-custom-layer";
 
-extend({ CustomLayer });
+extend({ MyCustomLayer });
 
-// Now you can use <customLayer /> (lowercase element)
+// Deprecated - use <layer> instead
+<myCustomLayer id="custom" data={data} />;
 ```
 
-This approach will be removed in v3. Migrate to the v2 pattern using `<layer layer={new CustomLayer(...)} />`.
+**Deprecation:** This function is deprecated and will be removed in v3. Use `<layer layer={new MyCustomLayer(...)} />` instead.
 
-See the [custom-layer example](../../examples/custom-layer) for a complete implementation.
+---
 
-## Migration from v1
+## Explanation
 
-### Why Migrate?
+### Why a React Reconciler?
 
-v2 improves on v1 in three ways:
+The official deck.gl React bindings wrap the imperative deck.gl API. This limits composition - layers must be direct children, hooks don't work, and TypeScript generics are unsupported.
 
-- **Full TypeScript generics** - Type-safe accessor functions with autocomplete
-- **Automatic code-splitting** - Only bundle the layers you import
-- **No registration** - Custom layers work immediately without setup
+A React reconciler integrates deck.gl at a lower level. It teaches React how to render to deck.gl, making layers first-class React components. This enables:
 
-### Syntax Comparison
+- **Nesting** - Layers can be anywhere in your component tree
+- **Hooks** - useState, useContext, custom hooks all work
+- **Generics** - Full TypeScript type inference in accessor functions
+- **Composition** - Build reusable layer components
 
-| Feature         | v1 Syntax                                      | v2 Syntax                                                        |
-| --------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
-| Basic layer     | `<scatterplotLayer id="points" data={data} />` | `<layer layer={new ScatterplotLayer({ id: 'points', data })} />` |
-| With TypeScript | No generic support                             | `new ScatterplotLayer<DataType>({ ... })`                        |
-| Custom layers   | Requires `extend()` call                       | No registration needed                                           |
-| Views           | `<mapView id="main">`                          | `<view view={new MapView({ id: 'main' })}>`                      |
+**Tradeoff:** Slightly larger bundle (~15KB) for reconciler infrastructure. Worth it for teams building complex visualizations.
 
-### Migration Steps
+### Persistence Mode Design
 
-1. **Install v2:**
+React reconcilers can mutate nodes (DOM) or replace them (primitives like strings). This reconciler uses **persistence mode** - it replaces layers instead of mutating them.
 
-```bash
-pnpm add @deckgl-fiber-renderer/dom@latest
-```
+**Why?** deck.gl layers are designed as immutable descriptors:
 
-2. **Update imports:**
+> "Layers are descriptor objects that are very cheap to instantiate. Create a new set of layers every render cycle." - [deck.gl docs](https://deck.gl/docs/developer-guide/using-layers)
+
+deck.gl handles efficient updates internally by:
+
+1. Matching layers by ID
+2. Diffing props
+3. Reusing GPU resources
+
+The reconciler creates new layer instances on prop changes. deck.gl's diffing algorithm detects what actually changed and updates only affected state.
+
+**Performance:** No overhead. Creating layer instances is cheap - they're plain objects until deck.gl processes them.
+
+### Layer IDs and Diffing
+
+**Rule:** Always provide explicit, stable `id` props.
 
 ```tsx
-// Old
+// ✅ Good - explicit, stable ID
+<layer layer={new ScatterplotLayer({ id: "points", data })} />
+
+// ❌ Bad - missing ID (auto-generated, changes every render)
+<layer layer={new ScatterplotLayer({ data })} />
+
+// ❌ Bad - non-stable ID (changes every render)
+<layer layer={new ScatterplotLayer({ id: Math.random().toString(), data })} />
+```
+
+**Why?** deck.gl uses IDs for diffing. Without stable IDs:
+
+- Layer treated as new on every render
+- GPU resources destroyed and recreated
+- Animations reset
+- Performance degrades
+
+**Development mode validation:** Missing or duplicate IDs trigger warnings. These checks are stripped from production builds.
+
+**Learn more:** https://deck.gl/docs/developer-guide/using-layers#layer-identity-and-diffing
+
+### v1 vs v2 Syntax
+
+**v1 (deprecated):**
+
+```tsx
 import "@deckgl-fiber-renderer/reconciler/side-effects";
 
-// New
+<scatterplotLayer id="points" data={data} getPosition={(d) => d.coordinates} />;
+```
+
+**v2 (current):**
+
+```tsx
 import { ScatterplotLayer } from "@deck.gl/layers";
+
+<layer layer={new ScatterplotLayer({ id: "points", data, getPosition: (d) => d.coordinates })} />;
 ```
 
-3. **Replace element syntax:**
+**Migration benefits:**
 
-```tsx
-// Old
-<scatterplotLayer
-  id="points"
-  data={data}
-  getPosition={(d) => d.coordinates}
-/>
+- ✅ Full TypeScript generics with type inference
+- ✅ Automatic code-splitting (only bundle imported layers)
+- ✅ Custom layers work without registration
+- ✅ Explicit layer instances match deck.gl idioms
 
-// New
-<layer
-  layer={
-    new ScatterplotLayer({
-      id: 'points',
-      data,
-      getPosition: (d) => d.coordinates,
-    })
-  }
-/>
-```
+**Backwards compatibility:** v1 syntax still works in v2 but shows deprecation warnings. It will be removed in v3.
 
-4. **Remove `extend()` calls** for custom layers - they now work directly with `<layer>`
+**Migration:** Replace layer-specific elements with `<layer>` and instantiate layers explicitly. Remove `extend()` calls and side-effects imports.
 
-### Key Changes
+---
 
-- **Universal elements:** Use `<layer>` and `<view>` instead of layer-specific elements
-- **No registration:** Import and use layers directly - no `extend()` or side-effects import needed
-- **Explicit instances:** Pass layer/view instances instead of props
+## Additional Resources
 
-### Deprecations
-
-- Layer-specific JSX elements (`<scatterplotLayer>`, `<pathLayer>`, etc.) - Still work but deprecated
-- `extend()` function - Still works but deprecated
-- Side-effects import (`@deckgl-fiber-renderer/reconciler/side-effects`) - No longer needed
-
-These deprecated APIs will be removed in v3.
-
-## Backwards Compatibility
-
-**v1 syntax is deprecated but still works in v2.** To ease migration, layer-specific JSX elements continue to function:
-
-```tsx
-// This still works but is deprecated
-<scatterplotLayer id="points" data={data} getPosition={(d) => d.coordinates} />
-```
-
-Migrate to v2 syntax for several reasons:
-
-- v1 syntax will be **removed in v3**
-- v2 syntax provides better TypeScript support
-- v2 enables automatic code-splitting
-- v2 works with custom layers without registration
-
-### Deprecation Timeline
-
-- **v2 (current):** v1 syntax works but shows deprecation warnings
-- **v3 (future):** v1 syntax will be removed
-
-Start migrating now to avoid breaking changes in v3.
-
-## Examples
-
-The [examples directory](../../examples/) contains full working applications:
-
-- **[react-map-gl](../../examples/react-map-gl)** - MapLibre/Mapbox integration with interleaved rendering
-- **[custom-layer](../../examples/custom-layer)** - Creating and using custom layers
-- **[views](../../examples/views)** - Multiple views with different cameras
-- **[standalone](../../examples/standalone)** - Basic standalone map without basemap
-- **[migration](../../examples/migration)** - Side-by-side v1 vs v2 comparison
-- **[nextjs](../../examples/nextjs)** - Next.js integration
-- **[remix](../../examples/remix)** - Remix integration
-- **[vite](../../examples/vite)** - Vite setup
-- **[rsbuild](../../examples/rsbuild)** - Rsbuild setup
-
-Each example includes a README with setup instructions and can be run with:
-
-```bash
-pnpm --filter <example-name> run dev
-```
+- **deck.gl Documentation:** https://deck.gl/docs
+- **deck.gl Examples:** https://deck.gl/examples
+- **React Reconciler:** https://github.com/facebook/react/tree/main/packages/react-reconciler
+- **Source Code:** https://github.com/deckgl-fiber-renderer/fiber.gl

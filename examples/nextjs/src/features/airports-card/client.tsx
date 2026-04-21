@@ -1,5 +1,6 @@
 "use client";
 
+import "client-only";
 import { useSelected } from "@/hooks/use-selected";
 import type { AirportFeature } from "@/data-access/airports/types";
 
@@ -11,7 +12,7 @@ interface AirportsCardClientProps {
  * Client component that renders airport detail card with close button
  */
 export function AirportsCardClient({ airport }: AirportsCardClientProps) {
-  const [, setSelected] = useSelected();
+  const [_, setSelected] = useSelected();
 
   return (
     <div
@@ -71,7 +72,7 @@ export function AirportsCardClient({ airport }: AirportsCardClientProps) {
           <div>
             <strong>Coordinates:</strong>
             <div style={{ color: "#666", fontFamily: "monospace" }}>
-              {airport.properties.LATITUDE.toFixed(4)}, {airport.properties.LONGITUDE.toFixed(4)}
+              {airport.properties.LATITUDE}, {airport.properties.LONGITUDE}
             </div>
           </div>
         </div>

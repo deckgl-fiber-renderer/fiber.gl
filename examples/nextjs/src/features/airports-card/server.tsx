@@ -1,3 +1,4 @@
+import "server-only";
 import { airportById } from "@/data-access/airports/server";
 import { AirportsCardClient } from "./client";
 

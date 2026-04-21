@@ -1,5 +1,6 @@
 "use client";
 
+import "client-only";
 import { useMemo } from "react";
 import { ScatterplotLayer } from "@deck.gl/layers";
 import { useSelected } from "@/hooks/use-selected";

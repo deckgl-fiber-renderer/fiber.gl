@@ -1,3 +1,4 @@
+import "server-only";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { AirportsListServer } from "./server";

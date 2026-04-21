@@ -1,4 +1,4 @@
-"use server";
+import "server-only";
 
 import { unstable_cacheTag as cacheTag } from "next/cache";
 import type { AirportFeature, AirportsGeoJSON } from "./types";

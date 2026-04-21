@@ -1,5 +1,6 @@
 "use client";
 
+import "client-only";
 import { useEffect, useRef } from "react";
 import { useSelected } from "@/hooks/use-selected";
 import { useHover } from "@/hooks/use-hover";
@@ -68,9 +69,9 @@ export function AirportsListClient({ data }: AirportsListClientProps) {
               style={{
                 backgroundColor: isSelected
                   ? "rgba(255, 0, 0, 0.1)"
-                  : (isHovered
+                  : isHovered
                     ? "rgba(0, 128, 255, 0.05)"
-                    : "transparent"),
+                    : "transparent",
                 borderBottom: "1px solid #f0f0f0",
                 cursor: "pointer",
                 padding: "12px 16px",

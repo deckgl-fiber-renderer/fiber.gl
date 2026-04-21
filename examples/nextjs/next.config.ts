@@ -1,10 +1,8 @@
 import type { NextConfig } from "next";
 
 const config: NextConfig = {
-  experimental: {
-    reactCompiler: true,
-    useCache: true,
-  },
+  cacheComponents: true,
+  reactCompiler: true,
 };
 
 export default config;

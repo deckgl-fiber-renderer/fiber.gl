@@ -1,3 +1,4 @@
+import "server-only";
 import { airports } from "@/data-access/airports/server";
 import { AirportsLayerClient } from "./client";
 

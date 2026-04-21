@@ -3,5 +3,5 @@ import ultracite from "ultracite/oxfmt";
 
 export default defineConfig({
   extends: [ultracite],
-  ignorePatterns: ['**/dist/**', '**/coverage/**']
+  ignorePatterns: ["**/dist/**", "**/coverage/**", "CHANGELOG.md"],
 });

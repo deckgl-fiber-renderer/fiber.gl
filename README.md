@@ -8,13 +8,13 @@ A React renderer for [deck.gl](https://deck.gl) that brings full React integrati
 
 The official deck.gl React bindings have limitations. This renderer removes them.
 
-| Feature                | Official Bindings | deckgl-fiber-renderer        |
-| ---------------------- | ----------------- | ---------------------------- |
-| Component nesting      | ❌ Direct only    | ✅ Nest anywhere             |
-| Hooks support          | ❌ No hooks       | ✅ Full hooks                |
-| TypeScript generics    | ❌ No inference   | ✅ Type-safe accessors       |
-| Custom layers          | ⚠️ Registration   | ✅ Works immediately         |
-| Code splitting         | ❌ Bundles all    | ✅ Tree-shaking              |
+| Feature             | Official Bindings | deckgl-fiber-renderer  |
+| ------------------- | ----------------- | ---------------------- |
+| Component nesting   | ❌ Direct only    | ✅ Nest anywhere       |
+| Hooks support       | ❌ No hooks       | ✅ Full hooks          |
+| TypeScript generics | ❌ No inference   | ✅ Type-safe accessors |
+| Custom layers       | ⚠️ Registration   | ✅ Works immediately   |
+| Code splitting      | ❌ Bundles all    | ✅ Tree-shaking        |
 
 ## Quick Look
 
@@ -24,7 +24,7 @@ import { ScatterplotLayer } from "@deck.gl/layers";
 
 function MyMap() {
   const [radius, setRadius] = useState(100);
-  
+
   return (
     <Deckgl initialViewState={{ longitude: -122.4, latitude: 37.8, zoom: 12 }}>
       <layer
@@ -44,30 +44,6 @@ function MyMap() {
 
 [→ Get Started](./packages/dom#tutorial)
 
-## Examples
-
-Three canonical examples demonstrate framework-idiomatic integration patterns:
-
-### [Next.js](./examples/nextjs)
-**App Router with React Server Components**  
-Shows the five-file RSC pattern with `"use cache"` data access layer, server/client component separation, and Suspense boundaries. Demonstrates modern Next.js architecture with URL state management via `nuqs`.
-
-### [Vite](./examples/vite)
-**Client-side with TanStack Query**  
-Pure client-side architecture using TanStack Query for data caching, Zustand for state management with manual URL synchronization, and single-file component organization.
-
-### [React Router](./examples/react-router)
-**v7 with Loaders**  
-Server-side rendering with loader functions for data fetching, `nuqs` for URL state management, and typed route patterns. Shows proper separation between server-side data access and client-side rendering.
-
-**Common Features Across Examples:**
-- ✅ Airports scatterplot (20k FAA dataset)
-- ✅ Bidirectional hover/click interactions between map and list
-- ✅ Search with server-side filtering
-- ✅ Detail card on selection
-- ✅ Maplibre base map in interleaved mode
-- ✅ V2 syntax with explicit layer IDs
-
 ## Packages
 
 - **[@deckgl-fiber-renderer/dom](./packages/dom)** - Main package with `<Deckgl>` component and hooks
@@ -77,8 +53,8 @@ Server-side rendering with loader functions for data fetching, `nuqs` for URL st
 
 ## Requirements
 
-- React `19.0.0` or later
-- deck.gl `^9.1.0` or later
+- React `>=19`
+- deck.gl `>=9.1`
 - Modern bundler with tree-shaking (Vite, Next.js, Webpack 5+, Rsbuild)
 
 ## Contributing

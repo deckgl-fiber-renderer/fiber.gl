@@ -43,11 +43,11 @@
     "access": "public"
   },
   "scripts": {
-    "build": "pnpm tsc",
-    "dev": "pnpm tsc --watch",
-    "format": "pnpm dlx ultracite fix",
-    "lint": "pnpm dlx ultracite check",
-    "test": "pnpm vitest --dir=src"
+    "build": "pnpm exec tsc",
+    "dev": "pnpm exec tsc --watch",
+    "format": "pnpm exec ultracite fix",
+    "lint": "pnpm exec ultracite check",
+    "test": "pnpm exec vitest --dir=src"
   },
   "devDependencies": {
     "@deck.gl/core": "catalog:",

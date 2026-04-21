@@ -141,8 +141,8 @@ This project uses **Ultracite**, a zero-config preset that enforces strict code 
 
 ## Quick Reference
 
-- **Format code**: `pnpm dlx ultracite fix`
-- **Check for issues**: `pnpm dlx ultracite check`
+- **Format code**: `pnpm run format`
+- **Check for issues**: `pnpm run lint`
 - **Diagnose setup**: `pnpm dlx ultracite doctor`
 
 Oxlint + Oxfmt (the underlying engine) provides robust linting and formatting. Most issues are automatically fixable.

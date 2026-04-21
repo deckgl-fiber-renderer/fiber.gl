@@ -1,12 +1,20 @@
-import type { ReactNode } from 'react';
+import type { Metadata } from "next";
+import "maplibre-gl/dist/maplibre-gl.css";
+import "./maplibre.css";
 
-import 'maplibre-gl/dist/maplibre-gl.css';
-import './_global.css';
+export const metadata: Metadata = {
+  description: "deck.gl fiber renderer airports example with Next.js App Router",
+  title: "Airports Example - Next.js",
+};
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body style={{ margin: 0, overflow: "hidden", padding: 0 }}>{children}</body>
     </html>
   );
 }

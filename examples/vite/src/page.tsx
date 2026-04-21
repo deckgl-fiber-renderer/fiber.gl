@@ -1,27 +1,33 @@
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { DeckglExample } from './_deckgl';
-import { Sidebar } from './_sidebar';
+import { Suspense } from "react";
+import { MapClient } from "@/modules/map";
+import { AirportsLayer } from "@/features/airports-layer";
+import { AirportsList } from "@/features/airports-list";
+import { AirportsCard } from "@/features/airports-card";
+import { SearchBox } from "@/components/search-box";
+import { useAppStore } from "@/stores/app";
 
-async function fetchData() {
-  const response = await fetch(
-    'https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/arcgis/rest/services/Stadiums/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson',
-  );
-
-  const data = await response.json();
-
-  return data;
-}
-
-export default function Page() {
-  const { data } = useSuspenseQuery({
-    queryKey: ['stadiums'],
-    queryFn: fetchData,
-  });
+/**
+ * Page composing all components with Suspense boundaries
+ */
+export function Page() {
+  const selected = useAppStore((state) => state.selected);
 
   return (
     <>
-      <DeckglExample data={data} />
-      <Sidebar data={data} />
+      <MapClient>
+        <Suspense fallback={null}>
+          <AirportsLayer />
+        </Suspense>
+      </MapClient>
+      <Suspense fallback={<div>Loading airports...</div>}>
+        <AirportsList />
+      </Suspense>
+      <SearchBox />
+      {selected !== null && (
+        <Suspense fallback={<div>Loading airport details...</div>}>
+          <AirportsCard />
+        </Suspense>
+      )}
     </>
   );
 }

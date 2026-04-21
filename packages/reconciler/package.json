@@ -1,73 +1,84 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@deckgl-fiber-renderer/reconciler",
   "version": "1.4.0",
   "private": false,
-  "license": "MIT",
-  "type": "module",
-  "files": [
-    "dist/**"
+  "keywords": [
+    "deck.gl",
+    "deckgl",
+    "fiber",
+    "react",
+    "renderer"
   ],
   "bugs": {
     "url": "https://github.com/deckgl-fiber-renderer/fiber.gl/issues"
   },
+  "license": "MIT",
   "author": "Brandon Pierce (https://github.com/brandonjpierce)",
   "maintainers": [
     "Brandon Pierce (https://github.com/brandonjpierce)"
-  ],
-  "keywords": [
-    "react",
-    "renderer",
-    "fiber",
-    "deckgl",
-    "deck.gl"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deckgl-fiber-renderer/fiber.gl.git",
     "directory": "packages/reconciler"
   },
+  "files": [
+    "dist/**"
+  ],
+  "type": "module",
+  "sideEffects": false,
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
+    ".": "./dist/index.js",
+    "./config": "./dist/config.js",
+    "./extend": "./dist/extend.js",
+    "./renderer": "./dist/renderer.js",
+    "./side-effects": "./dist/side-effects.js",
+    "./types": "./dist/types.js",
+    "./utils": "./dist/utils.js",
     "./package.json": "./package.json"
   },
-  "scripts": {
-    "build": "pnpm tsup",
-    "dev": "pnpm tsup --watch",
-    "lint": "pnpm biome lint",
-    "test": "pnpm vitest --dir=src"
+  "publishConfig": {
+    "access": "public"
   },
-  "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-reconciler": "^0.31.0",
-    "esbuild-plugin-file-path-extensions": "^2.1.4",
-    "tsup": "^8.4.0",
-    "vitest": "^3.0.8",
-    "typescript": "^5.8.2"
+  "scripts": {
+    "build": "pnpm tsdown",
+    "dev": "pnpm tsdown --watch",
+    "format": "pnpm dlx ultracite fix",
+    "lint": "pnpm dlx ultracite check",
+    "test": "pnpm vitest --dir=src"
   },
   "dependencies": {
     "@deckgl-fiber-renderer/shared": "workspace:*",
     "@deckgl-fiber-renderer/types": "workspace:*",
-    "react-reconciler": "~0.31.0"
+    "react-reconciler": "catalog:"
+  },
+  "devDependencies": {
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
+    "@deck.gl/test-utils": "^9.2.11",
+    "@types/react": "catalog:",
+    "@types/react-reconciler": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "fast-check": "catalog:",
+    "jsdom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
-    "@deck.gl/core": "^9.1.0",
-    "@deck.gl/geo-layers": "^9.1.0",
-    "@deck.gl/layers": "^9.1.0",
-    "@deck.gl/mapbox": "^9.1.0",
-    "@deck.gl/mesh-layers": "^9.1.0",
-    "react": "^19",
-    "react-dom": "^19"
-  },
-  "$schema": "https://json.schemastore.org/package",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": true
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  }
 }

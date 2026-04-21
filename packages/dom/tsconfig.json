@@ -1,13 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "include": ["./src"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.bench.ts",
-    "**/*.test.ts",
-    "**/*.test-d.ts"
-  ],
+  "exclude": ["node_modules", "dist", "**/*.bench.ts", "**/*.test.ts", "**/*.test-d.ts"],
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist",

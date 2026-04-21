@@ -1,71 +1,86 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "name": "@deckgl-fiber-renderer/dom",
-  "description": "A React renderer for Deck.gl",
   "version": "1.4.0",
   "private": false,
-  "license": "MIT",
-  "type": "module",
-  "files": [
-    "dist/**"
+  "description": "A React renderer for Deck.gl",
+  "keywords": [
+    "deck.gl",
+    "deckgl",
+    "fiber",
+    "react",
+    "renderer"
   ],
   "bugs": {
     "url": "https://github.com/deckgl-fiber-renderer/fiber.gl/issues"
   },
+  "license": "MIT",
   "author": "Brandon Pierce (https://github.com/brandonjpierce)",
   "maintainers": [
     "Brandon Pierce (https://github.com/brandonjpierce)"
-  ],
-  "keywords": [
-    "react",
-    "renderer",
-    "fiber",
-    "deckgl",
-    "deck.gl"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deckgl-fiber-renderer/fiber.gl.git",
     "directory": "packages/dom"
   },
+  "files": [
+    "dist/**"
+  ],
+  "type": "module",
+  "sideEffects": false,
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "default": "./dist/index.js"
-    },
+    ".": "./dist/index.js",
+    "./components": "./dist/components.js",
+    "./hooks": "./dist/hooks.js",
     "./package.json": "./package.json"
   },
-  "scripts": {
-    "build": "pnpm tsup",
-    "dev": "pnpm tsup --watch",
-    "lint": "pnpm biome lint",
-    "test": "pnpm vitest --dir=src"
+  "publishConfig": {
+    "access": "public"
   },
-  "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "esbuild-plugin-file-path-extensions": "^2.1.4",
-    "tsup": "^8.4.0",
-    "vitest": "^3.0.8",
-    "typescript": "^5.8.2"
+  "scripts": {
+    "build": "pnpm tsdown",
+    "dev": "pnpm tsdown --watch",
+    "format": "pnpm dlx ultracite fix",
+    "lint": "pnpm dlx ultracite check",
+    "test": "pnpm vitest --dir=src"
   },
   "dependencies": {
     "@deckgl-fiber-renderer/reconciler": "workspace:*",
     "@deckgl-fiber-renderer/shared": "workspace:*",
     "@deckgl-fiber-renderer/types": "workspace:*",
     "client-only": "^0.0.1",
-    "its-fine": "^2.0.0"
+    "its-fine": "^2.0.0",
+    "use-isomorphic-layout-effect": "^1.2.1"
+  },
+  "devDependencies": {
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
+    "@rolldown/plugin-babel": "^0.2.2",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "jsdom": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   },
   "peerDependencies": {
-    "react": "^19",
-    "react-dom": "^19"
-  },
-  "$schema": "https://json.schemastore.org/package",
-  "publishConfig": {
-    "access": "public"
-  },
-  "sideEffects": false
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/geo-layers": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/mapbox": "catalog:",
+    "@deck.gl/mesh-layers": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  }
 }

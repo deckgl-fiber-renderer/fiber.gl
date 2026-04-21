@@ -1,25 +1,31 @@
 {
   "name": "examples-nextjs",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm next dev --turbo",
-    "build": "pnpm next build",
-    "start": "pnpm next start"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "@deck.gl/core": "^9.1.0",
-    "@deck.gl/extensions": "^9.1.0",
-    "@deck.gl/geo-layers": "^9.1.0",
-    "@deck.gl/layers": "^9.1.0",
-    "@deck.gl/mapbox": "^9.1.0",
-    "@deck.gl/mesh-layers": "^9.1.0",
+    "@deck.gl/core": "catalog:",
+    "@deck.gl/layers": "catalog:",
+    "@deck.gl/widgets": "catalog:",
     "@deckgl-fiber-renderer/dom": "workspace:*",
-    "maplibre-gl": "^5.2.0",
-    "next": "^15.2.2",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "zustand": "^5.0.3"
+    "client-only": "^0.0.1",
+    "maplibre-gl": "catalog:",
+    "next": "^16",
+    "nuqs": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-error-boundary": "catalog:",
+    "server-only": "^0.0.1",
+    "zustand": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "typescript": "catalog:"
   }
 }

@@ -36,3 +36,6 @@ dist
 
 # Remix
 .react-router
+
+# Skills
+.agents/audit

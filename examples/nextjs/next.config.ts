@@ -1,16 +1,8 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  reactStrictMode: true,
-  poweredByHeader: false,
-
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+const config: NextConfig = {
+  cacheComponents: true,
+  reactCompiler: true,
 };
 
-export default nextConfig;
+export default config;

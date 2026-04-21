@@ -1,0 +1,20 @@
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  test: {
+    // Global mock cleanup - eliminates test pollution bugs
+    clearMocks: true,
+    mockReset: true,
+    restoreMocks: true,
+    watch: false,
+
+    // Test environment
+    environment: "jsdom",
+
+    // Include .test-d.ts files for type tests
+    include: ["**/*.{test,spec}.?(c|m)[jt]s?(x)", "**/*.test-d.ts"],
+
+    // No coverage thresholds needed for type tests
+    // Type tests use expectTypeOf and run at compile-time
+  },
+});

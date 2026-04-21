@@ -1,0 +1,6 @@
+pre-commit:
+  jobs:
+    - run: pnpm run lint
+      stage_fixed: false
+    - run: pnpm run format
+      stage_fixed: true

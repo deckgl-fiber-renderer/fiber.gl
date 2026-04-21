@@ -10,29 +10,29 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@deckgl-fiber-renderer/dom": "workspace:*",
     "@deck.gl/core": "catalog:",
     "@deck.gl/layers": "catalog:",
     "@deck.gl/widgets": "catalog:",
+    "@deckgl-fiber-renderer/dom": "workspace:*",
+    "@tanstack/react-query": "catalog:",
+    "@tanstack/react-router": "^1.168.23",
+    "@tanstack/router-devtools": "^1.166.13",
+    "@tanstack/start": "^1.120.20",
+    "@tanstack/zod-adapter": "^1.166.9",
+    "maplibre-gl": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "maplibre-gl": "catalog:",
-    "zustand": "catalog:",
-    "zod": "^3.24.1",
-    "@tanstack/react-query": "^5.67.3",
-    "@tanstack/react-router": "^1.120.20",
-    "@tanstack/start": "^1.120.20",
-    "@tanstack/router-devtools": "^1.120.20",
-    "@tanstack/zod-adapter": "^1.120.20",
-    "vinxi": "^0.5.11"
+    "vinxi": "^0.5.11",
+    "zod": "^4",
+    "zustand": "catalog:"
   },
   "devDependencies": {
+    "@tanstack/router-generator": "^1.166.32",
+    "@tanstack/router-plugin": "^1.167.22",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@tanstack/router-plugin": "^1.120.20",
-    "@tanstack/router-generator": "^1.120.20",
     "typescript": "catalog:",
-    "vite": "^6.0.11",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "^6.1.1"
   }
 }

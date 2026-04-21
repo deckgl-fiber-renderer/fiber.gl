@@ -9,25 +9,25 @@
     "start": "react-router-serve ./build/server/index.js"
   },
   "dependencies": {
-    "@deckgl-fiber-renderer/dom": "workspace:*",
     "@deck.gl/core": "catalog:",
     "@deck.gl/layers": "catalog:",
     "@deck.gl/widgets": "catalog:",
+    "@deckgl-fiber-renderer/dom": "workspace:*",
+    "@react-router/node": "^7.14.1",
+    "@react-router/serve": "^7.14.1",
+    "isbot": "^5.1.39",
+    "maplibre-gl": "catalog:",
+    "nuqs": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "maplibre-gl": "catalog:",
-    "zustand": "catalog:",
-    "@react-router/node": "^7.8.0",
-    "@react-router/serve": "^7.8.0",
-    "isbot": "^5.1.39",
-    "nuqs": "^2.2.3",
-    "react-router": "^7.8.0"
+    "react-router": "^7.14.1",
+    "zustand": "catalog:"
   },
   "devDependencies": {
+    "@react-router/dev": "^7.14.1",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@react-router/dev": "^7.8.0",
     "typescript": "catalog:",
-    "vite": "^6.0.11"
+    "vite": "catalog:"
   }
 }

@@ -9,21 +9,21 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@deckgl-fiber-renderer/dom": "workspace:*",
     "@deck.gl/core": "catalog:",
     "@deck.gl/layers": "catalog:",
     "@deck.gl/widgets": "catalog:",
+    "@deckgl-fiber-renderer/dom": "workspace:*",
+    "@tanstack/react-query": "catalog:",
+    "maplibre-gl": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "maplibre-gl": "catalog:",
-    "zustand": "catalog:",
-    "@tanstack/react-query": "^5.68.3"
+    "zustand": "catalog:"
   },
   "devDependencies": {
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^6.0.1",
     "typescript": "catalog:",
-    "vite": "^6.0.11"
+    "vite": "catalog:"
   }
 }

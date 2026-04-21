@@ -22,20 +22,27 @@ catalog:
   react-dom: ^19
   "@types/react": ^19
   "@types/react-dom": ^19
+  react-error-boundary: ^6
   # React Reconciler (pinned to exact versions)
   react-reconciler: 0.33.0
   "@types/react-reconciler": 0.33.0
 
   # Build/Test Tools
   tsdown: ^0.21.8
-  typescript: ^6.0.2
-  vitest: ^4.1.4
-  "@vitest/coverage-v8": ^4.1.4
-  jsdom: ^29.0.2
+  typescript: ^6
+  vitest: ^4
+  "@vitest/coverage-v8": ^4
+  jsdom: ^29
+  vite: ^8
+  fast-check: ^4
+  "@testing-library/react": ^16
+  "@testing-library/jest-dom": ^6
 
-  # Misc
+  # State Management & Utilities
   zustand: ^5
   loglayer: ^9
+  nuqs: ^2.2.3
+  "@tanstack/react-query": ^5
 
 onlyBuiltDependencies:
   - "@fission-ai/openspec"

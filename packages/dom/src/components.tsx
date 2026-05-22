@@ -24,22 +24,21 @@ function DeckglComponent(props: DeckglProps) {
   }, [debug]);
 
   // Memoize config to prevent recreation on every render
-  const config = useMemo(
-    () => ({
-      ...props,
-      // NOTE: only apply canvas/wrapper if we are not using an external renderer such as Mapbox/Maplibre
-      ...(canvas.current && { canvas: canvas.current }),
-      ...(wrapper.current && { parent: wrapper.current }),
-    }),
-    [props],
-  );
+  // NOTE: canvas and parent refs are spread in useIsomorphicLayoutEffect where refs are available
+  const config = useMemo(() => props, [props]);
 
   useIsomorphicLayoutEffect(() => {
     const node = canvas.current || interleave.current;
 
     if (node) {
       const root: ReconcilerRoot = roots.get(node) ?? createRoot(node);
-      root.configure(config);
+      // NOTE: spread canvas and parent refs here where they are guaranteed to be set
+      // Only set canvas/parent if not explicitly provided in props
+      root.configure({
+        ...config,
+        ...(!config.canvas && canvas.current && { canvas: canvas.current }),
+        ...(!config.parent && wrapper.current && { parent: wrapper.current }),
+      });
       root.render(<Bridge>{children}</Bridge>);
     }
   }, [children, config, Bridge]);

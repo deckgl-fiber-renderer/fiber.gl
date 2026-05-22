@@ -9,6 +9,20 @@ import { useEffect, useMemo, useRef } from "react";
 import type { ReactNode } from "react";
 import useIsomorphicLayoutEffect from "use-isomorphic-layout-effect";
 
+function getCanvasParent(value: string | HTMLCanvasElement): HTMLDivElement | undefined {
+  if (value instanceof HTMLCanvasElement) {
+    return value.parentElement as HTMLDivElement;
+  }
+
+  const el = document.querySelector(value);
+
+  if (el instanceof HTMLElement) {
+    return el.parentElement as HTMLDivElement;
+  }
+
+  return undefined;
+}
+
 function DeckglComponent(props: DeckglProps) {
   const { children, debug } = props;
 
@@ -30,7 +44,9 @@ function DeckglComponent(props: DeckglProps) {
     const actualCanvas = (config.canvas ||
       interleave.current ||
       canvas.current) as HTMLCanvasElement;
-    const actualWrapper = config.parent || wrapper.current;
+
+    // NOTE: if a canvas is defined through props, leverage that since we don't need to make a canvas ref below
+    const actualParent = config.canvas ? getCanvasParent(config.canvas) : wrapper.current;
 
     if (actualCanvas) {
       const root: ReconcilerRoot = roots.get(actualCanvas) ?? createRoot(actualCanvas);
@@ -39,26 +55,33 @@ function DeckglComponent(props: DeckglProps) {
       root.configure({
         ...config,
         canvas: actualCanvas,
-        parent: actualWrapper,
+        parent: actualParent,
       });
       root.render(<Bridge>{children}</Bridge>);
     }
   }, [children, config, Bridge]);
 
   useEffect(() => {
-    const node = canvas.current || interleave.current;
+    const actualCanvas = (config.canvas ||
+      interleave.current ||
+      canvas.current) as HTMLCanvasElement;
 
-    if (node) {
+    if (actualCanvas) {
       return () => {
-        unmountAtNode(node);
+        unmountAtNode(actualCanvas);
       };
     }
-  }, []);
+  }, [config.canvas]);
 
   // NOTE: interleaved prop is a hint that we are utilizing an external renderer such as Mapbox/Maplibre
   // so we want to avoid rendering another container / canvas element if that is true.
   if ("interleaved" in props) {
     return <div ref={interleave} id="deckgl-fiber-interleave" hidden />;
+  }
+
+  // Prevent creating an orphaned canvas/parent element. This assumes a user already has something in their JSX defined.
+  if (props.canvas) {
+    return null;
   }
 
   return (

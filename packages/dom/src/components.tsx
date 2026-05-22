@@ -24,20 +24,22 @@ function DeckglComponent(props: DeckglProps) {
   }, [debug]);
 
   // Memoize config to prevent recreation on every render
-  // NOTE: canvas and parent refs are spread in useIsomorphicLayoutEffect where refs are available
   const config = useMemo(() => props, [props]);
 
   useIsomorphicLayoutEffect(() => {
-    const node = canvas.current || interleave.current;
+    const actualCanvas = (config.canvas ||
+      interleave.current ||
+      canvas.current) as HTMLCanvasElement;
+    const actualWrapper = config.parent || wrapper.current;
 
-    if (node) {
-      const root: ReconcilerRoot = roots.get(node) ?? createRoot(node);
+    if (actualCanvas) {
+      const root: ReconcilerRoot = roots.get(actualCanvas) ?? createRoot(actualCanvas);
       // NOTE: spread canvas and parent refs here where they are guaranteed to be set
       // Only set canvas/parent if not explicitly provided in props
       root.configure({
         ...config,
-        ...(!config.canvas && canvas.current && { canvas: canvas.current }),
-        ...(!config.parent && wrapper.current && { parent: wrapper.current }),
+        canvas: actualCanvas,
+        parent: actualWrapper,
       });
       root.render(<Bridge>{children}</Bridge>);
     }

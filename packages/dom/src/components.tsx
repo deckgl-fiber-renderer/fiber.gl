@@ -46,7 +46,8 @@ function DeckglComponent(props: DeckglProps) {
       canvas.current) as HTMLCanvasElement;
 
     // NOTE: if a canvas is defined through props, leverage that since we don't need to make a canvas ref below
-    const actualParent = config.canvas ? getCanvasParent(config.canvas) : wrapper.current;
+    const actualParent =
+      config.parent || (config.canvas ? getCanvasParent(config.canvas) : wrapper.current);
 
     if (actualCanvas) {
       const root: ReconcilerRoot = roots.get(actualCanvas) ?? createRoot(actualCanvas);

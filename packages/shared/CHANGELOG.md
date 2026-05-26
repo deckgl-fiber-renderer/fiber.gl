@@ -1,5 +1,11 @@
 # @deckgl-fiber-renderer/shared
 
+## 2.0.1
+
+### Patch Changes
+
+- 35fa492: Fix race condition where React refs were null during Deck.gl initialization, causing duplicate canvas creation. Refs are now spread in layout effect after commit phase when guaranteed to be populated. Also adds support for external canvas elements via `canvas` prop when provided, no wrapper/canvas is rendered.
+
 ## 2.0.0
 
 ### Major Changes

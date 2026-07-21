@@ -50,12 +50,12 @@ In monorepos, the skill scopes analysis to the package containing the README, no
 
 Automatically detects and uses the correct package manager based on lockfiles:
 
-| Lockfile            | Package Manager |
-| ------------------- | --------------- |
-| `pnpm-lock.yaml`    | pnpm            |
-| `package-lock.json` | npm             |
-| `yarn.lock`         | yarn            |
-| `bun.lockb`         | bun             |
+| Lockfile | Package Manager |
+|----------|-----------------|
+| `pnpm-lock.yaml` | pnpm |
+| `package-lock.json` | npm |
+| `yarn.lock` | yarn |
+| `bun.lockb` | bun |
 
 ### Human-Sounding Writing
 

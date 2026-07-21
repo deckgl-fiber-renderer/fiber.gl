@@ -7,16 +7,14 @@ This example demonstrates how to transform an unclear test into a clear, maintai
 ## Before and After
 
 **❌ Incorrect: unclear test**
-
 ```ts
-test("product test", () => {
-  const p = new ProductService().add({ name: "Widget" });
-  expect(p.status).toBe("pendingApproval");
+test('product test', () => {
+  const p = new ProductService().add({name: 'Widget'});
+  expect(p.status).toBe('pendingApproval');
 });
 ```
 
 **Issues:**
-
 - Vague test name doesn't describe behavior
 - No AAA structure separation
 - Unclear what's being tested
@@ -25,26 +23,24 @@ test("product test", () => {
 - Abbreviated variable names
 
 **✅ Correct: optimized with vitest best practices**
-
 ```ts
-describe("ProductService", () => {
-  describe("Add new product", () => {
+describe('ProductService', () => {
+  describe('Add new product', () => {
     it('should have status "pending approval" when no price is specified', () => {
       // Arrange
       const productService = new ProductService();
 
       // Act
-      const newProduct = productService.add({ name: "Widget" });
+      const newProduct = productService.add({name: 'Widget'});
 
       // Assert
-      expect(newProduct.status).toEqual("pendingApproval");
+      expect(newProduct.status).toEqual('pendingApproval');
     });
   });
 });
 ```
 
 **Improvements:**
-
 - Clear, descriptive test name that explains the behavior
 - Test description in lowercase, reads as sentence: "it should have status..."
 - AAA pattern with comment markers for clarity
@@ -61,7 +57,6 @@ describe("ProductService", () => {
 5. **Assertions**: `toBe()` → `toEqual()`
 
 This example applies principles from:
-
 - [organization.md](organization.md) - Describe block structure
 - [aaa-pattern.md](aaa-pattern.md) - Arrange-Act-Assert separation
 - [assertions.md](assertions.md) - Strict assertions

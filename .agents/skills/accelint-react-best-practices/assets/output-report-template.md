@@ -3,13 +3,12 @@
 ╰───────────────────────────────╯
 
 <!-- Make sure to display this warning block to the user -->
-
 ┌──────────────────────────────────────────────────────┐
-│ ⚠️ WARNING: This skill does it's best to process │
+│ ⚠️  WARNING: This skill does it's best to process    │
 │ the context needed to suggest correct best practices │
-│ but it can make mistakes. Please make sure to read │
-│ the summary section of each issue to make sure it │
-│ isn't a false positive. │
+│ but it can make mistakes. Please make sure to read   │
+│ the summary section of each issue to make sure it    │
+│ isn't a false positive.                              │
 └──────────────────────────────────────────────────────┘
 
 # Report: [Target Name]
@@ -37,8 +36,10 @@ INSTRUCTIONS FOR COMPLETING THIS TEMPLATE:
    - Severity (Critical, High, Medium, Low)
    - Category (Derived State, Safety, State Management, Hoisting Static JSX, Code Quality, etc...)
    - Impact (potential bugs, maintainability concerns, runtime failures)
-   - Pattern Reference (which references/*.md file)
-   - Recommended Fix with ✅ marker
+   - Pattern Reference (which references/*.md file) + inline examples from that reference
+   - ❌ Anti-pattern Example (from the reference file showing typical bad code)
+   - ✅ Correct Pattern (from the reference file showing typical good code)
+   - Recommended Fix for This Code with ✅ marker (applying the pattern to their specific code)
 
 5. SEVERITY LEVELS:
    - Critical: Could cause infinite re-renders, memory leaks, hydration failures, app crashes
@@ -80,7 +81,6 @@ See assets/audit-report-example.md for a real-world example.
 Completed systematic audit of [file/module path] following accelint-react-best-practices standards. Identified [N] performance and correctness issues across [N] severity levels. [Brief description of what this component/feature does and why performance matters].
 
 **Key Findings:**
-
 - [N] Critical issues (infinite re-renders, memory leaks, hydration mismatches)
 - [N] High severity issues (unnecessary re-renders, stale closures, effect dependency problems)
 - [N] Medium severity issues (suboptimal patterns, bundle size concerns)
@@ -88,7 +88,6 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 
 **Impact Assessment:**
 [Explain the overall performance profile and user experience concerns. Consider:]
-
 - What are the potential runtime failures or performance degradation issues?
 - How do unnecessary re-renders affect user experience (UI jank, input lag)?
 - What hydration mismatches or SSR issues exist?
@@ -109,7 +108,6 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 ```
 
 **Issue:**
-
 - [Point 1 explaining the problem]
 - [Point 2 with specifics about the violation]
 - [Point 3 quantifying the impact if possible]
@@ -117,7 +115,6 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Re-render Optimization|Hooks|State Management|Performance|Hydration|React 19|Code Quality]
 **Impact:**
-
 - **User experience:** [UI jank, input lag, slow renders]
 - **Re-renders:** [How often and why unnecessary re-renders occur]
 - **Performance:** [Bundle size, memory, runtime performance impact]
@@ -125,8 +122,19 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 
 **Pattern Reference:** [filename.md]
 
-**Recommended Fix:**
+**❌ Anti-pattern Example:**
+```tsx
+// [Inline example from the reference showing the problem]
+[typical bad code]
+```
 
+**✅ Correct Pattern:**
+```tsx
+// [Inline example from the reference showing the solution]
+[typical good code]
+```
+
+**Recommended Fix for This Code:**
 ```tsx
 // ✅ [Brief description of solution]
 [code snippet showing the fix]
@@ -144,13 +152,11 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 ```
 
 **Issue:**
-
 - [Explanation]
 
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Re-render Optimization|Hooks|State Management|Performance|Hydration|React 19|Code Quality]
 **Impact:**
-
 - **User experience:** [UI jank, input lag, slow renders]
 - **Re-renders:** [How often and why unnecessary re-renders occur]
 - **Performance:** [Bundle size, memory, runtime performance impact]
@@ -158,8 +164,19 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 
 **Pattern Reference:** [filename.md]
 
-**Recommended Fix:**
+**❌ Anti-pattern Example:**
+```tsx
+// [Inline example from the reference showing the problem]
+[typical bad code]
+```
 
+**✅ Correct Pattern:**
+```tsx
+// [Inline example from the reference showing the solution]
+[typical good code]
+```
+
+**Recommended Fix for This Code:**
 ```tsx
 // ✅ [Brief description of solution]
 [code snippet]
@@ -172,20 +189,17 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 <!-- Use this format when multiple issues share the same root cause and fix pattern -->
 
 **Locations:**
-
 - `[file:line]` - [function/context]
 - `[file:line]` - [function/context]
 - `[file:line]` - [function/context]
 
 **Example from [specific location]:**
-
 ```tsx
 // ❌ Current: [Brief description of problem]
 [representative code snippet]
 ```
 
 **Issue:**
-
 - [Shared root cause explanation]
 - [Why this pattern is problematic]
 - [Impact across all instances]
@@ -193,7 +207,6 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Re-render Optimization|Hooks|State Management|Performance|Hydration|React 19|Code Quality]
 **Impact:**
-
 - **User experience:** [UI jank, input lag, slow renders across all instances]
 - **Re-renders:** [How often and why unnecessary re-renders occur]
 - **Performance:** [Bundle size, memory, runtime performance impact]
@@ -201,15 +214,25 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 
 **Pattern Reference:** [filename.md]
 
-**Recommended Fix:**
+**❌ Anti-pattern Example:**
+```tsx
+// [Inline example from the reference showing the problem]
+[typical bad code]
+```
 
-```ts
+**✅ Correct Pattern:**
+```tsx
+// [Inline example from the reference showing the solution]
+[typical good code]
+```
+
+**Recommended Fix for This Code:**
+```tsx
 // ✅ [Brief description of solution]
 [fixed code snippet]
 ```
 
 **Same pattern applies to all [N] instances:**
-
 ```tsx
 // [Location/function 2]
 // ❌ Current
@@ -230,12 +253,12 @@ Completed systematic audit of [file/module path] following accelint-react-best-p
 
 ## Phase 2: Categorized Issues
 
-| #   | Location    | Issue                     | Category   | Severity   |
-| --- | ----------- | ------------------------- | ---------- | ---------- |
-| 1   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 2   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 3   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 4-N | [multiple]  | [Brief issue description] | [Category] | [Severity] |
+| # | Location | Issue | Category | Severity |
+|---|----------|-------|----------|----------|
+| 1 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 2 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 3 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 4-N | [multiple] | [Brief issue description] | [Category] | [Severity] |
 
 **Total Issues:** [N]
 **By Severity:** Critical ([N]), High ([N]), Medium ([N]), Low ([N])

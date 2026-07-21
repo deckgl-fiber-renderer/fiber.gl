@@ -21,7 +21,6 @@
 ### Chained Methods to Single Reduce
 
 **❌ Incorrect: multiple passes over array**
-
 ```ts
 const result = arr.filter(predicate).map(mapper);
 // Pass 1: filter creates intermediate array
@@ -29,14 +28,15 @@ const result = arr.filter(predicate).map(mapper);
 ```
 
 **✅ Correct: single pass**
-
 ```ts
-const result = arr.reduce((acc, curr) => (predicate(curr) ? [...acc, mapper(curr)] : acc), []);
+const result = arr.reduce((acc, curr) =>
+  predicate(curr) ? [...acc, mapper(curr)] : acc,
+  []
+);
 // Single pass: test and transform in one iteration
 ```
 
 **Why this matters**: Each array method creates a new array and iterates all elements. For large arrays, this means:
-
 - Extra memory allocation for intermediate arrays
 - Cache misses from jumping between arrays
 - Double the loop overhead (iterator setup, bounds checks)
@@ -46,36 +46,24 @@ For 10,000 items, chaining `.filter().map()` means 20,000+ iterations plus tempo
 ### Linear Search to O(1) Lookup
 
 **❌ Incorrect: O(n) - searches entire array every time**
-
 ```ts
 const keys = Object.keys(someObj);
-if (keys.includes(id)) {
-  /**/
-}
+if (keys.includes(id)) { /**/ }
 
 // In a loop, this becomes O(n * m):
-for (const id of userIds) {
-  // n iterations
-  if (keys.includes(id)) {
-    /**/
-  } // m lookups each
+for (const id of userIds) {        // n iterations
+  if (keys.includes(id)) { /**/ }  // m lookups each
 }
 ```
 
 **✅ Correct: O(1) - hash lookup**
-
 ```ts
 const keys = new Set(Object.keys(someObj));
-if (keys.has(id)) {
-  /**/
-}
+if (keys.has(id)) { /**/ }
 
 // In a loop, this is O(n + m):
-for (const id of userIds) {
-  // n iterations
-  if (keys.has(id)) {
-    /**/
-  } // O(1) lookup each
+for (const id of userIds) {    // n iterations
+  if (keys.has(id)) { /**/ }   // O(1) lookup each
 }
 ```
 
@@ -84,16 +72,14 @@ for (const id of userIds) {
 ### Array Methods in Loops
 
 **❌ Incorrect: nested iterations**
-
 ```ts
 for (const user of users) {
-  const active = items.filter((item) => item.userId === user.id);
+  const active = items.filter(item => item.userId === user.id);
   process(active);
 }
 ```
 
 **✅ Correct: build lookup once**
-
 ```ts
 const itemsByUser = new Map();
 for (const item of items) {
@@ -112,13 +98,11 @@ for (const user of users) {
 ### Unnecessary Array Creation
 
 **❌ Incorrect: creates intermediate arrays**
-
 ```ts
 const result = [...arr].slice(0, 10).map(transform);
 ```
 
 **✅ Correct: process directly**
-
 ```ts
 const result = [];
 const len = Math.min(arr.length, 10);
@@ -130,7 +114,6 @@ for (let i = 0; i < len; i++) {
 ### Index-Based Loops for Hot Paths
 
 **❌ Incorrect: slower iteration**
-
 ```ts
 for (const item of largeArray) {
   // performance-critical operation
@@ -139,7 +122,6 @@ for (const item of largeArray) {
 ```
 
 **✅ Correct: index-based**
-
 ```ts
 const len = largeArray.length;
 for (let i = 0; i < len; i++) {
@@ -150,7 +132,6 @@ for (let i = 0; i < len; i++) {
 ### Typed Arrays for Numeric Data
 
 **❌ Incorrect: generic array stores boxed numbers**
-
 ```ts
 const pixels = new Array(width * height);
 for (let i = 0; i < pixels.length; i++) {
@@ -161,7 +142,6 @@ for (let i = 0; i < pixels.length; i++) {
 ```
 
 **✅ Correct: typed array uses contiguous memory**
-
 ```ts
 const pixels = new Uint8Array(width * height);
 for (let i = 0; i < pixels.length; i++) {
@@ -188,17 +168,15 @@ When the primary optimization doesn't work, use these alternatives:
 ### Fallback 1: Keep chained methods for readability in cold paths
 
 **Scenario**: Code runs infrequently or with small datasets
-
 ```ts
 // In configuration loading (runs once at startup)
 const activeUsers = users
-  .filter((u) => u.status === "active")
-  .map((u) => u.name)
+  .filter(u => u.status === 'active')
+  .map(u => u.name)
   .sort();
 ```
 
 **When to keep chained methods**:
-
 - Non-performance-critical code (configuration, initialization)
 - Small datasets (< 100 items)
 - Readability is more valuable than microsecond gains
@@ -208,27 +186,22 @@ const activeUsers = users
 ### Fallback 2: Use `for` loop when reduce becomes unreadable
 
 **Scenario**: Complex logic makes reduce hard to understand
-
 ```ts
 // ❌ Reduce is technically correct but hard to parse
-const result = items.reduce(
-  (acc, item) => {
-    if (item.active && item.score > 50) {
-      const processed = processItem(item);
-      if (processed.valid) {
-        acc.valid.push(processed);
-      } else {
-        acc.invalid.push(item.id);
-      }
+const result = items.reduce((acc, item) => {
+  if (item.active && item.score > 50) {
+    const processed = processItem(item);
+    if (processed.valid) {
+      acc.valid.push(processed);
+    } else {
+      acc.invalid.push(item.id);
     }
-    return acc;
-  },
-  { valid: [], invalid: [] },
-);
+  }
+  return acc;
+}, { valid: [], invalid: [] });
 ```
 
 **✅ Use explicit for loop**
-
 ```ts
 const result = { valid: [], invalid: [] };
 
@@ -249,20 +222,16 @@ for (const item of items) {
 ### Fallback 3: Keep Set.has() but add graceful degradation
 
 **Scenario**: Set might contain many items, memory becomes a concern
-
 ```ts
 // ❌ Set could consume excessive memory for very large datasets
 const keys = new Set(allKeys); // allKeys has 10M items
 
 for (const id of userIds) {
-  if (keys.has(id)) {
-    /* ... */
-  }
+  if (keys.has(id)) { /* ... */ }
 }
 ```
 
 **✅ Add size check and fallback**
-
 ```ts
 const MAX_SET_SIZE = 100000;
 let lookup: Set<string> | string[];
@@ -302,10 +271,9 @@ function contains(id: string): boolean {
 ### Fallback 4: Use Array.includes() with small arrays
 
 **Scenario**: Array has few items and won't grow
-
 ```ts
 // ✅ Array.includes() is fine here
-const ALLOWED_METHODS = ["GET", "POST", "PUT", "DELETE"];
+const ALLOWED_METHODS = ['GET', 'POST', 'PUT', 'DELETE'];
 
 if (ALLOWED_METHODS.includes(method)) {
   // Only 4 items - Set overhead not worth it
@@ -313,7 +281,6 @@ if (ALLOWED_METHODS.includes(method)) {
 ```
 
 **When Array.includes() is acceptable**:
-
 - Array has < 10 items
 - Array is constant (not built dynamically)
 - Lookup happens infrequently
@@ -323,7 +290,6 @@ if (ALLOWED_METHODS.includes(method)) {
 ### Fallback 5: Typed arrays with fallback for compatibility
 
 **Scenario**: Need typed array performance but must support old environments
-
 ```ts
 function createBuffer(size: number): Uint8Array | number[] {
   try {
@@ -335,7 +301,7 @@ function createBuffer(size: number): Uint8Array | number[] {
 }
 
 function setValue(buffer: Uint8Array | number[], index: number, value: number): void {
-  buffer[index] = Math.floor(value) & 0xff; // Works for both types
+  buffer[index] = Math.floor(value) & 0xFF; // Works for both types
 }
 ```
 
@@ -344,7 +310,6 @@ function setValue(buffer: Uint8Array | number[], index: number, value: number): 
 ### Fallback 6: Index-based loop with early exit
 
 **Scenario**: Need to stop iteration early, `for...of` doesn't allow break with value
-
 ```ts
 // ❌ for...of doesn't work well with early exit + return value
 function findFirstMatch(items: Item[]): Item | undefined {
@@ -357,7 +322,6 @@ function findFirstMatch(items: Item[]): Item | undefined {
 ```
 
 **✅ Index-based loop for early exit**
-
 ```ts
 function findFirstMatch(items: Item[]): Item | undefined {
   const len = items.length;

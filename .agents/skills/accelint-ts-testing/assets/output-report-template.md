@@ -3,13 +3,12 @@
 ╰─────────────────────╯
 
 <!-- Make sure to display this warning block to the user -->
-
 ┌─────────────────────────────────────────────────────┐
-│ ⚠️ WARNING: This skill does it's best to process │
-│ the context needed to suggest correct unit tests │
-│ but it can make mistakes. Please make sure to read │
+│ ⚠️  WARNING: This skill does it's best to process   │
+│ the context needed to suggest correct unit tests    │
+│ but it can make mistakes. Please make sure to read  │
 │ the suggested unit tests to make sure that they are │
-│ correct. │
+│ correct.                                            │
 └─────────────────────────────────────────────────────┘
 
 # Report: [Target Name]
@@ -80,7 +79,6 @@ See references/ for pattern guidance on each category.
 Completed systematic audit of [file/module path] following accelint-ts-testing standards. Identified [N] test quality issues across [N] severity levels. [Brief description of what this module does and why reliable tests matter here].
 
 **Key Findings:**
-
 - [N] Critical issues (false confidence, shared state, mock leakage across test files)
 - [N] High severity issues (implementation testing, over-mocking, type safety gaps)
 - [N] Medium severity issues (hard to maintain, missing parameterization, unclear structure)
@@ -88,7 +86,6 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 
 **Impact Assessment:**
 [Explain the overall test quality and reliability concerns. Consider:]
-
 - Are there tests that always pass but don't catch real bugs (false confidence)?
 - Are there flaky tests that fail non-deterministically due to shared state or mock leakage?
 - Do implementation tests block safe refactoring of internals?
@@ -109,7 +106,6 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 ```
 
 **Issue:**
-
 - [Point 1 explaining the problem]
 - [Point 2 with specifics about the violation]
 - [Point 3 quantifying the impact if possible]
@@ -117,7 +113,6 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Test Organization|AAA Pattern|Assertions|Test Doubles|Async Testing|Performance|Snapshot Testing|Code Quality]
 **Impact:**
-
 - **False confidence:** [Does this test pass for values you never intended?]
 - **Reliability:** [Could this fail non-deterministically or due to test order?]
 - **Refactor safety:** [Will this break when safely refactoring internals?]
@@ -126,7 +121,6 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [code snippet showing the fix]
@@ -144,13 +138,11 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 ```
 
 **Issue:**
-
 - [Explanation]
 
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Test Organization|AAA Pattern|Assertions|Test Doubles|Async Testing|Performance|Snapshot Testing|Code Quality]
 **Impact:**
-
 - **False confidence:** [Does this test pass for values you never intended?]
 - **Reliability:** [Could this fail non-deterministically or due to test order?]
 - **Refactor safety:** [Will this break when safely refactoring internals?]
@@ -159,7 +151,6 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [code snippet]
@@ -172,20 +163,17 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 <!-- Use this format when multiple issues share the same root cause and fix pattern -->
 
 **Locations:**
-
 - `[file:line]` - [function/context]
 - `[file:line]` - [function/context]
 - `[file:line]` - [function/context]
 
 **Example from [specific location]:**
-
 ```ts
 // ❌ Current: [Brief description of problem]
 [representative code snippet]
 ```
 
 **Issue:**
-
 - [Shared root cause explanation]
 - [Why this pattern is problematic]
 - [Impact across all instances]
@@ -193,7 +181,6 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Test Organization|AAA Pattern|Assertions|Test Doubles|Async Testing|Performance|Snapshot Testing|Code Quality]
 **Impact:**
-
 - **False confidence:** [Does this test pass for values you never intended, across all instances?]
 - **Reliability:** [Could these fail non-deterministically or due to test order?]
 - **Refactor safety:** [Will these break when safely refactoring internals?]
@@ -202,14 +189,12 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [fixed code snippet]
 ```
 
 **Same pattern applies to all [N] instances:**
-
 ```ts
 // [Location/function 2]
 // ❌ Current
@@ -237,14 +222,12 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 **Location:** `[file:line]` (implementation under test)
 
 **Current Test Approach:**
-
 ```ts
 // Example-based test
 [current test code snippet]
 ```
 
 **Why Property-Based Testing Would Help:**
-
 - [Reason 1: broader coverage, edge case discovery, etc.]
 - [Reason 2: specific property that example tests can't verify]
 - [Reason 3: quantify improvement - "100 generated inputs vs 3 examples"]
@@ -252,30 +235,30 @@ Completed systematic audit of [file/module path] following accelint-ts-testing s
 **Pattern Identified:** [Encode/Decode | Normalization | Validator | Pure Function | Sorting | Data Structure | Other]
 
 **Recommended Properties to Test:**
-
 1. **[Property name]**: `[property formula]`
    - Verifies: [what this property guarantees]
 2. **[Property name]**: `[property formula]`
    - Verifies: [what this property guarantees]
 
 **Implementation Sketch:**
-
 ```ts
 // ✅ Property-based test with fast-check
-import fc from "fast-check";
+import fc from 'fast-check'
 
-it("[property description]", () => {
+it('[property description]', () => {
   fc.assert(
-    fc.property([arbitrary], (input) => {
-      // Property verification
-      expect([assertion]).toBe([expected]);
-    }),
-  );
-});
+    fc.property(
+      [arbitrary],
+      (input) => {
+        // Property verification
+        expect([assertion]).toBe([expected])
+      }
+    )
+  )
+})
 ```
 
 **Prerequisites:**
-
 - [ ] fast-check installed? [Yes/No - if No, requires `npm install -D fast-check`]
 
 ---
@@ -287,12 +270,12 @@ Identified [N] high-value opportunities for property-based testing. These patter
 
 ## Phase 2: Categorized Issues
 
-| #   | Location    | Issue                     | Category   | Severity   |
-| --- | ----------- | ------------------------- | ---------- | ---------- |
-| 1   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 2   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 3   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 4-N | [multiple]  | [Brief issue description] | [Category] | [Severity] |
+| # | Location | Issue | Category | Severity |
+|---|----------|-------|----------|----------|
+| 1 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 2 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 3 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 4-N | [multiple] | [Brief issue description] | [Category] | [Severity] |
 
 **Total Issues:** [N]
 **By Severity:** Critical ([N]), High ([N]), Medium ([N]), Low ([N])

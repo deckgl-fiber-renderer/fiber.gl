@@ -9,13 +9,11 @@ This directory contains helper scripts to automatically detect common React anti
 Validates that React code uses named imports instead of default or wildcard imports.
 
 **Usage:**
-
 ```bash
 ./scripts/check-imports.sh [directory]
 ```
 
 **What it checks:**
-
 - ❌ `import React from 'react'` (default import)
 - ❌ `import * as React from 'react'` (wildcard import)
 - ✅ `import { useState, useEffect } from 'react'` (named imports)
@@ -23,7 +21,6 @@ Validates that React code uses named imports instead of default or wildcard impo
 **Related pattern:** [4.1 Named Imports](../references/named-imports.md)
 
 **Example:**
-
 ```bash
 # Check current directory
 ./scripts/check-imports.sh
@@ -42,13 +39,11 @@ Validates that React code uses named imports instead of default or wildcard impo
 Finds deprecated `forwardRef` usage that should be migrated to React 19's ref-as-prop pattern.
 
 **Usage:**
-
 ```bash
 ./scripts/find-forwardref.sh [directory]
 ```
 
 **What it checks:**
-
 - ❌ `import { forwardRef } from 'react'`
 - ❌ `forwardRef((props, ref) => ...)`
 - ✅ `function Component({ ref, ...props })`
@@ -56,7 +51,6 @@ Finds deprecated `forwardRef` usage that should be migrated to React 19's ref-as
 **Related pattern:** [4.2 No forwardRef](../references/no-forwardref.md)
 
 **Example:**
-
 ```bash
 # Find all forwardRef usage
 ./scripts/find-forwardref.sh src
@@ -72,13 +66,11 @@ Finds deprecated `forwardRef` usage that should be migrated to React 19's ref-as
 Identifies potentially hoistable static JSX elements in React components.
 
 **Usage:**
-
 ```bash
 ./scripts/detect-static-jsx.sh [directory]
 ```
 
 **What it detects:**
-
 - Skeleton/loading components defined inside functions
 - Static SVG elements that don't use props
 - Icon components that might not need to be functions
@@ -88,7 +80,6 @@ Identifies potentially hoistable static JSX elements in React components.
 **Important:** Only hoist JSX that doesn't depend on props or state. If React Compiler is enabled, manual hoisting is unnecessary.
 
 **Example:**
-
 ```bash
 # Scan for hoisting opportunities
 ./scripts/detect-static-jsx.sh src/components

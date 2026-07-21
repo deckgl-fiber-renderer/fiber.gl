@@ -46,12 +46,10 @@ Design for performance from the start. Optimize slowest resources first: `networ
 Fix algorithmic complexity before applying micro-optimizations. O(n²) → O(n) provides orders of magnitude improvement.
 
 #### 1.1 Reduce Branching
-
 Use table lookups instead of conditionals for static values; hoist invariants out of conditionals; use early returns.
 [View detailed examples](references/reduce-branching.md)
 
 #### 1.2 Reduce Looping
-
 Combine `.filter().map()` into single `reduce` pass; use `Set.has()` over `Array.includes()` for 10-50x speedup (O(1) vs O(n)); build lookups once.
 [View detailed examples](references/reduce-looping.md)
 
@@ -62,17 +60,14 @@ Combine `.filter().map()` into single `reduce` pass; use `Set.has()` over `Array
 Cache expensive computations and avoid repeated work. Trade memory for CPU when computation cost justifies it.
 
 #### 2.1 Memoization
-
 Hoist loop-invariant code; precompute constants at module load; memoize pure functions with limited input domain; avoid memoizing trivial computations.
 [View detailed examples](references/memoization.md)
 
 #### 2.2 Cache Property Access
-
 Cache property lookups before loops; eliminate single-use aliases; avoid unnecessary destructuring; cache array.length.
 [View detailed examples](references/cache-property-access.md)
 
 #### 2.3 Cache Storage API Calls
-
 Cache `localStorage`, `sessionStorage`, and `document.cookie` reads in memory; avoid repeated JSON.parse on same data.
 [View detailed examples](references/cache-storage-api.md)
 
@@ -83,12 +78,10 @@ Cache `localStorage`, `sessionStorage`, and `document.cookie` reads in memory; a
 Batch operations, parallelize independent work, defer blocking operations.
 
 #### 3.1 Batching
-
 Batch operations to amortize costly processes, especially for I/O-bound operations (network requests, database queries, file writes).
 [View detailed examples](references/batching.md)
 
 #### 3.2 Defer Await
-
 Move `await` into branches where result is actually used; parallelize independent async operations; avoid blocking on I/O that could be deferred.
 [View detailed examples](references/defer-await.md)
 
@@ -99,12 +92,10 @@ Move `await` into branches where result is actually used; parallelize independen
 Reduce garbage collection pressure and object creation in hot paths.
 
 #### 4.1 Object Operations
-
 Mutate when safe (local scope, not returned/exposed); use shallow clones when needed; preallocate object shapes for V8 hidden classes.
 [View detailed examples](references/object-operations.md)
 
 #### 4.2 Avoid Needless Allocations
-
 Inline simple computations; avoid intermediate variables in hot paths; reduce GC pressure by reusing objects when possible.
 [View detailed examples](references/avoid-allocations.md)
 
@@ -115,7 +106,6 @@ Inline simple computations; avoid intermediate variables in hot paths; reduce GC
 Write cache-friendly code with sequential access patterns.
 
 #### 5.1 Predictable Execution and Cache Locality
-
 Write code with clear execution paths; use sequential memory access; group related data; prefer Array of Structs for sequential processing.
 [View detailed examples](references/predictable-execution.md)
 
@@ -126,7 +116,6 @@ Write code with clear execution paths; use sequential memory access; group relat
 Prevent runaway resource consumption and denial-of-service scenarios.
 
 #### 6.1 Bounded Iteration
-
 Set limits on all loops, queues, and data structures; prevent unbounded recursion; validate iteration counts from user input.
 [View detailed examples](references/bounded-iteration.md)
 
@@ -137,12 +126,10 @@ Set limits on all loops, queues, and data structures; prevent unbounded recursio
 Apply in hot paths only (>1000 executions/sec). Profile first to ensure impact justifies complexity.
 
 #### 7.1 Currying and Partial Application
-
 Curry functions to precompute constant parameters; reduce repeated work in loops and hot paths; optimize function call overhead.
 [View detailed examples](references/currying.md)
 
 #### 7.2 Additional Performance Concerns
-
 Batch string operations; compile regex once; avoid async overhead for synchronous code; minimize closure scope; avoid try/catch in hot paths.
 [View detailed examples](references/performance-misc.md)
 
@@ -151,7 +138,6 @@ Batch string operations; compile regex once; avoid async overhead for synchronou
 ## Quick Reference for Bottleneck Mapping
 
 For systematic bottleneck identification and categorization, load [references/quick-reference.md](references/quick-reference.md) which provides:
-
 - Bottleneck symptom → Category mapping
 - Profiler output → Optimization category lookup
 - Anti-pattern detection with concrete code examples
@@ -161,15 +147,15 @@ For systematic bottleneck identification and categorization, load [references/qu
 
 ## Optimization Impact Summary
 
-| Category                   | Typical Speedup | When to Apply                         |
-| -------------------------- | --------------- | ------------------------------------- |
-| Algorithmic (O(n²) → O(n)) | 10-1000x        | Always fix first                      |
-| Caching & Memoization      | 2-100x          | Repeated expensive computations       |
-| I/O Optimization           | 2-50x           | Network, disk, async operations       |
-| Allocation Reduction       | 1.5-5x          | Hot paths with GC pressure            |
-| Memory Locality            | 1.5-3x          | Large datasets, sequential processing |
-| Bounded Execution          | Prevents DoS    | All user-controlled iterations        |
-| Micro-optimizations        | 1.05-2x         | Hot paths only, after profiling       |
+| Category | Typical Speedup | When to Apply |
+|----------|-----------------|---------------|
+| Algorithmic (O(n²) → O(n)) | 10-1000x | Always fix first |
+| Caching & Memoization | 2-100x | Repeated expensive computations |
+| I/O Optimization | 2-50x | Network, disk, async operations |
+| Allocation Reduction | 1.5-5x | Hot paths with GC pressure |
+| Memory Locality | 1.5-3x | Large datasets, sequential processing |
+| Bounded Execution | Prevents DoS | All user-controlled iterations |
+| Micro-optimizations | 1.05-2x | Hot paths only, after profiling |
 
 **Priority order:** Fix algorithm first, then cache, then I/O, then allocations, then micro-optimize hot paths.
 

@@ -3,7 +3,6 @@
 Always validate and sanitize external data at system boundaries.
 
 **❌ Incorrect: assumes valid**
-
 ```ts
 function validateAddress(userInput: any) {
   return userInput;
@@ -11,7 +10,6 @@ function validateAddress(userInput: any) {
 ```
 
 **✅ Correct: asserts validity**
-
 ```ts
 const AddressSchema = z.object({
   street: z.string(),

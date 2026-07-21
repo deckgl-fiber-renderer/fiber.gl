@@ -5,7 +5,6 @@ NEVER create unbounded loops, queues, or recursive calls. Always set explicit li
 ## Loop Limits
 
 **❌ Incorrect: unbounded while loop**
-
 ```ts
 while (true) {
   if (queue.isEmpty()) break;
@@ -16,7 +15,6 @@ while (true) {
 ```
 
 **✅ Correct: bounded iteration with max iterations**
-
 ```ts
 const MAX_ITERATIONS = 10000;
 let iterations = 0;
@@ -36,7 +34,6 @@ if (iterations >= MAX_ITERATIONS) {
 ## Queue Limits
 
 **❌ Incorrect: unbounded queue**
-
 ```ts
 const queue: Task[] = [];
 
@@ -48,7 +45,6 @@ function addTask(task: Task): void {
 ```
 
 **✅ Correct: bounded queue with max size**
-
 ```ts
 const MAX_QUEUE_SIZE = 1000;
 
@@ -81,7 +77,6 @@ const queue = new BoundedQueue<Task>(1000);
 ## Recursion Limits
 
 **❌ Incorrect: unbounded recursion**
-
 ```ts
 function traverse(node: Node): void {
   if (!node) return;
@@ -94,7 +89,6 @@ function traverse(node: Node): void {
 ```
 
 **✅ Correct: bounded recursion depth**
-
 ```ts
 const MAX_DEPTH = 100;
 
@@ -116,7 +110,6 @@ function traverse(node: Node, depth = 0): void {
 ## Timeout Patterns
 
 **❌ Incorrect: no timeout for long operations**
-
 ```ts
 async function processAll(items: Item[]): Promise<void> {
   for (const item of items) {
@@ -126,7 +119,6 @@ async function processAll(items: Item[]): Promise<void> {
 ```
 
 **✅ Correct: timeout for entire operation**
-
 ```ts
 const TIMEOUT_MS = 30000;
 
@@ -137,9 +129,7 @@ async function processAll(items: Item[]): Promise<void> {
     const elapsed = Date.now() - startTime;
 
     if (elapsed > TIMEOUT_MS) {
-      throw new Error(
-        `Operation exceeded ${TIMEOUT_MS}ms timeout after processing ${items.indexOf(item)} items`,
-      );
+      throw new Error(`Operation exceeded ${TIMEOUT_MS}ms timeout after processing ${items.indexOf(item)} items`);
     }
 
     await processItem(item);
@@ -148,7 +138,6 @@ async function processAll(items: Item[]): Promise<void> {
 ```
 
 **✅ Correct alternative: per-item timeout with AbortController**
-
 ```ts
 const ITEM_TIMEOUT_MS = 5000;
 
@@ -175,7 +164,6 @@ async function processAll(items: Item[]): Promise<void> {
 ## Array Length Limits
 
 **❌ Incorrect: unbounded array growth in loop**
-
 ```ts
 const results: Result[] = [];
 
@@ -186,7 +174,6 @@ for (const item of items) {
 ```
 
 **✅ Correct: check array size before adding**
-
 ```ts
 const MAX_RESULTS = 10000;
 const results: Result[] = [];
@@ -204,17 +191,16 @@ for (const item of items) {
 
 ## Recommended Limits
 
-| Operation Type    | Recommended Limit  | Rationale                                                   |
-| ----------------- | ------------------ | ----------------------------------------------------------- |
-| Loop iterations   | 10,000 - 100,000   | Prevents infinite loops while allowing large datasets       |
-| Queue size        | 1,000 - 10,000     | Prevents memory exhaustion from unbounded growth            |
-| Recursion depth   | 100 - 1,000        | Prevents stack overflow; typical stack supports ~10k frames |
-| Operation timeout | 30s - 5min         | Prevents hung operations; depends on expected duration      |
-| Array length      | 10,000 - 1,000,000 | Depends on element size and available memory                |
-| String length     | 1MB - 100MB        | Prevents memory issues from pathological inputs             |
+| Operation Type | Recommended Limit | Rationale |
+|----------------|-------------------|-----------|
+| Loop iterations | 10,000 - 100,000 | Prevents infinite loops while allowing large datasets |
+| Queue size | 1,000 - 10,000 | Prevents memory exhaustion from unbounded growth |
+| Recursion depth | 100 - 1,000 | Prevents stack overflow; typical stack supports ~10k frames |
+| Operation timeout | 30s - 5min | Prevents hung operations; depends on expected duration |
+| Array length | 10,000 - 1,000,000 | Depends on element size and available memory |
+| String length | 1MB - 100MB | Prevents memory issues from pathological inputs |
 
 **Adjust limits based on**:
-
 - Available system resources (memory, CPU)
 - Expected data sizes in production
 - Performance requirements
@@ -222,19 +208,18 @@ for (const item of items) {
 
 ## When to Use Each Pattern
 
-| Scenario                             | Pattern                | Example                      |
-| ------------------------------------ | ---------------------- | ---------------------------- |
+| Scenario | Pattern | Example |
+|----------|---------|---------|
 | Any `while(true)` or `do-while` loop | Loop iteration counter | Processing queue until empty |
-| Task queues, event queues, buffers   | Queue size limit       | Job processing system        |
-| Tree traversal, graph algorithms     | Recursion depth limit  | JSON parsing, DOM traversal  |
-| Async operations, network calls      | Timeout                | API calls, file I/O          |
-| Arrays built in loops                | Array length check     | Aggregating results          |
-| String concatenation in loops        | String length check    | Building large text output   |
+| Task queues, event queues, buffers | Queue size limit | Job processing system |
+| Tree traversal, graph algorithms | Recursion depth limit | JSON parsing, DOM traversal |
+| Async operations, network calls | Timeout | API calls, file I/O |
+| Arrays built in loops | Array length check | Aggregating results |
+| String concatenation in loops | String length check | Building large text output |
 
 ## Production Considerations
 
 **Make limits configurable**:
-
 ```ts
 interface BoundedLoopConfig {
   maxIterations?: number;
@@ -242,7 +227,10 @@ interface BoundedLoopConfig {
   onLimitExceeded?: (reason: string) => void;
 }
 
-async function processWithLimits(items: Item[], config: BoundedLoopConfig = {}): Promise<void> {
+async function processWithLimits(
+  items: Item[],
+  config: BoundedLoopConfig = {}
+): Promise<void> {
   const maxIterations = config.maxIterations ?? 10000;
   const timeout = config.timeout ?? 30000;
   const startTime = Date.now();
@@ -260,7 +248,6 @@ async function processWithLimits(items: Item[], config: BoundedLoopConfig = {}):
 ```
 
 **Log when approaching limits**:
-
 ```ts
 const MAX_ITERATIONS = 10000;
 const WARN_THRESHOLD = 0.8; // Warn at 80%
@@ -278,7 +265,6 @@ while (condition && iterations < MAX_ITERATIONS) {
 ```
 
 **Graceful degradation**:
-
 ```ts
 // Instead of throwing, return partial results
 function processUpToLimit(items: Item[], limit = 10000): ProcessResult {

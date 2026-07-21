@@ -82,16 +82,14 @@ Check these files in order:
 Only document exports that are accessible to package consumers:
 
 **✅ Public (document these)**
-
 ```typescript
 // src/index.ts
-export { parse } from "./parser";
-export { validate } from "./validator";
-export type { Config, Options } from "./types";
+export { parse } from './parser';
+export { validate } from './validator';
+export type { Config, Options } from './types';
 ```
 
 **❌ Internal (don't document)**
-
 ```typescript
 // src/parser.ts
 // This is only used internally, not re-exported from index
@@ -104,7 +102,7 @@ Follow the export chain to find the actual implementation:
 
 ```typescript
 // src/index.ts
-export { parse } from "./parser";
+export { parse } from './parser';
 
 // src/parser.ts
 export function parse(path: string): Promise<Config> {
@@ -119,14 +117,14 @@ Document the function as it appears in `parser.ts`, but note it's accessed via t
 ```typescript
 // Named exports
 export function foo() {}
-export const bar = "bar";
+export const bar = 'bar';
 export type Baz = string;
 
 // Re-exports
-export { foo } from "./foo";
-export { foo as bar } from "./foo";
-export * from "./types";
-export * as utils from "./utils";
+export { foo } from './foo';
+export { foo as bar } from './foo';
+export * from './types';
+export * as utils from './utils';
 
 // Default exports (discourage in documentation)
 export default function foo() {}
@@ -193,7 +191,7 @@ Format a value as a string. Accepts strings, numbers, or dates.
 
 Document constructor and public methods:
 
-````typescript
+```typescript
 // Source
 export class Parser {
   constructor(options?: ParserOptions);
@@ -210,16 +208,15 @@ Configuration parser with validation support.
 
 ```typescript
 new Parser(options?: ParserOptions)
-````
+```
 
 #### Methods
 
-| Method             | Returns   | Description             |
-| ------------------ | --------- | ----------------------- |
-| `parse(input)`     | `Result`  | Parse input string      |
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `parse(input)` | `Result` | Parse input string |
 | `validate(result)` | `boolean` | Validate a parse result |
-
-````
+```
 
 ---
 
@@ -242,7 +239,7 @@ Extract documentation from source:
  * const config = await parse('./app.config.yaml');
  */
 export async function parse(path: string, options?: Options): Promise<Config> {
-````
+```
 
 Use JSDoc as the primary source for:
 
@@ -266,16 +263,16 @@ Tests often show real usage:
 
 ```typescript
 // src/parser.test.ts
-describe("parse", () => {
-  it("reads JSON config", async () => {
-    const config = await parse("./fixtures/config.json");
-    expect(config.database.host).toBe("localhost");
+describe('parse', () => {
+  it('reads JSON config', async () => {
+    const config = await parse('./fixtures/config.json');
+    expect(config.database.host).toBe('localhost');
   });
 
-  it("interpolates environment variables", async () => {
-    process.env.DB_HOST = "production.db";
-    const config = await parse("./fixtures/config.yaml");
-    expect(config.database.host).toBe("production.db");
+  it('interpolates environment variables', async () => {
+    process.env.DB_HOST = 'production.db';
+    const config = await parse('./fixtures/config.yaml');
+    expect(config.database.host).toBe('production.db');
   });
 });
 ```
@@ -302,21 +299,17 @@ Extract patterns from tests for the Examples section.
 ## Documentation Audit
 
 ### Missing from README
-
 - `ValidationError` class - exported but not documented
 - `Options` type - exported but not documented
 - `validate()` function - exported but not documented
 
 ### Stale in README
-
 - `legacyParse()` - documented but no longer exported
 
 ### Signature Changes
-
 - `parse(path)` → `parse(path, options?)` - new optional parameter added
 
 ### Potentially Outdated Examples
-
 - Quick Start uses `parse()` without await (async function)
 ```
 
@@ -339,9 +332,9 @@ Flag documentation as potentially stale when:
 When `index.ts` re-exports everything:
 
 ```typescript
-export * from "./parser";
-export * from "./validator";
-export * from "./types";
+export * from './parser';
+export * from './validator';
+export * from './types';
 ```
 
 Trace each `export *` to find actual definitions.
@@ -369,8 +362,8 @@ Document the default behavior, note environment-specific differences.
 When exports are grouped:
 
 ```typescript
-export * as parsers from "./parsers";
-export * as validators from "./validators";
+export * as parsers from './parsers';
+export * as validators from './validators';
 ```
 
 Document as namespaced API:

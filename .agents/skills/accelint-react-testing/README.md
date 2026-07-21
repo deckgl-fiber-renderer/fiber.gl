@@ -15,21 +15,18 @@ npm install -D @testing-library/react @testing-library/user-event @testing-libra
 ## What's Included
 
 ### Core Guidance (SKILL.md)
-
 - Query priority hierarchy (role > label > text > testId)
 - User interaction patterns with userEvent
 - Async testing strategies
 - Thinking frameworks for test design
 
 ### Implementation Rules (AGENTS.md)
-
 - Query selection guidelines
 - Custom render setup
 - Accessibility testing patterns
 - Anti-patterns to avoid
 
 ### Reference Documentation
-
 - **query-priority.md** - Accessible query hierarchy and when to use each
 - **query-variants.md** - getBy vs findBy vs queryBy selection
 - **user-events.md** - userEvent vs fireEvent patterns and interactions
@@ -41,13 +38,11 @@ npm install -D @testing-library/react @testing-library/user-event @testing-libra
 ### Utilities
 
 **Scripts:**
-
 - `check-query-priority.sh` - Find suboptimal query patterns (testId before role)
 - `find-fire-event.sh` - Detect fireEvent that should be userEvent
 - `detect-wrapper-queries.sh` - Find deprecated wrapper/container patterns
 
 **Assets:**
-
 - `custom-render-template.tsx` - Boilerplate for test utils with providers
 
 ## Quick Start
@@ -55,18 +50,18 @@ npm install -D @testing-library/react @testing-library/user-event @testing-libra
 ### Example Test
 
 ```tsx
-import { render, screen } from "./test-utils";
+import { render, screen } from './test-utils';
 
-test("user can submit form", async () => {
+test('user can submit form', async () => {
   const { user } = render(<ContactForm />);
-
+  
   // Query by accessible labels
-  await user.type(screen.getByLabelText(/email/i), "user@example.com");
-  await user.type(screen.getByLabelText(/message/i), "Hello world");
-
+  await user.type(screen.getByLabelText(/email/i), 'user@example.com');
+  await user.type(screen.getByLabelText(/message/i), 'Hello world');
+  
   // Interact realistically
-  await user.click(screen.getByRole("button", { name: /submit/i }));
-
+  await user.click(screen.getByRole('button', { name: /submit/i }));
+  
   // Assert on user-visible outcomes
   expect(await screen.findByText(/thank you/i)).toBeInTheDocument();
 });
@@ -102,17 +97,15 @@ Copy [assets/custom-render-template.tsx](assets/custom-render-template.tsx) to y
 ## Configuration
 
 Vitest setup:
-
 ```ts
 // vitest.setup.ts
-import "@testing-library/jest-dom/vitest";
+import '@testing-library/jest-dom/vitest';
 ```
 
 Jest setup:
-
 ```ts
 // jest.setup.ts
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
 ```
 
 ## License

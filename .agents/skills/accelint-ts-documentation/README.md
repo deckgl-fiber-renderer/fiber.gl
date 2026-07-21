@@ -18,7 +18,6 @@ This skill combines **focused activation** with **expert judgment frameworks**:
 ### Core Capabilities
 
 **JSDoc Auditing**
-
 - Comprehensive standards for exported vs internal code
 - Function, type, interface, class, and constant documentation
 - Generic type parameter documentation (@template)
@@ -27,14 +26,12 @@ This skill combines **focused activation** with **expert judgment frameworks**:
 - Error documentation (@throws)
 
 **Comment Quality**
-
 - Comment markers (TODO, FIXME, HACK, NOTE, PERF, REVIEW, DEBUG, REMARK)
 - Identifying comments to remove (dead code, edit history, obvious statements)
 - Identifying comments to preserve (linter directives, business logic, markers)
 - Comment placement best practices
 
 **Expert Guidance**
-
 - Anti-patterns with visual ❌/✅ examples
 - Audit mindset and thinking frameworks
 - Decision trees for documentation sufficiency
@@ -76,18 +73,15 @@ Fix comments in src/core/ - remove dead code and improve placement
 The skill provides structured audit reports:
 
 **Missing Documentation:**
-
 - `fetchUserProfile()` (line 45) - missing @throws for AuthenticationError
 - `processData()` (line 89) - missing @param for options.timeout
 - `UserConfig` interface (line 12) - missing property descriptions
 
 **Syntax Issues:**
-
 - `calculateTotal()` (line 34) - @example without code fence
 - `authenticate()` (line 67) - void function has @returns tag
 
 **Comment Quality:**
-
 - Line 23: Remove commented-out code
 - Line 45: Move end-of-line comment above code
 - Line 78: Add FIXME marker for known bug
@@ -110,31 +104,26 @@ The skill provides structured audit reports:
 ### Audit Process
 
 **Step 1: Determine Scope**
-
 - Is code exported (public API)? → Comprehensive docs required
 - Is code internal? → Apply judgment frameworks
 
 **Step 2: Check Completeness**
-
 - Use decision trees for Functions, Types, Classes, Constants
 - Verify all required tags present (@param, @returns, @template, @throws, @example)
 
 **Step 3: Validate Syntax**
-
 - @example tags must use code fences with language identifier
 - Object parameters must use dot notation
 - void functions should not have @returns
 - Generic functions must include @template
 
 **Step 4: Review Comments**
-
 - Apply markers (TODO, FIXME, HACK, NOTE, etc.)
 - Remove dead code and edit history
 - Preserve linter directives and business logic
 - Improve placement (move end-of-line comments above code)
 
 **Step 5: Report Findings**
-
 - Structured output with file:line references
 - Categorized by issue type
 - Specific, actionable recommendations
@@ -144,7 +133,6 @@ The skill provides structured audit reports:
 ### 🚫 Anti-Patterns (6 Critical Mistakes)
 
 Visual ❌/✅ examples of common documentation mistakes:
-
 - Approving @example without code fences
 - Over-documenting internal code vs under-documenting public APIs
 - Leaving commented-out code
@@ -155,7 +143,6 @@ Visual ❌/✅ examples of common documentation mistakes:
 ### 🧠 Thinking Frameworks
 
 **Two-Tier Approach:**
-
 - Public API → Always comprehensive (no exceptions)
 - Internal code → Three judgment dimensions:
   - Complexity vs Clarity
@@ -165,7 +152,6 @@ Visual ❌/✅ examples of common documentation mistakes:
 ### 🌲 Decision Trees
 
 Clear sufficiency evaluation for:
-
 - Functions/Methods (exported vs internal requirements)
 - Types/Interfaces (with/without @example)
 - Classes (constructor, methods, examples)
@@ -174,7 +160,6 @@ Clear sufficiency evaluation for:
 ### 🔀 Conflict Resolution
 
 Principles for resolving common dilemmas:
-
 - Comprehensive vs Concise (favor comprehensive for public APIs)
 - Document Complexity vs Avoid Noise (well-named internals need minimal docs)
 - Stable API vs Changing Requirements (document current, note future with @remarks)
@@ -183,7 +168,6 @@ Principles for resolving common dilemmas:
 ### 🎯 Edge Cases
 
 Handling for special scenarios:
-
 - Deprecated APIs (@deprecated, @see, migration paths)
 - Overloaded functions (single doc block, multiple examples)
 - Generic utility types (@template explanations, type transformations)
@@ -198,32 +182,27 @@ Side-by-side comparison of excellent vs poor documentation with annotated explan
 ## Benefits of Hybrid Design
 
 **Expert knowledge layer**:
-
 - Anti-patterns, thinking frameworks, and decision trees are unique to this skill
 - Provides audit-specific expertise beyond general documentation rules
 - ~640 lines of focused documentation guidance
 
 **Smart delegation**:
-
 - Implementation details (JSDoc syntax, comment rules) come from parent skill
 - Avoids duplicating content that changes frequently
 - Hybrid verification approach handles parent skill reorganization
 
 **Activation specificity**:
-
 - Enhanced description with specific JSDoc tags (@param, @returns, @template, @example)
 - Triggers on documentation-specific phrases users actually say
 - Higher activation accuracy than general-purpose parent skill
 
 **Comprehensive coverage**:
-
 - Standard cases (decision trees for all code element types)
 - Edge cases (deprecated, overloads, generics, callbacks, builders, events)
 - Conflicts (resolution principles for common dilemmas)
 - Quality benchmarks (excellent vs poor examples)
 
 **Drift-resilient integration**:
-
 - Verifies parent structure before loading
 - Fallback discovery if files reorganized
 - Clear expected file list with pattern-based alternatives
@@ -231,7 +210,6 @@ Side-by-side comparison of excellent vs poor documentation with annotated explan
 ## Integration
 
 **Use this skill when**:
-
 - Documentation auditing is the primary focus
 - You need expert judgment on what/how to document
 - You're adding JSDoc to exported functions/types/classes

@@ -43,15 +43,14 @@ pnpm add required-peer-dep
 -->
 
 <!-- Add TypeScript note if types are included -->
-
 TypeScript types are included.
 
 ## Quick Start
 
 ```typescript
-import { mainFunction } from "package-name";
+import { mainFunction } from 'package-name';
 
-const result = mainFunction("input");
+const result = mainFunction('input');
 console.log(result);
 // Expected output here
 ```
@@ -78,17 +77,17 @@ Explain why this package was created:
 
 Description of what this function does.
 
-| Parameter | Type      | Description                |
-| --------- | --------- | -------------------------- |
-| `input`   | `string`  | What this parameter is for |
-| `options` | `Options` | Optional configuration     |
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `input` | `string` | What this parameter is for |
+| `options` | `Options` | Optional configuration |
 
 **Returns:** `ReturnType` - Description of return value
 
 **Example:**
 
 ```typescript
-const result = mainFunction("input", { option: true });
+const result = mainFunction('input', { option: true });
 ```
 
 ---
@@ -105,15 +104,15 @@ new SecondaryClass(config: Config)
 
 #### Methods
 
-| Method          | Returns   | Description            |
-| --------------- | --------- | ---------------------- |
-| `process(data)` | `Result`  | Process input data     |
-| `validate()`    | `boolean` | Validate current state |
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `process(data)` | `Result` | Process input data |
+| `validate()` | `boolean` | Validate current state |
 
 **Example:**
 
 ```typescript
-const instance = new SecondaryClass({ setting: "value" });
+const instance = new SecondaryClass({ setting: 'value' });
 const result = instance.process(data);
 ```
 
@@ -137,32 +136,32 @@ interface HelperType {
 ### Basic Usage
 
 ```typescript
-import { mainFunction } from "package-name";
+import { mainFunction } from 'package-name';
 
-const result = mainFunction("simple input");
+const result = mainFunction('simple input');
 ```
 
 ### With Configuration
 
 ```typescript
-import { mainFunction } from "package-name";
+import { mainFunction } from 'package-name';
 
-const result = mainFunction("input", {
+const result = mainFunction('input', {
   verbose: true,
-  format: "json",
+  format: 'json',
 });
 ```
 
 ### Error Handling
 
 ```typescript
-import { mainFunction, PackageError } from "package-name";
+import { mainFunction, PackageError } from 'package-name';
 
 try {
-  const result = mainFunction("input");
+  const result = mainFunction('input');
 } catch (error) {
   if (error instanceof PackageError) {
-    console.error("Package error:", error.message);
+    console.error('Package error:', error.message);
   }
   throw error;
 }
@@ -221,29 +220,28 @@ Pipeline packages have one main workflow. Customize by:
 
 CLI packages need command documentation. Add:
 
-````markdown
+```markdown
 ## Usage
 
 ```bash
 package-name <command> [options]
 ```
-````
 
 ### Commands
 
-| Command | Description              |
-| ------- | ------------------------ |
-| `init`  | Initialize a new project |
-| `build` | Build the project        |
+| Command | Description |
+|---------|-------------|
+| `init` | Initialize a new project |
+| `build` | Build the project |
 | `serve` | Start development server |
 
 ### Options
 
-| Option          | Default         | Description           |
-| --------------- | --------------- | --------------------- |
-| `--config, -c`  | `./config.json` | Path to config file   |
-| `--verbose, -v` | `false`         | Enable verbose output |
-| `--help, -h`    |                 | Show help             |
+| Option | Default | Description |
+|--------|---------|-------------|
+| `--config, -c` | `./config.json` | Path to config file |
+| `--verbose, -v` | `false` | Enable verbose output |
+| `--help, -h` | | Show help |
 
 ### Examples
 
@@ -257,8 +255,7 @@ package-name build --config ./my-config.json
 # Start server in verbose mode
 package-name serve --verbose
 ```
-
-````
+```
 
 ### For Monorepo Packages
 
@@ -275,8 +272,7 @@ pnpm add @org/package-name
 
 # Or if using workspace protocol
 pnpm add @org/package-name@workspace:*
-````
-
+```
 ```
 
 ---
@@ -312,4 +308,3 @@ Use this checklist to verify README completeness:
 - [ ] No placeholder text remaining
 - [ ] TOC included if > 200 lines
 - [ ] Badges link to correct URLs
-```

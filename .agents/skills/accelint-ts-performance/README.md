@@ -14,7 +14,6 @@ This skill provides:
 ## When to Use
 
 Use this skill when:
-
 - Auditing code for performance bottlenecks
 - Optimizing loops, caching, or allocation patterns
 - Profiling slow code paths
@@ -55,15 +54,15 @@ This skill minimizes context usage through progressive loading:
 
 ## Performance Categories
 
-| Category                 | Typical Speedup | Reference Files                                                |
-| ------------------------ | --------------- | -------------------------------------------------------------- |
-| Algorithmic optimization | 10-1000x        | reduce-branching.md, reduce-looping.md                         |
-| Caching & memoization    | 2-100x          | memoization.md, cache-property-access.md, cache-storage-api.md |
-| I/O optimization         | 2-50x           | batching.md, defer-await.md                                    |
-| Allocation reduction     | 1.5-5x          | object-operations.md, avoid-allocations.md                     |
-| Memory locality          | 1.5-3x          | predictable-execution.md                                       |
-| Safety & bounds          | DoS prevention  | bounded-iteration.md                                           |
-| Micro-optimizations      | 1.05-2x         | currying.md, performance-misc.md                               |
+| Category | Typical Speedup | Reference Files |
+|----------|-----------------|-----------------|
+| Algorithmic optimization | 10-1000x | reduce-branching.md, reduce-looping.md |
+| Caching & memoization | 2-100x | memoization.md, cache-property-access.md, cache-storage-api.md |
+| I/O optimization | 2-50x | batching.md, defer-await.md |
+| Allocation reduction | 1.5-5x | object-operations.md, avoid-allocations.md |
+| Memory locality | 1.5-3x | predictable-execution.md |
+| Safety & bounds | DoS prevention | bounded-iteration.md |
+| Micro-optimizations | 1.05-2x | currying.md, performance-misc.md |
 
 ## Quick Start
 
@@ -75,7 +74,6 @@ This skill minimizes context usage through progressive loading:
 ## Critical Anti-Patterns
 
 **NEVER** do these:
-
 - ❌ Chain array methods (`.filter().map()`) - use single `reduce` pass
 - ❌ Use `Array.includes()` for repeated lookups - use `Set.has()` (O(n) → O(1))
 - ❌ Await before checking if needed - defer `await` into branches

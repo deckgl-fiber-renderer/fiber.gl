@@ -5,7 +5,6 @@ Snapshots capture the output of code and save it for comparison in future test r
 ## When to Use Snapshots
 
 **✅ Good use cases:**
-
 - Testing complex object structures that rarely change
 - Testing error messages and stack traces
 - Testing serialized output (JSON, XML, HTML)
@@ -13,7 +12,6 @@ Snapshots capture the output of code and save it for comparison in future test r
 - Testing generated code or configurations
 
 **❌ Bad use cases:**
-
 - Testing dynamic data (dates, IDs, random values)
 - Testing simple values (use explicit assertions instead)
 - Testing implementation details
@@ -22,16 +20,15 @@ Snapshots capture the output of code and save it for comparison in future test r
 ## Basic Snapshot Testing
 
 **✅ Correct: snapshot for complex structure**
-
 ```ts
-import { describe, it, expect } from "vitest";
-import { generateConfig } from "./config-generator";
+import { describe, it, expect } from 'vitest';
+import { generateConfig } from './config-generator';
 
-describe("generateConfig", () => {
-  it("should generate correct config structure", () => {
+describe('generateConfig', () => {
+  it('should generate correct config structure', () => {
     const config = generateConfig({
-      environment: "production",
-      features: ["auth", "analytics"],
+      environment: 'production',
+      features: ['auth', 'analytics'],
     });
 
     expect(config).toMatchSnapshot();
@@ -40,7 +37,6 @@ describe("generateConfig", () => {
 ```
 
 **First run creates snapshot:**
-
 ```ts
 // __snapshots__/config-generator.test.ts.snap
 exports[`generateConfig > should generate correct config structure 1`] = `
@@ -64,12 +60,11 @@ exports[`generateConfig > should generate correct config structure 1`] = `
 For smaller snapshots, use inline snapshots to keep tests self-contained.
 
 **✅ Correct: inline snapshot**
-
 ```ts
-it("should format error message", () => {
+it('should format error message', () => {
   const error = formatError({
-    code: "AUTH_FAILED",
-    message: "Invalid credentials",
+    code: 'AUTH_FAILED',
+    message: 'Invalid credentials',
   });
 
   expect(error).toMatchInlineSnapshot(`
@@ -87,12 +82,11 @@ it("should format error message", () => {
 Use property matchers for dynamic values like dates and IDs.
 
 **✅ Correct: snapshot with property matchers**
-
 ```ts
-it("should create user with generated fields", () => {
+it('should create user with generated fields', () => {
   const user = createUser({
-    name: "John Doe",
-    email: "john@example.com",
+    name: 'John Doe',
+    email: 'john@example.com',
   });
 
   expect(user).toMatchSnapshot({
@@ -104,7 +98,6 @@ it("should create user with generated fields", () => {
 ```
 
 **Snapshot saved:**
-
 ```ts
 exports[`should create user with generated fields 1`] = `
 {
@@ -133,7 +126,6 @@ vitest --ui
 ```
 
 **⚠️ Warning: Review changes carefully**
-
 ```bash
 # Before updating, review what changed
 vitest run
@@ -150,7 +142,6 @@ vitest run -u
 Snapshots work well for component output (but prefer visual regression tools for styling).
 
 **✅ Correct: component snapshot**
-
 ```ts
 import { render } from '@testing-library/react';
 
@@ -168,7 +159,6 @@ it('should render user profile', () => {
 ```
 
 **✅ Better: snapshot with property testing**
-
 ```ts
 it('should render user profile with all fields', () => {
   const { getByText, getByRole } = render(
@@ -194,13 +184,12 @@ it('should render user profile with all fields', () => {
 Snapshots work well for error messages that include context.
 
 **✅ Correct: error snapshot**
-
 ```ts
-it("should throw detailed validation error", () => {
+it('should throw detailed validation error', () => {
   const invalidData = {
-    email: "invalid-email",
+    email: 'invalid-email',
     age: -5,
-    name: "",
+    name: '',
   };
 
   expect(() => validateUser(invalidData)).toThrowErrorMatchingSnapshot();
@@ -208,7 +197,6 @@ it("should throw detailed validation error", () => {
 ```
 
 **Snapshot:**
-
 ```ts
 exports[`should throw detailed validation error 1`] = `
 [ValidationError: User validation failed:
@@ -223,16 +211,15 @@ exports[`should throw detailed validation error 1`] = `
 Custom serializers normalize output for consistent snapshots.
 
 **✅ Correct: custom serializer for dates**
-
 ```ts
-import { expect } from "vitest";
+import { expect } from 'vitest';
 
 expect.addSnapshotSerializer({
   test: (val) => val instanceof Date,
   serialize: (val) => `Date<${val.toISOString()}>`,
 });
 
-it("should create order with timestamp", () => {
+it('should create order with timestamp', () => {
   const order = createOrder({ items: [] });
 
   expect(order).toMatchInlineSnapshot(`
@@ -248,27 +235,24 @@ it("should create order with timestamp", () => {
 ## When NOT to Use Snapshots
 
 **❌ Incorrect: snapshot for simple value**
-
 ```ts
-it("should return user name", () => {
+it('should return user name', () => {
   const name = getUserName(user);
   expect(name).toMatchInlineSnapshot(`"John Doe"`);
 });
 ```
 
 **✅ Correct: explicit assertion**
-
 ```ts
-it("should return user name", () => {
+it('should return user name', () => {
   const name = getUserName(user);
-  expect(name).toBe("John Doe");
+  expect(name).toBe('John Doe');
 });
 ```
 
 **❌ Incorrect: snapshot with dynamic data**
-
 ```ts
-it("should generate report", () => {
+it('should generate report', () => {
   const report = generateReport();
 
   // Snapshot will change every run!
@@ -277,9 +261,8 @@ it("should generate report", () => {
 ```
 
 **✅ Correct: snapshot with matchers**
-
 ```ts
-it("should generate report", () => {
+it('should generate report', () => {
   const report = generateReport();
 
   expect(report).toMatchSnapshot({
@@ -294,9 +277,8 @@ it("should generate report", () => {
 Snapshots work well for command-line output.
 
 **✅ Correct: CLI output snapshot**
-
 ```ts
-it("should display help text", () => {
+it('should display help text', () => {
   const output = cli.getHelpText();
 
   expect(output).toMatchInlineSnapshot(`
@@ -317,10 +299,9 @@ it("should display help text", () => {
 ## Testing JSON/API Responses
 
 **✅ Correct: API response snapshot**
-
 ```ts
-it("should return user API response", async () => {
-  const response = await api.getUser("user-123");
+it('should return user API response', async () => {
+  const response = await api.getUser('user-123');
 
   expect(response).toMatchSnapshot({
     data: {
@@ -341,7 +322,6 @@ it("should return user API response", async () => {
 ### 1. Keep Snapshots Small
 
 **❌ Incorrect: massive snapshot**
-
 ```ts
 it('should render entire page', () => {
   const { container } = render(<App />);
@@ -350,7 +330,6 @@ it('should render entire page', () => {
 ```
 
 **✅ Correct: focused snapshot**
-
 ```ts
 it('should render header', () => {
   const { container } = render(<Header user={mockUser} />);
@@ -366,18 +345,16 @@ it('should render navigation', () => {
 ### 2. Name Snapshots Clearly
 
 **❌ Incorrect: generic name**
-
 ```ts
-it("test 1", () => {
+it('test 1', () => {
   expect(result).toMatchSnapshot();
 });
 ```
 
 **✅ Correct: descriptive name**
-
 ```ts
-it("should format currency with symbol and decimals", () => {
-  expect(formatCurrency(1234.56, "USD")).toMatchInlineSnapshot(`"$1,234.56"`);
+it('should format currency with symbol and decimals', () => {
+  expect(formatCurrency(1234.56, 'USD')).toMatchInlineSnapshot(`"$1,234.56"`);
 });
 ```
 
@@ -394,7 +371,6 @@ vitest run
 ```
 
 **✅ Correct: intentional update**
-
 ```
 1. Make code change
 2. Run tests - see snapshot diff
@@ -407,11 +383,10 @@ vitest run
 ### 4. Combine with Explicit Assertions
 
 **✅ Correct: snapshots + assertions**
-
 ```ts
-it("should generate invoice", () => {
+it('should generate invoice', () => {
   const invoice = generateInvoice({
-    items: [{ name: "Widget", price: 10, quantity: 2 }],
+    items: [{ name: 'Widget', price: 10, quantity: 2 }],
     tax: 0.08,
   });
 
@@ -431,25 +406,22 @@ it("should generate invoice", () => {
 ## Snapshot Anti-Patterns
 
 **❌ Incorrect: using snapshots as a crutch**
-
 ```ts
-it("should work", () => {
+it('should work', () => {
   // Lazy: just snapshot everything instead of thinking about what to test
   expect(doSomething()).toMatchSnapshot();
 });
 ```
 
 **❌ Incorrect: ignoring failing snapshots**
-
 ```bash
 # Don't blindly update snapshots without understanding why they changed
 vitest run -u  # ❌ Without reviewing changes first
 ```
 
 **❌ Incorrect: snapshots for test doubles**
-
 ```ts
-it("should call service", () => {
+it('should call service', () => {
   const mockService = vi.fn();
   callService(mockService);
 
@@ -459,15 +431,14 @@ it("should call service", () => {
 ```
 
 **✅ Correct: explicit assertions for mocks**
-
 ```ts
-it("should call service with correct params", () => {
+it('should call service with correct params', () => {
   const mockService = vi.fn();
   callService(mockService);
 
   expect(mockService).toHaveBeenCalledWith({
-    id: "123",
-    action: "update",
+    id: '123',
+    action: 'update',
   });
 });
 ```
@@ -491,7 +462,6 @@ src/
 ```
 
 **✅ Correct: commit snapshots**
-
 ```bash
 # Always commit snapshot files
 git add src/**/__snapshots__
@@ -501,14 +471,12 @@ git commit -m "Update snapshots after button styling changes"
 ## When to Prefer Explicit Assertions
 
 Use explicit assertions when:
-
 - Testing simple values
 - Testing critical business logic
 - Testing behavior, not structure
 - You need clear failure messages
 
 Use snapshots when:
-
 - Testing complex structures
 - Output format matters
 - Regression testing large outputs

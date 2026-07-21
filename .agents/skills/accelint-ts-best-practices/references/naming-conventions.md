@@ -5,7 +5,6 @@
 When combining measurements with qualifiers (min, max, avg) or units (ms, px, count), append them in **descending order of significance**. This creates natural autocomplete grouping and prevents scattered naming.
 
 **❌ Incorrect: qualifier comes first**
-
 ```ts
 const maxLatencyMs = 1000;
 const minLatencyMs = 100;
@@ -18,7 +17,6 @@ const avgLatencyMs = 500;
 ```
 
 **✅ Correct: qualifiers appended in descending order**
-
 ```ts
 const latencyMsMax = 1000;
 const latencyMsMin = 100;
@@ -49,14 +47,12 @@ const renderTimeMsMin = 0;
 Prefix boolean variables and functions with `is`, `has`, `should`, or `can` to make their type obvious.
 
 **❌ Incorrect: ambiguous type**
-
 ```ts
-const visible = getVisibility(); // Function? Boolean? String?
+const visible = getVisibility();  // Function? Boolean? String?
 const children = countChildren(); // Array? Number? Boolean?
 ```
 
 **✅ Correct: unambiguous boolean**
-
 ```ts
 const isVisible = getVisibility();
 const hasChildren = countChildren() > 0;

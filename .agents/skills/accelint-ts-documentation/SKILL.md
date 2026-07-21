@@ -16,21 +16,18 @@ Comprehensive skill for improving JavaScript/TypeScript documentation, including
 Use this skill when the task involves:
 
 ### JSDoc Documentation
-
 - Adding JSDoc comments to exported functions, types, interfaces, or classes
 - Validating JSDoc completeness (missing @param, @returns, @template tags)
 - Ensuring JSDoc @example tags use proper code fences
 - Documenting object parameters with destructuring using dot notation
 
 ### Comment Quality
-
 - Identifying and categorizing comments using proper markers (TODO, FIXME, HACK, NOTE, PERF, REVIEW, DEBUG, REMARK)
 - Removing unnecessary comments (commented-out code, edit history, obvious statements)
 - Preserving important comments (markers, linter directives, business logic)
 - Improving comment placement (moving end-of-line comments above code)
 
 ### Documentation Audits
-
 - Reviewing code for documentation completeness
 - Ensuring exported code has comprehensive documentation
 - Validating internal code has minimum required documentation
@@ -38,7 +35,6 @@ Use this skill when the task involves:
 ## When NOT to Use This Skill
 
 Do not activate for:
-
 - General code quality issues (use accelint-ts-best-practices instead)
 - Performance optimization (use accelint-ts-performance instead)
 - Type safety improvements (use accelint-ts-best-practices instead)
@@ -69,18 +65,15 @@ Critical content: Comment marker standards, what to remove vs preserve, placemen
 Apply this thinking framework before auditing:
 
 **Question 1: Who is the reader?**
-
 - API consumers: Lack implementation context → Document comprehensively
 - Team members: Have codebase context → Document non-self-evident behaviors only
 - Future you (6 months): Will forget subtle decisions → Document rationale
 
 **Question 2: Opacity vs Complexity?**
-
 - Opacity = Intent is hidden → Must document (e.g., cache.invalidate() - why? performance? correctness?)
 - Complexity = Implementation is intricate → Implementation comments, not JSDoc
 
 **Question 3: Maintenance cost trade-off?**
-
 - High churn code: Minimal docs (won't stay accurate)
 - Stable API: Comprehensive docs (will stay accurate)
 - Internal utilities: Brief docs (low reader count × low frequency = minimal ROI)
@@ -91,13 +84,11 @@ After applying the thinking framework:
 
 **Is this exported (public API)?**
 → YES: Comprehensive documentation REQUIRED
-
 - All @param, @returns, @template, @throws, @example
 - Even if "obvious" - consumers lack your context
 
 **Is this internal code?**
 → Apply judgment: Document what's NOT self-evident from:
-
 1. Function name and type signature
 2. Parameter names and types
 3. Standard patterns in the codebase
@@ -109,7 +100,6 @@ After applying the thinking framework:
 Use this decision tree to determine if documentation is complete:
 
 **Step 1: Determine visibility tier**
-
 ```
 Is it exported (public API)?
   YES → Tier 1: Comprehensive documentation required
@@ -119,7 +109,6 @@ Is it exported (public API)?
 **Step 2: Apply entity-specific requirements**
 
 **Tier 1 (Exported) - Always Required:**
-
 - Description (purpose, usage context, "when to use" for appropriate entities)
 - All @param with property documentation for objects
 - @returns (unless void)
@@ -128,7 +117,6 @@ Is it exported (public API)?
 - At least one realistic @example
 
 **Tier 2 (Internal) - Judgment-Based:**
-
 - Brief description (one line acceptable)
 - @param for non-obvious parameters only
 - @returns if non-obvious
@@ -136,7 +124,6 @@ Is it exported (public API)?
 - @example only if behavior is complex
 
 **Entity-Specific Additions:**
-
 - **Classes (Tier 1)**: Constructor docs, public method docs, instantiation example
 - **Types/Interfaces (Tier 1)**: Property descriptions for all public properties
 - **Constants/Variables**: Units/constraints if applicable (e.g., "milliseconds", "must be positive")
@@ -144,7 +131,6 @@ Is it exported (public API)?
 **Sufficiency Checklist:**
 
 Before marking documentation as "sufficient", verify:
-
 - [ ] All exported items have comprehensive documentation
 - [ ] All @param tags describe what the parameter does (not just type info)
 - [ ] All @returns tags describe what is returned in different scenarios
@@ -159,7 +145,6 @@ Before marking documentation as "sufficient", verify:
 If you encounter scenarios not covered in references or standard patterns:
 
 **Fallback strategy:**
-
 1. Apply the two-tier rule (export vs internal) as your foundation
 2. Prioritize clarity over completeness - better to document what you know than guess syntax
 3. Use standard JSDoc conventions from TypeScript/JSDoc official documentation
@@ -167,7 +152,6 @@ If you encounter scenarios not covered in references or standard patterns:
 5. If truly ambiguous, ask the user for clarification rather than making assumptions
 
 **Common uncovered scenarios:**
-
 - Exotic TypeScript features (mapped types, conditional types, template literal types)
 - Framework-specific patterns (React hooks with generics, Vue composables)
 - Complex callback signatures with multiple overloads
@@ -181,20 +165,17 @@ When users explicitly request a documentation audit or invoke the skill directly
 **Template:** [`assets/output-report-template.md`](assets/output-report-template.md)
 
 The audit report format provides:
-
 - Numbered findings with clear before/after examples
 - Categorization (Missing, Incomplete, Incorrect Syntax, Quality, Internal)
 - References to detailed guidance (jsdoc.md, comments.md)
 - Summary table for tracking all issues
 
 **When to use the audit template:**
-
 - Skill invoked directly via `/accelint-ts-documentation <path>`
 - User explicitly requests "documentation audit" or "audit documentation"
 - User asks to "review all documentation" across file(s)
 
 **When NOT to use the audit template:**
-
 - User asks to "add JSDoc to this function" (direct implementation)
 - User asks "what's wrong with this comment?" (answer the question)
 - User requests specific fixes (apply fixes directly without formal report)
@@ -205,7 +186,7 @@ When performing documentation audits, avoid these common mistakes:
 
 ### ❌ Incorrect: Over-documenting internal code
 
-````typescript
+```typescript
 // Internal utility with verbose documentation
 /**
  * Internal helper function that validates input
@@ -220,13 +201,13 @@ When performing documentation audits, avoid these common mistakes:
 function isValid(x: unknown): boolean {
   return x != null;
 }
-````
+```
 
 Why this is wrong: Internal docs rot faster than public API docs because they're adjacent to frequently-changed implementation. Team members can read the actual implementation faster than reading outdated documentation that creates confusion. Reserve comprehensive docs for stable exported APIs where consumers cannot access implementation.
 
 ### ✅ Correct: Minimal internal docs, comprehensive public API docs
 
-````typescript
+```typescript
 // Internal utility - minimal documentation
 /** Checks if value is not null/undefined */
 function isValid(x: unknown): boolean {
@@ -248,7 +229,7 @@ function isValid(x: unknown): boolean {
 export function validateInput(data: unknown): boolean {
   return data != null;
 }
-````
+```
 
 ### ❌ Incorrect: Documenting HOW instead of WHAT/WHY
 
@@ -298,7 +279,7 @@ Why this is wrong: "TODO: fix this" creates diffusion of responsibility. After m
 
 ### Excellent Public API Documentation
 
-````typescript
+```typescript
 /**
  * Fetches user profile data from the authentication service
  *
@@ -329,16 +310,15 @@ Why this is wrong: "TODO: fix this" creates diffusion of responsibility. After m
  */
 export async function fetchUserProfile(
   userId: string,
-  options?: { includeMetadata?: boolean; timeout?: number },
+  options?: { includeMetadata?: boolean; timeout?: number }
 ): Promise<UserProfile> {
   // implementation
 }
-````
+```
 
 **What makes this excellent:**
-
 - Describes hidden behaviors (retry logic with exponential backoff)
-- Documents object parameters with dot notation (options.\*)
+- Documents object parameters with dot notation (options.*)
 - @throws lists all possible errors with triggering conditions
 - @example shows both basic and advanced usage patterns
 - Mentions defaults and constraints (timeout default: 5000)

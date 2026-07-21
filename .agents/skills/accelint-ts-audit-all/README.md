@@ -7,7 +7,6 @@ Comprehensive JavaScript and TypeScript file audit system that systematically ap
 `accelint-ts-audit-all` is a meta-skill that orchestrates four specialized JavaScript and TypeScript audit skills (`accelint-ts-testing`, `accelint-ts-best-practices`, `accelint-ts-performance`, `accelint-ts-documentation`) in a systematic 9-step process. It maintains detailed progress tracking across sessions and requires interactive approval for all changes.
 
 **Key Features:**
-
 - 🔄 9-step audit process per file with progress tracking
 - 🤝 Interactive change approval (accept/deny/other)
 - 📊 Parallel execution of quality + performance to avoid contradictions
@@ -17,13 +16,11 @@ Comprehensive JavaScript and TypeScript file audit system that systematically ap
 ## Installation
 
 **npm**
-
 ```bash
 npx skills add https://github.com/gohypergiant/agent-skills --skill accelint-ts-audit-all
 ```
 
 **pnpm**
-
 ```bash
 pnpm dlx skills add https://github.com/gohypergiant/agent-skills --skill accelint-ts-audit-all
 ```
@@ -49,27 +46,22 @@ If you don't provide a path, the skill will ask for one.
 For each TypeScript file (excluding `.test.ts`, `.spec.ts`, `.bench.ts`), the skill runs this 9-step process:
 
 ### Phase 1: Initial Test Coverage
-
 1. Run `accelint-ts-testing` to check test quality
 2. Interactively apply test improvements
 
 ### Phase 2: Code Quality & Performance
-
 3. Run `accelint-ts-best-practices` AND `accelint-ts-performance` in parallel
 4. Interactively apply improvements (merging overlapping recommendations)
 
 ### Phase 3: Verification
-
 5. Run test/build/lint commands to verify changes
 6. Fix any issues that arise
 
 ### Phase 4: Documentation
-
 7. Run `accelint-ts-documentation` to improve code comments
 8. Interactively apply documentation fixes
 
 **Progress Tracking:**
-
 - Creates `.agents/audit/audit-process-{date}-{time}.md` to track in-progress work
 - Creates `.agents/audit/audit-history-{date}-{time}.md` to archive completed files
 - Survives context window limits by saving after each step
@@ -77,7 +69,6 @@ For each TypeScript file (excluding `.test.ts`, `.spec.ts`, `.bench.ts`), the sk
 ## Example Session
 
 **Initial invocation:**
-
 ```bash
 User: /skill accelint-ts-audit-all packages/core/src
 Agent: Found 15 TypeScript files to audit. Creating audit tracking files...
@@ -99,7 +90,6 @@ Agent: Applied. Running verification...
 ```
 
 **Resuming later:**
-
 ```bash
 User: /skill accelint-ts-audit-all packages/core/src
 Agent: Found existing audit at .agents/audit/audit-process-2026-02-14-143022.md
@@ -117,7 +107,6 @@ Agent: Found existing audit at .agents/audit/audit-process-2026-02-14-143022.md
 ## Requirements
 
 This skill requires these other skills to be installed:
-
 - `accelint-ts-testing` - Test coverage and quality analysis
 - `accelint-ts-best-practices` - Code quality and type safety checks
 - `accelint-ts-performance` - Performance optimization analysis
@@ -125,7 +114,6 @@ This skill requires these other skills to be installed:
 
 **Verification Commands:**
 Your project needs test/build/lint commands. The skill will ask for exact commands on first run:
-
 - Test command (e.g., `npm test`, `bun run test`)
 - Build command (e.g., `npm run build`, `tsc`)
 - Lint command (e.g., `npm run lint`, `biome check`)
@@ -143,36 +131,28 @@ This skill embodies these principles:
 ## Common Scenarios
 
 ### Large Directory Audit
-
 For directories with >20 files, expect multiple sessions:
-
 - The skill saves progress after each step
 - Context window limits will naturally pause the audit
 - Resume by re-invoking with the same directory path
 - Progress files track exactly where to continue
 
 ### Property-Based Test Failures
-
 If property-based tests fail randomly:
-
 - Note the exact seed that failed
 - Add constraints to arbitraries (date ranges, NaN filtering)
 - Run tests 100 times to verify stability
 - Document any constraints in test comments
 
 ### Overlapping Recommendations
-
 When quality + performance suggest changes to same code:
-
 - Skill attempts to merge into single fix
 - If conflicting, presents both options
 - User chooses which to apply
 - Decision documented in audit history
 
 ### Build Failures After Changes
-
 If verification fails after applying changes:
-
 - Progress stops (won't move to next step)
 - User can revert, modify, or debug
 - Once fixed, continue from current step

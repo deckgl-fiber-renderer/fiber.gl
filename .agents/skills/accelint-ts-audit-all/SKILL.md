@@ -34,19 +34,16 @@ Comprehensive TypeScript file audit system that systematically applies multiple 
 Apply these tests before launching a comprehensive audit:
 
 ### Scope Validation
-
 - **Is this path valid and accessible?** Verify the file or directory exists before creating TODO lists.
 - **Are there test and build commands available?** Check package.json or ask user for verification commands before starting.
 - **How many files will this audit?** Large directories (>5 files) will require multiple sessions. Set expectations upfront.
 
 ### Session Management
-
 - **Is this a new audit or resuming?** Check for existing audit-process files in `.agents/audit/` before creating new ones.
 - **Will this fit in one session?** Estimate ~1-5 files per session max. Plan for resumption if larger.
 - **Are verification commands known?** Document exact test/build/lint commands in the audit-process file from the start.
 
 ### Change Philosophy
-
 - **What's the user's risk tolerance?** Some users want every suggestion, others only critical fixes. Clarify before first interactive prompt.
 - **Should performance micro-optimizations be included?** 1.05x-1.15x gains may not be worth code churn for all projects.
 
@@ -90,14 +87,12 @@ Skip to Step 2 if resuming.
 BLOCKING: All audit work MUST happen in an isolated worktree to prevent conflicts with parallel audits and allow safe rollback.
 
 1. **Create worktree with timestamped branch:**
-
    ```bash
    timestamp=$(date +%Y%m%d-%H%M%S)
    git worktree add .agents/worktrees/audit-${timestamp} -b audit/${timestamp}
    ```
 
 2. **Switch to the worktree directory:**
-
    ```bash
    cd .agents/worktrees/audit-${timestamp}
    ```
@@ -120,7 +115,6 @@ to understand the archival format.
 once at the start of a new audit.
 
 Create timestamped tracking files in the ORIGINAL repository (not in the worktree):
-
 - Go back to the original repository root: `cd $(git rev-parse --show-toplevel)`
 - Create `.agents/audit/audit-process-${timestamp}.md` (use same timestamp as worktree)
 - Create `.agents/audit/audit-history-${timestamp}.md` (same timestamp)
@@ -133,7 +127,6 @@ Create timestamped tracking files in the ORIGINAL repository (not in the worktre
 Find all TypeScript files in the target directory, excluding `.test.ts`, `.spec.ts`, and `.bench.ts` files. If given a single file, validate it's not a test/benchmark file.
 
 **Populate the audit-process file:**
-
 - Add worktree path and branch to "Worktree Information" section
 - Add all files to "Files to Audit" section as "Pending"
 - Document the exact verification commands (test/build/lint)
@@ -147,7 +140,6 @@ For each file in the pending list, follow this exact sequence:
 #### Phase 1: Initial Test Coverage
 
 **Step 1: Run accelint-ts-testing skill**
-
 ```bash
 /skill accelint-ts-testing <file-path>
 ```
@@ -155,28 +147,23 @@ For each file in the pending list, follow this exact sequence:
 **Step 2: Interactive Changes**
 
 **BLOCKING - Interactive Approval Required:**
-
 > You MUST complete all three checkpoints before proceeding:
->
 > 1. ✅ Display emoji severity table with ALL issues (see "Interactive Change Approval Pattern")
 > 2. ✅ Show detailed before/after code for EVERY issue
 > 3. ✅ Ask "Apply which issues?" with numbered list acceptance
->    NO EXCEPTIONS. If you skip any checkpoint, you are violating the workflow.
+> NO EXCEPTIONS. If you skip any checkpoint, you are violating the workflow.
 
 - Apply accepted changes
 - **BLOCKING REQUIREMENT:** If property-based tests added, run verification:
-
   ```bash
   # Run test suite 100 times to verify PBT stability
   for i in {1..100}; do <test-command> || break; done
   ```
-
   - Run the tests without coverage reporting to prevent coverage conflicts
   - If ANY run fails, examine the seed that failed
   - Fix test properties (add constraints to arbitraries: date ranges, filtered NaNs, safe strings)
   - Re-run 100 times until 100 consecutive passes achieved
   - DO NOT proceed to Step 3 until this verification passes
-
 - Document findings in "Current File - Detailed Progress" section
 - Update status to show Step 1 ✅, Step 2 ✅
 - **SAVE PROGRESS to audit-process file NOW before continuing**
@@ -186,27 +173,23 @@ For each file in the pending list, follow this exact sequence:
 **Step 3: Run BOTH skills in parallel**
 
 CRITICAL: Run these together to avoid contradictory suggestions:
-
 ```bash
 /skill accelint-ts-best-practices <file-path>
 /skill accelint-ts-performance <file-path>
 ```
 
 **Step 4: Interactive Changes**
-
 - Review both sets of recommendations
 - **If recommendations overlap:**
   - Try to merge them into single fix if possible
   - If conflicting, present both and let user choose
 
 **BLOCKING - Interactive Approval Required:**
-
 > You MUST complete all three checkpoints before proceeding:
->
 > 1. ✅ Display emoji severity table with ALL issues from BOTH skills (see "Interactive Change Approval Pattern")
 > 2. ✅ Show detailed before/after code for EVERY issue
 > 3. ✅ Ask "Apply which issues?" with numbered list acceptance
->    NO EXCEPTIONS. If you skip any checkpoint, you are violating the workflow.
+> NO EXCEPTIONS. If you skip any checkpoint, you are violating the workflow.
 
 - Apply accepted changes
 - Add `// PERF:` comments only where they add genuine insight
@@ -221,7 +204,6 @@ CRITICAL: Run these together to avoid contradictory suggestions:
 ⚠️ **CRITICAL:** Use EXACT commands from audit-process file "Verification Commands" section. DO NOT improvise or run one-off commands.
 
 Run ALL verification commands documented in audit-process file:
-
 ```bash
 # Example commands (MUST match audit-process file exactly):
 cd <project-root>; npm test
@@ -234,13 +216,11 @@ cd <project-root>; npm run lint
 If verification passes, skip to documenting results. Otherwise:
 
 **BLOCKING - Interactive Approval Required:**
-
 > You MUST complete all three checkpoints before proceeding:
->
 > 1. ✅ Display emoji severity table with ALL verification failures (see "Interactive Change Approval Pattern")
 > 2. ✅ Show detailed before/after code for EVERY issue
 > 3. ✅ Ask "Apply which fixes?" with numbered list acceptance
->    NO EXCEPTIONS. If you skip any checkpoint, you are violating the workflow.
+> NO EXCEPTIONS. If you skip any checkpoint, you are violating the workflow.
 
 - Apply accepted changes
 - Document results in "Current File - Detailed Progress"
@@ -250,7 +230,6 @@ If verification passes, skip to documenting results. Otherwise:
 #### Phase 4: Documentation
 
 **Step 7: Run accelint-ts-documentation skill**
-
 ```bash
 /skill accelint-ts-documentation <file-path>
 ```
@@ -258,13 +237,11 @@ If verification passes, skip to documenting results. Otherwise:
 **Step 8: Interactive Changes**
 
 **BLOCKING - Interactive Approval Required:**
-
 > You MUST complete all three checkpoints before proceeding:
->
 > 1. ✅ Display emoji severity table with ALL documentation issues (see "Interactive Change Approval Pattern")
 > 2. ✅ Show detailed before/after code for EVERY issue
 > 3. ✅ Ask "Apply which issues?" with numbered list acceptance
->    NO EXCEPTIONS. If you skip any checkpoint, you are violating the workflow.
+> NO EXCEPTIONS. If you skip any checkpoint, you are violating the workflow.
 
 - Apply accepted changes
 - Run final verification to ensure docs didn't break anything (use EXACT commands from audit-process file)
@@ -293,7 +270,6 @@ When all 9 steps complete for a file:
 ### Step 4: Continue or Complete
 
 **If more pending files exist:**
-
 - Return to Step 2 for next file
 - Monitor context usage - if approaching limit, stop and save progress
 
@@ -304,7 +280,6 @@ When all 9 steps complete for a file:
    - Ensure all changes pass before merging
 
 2. **Merge worktree back to original branch:**
-
    ```bash
    # Extract timestamp from current worktree directory name
    # We're in .agents/worktrees/audit-YYYYMMDD-HHMMSS
@@ -335,7 +310,6 @@ When all 9 steps complete for a file:
    ```
 
 3. **Clean up worktree:**
-
    ```bash
    # Remove the worktree (use the timestamp extracted earlier)
    git worktree remove .agents/worktrees/audit-${timestamp}
@@ -357,33 +331,27 @@ When all 9 steps complete for a file:
 ## Progress Tracking Format
 
 **File Status Markers:**
-
 - `[ ]` - Pending (not started)
 - `[x]` - Completed (all 9 steps done, moved to history)
 
 **Step Status Markers:**
-
 - ✅ - Complete
 - 🔄 - In Progress
 - ⏸️ - Pending (not started)
 
 **Detailed Progress Template:**
-
 ```markdown
 ### filename.ts - Audit Status 🔄 IN PROGRESS
 
 **Overall Progress:** X% complete (Step Y of 8)
 
 #### ✅ Step 1: Test Coverage - COMPLETE
-
 [Findings, changes applied, test results]
 
 #### 🔄 Step 2: Interactive Changes - IN PROGRESS
-
 [Current change being reviewed, user decision needed]
 
 #### ⏸️ Step 3: Code Quality Analysis - PENDING
-
 [Not started yet]
 ```
 
@@ -398,17 +366,16 @@ Present ALL issues in a numbered table using emoji severity indicators:
 ```markdown
 ## Found Issues Summary (X total)
 
-| #   | Severity    | Type          | Lines   | Description                            |
-| --- | ----------- | ------------- | ------- | -------------------------------------- |
-| 1   | 🛑 Critical | Type Safety   | 45-47   | Missing null check on user object      |
-| 2   | ⚠️ High     | Performance   | 89      | N+1 query in loop - use batch fetch    |
-| 3   | ⚡ Medium   | Performance   | 120-125 | Filter+map → single pass with reduce   |
-| 4   | 🔵 Low      | Best Practice | 78      | Use const assertion for readonly array |
-| 5   | ✅ Info     | Documentation | 12      | Missing JSDoc return type              |
+| # | Severity | Type | Lines | Description |
+|---|----------|------|-------|-------------|
+| 1 | 🛑 Critical | Type Safety | 45-47 | Missing null check on user object |
+| 2 | ⚠️ High | Performance | 89 | N+1 query in loop - use batch fetch |
+| 3 | ⚡ Medium | Performance | 120-125 | Filter+map → single pass with reduce |
+| 4 | 🔵 Low | Best Practice | 78 | Use const assertion for readonly array |
+| 5 | ✅ Info | Documentation | 12 | Missing JSDoc return type |
 ```
 
 **Severity Legend:**
-
 - 🛑 **Critical** - Causes runtime errors, security vulnerabilities, or data loss
 - ⚠️ **High** - Type errors, significant performance issues, or API breaking changes
 - ⚡ **Medium** - Moderate performance gains, maintainability improvements
@@ -419,29 +386,25 @@ Present ALL issues in a numbered table using emoji severity indicators:
 
 After showing the overview table, display each issue with complete before/after code:
 
-````markdown
+```markdown
 ---
 
 ### Issue #1: Missing null check (🛑 Critical - Type Safety)
-
 **Lines:** 45-47
 **Problem:** Function doesn't handle null user case
 **Impact:** Runtime TypeError when user is null
 
 ❌ **Before:**
-
 ```typescript
 function getUsername(user: User | null) {
   return user.name; // TS error + runtime crash
 }
 ```
-````
 
 ✅ **After:**
-
 ```typescript
 function getUsername(user: User | null) {
-  return user?.name ?? "Anonymous";
+  return user?.name ?? 'Anonymous';
 }
 ```
 
@@ -450,13 +413,11 @@ function getUsername(user: User | null) {
 ---
 
 ### Issue #2: N+1 Query Performance (⚠️ High - Performance)
-
 [... same detailed format for each issue ...]
 
 ---
 
 ### Issue #3: Filter+map optimization (⚡ Medium - Performance)
-
 [... same detailed format for each issue ...]
 
 ---
@@ -466,8 +427,7 @@ function getUsername(user: User | null) {
 ---
 
 **Apply which issues?** Enter numbers (e.g., "1, 2, 5" or "all" or "skip"):
-
-````
+```
 
 **Key Benefits:**
 - Overview table allows quick scanning for conflicts across parallel processes
@@ -487,10 +447,9 @@ The audit-process file MUST document exact verification commands. Common pattern
 cd <project-root>; npm test
 cd <project-root>; npm run build
 cd <project-root>; npm run lint
-````
+```
 
 **Bun projects:**
-
 ```bash
 cd <project-root>; bun run test
 cd <project-root>; bun run build
@@ -499,7 +458,6 @@ cd <project-root>; bun run bench  # if applicable
 ```
 
 **Monorepo packages:**
-
 ```bash
 cd <workspace-root>/packages/<package-name>; npm test
 ```

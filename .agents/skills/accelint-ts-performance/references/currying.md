@@ -9,11 +9,10 @@ Convert functions to curried form when parameters are constant across many calls
 ### Currying for Expensive Computation
 
 **❌ Incorrect: recompute multiplier every call**
-
 ```ts
 export function round(precision: number, value: number): number {
   if (!Number.isInteger(precision)) {
-    throw new Error("Precision must be an integer.");
+    throw new Error('Precision must be an integer.');
   }
 
   const multiplier = 10 ** precision;
@@ -28,13 +27,15 @@ for (const price of prices) {
 ```
 
 **✅ Correct: curry to precompute multiplier**
-
 ```ts
 export function round(precision: number): (value: number) => number;
 export function round(precision: number, value: number): number;
-export function round(precision: number, value?: number): number | ((value: number) => number) {
+export function round(
+  precision: number,
+  value?: number,
+): number | ((value: number) => number) {
   if (!Number.isInteger(precision)) {
-    throw new Error("Precision must be an integer.");
+    throw new Error('Precision must be an integer.');
   }
 
   const multiplier = 10 ** precision;
@@ -59,7 +60,6 @@ The curried version computes `10 ** precision` once and captures it in the closu
 ### Currying for Regex Compilation
 
 **❌ Incorrect: recompile regex every call**
-
 ```ts
 function validate(pattern: string, value: string): boolean {
   const regex = new RegExp(pattern);
@@ -67,18 +67,20 @@ function validate(pattern: string, value: string): boolean {
 }
 
 for (const email of emails) {
-  if (validate("^[a-z]+@[a-z]+\\.[a-z]+$", email)) {
+  if (validate('^[a-z]+@[a-z]+\\.[a-z]+$', email)) {
     validEmails.push(email);
   }
 }
 ```
 
 **✅ Correct: curry to compile regex once**
-
 ```ts
 function validate(pattern: string): (value: string) => boolean;
 function validate(pattern: string, value: string): boolean;
-function validate(pattern: string, value?: string): boolean | ((value: string) => boolean) {
+function validate(
+  pattern: string,
+  value?: string,
+): boolean | ((value: string) => boolean) {
   const regex = new RegExp(pattern);
 
   if (value === undefined) {
@@ -88,7 +90,7 @@ function validate(pattern: string, value?: string): boolean | ((value: string) =
   return regex.test(value);
 }
 
-const isValidEmail = validate("^[a-z]+@[a-z]+\\.[a-z]+$");
+const isValidEmail = validate('^[a-z]+@[a-z]+\\.[a-z]+$');
 for (const email of emails) {
   if (isValidEmail(email)) {
     validEmails.push(email);
@@ -99,7 +101,6 @@ for (const email of emails) {
 ### Currying for Configuration
 
 **❌ Incorrect: pass same config repeatedly**
-
 ```ts
 function formatCurrency(config: FormatConfig, amount: number): string {
   const symbol = config.currencySymbol;
@@ -116,7 +117,6 @@ for (const transaction of transactions) {
 ```
 
 **✅ Correct: curry to capture config**
-
 ```ts
 function formatCurrency(config: FormatConfig): (amount: number) => string;
 function formatCurrency(config: FormatConfig, amount: number): string;
@@ -147,7 +147,6 @@ for (const transaction of transactions) {
 ### Partial Application with bind
 
 **❌ Incorrect: repeated identical calls**
-
 ```ts
 function scale(factor: number, base: number, value: number): number {
   return base + value * factor;
@@ -159,7 +158,6 @@ for (const measurement of measurements) {
 ```
 
 **✅ Correct: use bind for partial application**
-
 ```ts
 function scale(factor: number, base: number, value: number): number {
   return base + value * factor;
@@ -176,7 +174,6 @@ for (const measurement of measurements) {
 ### Currying for Validation Rules
 
 **❌ Incorrect: recreate validators**
-
 ```ts
 function validateRange(min: number, max: number, value: number): boolean {
   return value >= min && value <= max;
@@ -190,7 +187,6 @@ for (const score of scores) {
 ```
 
 **✅ Correct: curry to create reusable validator**
-
 ```ts
 function validateRange(min: number, max: number): (value: number) => boolean;
 function validateRange(min: number, max: number, value: number): boolean;
@@ -219,7 +215,6 @@ for (const score of scores) {
 ### When NOT to Curry
 
 **✅ Good: parameters vary frequently**
-
 ```ts
 function add(a: number, b: number): number {
   return a + b;
@@ -232,7 +227,6 @@ for (let i = 0; i < items.length; i++) {
 ```
 
 Don't curry when:
-
 - Parameters vary on every call
 - Function is called infrequently
 - Setup cost is negligible
@@ -241,7 +235,6 @@ Don't curry when:
 ### Currying with TypeScript Generics
 
 **❌ Incorrect: lose type information**
-
 ```ts
 function map<T, U>(fn: (item: T) => U, items: T[]): U[] {
   return items.map(fn);
@@ -252,11 +245,13 @@ const doubled = map((x: number) => x * 2, [1, 2, 3]);
 ```
 
 **✅ Correct: curry with generics**
-
 ```ts
 function map<T, U>(fn: (item: T) => U): (items: T[]) => U[];
 function map<T, U>(fn: (item: T) => U, items: T[]): U[];
-function map<T, U>(fn: (item: T) => U, items?: T[]): U[] | ((items: T[]) => U[]) {
+function map<T, U>(
+  fn: (item: T) => U,
+  items?: T[],
+): U[] | ((items: T[]) => U[]) {
   const mapper = (arr: T[]) => arr.map(fn);
 
   if (items === undefined) {
@@ -284,7 +279,6 @@ const doubled2 = double([4, 5, 6]);
 ## When to Use Currying
 
 Curry functions when:
-
 - Parameters include expensive computations (exponentiation, regex, lookup tables)
 - Some parameters are constant across hundreds/thousands of calls
 - Function is in a hot path (loop, render, event handler)
@@ -294,7 +288,6 @@ Curry functions when:
 ## When NOT to Use Currying
 
 Avoid currying when:
-
 - All parameters vary on every call
 - Function is called infrequently
 - Setup cost is trivial (simple primitives)
@@ -308,7 +301,6 @@ When currying doesn't work, use these alternatives:
 ### Fallback 1: Direct function calls when parameters vary
 
 **Scenario**: All parameters change on every call
-
 ```ts
 // ❌ Don't curry - no benefit
 const add = (a: number) => (b: number) => a + b;
@@ -319,7 +311,6 @@ for (let i = 0; i < items.length; i++) {
 ```
 
 **✅ Use direct function call**
-
 ```ts
 function add(a: number, b: number): number {
   return a + b;
@@ -335,7 +326,6 @@ for (let i = 0; i < items.length; i++) {
 ### Fallback 2: Inline computation when setup cost is trivial
 
 **Scenario**: Operation is so simple that currying adds complexity
-
 ```ts
 // ❌ Over-engineered
 const multiply = (factor: number) => (value: number) => factor * value;
@@ -347,7 +337,6 @@ for (const x of values) {
 ```
 
 **✅ Inline the trivial operation**
-
 ```ts
 for (const x of values) {
   results.push(x * 2); // No abstraction needed
@@ -359,7 +348,6 @@ for (const x of values) {
 ### Fallback 3: Memoization for expensive pure functions
 
 **Scenario**: Function is expensive but parameters vary frequently
-
 ```ts
 // ❌ Currying doesn't help - parameters vary
 function fibonacci(n: number): number {
@@ -374,7 +362,6 @@ for (const num of numbers) {
 ```
 
 **✅ Use memoization instead**
-
 ```ts
 const fibCache = new Map<number, number>();
 
@@ -397,7 +384,6 @@ for (const num of numbers) {
 ### Fallback 4: Loop hoisting for simple invariants
 
 **Scenario**: Simple invariant doesn't need currying
-
 ```ts
 // ❌ Overkill for simple hoisting
 const addTax = (rate: number) => (amount: number) => amount * (1 + rate);
@@ -409,7 +395,6 @@ for (const price of prices) {
 ```
 
 **✅ Hoist the invariant**
-
 ```ts
 const TAX_RATE = 1.08;
 

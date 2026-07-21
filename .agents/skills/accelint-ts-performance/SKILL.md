@@ -46,18 +46,15 @@ Systematic performance optimization for JavaScript/TypeScript codebases. Combine
 Apply these tests to focus optimization efforts effectively:
 
 ### Impact Assessment
-
 - **Is this code actually slow?** When profiling data is available, use it to inform prioritization. When unavailable, audit all code for anti-patterns.
 - **What percentage of runtime does this represent?** When profiling data is available, flame graphs help identify the highest-impact issues. When unavailable, report all anti-patterns found.
 - **Raw performance matters** - Audit ALL code for performance anti-patterns regardless of current usage context. Utility functions, formatters, parsers, and data transformations are frequently called in loops, rendering pipelines, or real-time systems even when they appear simple.
 
 ### Correctness Verification
-
 - **Do I have tests covering this code?** Performance bugs are subtle. Comprehensive tests catch regressions from optimizations. Add tests before optimizing.
 - **What are the edge cases?** Off-by-one errors, empty arrays, null/undefined values become more likely with manual loop optimizations. Test exhaustively.
 
 ### Complexity vs Benefit
-
 - **Is the algorithmic complexity optimal?** O(n) → O(1) is 1000x speedup. Micro-optimizations are 1.1-2x at best. Fix algorithm first.
 - **Will this optimization persist?** If the code changes frequently, optimization may be discarded soon. Optimize stable code first.
 - **What's the readability cost?** Manual loops are faster but harder to maintain than `.map()`. Balance performance with team velocity.
@@ -67,21 +64,16 @@ Apply these tests to focus optimization efforts effectively:
 This skill uses **progressive disclosure** to minimize context usage:
 
 ### 1. Start with the Workflow (SKILL.md)
-
 Follow the 4-phase audit workflow below for systematic performance analysis.
 
 ### 2. Reference Performance Rules Overview (AGENTS.md)
-
 Load [AGENTS.md](AGENTS.md) to scan compressed rule summaries organized by category.
 
 ### 3. Load Specific Performance Patterns as Needed
-
 When you identify specific performance issues, load corresponding reference files for detailed ❌/✅ examples.
 
 ### 4. Use the Report Template (For Explicit Audit Requests)
-
 When users explicitly request a performance audit, load the template for consistent reporting:
-
 - [assets/output-report-template.md](assets/output-report-template.md) - Structured template with guidance
 
 ## Performance Optimization Workflow
@@ -112,12 +104,10 @@ When users explicitly request a performance audit, load the template for consist
 **CRITICAL: Audit ALL code for performance anti-patterns.** Do not skip code based on assumptions about usage frequency. Utility functions, formatters, parsers, validators, and data transformations are frequently called in loops, rendering pipelines, or real-time systems even if their implementation appears simple.
 
 **When profiling tools are available**, use them to establish baseline measurements:
-
 - **Browser**: Chrome DevTools Performance tab
 - **Node.js**: `node --prof script.js && node --prof-process isolate-*.log`
 
 **Whether profiling data is available or not**: Perform systematic static code analysis to identify ALL performance anti-patterns:
-
 - O(n²) complexity (nested loops, repeated searches)
 - Excessive allocations (template literals, object spreads, array methods)
 - Template literal allocation when String() would suffice
@@ -128,7 +118,6 @@ When users explicitly request a performance audit, load the template for consist
 **Output**: Complete list of ALL identified anti-patterns with their locations and expected performance impact. Do not filter based on "severity" or "priority" - report everything found.
 
 **When generating audit reports** (when skill is invoked directly via `/accelint-ts-performance <path>` or user explicitly requests performance audit), use the structured template:
-
 1. Load [assets/output-report-template.md](assets/output-report-template.md) for the report structure
 2. Follow the template's guidance for consistent formatting and issue grouping
 
@@ -138,15 +127,15 @@ For EVERY issue identified in Phase 1, categorize by optimization type:
 
 **Categorize ALL issues by optimization type:**
 
-| Issue Type                      | Category                 | Expected Gain |
-| ------------------------------- | ------------------------ | ------------- |
-| Nested loops, O(n²) complexity  | Algorithmic optimization | 10-1000x      |
-| Repeated expensive computations | Caching & memoization    | 2-100x        |
-| Allocation-heavy code           | Allocation reduction     | 1.5-5x        |
-| Sequential access violations    | Memory locality          | 1.5-3x        |
-| Excessive I/O operations        | I/O optimization         | 5-50x         |
-| Blocking async operations       | I/O optimization         | 2-10x         |
-| Property access in loops        | Caching & memoization    | 1.2-2x        |
+| Issue Type | Category | Expected Gain |
+|------------|----------|---------------|
+| Nested loops, O(n²) complexity | Algorithmic optimization | 10-1000x |
+| Repeated expensive computations | Caching & memoization | 2-100x |
+| Allocation-heavy code | Allocation reduction | 1.5-5x |
+| Sequential access violations | Memory locality | 1.5-3x |
+| Excessive I/O operations | I/O optimization | 5-50x |
+| Blocking async operations | I/O optimization | 2-10x |
+| Property access in loops | Caching & memoization | 1.2-2x |
 
 **Quick reference for mapping issues:**
 
@@ -160,18 +149,17 @@ Load [references/quick-reference.md](references/quick-reference.md) for detailed
 
 **Step 2**: Load MANDATORY references for your category. Read each file completely with no range limits.
 
-| Category                                                      | MANDATORY Files                              | Optional                                | Do NOT Load                                     |
-| ------------------------------------------------------------- | -------------------------------------------- | --------------------------------------- | ----------------------------------------------- |
-| **Algorithmic** (O(n²), nested loops, repeated lookups)       | reduce-looping.md<br>reduce-branching.md     | —                                       | memoization, caching, I/O, allocation           |
-| **Caching** (property access in loops, repeated calculations) | memoization.md<br>cache-property-access.md   | cache-storage-api.md (for Storage APIs) | I/O, allocation                                 |
-| **I/O** (blocking async, excessive I/O operations)            | batching.md<br>defer-await.md                | —                                       | algorithmic, memory                             |
-| **Memory** (allocation-heavy, GC pressure)                    | object-operations.md<br>avoid-allocations.md | —                                       | I/O, caching                                    |
-| **Locality** (sequential access violations, cache misses)     | predictable-execution.md                     | —                                       | all others                                      |
-| **Safety** (unbounded loops, runaway queues)                  | bounded-iteration.md                         | —                                       | all others                                      |
-| **Micro-opt** (hot path fine-tuning, 1.1-2x improvements)     | currying.md<br>performance-misc.md           | —                                       | all others (apply only after algorithmic fixes) |
+| Category | MANDATORY Files | Optional | Do NOT Load |
+|----------|----------------|----------|-------------|
+| **Algorithmic** (O(n²), nested loops, repeated lookups) | reduce-looping.md<br>reduce-branching.md | — | memoization, caching, I/O, allocation |
+| **Caching** (property access in loops, repeated calculations) | memoization.md<br>cache-property-access.md | cache-storage-api.md (for Storage APIs) | I/O, allocation |
+| **I/O** (blocking async, excessive I/O operations) | batching.md<br>defer-await.md | — | algorithmic, memory |
+| **Memory** (allocation-heavy, GC pressure) | object-operations.md<br>avoid-allocations.md | — | I/O, caching |
+| **Locality** (sequential access violations, cache misses) | predictable-execution.md | — | all others |
+| **Safety** (unbounded loops, runaway queues) | bounded-iteration.md | — | all others |
+| **Micro-opt** (hot path fine-tuning, 1.1-2x improvements) | currying.md<br>performance-misc.md | — | all others (apply only after algorithmic fixes) |
 
 **Notes**:
-
 - If bottleneck spans multiple categories, load references for all relevant categories
 - Only apply micro-optimizations if: bottleneck is in hot path, algorithmic optimization already applied, need additional 1.1-2x performance
 
@@ -189,11 +177,10 @@ Load [AGENTS.md](AGENTS.md) to see compressed rule summaries organized by catego
 4. **Add comments** explaining the optimization and referencing the pattern
 
 **Example optimization:**
-
 ```typescript
 // ❌ Before: O(n²) - nested iteration
 for (const user of users) {
-  const items = allItems.filter((item) => item.userId === user.id);
+  const items = allItems.filter(item => item.userId === user.id);
   process(items);
 }
 
@@ -216,19 +203,16 @@ for (const user of users) {
 ### Phase 4: Verify Improvements
 
 **Measure performance gain:**
-
 1. Re-run profiler with same inputs
 2. Compare before/after runtime percentages
 3. Document speedup factor (e.g., "2.3x faster")
 
 **Verify correctness:**
-
 1. Run existing test suite - all tests must pass
 2. Add new tests for edge cases affected by optimization
 3. Manual testing for user-facing functionality
 
 **Document optimization:**
-
 ```typescript
 // Performance optimization applied: 2026-01-28
 // Issue: Nested iteration causing O(n²) complexity with 10k items
@@ -238,7 +222,6 @@ for (const user of users) {
 ```
 
 **Deciding whether to keep the optimization:**
-
 - **>10x speedup:** Always keep if tests pass
 - **2-10x speedup:** Keep if tests pass and code remains maintainable
 - **1.2-2x speedup:** Keep for hot paths (>1000 executions/sec) or real-time systems
@@ -254,14 +237,13 @@ Even 1.05x improvements matter in critical hot paths. Use frame timing profiler 
 
 **Calibrate guidance specificity to optimization impact:**
 
-| Optimization Type               | Freedom Level  | Guidance Format                                      | Example                                                                |
-| ------------------------------- | -------------- | ---------------------------------------------------- | ---------------------------------------------------------------------- |
-| **Algorithmic (10x+ gain)**     | Medium freedom | Multiple valid approaches, pick based on constraints | "Use Map for O(1) lookup or Set for deduplication"                     |
-| **Caching (2-10x gain)**        | Medium freedom | Pattern with examples, cache invalidation strategy   | "Memoize with WeakMap if lifecycle matches source objects"             |
-| **Micro-optimization (1.1-2x)** | Low freedom    | Exact pattern from reference, measure first          | "Cache array.length in loop: `for (let i = 0, len = arr.length; ...)`" |
+| Optimization Type | Freedom Level | Guidance Format | Example |
+|------------------|---------------|-----------------|---------|
+| **Algorithmic (10x+ gain)** | Medium freedom | Multiple valid approaches, pick based on constraints | "Use Map for O(1) lookup or Set for deduplication" |
+| **Caching (2-10x gain)** | Medium freedom | Pattern with examples, cache invalidation strategy | "Memoize with WeakMap if lifecycle matches source objects" |
+| **Micro-optimization (1.1-2x)** | Low freedom | Exact pattern from reference, measure first | "Cache array.length in loop: `for (let i = 0, len = arr.length; ...)`" |
 
 **The test:** "What's the speedup and maintenance cost?"
-
 - 10x+ speedup → Worth complexity, medium freedom with patterns
 - 2-10x speedup → Justify with measurements, medium freedom
 - 1.2-2x speedup → Valuable for hot paths and real-time systems, low freedom with exact patterns
@@ -283,28 +265,27 @@ Use this table to rapidly identify which optimization category applies.
 
 **Audit everything**: Identify ALL performance anti-patterns in the code regardless of current usage context. Report all findings with expected gains.
 
-| If You See...                                          | Root Cause                    | Optimization Category                     | Expected Gain    |
-| ------------------------------------------------------ | ----------------------------- | ----------------------------------------- | ---------------- |
-| Nested `for` loops over same data                      | O(n²) complexity              | Algorithmic (reduce-looping)              | 10-1000x         |
-| `.filter()` followed by `.find()` or `.map()`          | Multiple passes over data     | Algorithmic (reduce-looping)              | 2-10x            |
-| Repeated `array.find()` or `.includes()`               | O(n) linear search            | Algorithmic (reduce-looping, use Set/Map) | 10-100x          |
-| Many `if/else` chains on same variable                 | Branch-heavy code             | Algorithmic (reduce-branching)            | 1.5-3x           |
-| Same function called with same inputs repeatedly       | Redundant computation         | Caching (memoization)                     | 2-100x           |
-| `obj.prop.nested.deep` accessed multiple times in loop | Property access overhead      | Caching (cache-property-access)           | 1.2-2x           |
-| `localStorage.getItem()` or `sessionStorage` in loop   | Expensive I/O in loop         | Caching (cache-storage-api)               | 5-20x            |
-| Multiple `await fetch()` in sequence                   | Sequential I/O blocking       | I/O (batching, defer-await)               | 2-10x            |
-| `await` before conditional that might not need result  | Premature async suspension    | I/O (defer-await)                         | 1.5-3x           |
-| Many object spreads `{...obj}` or `[...arr]`           | Allocation overhead           | Memory (avoid-allocations)                | 1.5-5x           |
-| Creating objects/arrays inside hot loops               | GC pressure from allocations  | Memory (avoid-allocations)                | 2-5x             |
-| `Object.assign()` or spread when mutation is safe      | Unnecessary immutability cost | Memory (object-operations)                | 1.5-3x           |
-| Accessing array elements non-sequentially              | Cache locality issues         | Memory Locality (predictable-execution)   | 1.5-3x           |
-| `while(true)` or unbounded queue growth                | Runaway resource usage        | Safety (bounded-iteration)                | Prevents crashes |
-| Function called with mostly same first N params        | Repeated parameter passing    | Micro-opt (currying)                      | 1.1-1.5x         |
-| `try/catch` inside hot loop                            | V8 deoptimization             | Micro-opt (performance-misc)              | 3-5x             |
-| String concatenation in loop with `+`                  | Quadratic string copying      | Micro-opt (performance-misc)              | 2-10x            |
+| If You See... | Root Cause | Optimization Category | Expected Gain |
+|---------------|------------|----------------------|---------------|
+| Nested `for` loops over same data | O(n²) complexity | Algorithmic (reduce-looping) | 10-1000x |
+| `.filter()` followed by `.find()` or `.map()` | Multiple passes over data | Algorithmic (reduce-looping) | 2-10x |
+| Repeated `array.find()` or `.includes()` | O(n) linear search | Algorithmic (reduce-looping, use Set/Map) | 10-100x |
+| Many `if/else` chains on same variable | Branch-heavy code | Algorithmic (reduce-branching) | 1.5-3x |
+| Same function called with same inputs repeatedly | Redundant computation | Caching (memoization) | 2-100x |
+| `obj.prop.nested.deep` accessed multiple times in loop | Property access overhead | Caching (cache-property-access) | 1.2-2x |
+| `localStorage.getItem()` or `sessionStorage` in loop | Expensive I/O in loop | Caching (cache-storage-api) | 5-20x |
+| Multiple `await fetch()` in sequence | Sequential I/O blocking | I/O (batching, defer-await) | 2-10x |
+| `await` before conditional that might not need result | Premature async suspension | I/O (defer-await) | 1.5-3x |
+| Many object spreads `{...obj}` or `[...arr]` | Allocation overhead | Memory (avoid-allocations) | 1.5-5x |
+| Creating objects/arrays inside hot loops | GC pressure from allocations | Memory (avoid-allocations) | 2-5x |
+| `Object.assign()` or spread when mutation is safe | Unnecessary immutability cost | Memory (object-operations) | 1.5-3x |
+| Accessing array elements non-sequentially | Cache locality issues | Memory Locality (predictable-execution) | 1.5-3x |
+| `while(true)` or unbounded queue growth | Runaway resource usage | Safety (bounded-iteration) | Prevents crashes |
+| Function called with mostly same first N params | Repeated parameter passing | Micro-opt (currying) | 1.1-1.5x |
+| `try/catch` inside hot loop | V8 deoptimization | Micro-opt (performance-misc) | 3-5x |
+| String concatenation in loop with `+` | Quadratic string copying | Micro-opt (performance-misc) | 2-10x |
 
 **How to use this table:**
-
 1. Identify the pattern from profiler bottleneck
 2. Find matching row in "If You See..." column
 3. Jump to corresponding Optimization Category in Phase 3

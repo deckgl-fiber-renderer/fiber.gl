@@ -4,7 +4,7 @@ description: React performance optimization and best practices. ALWAYS use this 
 license: Apache-2.0
 metadata:
   author: accelint
-  version: "1.5.0"
+  version: "1.8.0"
 ---
 
 # React Best Practices
@@ -31,20 +31,35 @@ These are the most critical anti-patterns that cause real production issues. Exp
 
 **NEVER put user interaction logic in useEffect** — if it's triggered by a button click or form submit, put it directly in the event handler. Effects are for synchronization with external systems, not user-triggered actions.
 
+## Before Optimizing Performance, Ask
+
+Before suggesting memo/useMemo/useCallback optimizations, determine if they're needed:
+
+1. **Does this project use React Compiler?**
+   - Search for `babel-plugin-react-compiler` or `react-compiler-webpack-plugin` in package.json/config files
+   - If **yes** → Skip manual memoization (memo, useMemo, useCallback, hoisting static JSX) — the compiler handles these automatically
+   - If **no** → Apply all relevant optimizations from this skill
+   - See [react-compiler-guide.md](references/react-compiler-guide.md) for what the compiler handles
+
+2. **Is this actually a performance problem?**
+   - Has the user measured/profiled and identified a bottleneck?
+   - Or are they asking for a general review/optimization?
+
+3. **What's the scale?**
+   - For lists: How many items? (affects whether to suggest content-visibility vs virtualization)
+   - For re-renders: How often does this component re-render?
+
 ## How to Use
 
 This skill uses a **progressive disclosure** structure to minimize context usage:
 
 ### 1. Start with the Overview (AGENTS.md)
-
 Read [AGENTS.md](AGENTS.md) for a concise overview of all rules with one-line summaries.
 
 ### 2. Load Specific Rules as Needed
-
 When you identify a relevant optimization, load the corresponding reference file for detailed implementation guidance:
 
 **Re-render Optimizations:**
-
 - [defer-state-reads.md](references/defer-state-reads.md)
 - [extract-memoized-components.md](references/extract-memoized-components.md)
 - [narrow-effect-dependencies.md](references/narrow-effect-dependencies.md)
@@ -62,7 +77,6 @@ When you identify a relevant optimization, load the corresponding reference file
 - [use-deferred-value.md](references/use-deferred-value.md)
 
 **Rendering Performance:**
-
 - [animate-svg-wrapper.md](references/animate-svg-wrapper.md)
 - [css-content-visibility.md](references/css-content-visibility.md)
 - [hoist-static-jsx.md](references/hoist-static-jsx.md)
@@ -73,43 +87,36 @@ When you identify a relevant optimization, load the corresponding reference file
 - [use-usetransition-over-manual-loading.md](references/use-usetransition-over-manual-loading.md)
 
 **Advanced Patterns:**
-
 - [store-event-handlers-refs.md](references/store-event-handlers-refs.md)
 - [uselatest-stable-callbacks.md](references/uselatest-stable-callbacks.md)
 - [cache-repeated-function-calls.md](references/cache-repeated-function-calls.md)
 - [initialize-app-once.md](references/initialize-app-once.md)
+- [effect-event-deps.md](references/effect-event-deps.md)
 
 **Misc:**
-
 - [named-imports.md](references/named-imports.md)
 - [no-forwardref.md](references/no-forwardref.md)
 
 **Quick References:**
-
 - [quick-checklists.md](references/quick-checklists.md)
 - [compound-patterns.md](references/compound-patterns.md)
 - [react-compiler-guide.md](references/react-compiler-guide.md)
 
 **Automation Scripts:**
-
 - [scripts/](scripts/) - Helper scripts to detect anti-patterns
 
 ### 3. Apply the Pattern
-
 Each reference file contains:
-
 - ❌ Incorrect examples showing the anti-pattern
 - ✅ Correct examples showing the optimal implementation
 - Explanations of why the pattern matters
 
 ### 4. Use the Report Template
-
 When this skill is invoked, use the standardized report format:
 
 **Template:** [`assets/output-report-template.md`](assets/output-report-template.md)
 
 The report format provides:
-
 - Executive Summary with impact assessment
 - Severity levels (Critical, High, Medium, Low) for prioritization
 - Impact analysis (potential bugs, type safety, maintainability, runtime failures)
@@ -118,12 +125,10 @@ The report format provides:
 - Phase 2 summary table for tracking all issues
 
 **When to use the audit template:**
-
 - Skill invoked directly via `/accelint-react-best-practices <path>`
 - User asks to "review code quality" or "audit code" across file(s), invoking skill implicitly
 
 **When NOT to use the report template:**
-
 - User asks to "fix this type error" (direct implementation)
 - User asks "what's wrong with this code?" (answer the question)
 - User requests specific fixes (apply fixes directly without formal report)
@@ -131,33 +136,27 @@ The report format provides:
 ## Examples
 
 ### Example 1: Optimizing Re-renders
-
 **Task:** "This component re-renders too frequently when the user scrolls"
 
 **Approach:**
-
 1. Read AGENTS.md overview
 2. Identify likely cause: subscribing to continuous values (scroll position)
 3. Load [subscribe-derived-state.md](references/subscribe-derived-state.md) or [transitions-non-urgent-updates.md](references/transitions-non-urgent-updates.md)
 4. Apply the pattern from the reference file
 
 ### Example 2: Fixing Stale Closures
-
 **Task:** "This callback always uses the old state value"
 
 **Approach:**
-
 1. Read AGENTS.md overview
 2. Identify issue: stale closure in useCallback
 3. Load [functional-setstate-updates.md](references/functional-setstate-updates.md)
 4. Replace direct state reference with functional update
 
 ### Example 3: SSR Hydration Mismatch
-
 **Task:** "Getting hydration errors with localStorage theme"
 
 **Approach:**
-
 1. Read AGENTS.md overview
 2. Identify issue: client-only state causing mismatch
 3. Load [prevent-hydration-mismatch.md](references/prevent-hydration-mismatch.md)
@@ -168,7 +167,6 @@ The report format provides:
 Each reference file demonstrates ONE proven pattern, but React problems often have multiple valid solutions.
 
 **When applying patterns:**
-
 1. ✅ Present the pattern from the reference file
 2. ✅ Mention alternative approaches when they exist
 3. ✅ Consider user's React version, project complexity, and team preferences
@@ -179,34 +177,28 @@ Each reference file demonstrates ONE proven pattern, but React problems often ha
 ## Important Notes
 
 ### React Compiler Awareness
-
 Many manual optimization patterns (memo, useMemo, useCallback, hoisting static JSX) are **automatically handled by React Compiler**.
 
 **Before optimizing, check if the project uses React Compiler:**
-
 - If enabled: Skip manual memoization, but still apply state/effect/CSS optimizations
 - If not enabled: Apply all relevant optimizations from this guide
 
 See [react-compiler-guide.md](references/react-compiler-guide.md) for a complete breakdown of what the compiler handles vs what still needs manual optimization.
 
 ### React 19+ Features
-
 This skill covers React 19 features including:
-
 - `useEffectEvent` (19.2+) for stable event handlers
 - `<Activity>` component for preserving hidden component state
 - `ref` as a prop (replaces deprecated `forwardRef`)
 - Named imports only (no default import of React)
 
 ### Performance Philosophy
-
 - Start with correct code, then optimize
 - Measure before optimizing
 - Optimize slowest operations first (network > rendering > computation)
 - Avoid premature optimization of trivial operations
 
 ### Code Quality Principles
-
 - Prefer simple, readable code over clever optimizations
 - Only add complexity when measurements justify it
 - Document non-obvious performance optimizations
@@ -214,7 +206,6 @@ This skill covers React 19 features including:
 ## Additional Resources
 
 Catch up on React 19 features:
-
 - [React 19](https://react.dev/blog/2024/12/05/react-19)
 - [React 19.2](https://react.dev/blog/2025/10/01/react-19-2)
 - [React 19 Upgrade Guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide)

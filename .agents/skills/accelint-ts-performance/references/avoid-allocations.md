@@ -21,7 +21,6 @@
 ### Inline Simple Computations
 
 **❌ Incorrect: needless allocation**
-
 ```ts
 function randomInt(min: number, max: number): number {
   const minCeil = Math.ceil(min);
@@ -33,7 +32,6 @@ function randomInt(min: number, max: number): number {
 ```
 
 **✅ Correct: inline computation**
-
 ```ts
 function randomInt(min: number, max: number): number {
   const minCeil = Math.ceil(min);
@@ -48,7 +46,6 @@ The `range` variable creates an allocation that provides no semantic value. When
 ### Avoid Allocations in Loops
 
 **❌ Incorrect: allocate per iteration**
-
 ```ts
 for (let i = 0; i < items.length; i++) {
   const scaledIndex = i * scaleFactor;
@@ -58,7 +55,6 @@ for (let i = 0; i < items.length; i++) {
 ```
 
 **✅ Correct: compute inline or hoist**
-
 ```ts
 const offset = baseOffset + padding;
 
@@ -72,7 +68,6 @@ If `offset` is loop-invariant, hoist it. If `scaledIndex` is only used once, com
 ### When to Use Variables
 
 **✅ Good: complex expression used multiple times**
-
 ```ts
 function calculatePrice(quantity: number, basePrice: number): number {
   const discountedPrice = basePrice * (1 - getDiscount(quantity));
@@ -81,14 +76,12 @@ function calculatePrice(quantity: number, basePrice: number): number {
 ```
 
 Variables are warranted when:
-
 - Expression is complex and inlining hurts readability
 - Value is used multiple times
 - Expression has side effects that shouldn't repeat
 - Debugging would benefit from named intermediate values
 
 **✅ Good: semantic value in business logic**
-
 ```ts
 function validateOrder(order: Order): boolean {
   const hasValidItems = order.items.length > 0;
@@ -104,7 +97,6 @@ These variables add semantic clarity to business logic. The readability benefit 
 ### Inline vs Variable Trade-offs
 
 **❌ Incorrect: variable for trivial computation**
-
 ```ts
 function distance(x1: number, y1: number, x2: number, y2: number): number {
   const dx = x2 - x1;
@@ -118,7 +110,6 @@ function distance(x1: number, y1: number, x2: number, y2: number): number {
 ```
 
 **✅ Correct: inline simple math**
-
 ```ts
 function distance(x1: number, y1: number, x2: number, y2: number): number {
   const dx = x2 - x1;
@@ -133,7 +124,6 @@ Use variables for `dx` and `dy` (reused), but inline `dx * dx` and `dy * dy` (si
 ### Object/Array Allocations in Hot Paths
 
 **❌ Incorrect: create objects in loop**
-
 ```ts
 function processPoints(points: Point[]): number {
   let sum = 0;
@@ -146,7 +136,6 @@ function processPoints(points: Point[]): number {
 ```
 
 **✅ Correct: inline computation**
-
 ```ts
 function processPoints(points: Point[]): number {
   let sum = 0;
@@ -162,7 +151,6 @@ Avoid creating objects when you can compute inline. The `normalized` object crea
 ### Temporary Arrays
 
 **❌ Incorrect: intermediate array**
-
 ```ts
 function firstThreeValid(items: Item[]): Item[] {
   const validItems = items.filter(isValid);
@@ -171,7 +159,6 @@ function firstThreeValid(items: Item[]): Item[] {
 ```
 
 **✅ Correct: single pass**
-
 ```ts
 function firstThreeValid(items: Item[]): Item[] {
   const result: Item[] = [];
@@ -199,14 +186,12 @@ Avoids allocating the full `validItems` array when you only need three elements.
 ## When to Optimize
 
 Optimize allocations when:
-
 - Function is called thousands+ times per second
 - Profiling shows GC pressure
 - Running in memory-constrained environments
 - Inside tight loops or hot paths
 
 Don't optimize when:
-
 - Function is called infrequently
 - Readability significantly suffers
 - No measurable performance impact

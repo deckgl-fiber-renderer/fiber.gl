@@ -3,7 +3,6 @@
 Don't create `RegExp` inside render. Hoist to module scope or memoize with `useMemo()`.
 
 **❌ Incorrect: RegExp created every render**
-
 ```ts
 function Highlighter({ text, query }: Props) {
   const regex = new RegExp(`(${query})`, 'gi');
@@ -14,7 +13,6 @@ function Highlighter({ text, query }: Props) {
 ```
 
 **✅ Correct: memoized or hoisted**
-
 ```ts
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -30,11 +28,10 @@ function Highlighter({ text, query }: Props) {
 ```
 
 **Warning**: global regex (/g) has mutable lastIndex state:
-
 ```ts
-const regex = /foo/g;
-regex.test("foo"); // true, lastIndex = 3
-regex.test("foo"); // false, lastIndex = 0
+const regex = /foo/g
+regex.test('foo')  // true, lastIndex = 3
+regex.test('foo')  // false, lastIndex = 0
 ```
 
 ---

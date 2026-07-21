@@ -5,7 +5,6 @@ Comprehensive coding standards and performance optimization guide for JavaScript
 ## Overview
 
 This skill provides structured guidance for JavaScript and TypeScript development across five categories:
-
 - **General Best Practices**: Naming, control flow, state management, functions
 - **TypeScript**: Avoid any/enum, prefer type over interface
 - **Safety**: Input validation, assertions, error handling
@@ -32,7 +31,6 @@ See [references/quick-start.md](references/quick-start.md) for complete workflow
 ### For Humans
 
 This skill is optimized for AI agents but humans may find it useful for:
-
 - Learning JavaScript/TypeScript performance optimization
 - Reviewing code for common anti-patterns
 - Understanding safety-first programming principles
@@ -44,7 +42,6 @@ This skill is optimized for AI agents but humans may find it useful for:
 ## Structure
 
 ### Progressive Disclosure
-
 - **SKILL.md**: Activation criteria and usage workflow
 - **AGENTS.md**: One-line summaries with links to detailed references
 - **references/**: 33 self-contained files with ❌/✅ examples
@@ -52,22 +49,17 @@ This skill is optimized for AI agents but humans may find it useful for:
 This structure minimizes context usage while providing complete implementation guidance when needed.
 
 ### Safety-First Philosophy
-
 Design for correctness before performance:
-
 - Validate at boundaries (all external data with schemas)
 - Assertions for programmer errors (crash on corrupted state)
 - Explicit error handling (no silent failures)
 - Zero values (eliminate downstream null checks)
 
 ### Performance Optimization Hierarchy
-
 Optimize slowest resources first:
-
 ```
 network >> disk >> memory >> cpu
 ```
-
 Always benchmark assumptions. Profile to identify real bottlenecks before optimizing.
 
 ---

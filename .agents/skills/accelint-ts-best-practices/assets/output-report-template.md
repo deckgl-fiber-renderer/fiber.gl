@@ -3,13 +3,12 @@
 ╰────────────────────────────╯
 
 <!-- Make sure to display this warning block to the user -->
-
 ┌──────────────────────────────────────────────────────┐
-│ ⚠️ WARNING: This skill does it's best to process │
+│ ⚠️  WARNING: This skill does it's best to process    │
 │ the context needed to suggest correct best practices │
-│ but it can make mistakes. Please make sure to read │
-│ the summary section of each issue to make sure it │
-│ isn't a false positive. │
+│ but it can make mistakes. Please make sure to read   │
+│ the summary section of each issue to make sure it    │
+│ isn't a false positive.                              │
 └──────────────────────────────────────────────────────┘
 
 # Report: [Target Name]
@@ -76,7 +75,6 @@ See assets/audit-report-example.md for a real-world example.
 Completed systematic audit of [file/module path] following accelint-ts-best-practices standards. Identified [N] code correctness issues across [N] severity levels. [Brief description of what this code does and why correctness matters].
 
 **Key Findings:**
-
 - [N] Critical issues (potential crashes, security risks, unbounded resource usage)
 - [N] High severity issues (type safety violations, hidden side effects)
 - [N] Medium severity issues (code quality and maintainability)
@@ -84,7 +82,6 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 
 **Impact Assessment:**
 [Explain the overall risk profile and maintainability concerns. Consider:]
-
 - What are the potential runtime failures or security risks?
 - How do type safety violations affect long-term maintainability?
 - What hidden side effects or state mutations exist?
@@ -105,7 +102,6 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 ```
 
 **Issue:**
-
 - [Point 1 explaining the problem]
 - [Point 2 with specifics about the violation]
 - [Point 3 quantifying the impact if possible]
@@ -113,7 +109,6 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Type Safety|Safety|State Management|Return Values|Code Quality]
 **Impact:**
-
 - **Potential bugs:** [What could go wrong at runtime]
 - **Type safety:** [How types are compromised or bypassed]
 - **Maintainability:** [How this affects future development]
@@ -122,7 +117,6 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [code snippet showing the fix]
@@ -140,13 +134,11 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 ```
 
 **Issue:**
-
 - [Explanation]
 
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Category Name]
 **Impact:**
-
 - **Potential bugs:** [Description]
 - **Type safety:** [Description]
 - **Maintainability:** [Description]
@@ -155,7 +147,6 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [code snippet]
@@ -168,20 +159,17 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 <!-- Use this format when multiple issues share the same root cause and fix pattern -->
 
 **Locations:**
-
 - `[file:line]` - [function/context]
 - `[file:line]` - [function/context]
 - `[file:line]` - [function/context]
 
 **Example from [specific location]:**
-
 ```ts
 // ❌ Current: [Brief description of problem]
 [representative code snippet]
 ```
 
 **Issue:**
-
 - [Shared root cause explanation]
 - [Why this pattern is problematic]
 - [Impact across all instances]
@@ -189,7 +177,6 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Category Name]
 **Impact:**
-
 - **Potential bugs:** [Description across all instances]
 - **Type safety:** [How types are compromised]
 - **Maintainability:** [Overall maintainability impact]
@@ -198,14 +185,12 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [fixed code snippet]
 ```
 
 **Same pattern applies to all [N] instances:**
-
 ```ts
 // [Location/function 2]
 // ❌ Current
@@ -226,12 +211,12 @@ Completed systematic audit of [file/module path] following accelint-ts-best-prac
 
 ## Phase 2: Categorized Issues
 
-| #   | Location    | Issue                     | Category   | Severity   |
-| --- | ----------- | ------------------------- | ---------- | ---------- |
-| 1   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 2   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 3   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 4-N | [multiple]  | [Brief issue description] | [Category] | [Severity] |
+| # | Location | Issue | Category | Severity |
+|---|----------|-------|----------|----------|
+| 1 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 2 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 3 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 4-N | [multiple] | [Brief issue description] | [Category] | [Severity] |
 
 **Total Issues:** [N]
 **By Severity:** Critical ([N]), High ([N]), Medium ([N]), Low ([N])

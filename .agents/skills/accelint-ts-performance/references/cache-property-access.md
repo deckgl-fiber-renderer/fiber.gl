@@ -20,7 +20,6 @@
 ### Cache Property Access in Loops
 
 **❌ Incorrect: 3 lookups × N iterations**
-
 ```ts
 for (let i = 0; i < arr.length; i++) {
   process(obj.config.settings.value);
@@ -28,7 +27,6 @@ for (let i = 0; i < arr.length; i++) {
 ```
 
 **✅ Correct: 1 lookup total**
-
 ```ts
 const value = obj.config.settings.value;
 const len = arr.length;
@@ -41,7 +39,6 @@ for (let i = 0; i < len; i++) {
 ### Eliminate Single-Use Aliases
 
 **❌ Incorrect: unnecessary intermediate**
-
 ```ts
 function getUserName(user) {
   const name = user.name;
@@ -50,7 +47,6 @@ function getUserName(user) {
 ```
 
 **✅ Correct: direct access**
-
 ```ts
 function getUserName(user) {
   return user.name;
@@ -60,7 +56,6 @@ function getUserName(user) {
 ### Unnecessary Destructuring
 
 **❌ Incorrect: destructure for single property**
-
 ```ts
 function process(data) {
   const { id } = data;
@@ -69,7 +64,6 @@ function process(data) {
 ```
 
 **✅ Correct: direct access**
-
 ```ts
 function process(data) {
   return fetchUser(data.id);
@@ -79,7 +73,6 @@ function process(data) {
 ### Cache Repeated Property Access
 
 **❌ Incorrect: multiple lookups**
-
 ```ts
 function calculate(obj) {
   if (obj.config.settings.enabled) {
@@ -90,7 +83,6 @@ function calculate(obj) {
 ```
 
 **✅ Correct: cache once**
-
 ```ts
 function calculate(obj) {
   const settings = obj.config.settings;
@@ -104,7 +96,6 @@ function calculate(obj) {
 ### Excessive Parameter Spreading
 
 **❌ Incorrect: spread entire object**
-
 ```ts
 function render({ id, name, email, address, phone, ...rest }) {
   return formatUser(id, name);
@@ -112,7 +103,6 @@ function render({ id, name, email, address, phone, ...rest }) {
 ```
 
 **✅ Correct: access needed properties**
-
 ```ts
 function render(user) {
   return formatUser(user.id, user.name);

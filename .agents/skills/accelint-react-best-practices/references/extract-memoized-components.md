@@ -3,7 +3,6 @@
 Extract expensive work into memoized components to enable early returns before computation.
 
 **❌ Incorrect: computes avatar even when loading**
-
 ```tsx
 function Profile({ user, loading }: Props) {
   const avatar = useMemo(() => {
@@ -20,12 +19,11 @@ function Profile({ user, loading }: Props) {
 ```
 
 **✅ Correct: skips computation when loading**
-
 ```tsx
 const UserAvatar = memo(function UserAvatar({ user }: { user: User }) {
   const id = useMemo(() => computeAvatarId(user), [user]);
   return <Avatar id={id} />;
-});
+})
 
 function Profile({ user, loading }: Props) {
   if (loading) {
@@ -36,7 +34,7 @@ function Profile({ user, loading }: Props) {
     <div>
       <UserAvatar user={user} />
     </div>
-  );
+  )
 }
 ```
 

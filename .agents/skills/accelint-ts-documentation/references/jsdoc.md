@@ -7,7 +7,6 @@ All functions, type aliases, interfaces, constants, and classes (both exported a
 ## Directive Comments Are Exempt
 
 **Tool directive comments must be left unchanged.** These include:
-
 - Linter directives: `// eslint-disable-next-line`, `// biome-ignore lint/suspicious/noExplicitAny: reason`
 - Formatter directives: `// prettier-ignore`
 - Tool-specific comments: `// biome-ignore-all assist/source/organizeImports: reason`
@@ -22,14 +21,12 @@ These comments have specific syntaxes required by their respective tools and **m
 ## @example Code Fence Requirement
 
 All `@example` tags **must** use code fences with the appropriate language identifier:
-
 - Use `javascript` for `.js` files
 - Use `typescript` for `.ts` files
 - Use `jsx` for `.jsx` files
 - Use `tsx` for `.tsx` files
 
 **❌ Incorrect: No code fence**
-
 ```ts
 /**
  * @example
@@ -38,43 +35,38 @@ All `@example` tags **must** use code fences with the appropriate language ident
 ```
 
 **❌ Incorrect: Code fence without language**
-
-````ts
+```ts
 /**
  * @example
  * ```
  * const result = add(1, 2); // 3
  * ```
  */
-````
+```
 
 **✅ Correct: Code fence with language identifier**
-
-````ts
+```ts
 /**
  * @example
  * ```typescript
  * const result = add(1, 2); // 3
  * ```
  */
-````
+```
 
 ## Functions
 
 ### Required (all functions)
-
 - Description (clear summary)
 - `@param` for each parameter
 - `@template` for each generic type parameter
 - `@returns` (unless return type is `void`)
 
 ### Required (exported functions only)
-
 - `@throws` for each thrown error type
 - `@example` with working code snippet
 
 ### Optional
-
 - `@remarks` - Additional context
 - `@see` / `@link` - Related references
 - `@deprecated` - Deprecation notice
@@ -82,7 +74,6 @@ All `@example` tags **must** use code fences with the appropriate language ident
 ### Examples
 
 **❌ Incorrect: Missing required tags**
-
 ```ts
 export function clamp(min: number, max: number, value: number): number {
   if (min > max) {
@@ -93,8 +84,7 @@ export function clamp(min: number, max: number, value: number): number {
 ```
 
 **✅ Correct: Complete documentation**
-
-````ts
+```ts
 /**
  * Clamps a number within the specified bounds.
  *
@@ -118,10 +108,9 @@ export function clamp(min: number, max: number, value: number): number {
   }
   return Math.max(min, Math.min(max, value));
 }
-````
+```
 
 **❌ Incorrect: Generic function without @template**
-
 ```ts
 /**
  * Returns the first element of an array.
@@ -135,8 +124,7 @@ function first<T>(arr: T[]): T | undefined {
 ```
 
 **✅ Correct: Generic function with @template**
-
-````ts
+```ts
 /**
  * Returns the first element of an array.
  *
@@ -154,10 +142,9 @@ function first<T>(arr: T[]): T | undefined {
 function first<T>(arr: T[]): T | undefined {
   return arr[0];
 }
-````
+```
 
 **❌ Incorrect: void function with @returns**
-
 ```ts
 /**
  * Logs a message to the console.
@@ -171,8 +158,7 @@ function log(message: string): void {
 ```
 
 **✅ Correct: void function without @returns**
-
-````ts
+```ts
 /**
  * Logs a message to the console.
  *
@@ -186,14 +172,13 @@ function log(message: string): void {
 function log(message: string): void {
   console.log(message);
 }
-````
+```
 
 ### Object Parameters with Destructuring
 
 When a function accepts an object parameter that is destructured, document the object properties using nested `@param` tags with dot notation. This provides developers with clear understanding of the expected object structure.
 
 **❌ Incorrect: Single @param without property details**
-
 ```tsx
 /**
  * Container component for grouping multiple accordions together.
@@ -205,7 +190,7 @@ export function AccordionGroup({
   ref,
   children,
   className,
-  variant = "cozy",
+  variant = 'cozy',
   isDisabled,
   ...rest
 }: AccordionGroupProps) {
@@ -214,7 +199,6 @@ export function AccordionGroup({
 ```
 
 **❌ Incorrect: Documenting each destructured parameter separately**
-
 ```tsx
 /**
  * Container component for grouping multiple accordions together.
@@ -231,7 +215,7 @@ export function AccordionGroup({
   ref,
   children,
   className,
-  variant = "cozy",
+  variant = 'cozy',
   isDisabled,
   ...rest
 }: AccordionGroupProps) {
@@ -240,8 +224,7 @@ export function AccordionGroup({
 ```
 
 **✅ Correct: Documenting object parameter with nested properties**
-
-````tsx
+```tsx
 /**
  * Container component for grouping multiple accordions together with shared configuration.
  *
@@ -268,17 +251,16 @@ export function AccordionGroup({
   ref,
   children,
   className,
-  variant = "cozy",
+  variant = 'cozy',
   isDisabled,
   ...rest
 }: AccordionGroupProps) {
   // ...
 }
-````
+```
 
 **✅ Correct: Nested object properties**
-
-````ts
+```ts
 /**
  * Initializes a database connection with configuration options.
  *
@@ -306,30 +288,28 @@ export function AccordionGroup({
 function initDatabase(config: DatabaseConfig): Database {
   // ...
 }
-````
+```
 
 ## Types and Interfaces
 
 ### Required (all types/interfaces)
-
 - Description (clear summary)
 - `@template` for each generic type parameter
 
 ### Optional
-
 - Property descriptions (inline)
 - `@remarks` - Additional context
 
 ### Examples
 
 **❌ Incorrect: Type without documentation**
-
 ```ts
-type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
+type Result<T, E> =
+  | { ok: true; value: T }
+  | { ok: false; error: E };
 ```
 
 **✅ Correct: Type with complete documentation**
-
 ```ts
 /**
  * Represents the result of an operation that can succeed or fail.
@@ -337,11 +317,12 @@ type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
  * @template T - The type of the success value.
  * @template E - The type of the error.
  */
-type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
+type Result<T, E> =
+  | { ok: true; value: T }
+  | { ok: false; error: E };
 ```
 
 **❌ Incorrect: Interface without property descriptions**
-
 ```ts
 /**
  * Configuration for the API client.
@@ -354,7 +335,6 @@ interface ApiConfig {
 ```
 
 **✅ Correct: Interface with property descriptions**
-
 ```ts
 /**
  * Configuration for the API client.
@@ -374,19 +354,16 @@ interface ApiConfig {
 ## Constants
 
 ### Required (all constants)
-
 - Description (clear summary)
 
 ### Examples
 
 **❌ Incorrect: Constant without documentation**
-
 ```ts
 const MAX_RETRIES = 3;
 ```
 
 **✅ Correct: Constant with documentation**
-
 ```ts
 /**
  * Maximum number of retry attempts for failed requests.
@@ -395,7 +372,6 @@ const MAX_RETRIES = 3;
 ```
 
 **✅ Correct: Complex constant with documentation**
-
 ```ts
 /**
  * HTTP status code mappings.
@@ -411,16 +387,13 @@ const STATUS_CODES = {
 ## Classes
 
 ### Required (all classes)
-
 - Description (clear summary)
 - `@template` for each generic type parameter
 
 ### Required (exported classes only)
-
 - `@example` with working code snippet
 
 ### Optional
-
 - `@remarks` - Additional context
 - `@see` / `@link` - Related references
 - `@deprecated` - Deprecation notice
@@ -428,7 +401,6 @@ const STATUS_CODES = {
 ### Examples
 
 **❌ Incorrect: Class without documentation**
-
 ```ts
 class Queue<T> {
   private items: T[] = [];
@@ -444,8 +416,7 @@ class Queue<T> {
 ```
 
 **✅ Correct: Class with complete documentation**
-
-````ts
+```ts
 /**
  * A generic FIFO (First-In-First-Out) queue.
  *
@@ -492,10 +463,9 @@ class Queue<T> {
     return this.items.shift();
   }
 }
-````
+```
 
 **❌ Incorrect: Deprecated class without notice**
-
 ```ts
 /**
  * Legacy user authentication handler.
@@ -508,8 +478,7 @@ class AuthHandler {
 ```
 
 **✅ Correct: Deprecated class with notice**
-
-````ts
+```ts
 /**
  * Legacy user authentication handler.
  *
@@ -538,4 +507,4 @@ class AuthHandler {
     // ...
   }
 }
-````
+```

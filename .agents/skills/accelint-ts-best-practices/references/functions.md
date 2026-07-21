@@ -8,13 +8,11 @@
 - Use arrow functions only for simple cases (< 3 instructions)
 
 **❌ Incorrect: implicit defaults**
-
 ```ts
 const position = getPosition();
 ```
 
 **✅ Correct: explicit values**
-
 ```ts
 const position = getPosition(330);
 ```
@@ -30,10 +28,9 @@ const position = getPosition(330);
 4. **Forces intentional choices**: Requiring explicit values makes developers think about what value is appropriate for each call site rather than accepting a generic default.
 
 **❌ Incorrect: missing return type annotation**
-
 ```ts
 function getUser(id: string) {
-  return users.find((u) => u.id === id);
+  return users.find(u => u.id === id);
 }
 
 const processData = (input: unknown) => {
@@ -42,10 +39,9 @@ const processData = (input: unknown) => {
 ```
 
 **✅ Correct: explicit return type annotation**
-
 ```ts
 function getUser(id: string): User | undefined {
-  return users.find((u) => u.id === id);
+  return users.find(u => u.id === id);
 }
 
 const processData = (input: unknown): Record<string, unknown> => {

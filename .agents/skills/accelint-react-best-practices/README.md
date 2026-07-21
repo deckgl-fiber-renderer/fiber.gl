@@ -5,7 +5,6 @@ Comprehensive performance optimization and best practices for React applications
 ## Overview
 
 This skill provides structured guidance for React performance optimization, covering:
-
 - Re-render optimizations
 - Rendering performance improvements
 - Advanced patterns for state and effects
@@ -30,7 +29,6 @@ A large number of these patterns were originally from [Vercel's Skill](https://g
 ### For Humans
 
 This skill is optimized for AI agents but humans may find it useful for:
-
 - Learning React performance optimization patterns
 - Reviewing code for common anti-patterns
 - Understanding React 19+ features and migrations
@@ -41,9 +39,7 @@ This skill is optimized for AI agents but humans may find it useful for:
 ## Pattern Categories
 
 ### 1. Re-render Optimizations
-
 Patterns to reduce unnecessary component re-renders and state updates:
-
 - Defer state reads
 - Extract to memoized components
 - Narrow effect dependencies
@@ -53,9 +49,7 @@ Patterns to reduce unnecessary component re-renders and state updates:
 - Transitions for non-urgent updates
 
 ### 2. Rendering Performance
-
 Patterns to optimize actual rendering and painting:
-
 - Animate SVG wrapper (GPU acceleration)
 - CSS content-visibility (long lists)
 - Hoist static JSX
@@ -66,17 +60,13 @@ Patterns to optimize actual rendering and painting:
 - Avoid useMemo for simple expressions
 
 ### 3. Advanced Patterns
-
 Specialized patterns for complex scenarios:
-
 - Store event handlers in refs (useEffectEvent)
 - useLatest for stable callbacks
 - Cache repeated function calls
 
 ### 4. React 19+ Migration
-
 Patterns for React 19 and modern React:
-
 - Named imports only
 - No forwardRef (use ref prop)
 - React Compiler guide
@@ -86,29 +76,23 @@ Patterns for React 19 and modern React:
 ## Key Features
 
 ### Progressive Disclosure
-
 - Start with rule summaries in AGENTS.md
 - Load detailed examples only when needed
 - Minimizes context usage for LLMs
 
 ### React Compiler Awareness
-
 - Clear guidance on what React Compiler handles automatically
 - Standardized notes on all patterns indicating manual vs automatic optimization
 - Dedicated [React Compiler Guide](references/react-compiler-guide.md)
 
 ### Quick Diagnostic Guide
-
 Navigate directly to relevant patterns based on symptoms:
-
 - "Component re-renders too often" → Section 1
 - "Scrolling is janky" → Section 2.2, 2.1
 - "Hydration mismatch errors" → Section 2.5
 
 ### Comprehensive Checklists
-
 Ready-to-use checklists for:
-
 - New component creation
 - Performance reviews
 - SSR/SSG projects
@@ -118,9 +102,7 @@ Ready-to-use checklists for:
 - Code reviews
 
 ### Real-World Examples
-
 [Compound Patterns](references/compound-patterns.md) shows complete examples:
-
 - Optimized search component
 - Infinite scroll list
 - Dashboard with widgets
@@ -132,14 +114,12 @@ Ready-to-use checklists for:
 ## React 19 Support
 
 This skill covers React 19+ features including:
-
 - `useEffectEvent` (19.2+) for stable event handlers
 - `<Activity>` component for preserving hidden component state
 - `ref` as a prop (replaces deprecated `forwardRef`)
 - Named imports only (no default import of React)
 
 **Resources:**
-
 - [React 19 Release](https://react.dev/blog/2024/12/05/react-19)
 - [React 19.2 Release](https://react.dev/blog/2025/10/01/react-19-2)
 - [React 19 Upgrade Guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide)
@@ -149,7 +129,6 @@ This skill covers React 19+ features including:
 ## Usage in Claude Code
 
 This skill is designed to be used with environments such as Claude Code (claude.ai/claude-code) and automatically activates when:
-
 - Writing React components, hooks, or JSX
 - Refactoring React code
 - Optimizing re-renders or performance

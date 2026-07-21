@@ -26,7 +26,6 @@ This structure minimizes context usage while providing complete implementation g
 
 **0. Verify the file contains testable behavior**
 Before writing any tests, check if the file actually needs testing:
-
 - Does it contain functions or logic? → Test it
 - Does it only export constants, types, or data? → Skip testing it
 
@@ -34,26 +33,23 @@ Files without behavior (constants files, type definitions, GLSL uniform declarat
 
 **1. Check vitest.config.ts for global configuration**
 Verify mock cleanup is configured globally:
-
 ```ts
 // Look for these settings:
-clearMocks: true; // Mock cleanup configured?
-mockReset: true; // Mock reset configured?
-restoreMocks: true; // Mock restore configured?
+clearMocks: true      // Mock cleanup configured?
+mockReset: true       // Mock reset configured?
+restoreMocks: true    // Mock restore configured?
 ```
 
 If not present, recommend adding them. This eliminates the entire class of mock cleanup errors.
 
 **2. Discover existing test setup files**
 Check common locations for test setup configuration:
-
 - `test/setup.{ts,js}` or `testing/setup.{ts,js}`
 - `vitest.setup.{ts,js}` or `src/test/setup.{ts,js}`
 - Check `vitest.config.ts` for configured `setupFiles` and `globalSetup`
 
 **3. Analyze setup file contents**
 When found, identify:
-
 - Global mocks (fetch, timers, etc.)
 - Custom matchers (e.g., `@testing-library/jest-dom`)
 - Test utilities and helpers
@@ -61,7 +57,6 @@ When found, identify:
 
 **4. Only add per-test cleanup for non-mock resources**
 If global config handles mocks, DO NOT add manual mock cleanup:
-
 - ❌ Don't add `vi.clearAllMocks()` (handled by config)
 - ✅ Do clean up listeners, connections, custom state
 
@@ -77,7 +72,6 @@ See [vitest-features.md](references/vitest-features.md#discovering-existing-setu
 Before marking any test file as "complete" or "done", verify type correctness:
 
 **Why this matters:** Test files are typically excluded from `tsconfig.json` compilation (not in `include` paths), so running `tsc` at the project root won't catch type errors in tests. Type errors in tests can cause:
-
 - Runtime failures that should have been caught at compile time
 - Incorrect test behavior due to type mismatches
 - False confidence from tests that don't actually test what they claim
@@ -85,7 +79,7 @@ Before marking any test file as "complete" or "done", verify type correctness:
 **Verification steps:**
 
 1. **Navigate to the package directory (CRITICAL for monorepos):**
-   For monorepos or multi-package projects, you MUST `cd` into the specific package directory before running type checking. TypeScript needs to run from where the `tsconfig.json` and `node_modules` are located for that package.
+For monorepos or multi-package projects, you MUST `cd` into the specific package directory before running type checking. TypeScript needs to run from where the `tsconfig.json` and `node_modules` are located for that package.
 
 ```bash
 # Example for monorepo:
@@ -94,8 +88,7 @@ cd packages/my-package
 ```
 
 2. **Check test file directly with TypeScript:**
-   Use the project's package manager to run TypeScript:
-
+Use the project's package manager to run TypeScript:
 ```bash
 # Detect which package manager to use:
 # - npm: npm exec tsc -- --noEmit path/to/test.test.ts
@@ -105,14 +98,12 @@ cd packages/my-package
 ```
 
 To detect the package manager, check for:
-
 - `bun.lockb` or `bun.lock` → use `bunx`
 - `pnpm-lock.yaml` → use `pnpm exec`
 - `yarn.lock` → use `yarn exec`
 - `package-lock.json` → use `npm exec`
 
 2. **Look for common type issues:**
-
 - Mock types not matching actual implementation types
 - Test data with missing or incorrect properties
 - Assertion types that don't match expected values
@@ -120,8 +111,7 @@ To detect the package manager, check for:
 - Incorrect use of type guards or type assertions
 
 3. **Fix all type errors before marking complete (NON-NEGOTIABLE)**
-   This step is MANDATORY, not optional. Type errors in tests are as critical as type errors in production code.
-
+This step is MANDATORY, not optional. Type errors in tests are as critical as type errors in production code.
 - Do NOT use `as any` or `@ts-ignore` to bypass type checking
 - Update test data to match actual types
 - Fix mock return types to match implementation
@@ -132,18 +122,16 @@ To detect the package manager, check for:
 
 ```typescript
 // ❌ Type error: property 'email' is missing
-const user = createUser({ name: "Alice" });
+const user = createUser({ name: 'Alice' })
 
 // ✅ Correct: all required properties provided
-const user = createUser({ name: "Alice", email: "alice@example.com" });
+const user = createUser({ name: 'Alice', email: 'alice@example.com' })
 
 // ❌ Type error: vi.fn() returns unknown, not User
-const mockGetUser = vi.fn().mockReturnValue({ id: 1 });
+const mockGetUser = vi.fn().mockReturnValue({ id: 1 })
 
 // ✅ Correct: explicitly type the mock
-const mockGetUser = vi
-  .fn<() => User>()
-  .mockReturnValue({ id: 1, name: "Alice", email: "test@example.com" });
+const mockGetUser = vi.fn<() => User>().mockReturnValue({ id: 1, name: 'Alice', email: 'test@example.com' })
 ```
 
 **Principle: Type-safe tests prevent silent failures**
@@ -165,7 +153,6 @@ Check for violations of rules in sections 1.1-1.10 below.
 For each test file, analyze the code under test and identify high-value PBT patterns:
 
 **ALWAYS check for these patterns:**
-
 - **Encode/decode pairs**: Functions like `encode()`/`decode()`, `serialize()`/`deserialize()`, `toJSON()`/`fromJSON()` → Suggest roundtrip property
 - **Normalization functions**: `normalize()`, `sanitize()`, `format()` → Suggest idempotence property
 - **Validator + normalizer pairs**: `isValid()` + `normalize()` → Suggest "isValid(normalize(x)) always true"
@@ -174,7 +161,6 @@ For each test file, analyze the code under test and identify high-value PBT patt
 - **Data structure operations**: Custom collections with invariants → Suggest invariant properties
 
 **When identifying PBT opportunities:**
-
 - Check if fast-check is installed (`package.json` devDependencies)
 - If installed: Recommend PBT improvements directly
 - If NOT installed: Suggest PBT as an option with user approval required
@@ -186,12 +172,12 @@ Use [assets/output-report-template.md](assets/output-report-template.md) and inc
 
 ```typescript
 // Code under test:
-function get<T>(obj: Record<string, T>, path: string): T | undefined;
+function get<T>(obj: Record<string, T>, path: string): T | undefined
 
 // Example-based test found:
-it("gets nested value", () => {
-  expect(get({ a: { b: 1 } }, "a.b")).toBe(1);
-});
+it('gets nested value', () => {
+  expect(get({ a: { b: 1 } }, 'a.b')).toBe(1)
+})
 
 // PBT opportunity identified:
 // ✅ EXCELLENT CANDIDATE for property-based testing
@@ -210,56 +196,45 @@ Don't wait for users to ask "would any benefit from PBT?" — proactively identi
 ## 1. General
 
 ### 1.1 Organization
-
 Place test files next to implementation; one test file per module.
 [View detailed examples](references/organization.md)
 
 ### 1.2 AAA Pattern
-
 Structure tests as Arrange, Act, Assert for clarity.
 [View detailed examples](references/aaa-pattern.md)
 
 ### 1.3 Parameterized Tests
-
 Use `it.each` for variations; one behavior per test.
 [View detailed examples](references/parameterized-tests.md)
 
 ### 1.4 Error Handling
-
 Test negative cases, fault injection, and recovery thoroughly.
 [View detailed examples](references/error-handling.md)
 
 ### 1.5 Assertions
-
 Use strict assertions (`toEqual`, `toStrictEqual`) over loose ones.
 [View detailed examples](references/assertions.md)
 
 ### 1.6 Test Doubles
-
 Prefer fakes > stubs > spies/mocks; avoid over-mocking.
 [View detailed examples](references/test-doubles.md)
 
 ### 1.7 Async Testing
-
 Test promises, async/await, and timers correctly.
 [View detailed examples](references/async-testing.md)
 
 ### 1.8 Performance
-
 Keep tests fast through efficient setup and avoiding expensive operations.
 [View detailed examples](references/performance.md)
 
 ### 1.9 Vitest Features
-
 Use coverage, watch mode, benchmarking, and other vitest-specific features.
 [View detailed examples](references/vitest-features.md)
 
 ### 1.10 Snapshot Testing
-
 Use snapshots for appropriate cases; avoid common pitfalls.
 [View detailed examples](references/snapshot-testing.md)
 
 ### 1.11 Property-Based Testing
-
 Use fast-check for stronger coverage with generated inputs; test encode/decode pairs, validators, normalizers, and invariants.
 [View detailed examples](references/property-based-testing.md)

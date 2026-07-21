@@ -9,17 +9,18 @@ This guide demonstrates the workflow for applying patterns from this skill: iden
 ### Example 1: Optimizing Array Operations
 
 **❌ Incorrect: chained array methods create multiple iterations**
-
 ```ts
-const result = items.filter((x) => x.active).map((x) => x.id);
+const result = items.filter(x => x.active).map(x => x.id);
 ```
 
 **Issue:** Multiple passes over the same array (O(2n)) with intermediate array allocations.
 
 **✅ Correct: single-pass reduce operation**
-
 ```ts
-const result = items.reduce((acc, x) => (x.active ? [...acc, x.id] : acc), []);
+const result = items.reduce((acc, x) =>
+  x.active ? [...acc, x.id] : acc,
+  []
+);
 ```
 
 **Why this is better:** Single iteration (O(n)), though still creates intermediate arrays. For very large arrays, consider using a for loop with pre-allocated array or filtering into a Set.
@@ -29,7 +30,6 @@ const result = items.reduce((acc, x) => (x.active ? [...acc, x.id] : acc), []);
 ### Example 2: Avoiding Needless Allocations
 
 **❌ Incorrect: intermediate variable creates unnecessary allocation**
-
 ```ts
 function randomInt(min: number, max: number): number {
   const minCeil = Math.ceil(min);
@@ -42,7 +42,6 @@ function randomInt(min: number, max: number): number {
 **Issue:** The `range` variable is allocated on every call, creating GC pressure in hot paths.
 
 **✅ Correct: inline simple computation**
-
 ```ts
 function randomInt(min: number, max: number): number {
   const minCeil = Math.ceil(min);
@@ -58,7 +57,6 @@ function randomInt(min: number, max: number): number {
 ### Example 3: Currying for Performance
 
 **❌ Incorrect: recompute expensive operation every call**
-
 ```ts
 export function round(precision: number, value: number): number {
   const multiplier = 10 ** precision;
@@ -74,11 +72,13 @@ for (const price of prices) {
 **Issue:** Expensive exponentiation (`10 ** precision`) is recomputed on every call even though precision is constant.
 
 **✅ Correct: curry to precompute constant parameters**
-
 ```ts
 export function round(precision: number): (value: number) => number;
 export function round(precision: number, value: number): number;
-export function round(precision: number, value?: number): number | ((value: number) => number) {
+export function round(
+  precision: number,
+  value?: number,
+): number | ((value: number) => number) {
   const multiplier = 10 ** precision;
 
   if (value === undefined) {
@@ -102,10 +102,9 @@ for (const price of prices) {
 ### Example 4: Caching Storage API Calls
 
 **❌ Incorrect: repeated storage reads in loop**
-
 ```ts
 for (const item of items) {
-  const theme = localStorage.getItem("theme");
+  const theme = localStorage.getItem('theme');
   applyTheme(theme, item);
   // 100 iterations = 100 storage reads
 }
@@ -114,7 +113,6 @@ for (const item of items) {
 **Issue:** `localStorage.getItem()` is synchronous but slow (disk I/O). Reading same key repeatedly wastes time.
 
 **✅ Correct: cache storage reads in memory**
-
 ```ts
 const storageCache = new Map<string, string | null>();
 
@@ -127,7 +125,7 @@ function getCached(key: string): string | null {
 
 // Use cached version
 for (const item of items) {
-  const theme = getCached("theme");
+  const theme = getCached('theme');
   applyTheme(theme, item);
   // 100 iterations = 1 storage read
 }

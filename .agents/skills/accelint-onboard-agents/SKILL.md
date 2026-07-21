@@ -4,7 +4,7 @@ description: Interactively onboard a project to agent-driven development by runn
 license: Apache-2.0
 metadata:
   author: accelint
-  version: "1.2.0"
+  version: "1.4.0"
 ---
 
 # Onboard Agents
@@ -54,14 +54,24 @@ other.
 If a piece of information answers "what is the project?" rather than "how
 should the agent behave?", it belongs in `config.yaml`, not here.
 
-| Belongs in AGENTS.md                        | Belongs in config.yaml               |
-| ------------------------------------------- | ------------------------------------ |
-| "Always run `pnpm check` before committing" | "Package manager: pnpm"              |
-| "Use Conventional Commits"                  | "TypeScript 5.x, strict mode"        |
-| "Ask before deleting files"                 | "Monorepo: Turborepo + PNPM"         |
-| "Prefer small, focused PRs"                 | "`type` over `interface`"            |
-| "You are a senior TS engineer"              | "Domain: geospatial visualization"   |
-| "Never force-push to main"                  | "Testing: Vitest + @testing-library" |
+| Belongs in AGENTS.md              | Belongs in config.yaml            |
+|-----------------------------------|-----------------------------------|
+| "Always run `pnpm check` before committing" | "Package manager: pnpm"  |
+| "Use Conventional Commits"        | "TypeScript 5.x, strict mode"     |
+| "Ask before deleting files"       | "Monorepo: Turborepo + PNPM"      |
+| "Prefer small, focused PRs"       | "`type` over `interface`"         |
+| "You are a senior TS engineer"    | "Domain: geospatial visualization"|
+| "Never force-push to main"        | "Testing: Vitest + @testing-library"|
+
+---
+
+## NEVER Do When Onboarding Agents
+
+- **NEVER run codebase discovery serially** — Phase 3 spawns parallel subagents for different behavioral domains. Serial scanning wastes time on codebases with many config files spread across directories.
+- **NEVER skip discovery before asking questions** — attempt to infer behavioral conventions from the codebase before adding questions to the interview. A question about commit format when `commitlint.config.ts` exists wastes the user's time.
+- **NEVER omit sections from the generated AGENTS.md** — if a section cannot be inferred or answered, mark it with `<!-- TODO: fill in -->` rather than leaving it out. Missing sections silently shape agent behavior in unpredictable ways.
+- **NEVER duplicate root-level instructions in package-level files** — if a monorepo root AGENTS.md exists, package files should reference it and add only what is package-specific. Repeated instructions inflate context on every agent invocation.
+- **NEVER write the final file without showing a preview** — the user must see inferred values with source annotations and confirm before any filesystem write.
 
 ---
 
@@ -80,10 +90,10 @@ directory is a package inside a monorepo. If a root-level `AGENTS.md` or
 `CLAUDE.md` exists above the current directory:
 
 1. Read the root file in full.
-2. Announce: _"I found a root-level AGENTS.md at [path]. I'll use it as
+2. Announce: *"I found a root-level AGENTS.md at [path]. I'll use it as
    context to avoid duplicating instructions that apply to all packages.
    The file I generate here will reference the root where appropriate
-   rather than repeating it."_
+   rather than repeating it."*
 3. In the generated file, add a header reference:
    ```markdown
    <!-- Inherits from: [relative path to root AGENTS.md] -->
@@ -98,6 +108,20 @@ directory is a package inside a monorepo. If a root-level `AGENTS.md` or
    If the user says no: emit a reference in the generated file rather than
    repeating the content. If the user flags additions or overrides: ask the
    normal turn questions scoped to what's actually missing or different.
+
+**Step 1.5 — Check for Related Documents**
+
+Before detecting local AGENTS.md state, check for related onboarding documents:
+
+1. **Check for openspec/config.yml or openspec/config.yaml**
+   - If exists: Read it to understand the project's stack and patterns
+   - Note its existence for the "Related Documentation" section
+   - Announce: "Found openspec/config.yml — I'll reference it for the separation of concerns boundary."
+
+2. **Check for ARCHITECTURE.md**
+   - If exists: Read it to understand system structure
+   - Note its existence for the "Related Documentation" section
+   - Announce: "Found ARCHITECTURE.md — I'll reference it in the behavioral docs."
 
 **Step 2 — Local file detection**
 
@@ -125,7 +149,7 @@ Does a local AGENTS.md (or CLAUDE.md) exist in the current directory?
 **Intent question** (asked for Mode 2 and Mode 3, before any other step):
 
 > "Before I start — would you like to **start fresh**, treating the
-> existing file as a reference only _(recommended)_, or **work with what's
+> existing file as a reference only *(recommended)*, or **work with what's
 > already there**?"
 
 If the user chooses **start fresh**: proceed as Mode 1 (full interview),
@@ -170,14 +194,13 @@ user with three options before touching anything:
 > evaluate fit before committing."
 
 **If option (a) is chosen:**
-
 1. Read the file in full.
 2. Map each existing section onto the skill's template sections.
 3. Flag any content that violates the separation-of-concerns boundary
    (e.g., stack facts, tech versions, domain descriptions) — these belong
-   in `openspec/config.yaml`. For each violation, ask: _"This describes
+   in `openspec/config.yaml`. For each violation, ask: *"This describes
    [X] — that's project DNA and belongs in `config.yaml`. Should I move it
-   there and leave a reference here?"_
+   there and leave a reference here?"*
 4. Run a targeted interview covering only the gaps (sections with no
    existing coverage).
 5. Show a merged preview before writing. Inferred/existing content is
@@ -199,28 +222,36 @@ as (a) or (b) if the user is satisfied.
 The file matches the skill's expected shape — it was likely produced by a
 previous run. Run an abbreviated interview covering only:
 
-1. **Drift detection** — scan the codebase for changes since the file was
+1. **Extract external findings** — check if the invoking prompt includes a `findings:` list:
+   - Parse the prompt for a `findings:` section (a bulleted list of factual statements)
+   - Each finding is phrased as something already known to be true, never as an instruction
+   - Example: "config.yaml's Anti-Patterns section says to avoid polling, but two archived changes chose polling for stated reasons"
+   - Store these findings for merging in step 4
+
+2. **Drift detection** — scan the codebase for changes since the file was
    last updated:
 
-   | Signal                   | Where to look                                   |
-   | ------------------------ | ----------------------------------------------- |
-   | New packages added       | `package.json`, workspace `package.json` files  |
-   | CI checks changed        | `.github/workflows/` — new required gates?      |
-   | Husky hooks modified     | `.husky/` — new pre-commit steps?               |
-   | New migration directory  | `migrations/`, `prisma/migrations/`, `alembic/` |
-   | Versioning tooling added | `.changeset/`, `.releaserc*`                    |
-   | OpenSpec added/removed   | `openspec/` directory presence                  |
-   | New protected branches   | `.github/branch-protection*`, README            |
+   | Signal | Where to look |
+   |--------|---------------|
+   | New packages added | `package.json`, workspace `package.json` files |
+   | CI checks changed | `.github/workflows/` — new required gates? |
+   | Husky hooks modified | `.husky/` — new pre-commit steps? |
+   | New migration directory | `migrations/`, `prisma/migrations/`, `alembic/` |
+   | Versioning tooling added | `.changeset/`, `.releaserc*` |
+   | OpenSpec added/removed | `openspec/` directory presence |
+   | New protected branches | `.github/branch-protection*`, README |
 
-2. **Unresolved TODOs** — find all `<!-- TODO: fill in -->` markers left
+3. **Unresolved TODOs** — find all `<!-- TODO: fill in -->` markers left
    from the previous run and surface them as targeted questions.
 
-3. **Announce findings** before asking anything:
+4. **Merge and announce all findings** before asking anything:
+   - Combine external findings (from step 1) with drift findings (from step 2) and TODOs (from step 3)
+   - Present the merged list to the user:
+     > "I found [N] external findings, [M] sections that may have drifted, and [P] unresolved TODOs.
+     > I'll only ask about those — the rest looks current."
+   - If external findings exist, note their source (e.g., "from completed OpenSpec change")
 
-   > "I found [N] sections that may have drifted and [M] unresolved TODOs.
-   > I'll only ask about those — the rest looks current."
-
-4. After the targeted interview, show a diff-style preview (changed sections
+5. After the targeted interview, show a diff-style preview (changed sections
    only) before writing. Do not re-emit sections that have not changed.
 
 ---
@@ -232,7 +263,6 @@ them into natural topic turns. If the user describes a workflow, infer related
 behavioral constraints and confirm rather than asking again.
 
 **Turn 1 — Role & Identity**
-
 - What role should the agent play? ("senior TypeScript engineer", "full-stack
   developer", "pair programmer", "code reviewer", etc.)
 - Is the agent scoped to a specific domain? ("focuses on the rendering
@@ -240,7 +270,6 @@ behavioral constraints and confirm rather than asking again.
 - Any role constraints? ("never makes architectural decisions alone")
 
 **Turn 2 — Communication Style**
-
 - How verbose should responses be? (concise summaries, detailed explanations,
   adaptive to the question?)
 - Preferred format for code changes? (show diffs, show full files, inline
@@ -250,7 +279,6 @@ behavioral constraints and confirm rather than asking again.
 - Should the agent explain its reasoning, or just act?
 
 **Turn 3 — Workflow Procedures**
-
 - What is the standard flow for a new feature? (e.g., propose → spec → design
   → implement → test → PR)
 - For bug fixes, is the flow different?
@@ -260,41 +288,37 @@ behavioral constraints and confirm rather than asking again.
   example format?)
 - Versioning workflow? (when to bump, who approves changelog?)
 
-**Turn 4 — OpenSpec / Spec-Driven Workflow** _(skip if not using OpenSpec)_
-
+**Turn 4 — OpenSpec / Spec-Driven Workflow** *(skip if not using OpenSpec)*
 - When should the agent invoke `/opsx:propose`?
-  _Good default: "for any new feature or non-trivial change"._
+  *Good default: "for any new feature or non-trivial change".*
 - When is a spec required vs. optional?
 - Should the agent reference existing specs before creating new patterns?
 - How should the agent handle a task that has no existing spec?
 
 **Turn 5 — Decision Heuristics**
-
 - When should the agent ask vs. proceed autonomously?
-  _Good prompts: "deleting files", "changing public APIs", "modifying
-  migrations", "adding new dependencies"._
+  *Good prompts: "deleting files", "changing public APIs", "modifying
+  migrations", "adding new dependencies".*
 - Any operations that require explicit human sign-off before acting?
 - How should scope creep be handled if discovered mid-task?
 - If two approaches are equally valid, should the agent pick one, ask, or
   present both?
 
 **Turn 6 — Tool & Command Preferences**
-
 - Any tool-level preferences the agent should honor?
-  _Examples: "prefer vitest over jest", "use pnpm, never npm", "biome for
-  formatting, never prettier"._
+  *Examples: "prefer vitest over jest", "use pnpm, never npm", "biome for
+  formatting, never prettier".*
 - Any CLI commands the agent should always/never run?
-  _Examples: "never run `git push --force`", "always use `pnpm` not `npm run`"._
+  *Examples: "never run `git push --force`", "always use `pnpm` not `npm run`".*
 - Any environment setup the agent should validate before starting?
 
 **Turn 7 — Guardrails**
-
 - Hard "never" rules? (operations that are always off-limits)
-  _Examples: "never force-push to main", "never delete migration files",
-  "never commit secrets"._
+  *Examples: "never force-push to main", "never delete migration files",
+  "never commit secrets".*
 - Soft "always ask first" rules?
-  _Examples: "ask before modifying `package.json` scripts", "ask before
-  changing shared utility packages"._
+  *Examples: "ask before modifying `package.json` scripts", "ask before
+  changing shared utility packages".*
 - Any security-sensitive areas that require special handling?
 
 ---
@@ -306,27 +330,23 @@ confirm. Use these examples as a pattern; extend to other stacks as
 appropriate.
 
 **Turborepo + PNPM monorepo → suggest confirming:**
-
 - "I'll assume you want `pnpm -w` (workspace root) for adding shared deps
   and `pnpm --filter <pkg>` for package-scoped deps; correct?"
 - "For tasks, I'll default to `pnpm turbo run build --filter=...` rather
   than running package scripts directly; correct?"
 
 **GitHub Actions CI → suggest confirming:**
-
 - "Should I wait for CI to pass before treating a PR as mergeable?"
 - "Any required status checks the agent should reference before marking
   work done?"
 
 **Conventional Commits → suggest confirming:**
-
 - "I'll use `feat:`, `fix:`, `chore:`, `docs:`, `test:`, `refactor:` — any
   additional types your team uses (e.g., `perf:`, `ci:`)?"
 - "Are breaking changes annotated with `!` suffix (e.g., `feat!:`) or with
   a footer `BREAKING CHANGE:` block?"
 
 **Spec-Driven Development (OpenSpec) → suggest confirming:**
-
 - "For non-trivial changes, I'll start with `/opsx:propose` before writing
   any code; should I also require a design artifact for changes touching more
   than N files?"
@@ -334,39 +354,60 @@ appropriate.
 
 ---
 
-### Phase 3 — Codebase Inference (fill gaps before generating)
+### Phase 3 — Parallel Codebase Discovery (fill gaps before generating)
 
 After the interview, audit every AGENTS.md section that still has no answer.
 For each gap, attempt to derive the behavioral intent directly from the
-codebase before asking or leaving a `# TODO`. A behavioral file with explicit
-TODOs is actionable; a file with missing sections silently shapes agent
-behavior in unpredictable ways.
+codebase using parallel subagents before asking or leaving a `# TODO`. A
+behavioral file with explicit TODOs is actionable; a file with missing sections
+silently shapes agent behavior in unpredictable ways.
 
-**Inference targets and where to look:**
+Spawn discovery subagents in parallel — don't scan serially. Each agent focuses
+on one behavioral domain and returns structured findings. Wait for all agents
+to complete, then merge results before Phase 4.
 
-| Gap                              | Files / signals to inspect                                                      |
-| -------------------------------- | ------------------------------------------------------------------------------- |
-| Commit convention                | `commitlint.config.*`, recent `git log --oneline`, `.gitmessage`, `.releaserc*` |
-| PR workflow                      | `.github/PULL_REQUEST_TEMPLATE.md`, `.github/workflows/` (CI gate names)        |
-| Pre-commit checks                | `.husky/`, `.lefthook.yml`, `package.json#scripts` (lint, typecheck, test)      |
-| Test runner preference           | `vitest.config.*`, `jest.config.*` — whichever is present                       |
-| Package manager                  | `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`                 |
-| Forced-push protection           | `.github/branch-protection*`, README mentions of branch policy                  |
-| Migration guardrails             | Presence of `migrations/`, `prisma/migrations/`, `alembic/`                     |
-| Secret handling                  | `.env.example`, `.gitignore` patterns, presence of `dotenv` / vault tooling     |
-| OpenSpec usage                   | `openspec/` directory, `openspec/config.yaml`, any `/opsx:*` references in docs |
-| Versioning workflow              | `.changeset/`, `CHANGELOG.md`, `standard-version`, `conventional-changelog`     |
-| Path aliases (for tool commands) | `tsconfig.json#paths`, `vite.config` — infer preferred import style             |
-| TypeScript project detection     | `tsconfig.json` presence — enables TS-specific baseline guardrails              |
-| Vitest global mock cleanup       | `vitest.config.ts` — check for `clearMocks`, `mockReset`, `restoreMocks` flags  |
-| Test file type checking          | CI workflows, package.json scripts — check if `tsc --noEmit` runs on test files |
+**Spawn these agents simultaneously:**
 
-**After inference, for each field resolved this way**, note the source in the
-preview with a trailing comment, e.g.:
+**Agent A — Version Control & Commit Conventions**
+- Commit convention: `commitlint.config.*`, recent `git log --oneline`, `.gitmessage`, `.releaserc*`
+- Versioning workflow: `.changeset/`, `CHANGELOG.md`, `standard-version`, `conventional-changelog`
+- Forced-push protection: `.github/branch-protection*`, README mentions of branch policy
+- Return: commit message format with types and examples, versioning commands, branch protection rules
+
+**Agent B — CI/CD & Pre-commit Workflows**
+- PR workflow: `.github/PULL_REQUEST_TEMPLATE.md`, `.github/workflows/` (CI gate names, required checks)
+- Pre-commit checks: `.husky/`, `.lefthook.yml`, `package.json#scripts` (lint, typecheck, test)
+- Return: PR conventions (size, labels, templates), pre-commit checklist with commands, CI required checks
+
+**Agent C — Testing & Code Quality**
+- Test runner: `vitest.config.*`, `jest.config.*`, `pytest.ini`, `pyproject.toml [tool.pytest]`, Playwright, Cypress
+- Package manager: `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `bun.lockb`
+- TypeScript project: `tsconfig.json` presence, path aliases in `tsconfig.json#paths` or `vite.config`
+- Vitest config: `vitest.config.ts` — check for `clearMocks`, `mockReset`, `restoreMocks` flags
+- Test file type checking: CI workflows, `package.json` scripts — check if `tsc --noEmit` runs on test files
+- Return: test framework, package manager, TS-specific guardrails if applicable, vitest cleanup config
+
+**Agent D — Security & Migrations**
+- Migration files: presence of `migrations/`, `prisma/migrations/`, `alembic/`
+- Secret handling: `.env.example`, `.gitignore` patterns, presence of `dotenv` / vault tooling
+- Return: migration guardrails if migrations exist, secret handling practices
+
+**Agent E — OpenSpec & Development Workflow**
+- OpenSpec: `openspec/` directory, `openspec/config.yaml`, any `/opsx:*` references in docs or CLAUDE.md
+- Return: OpenSpec usage status, when to invoke spec workflow
+
+**After all agents complete:** merge their findings into a unified discovery map.
+Tag each field as `# inferred from [source]` or leave empty if unknown. Fields
+that remain empty after discovery become explicit `<!-- TODO: fill in -->` markers
+in the generated file.
+
+**Preview with source annotations:**
+
+After merging discovery results, show a preview with trailing comments on inferred values:
 
 ```markdown
-- Always run `pnpm check` before committing # inferred from .husky/pre-commit
-- Use Conventional Commits (`feat:`, `fix:`) # inferred from commitlint.config.ts
+- Always run `pnpm check` before committing   # inferred from .husky/pre-commit
+- Use Conventional Commits (`feat:`, `fix:`)  # inferred from commitlint.config.ts
 ```
 
 **If a field genuinely cannot be inferred** (e.g., decision heuristics,
@@ -380,12 +421,14 @@ rather than omitting the section.
 1. **Show a labeled preview** of the full AGENTS.md before writing anything.
    Inferred values carry their source comment; unresolved sections carry
    `<!-- TODO: fill in -->`. This gives the user a complete confidence map.
-2. Ask: _"Does this look right? Any sections to correct or expand before I
-   write the file?"_
+2. Ask: *"Does this look right? Any sections to correct or expand before I
+   write the file?"*
 3. After confirmation, write to `AGENTS.md` at the project root (or
    `CLAUDE.md` if the user is using Claude Code conventions), **stripping
    the inference source comments** — they are for review only, not the
-   final file.
+   final file. **For the Related Documentation section:** only include
+   links to files that actually exist in the repository. Check for each file
+   (openspec/config.yml, ARCHITECTURE.md, README.md) before including its link.
 4. Print a brief summary of what was generated, what was inferred vs.
    answered directly, and which `<!-- TODO -->` sections still need human
    input.
@@ -436,9 +479,7 @@ architectural decisions."]
 ## Workflow Procedures
 
 ### New Features
-
 [step-by-step procedure, e.g.:]
-
 1. Start with `/opsx:propose` for any non-trivial change
 2. Get proposal reviewed before writing code
 3. Run `pnpm check` and `pnpm test` after each meaningful change
@@ -457,27 +498,23 @@ Follow Test-Driven Development to ensure the bug is fixed and does not regress:
 5. Hand off to engineer for PR
 
 ### Pre-Commit Checklist
-
 - [ ] [check, e.g., `pnpm typecheck`]
 - [ ] [check, e.g., `pnpm lint`]
 - [ ] [check, e.g., `pnpm test`]
-- [ ] _(TypeScript/JavaScript)_ Type check test files: `tsc --noEmit <test-file>.test.ts`
+- [ ] *(TypeScript/JavaScript)* Type check test files: `tsc --noEmit <test-file>.test.ts`
 
 ### Commit Messages
-
 Convention: [e.g., Conventional Commits]
 Format: `[type]([scope]): [description]`
 Types: `feat`, `fix`, `chore`, `docs`, `test`, `refactor`[, additional types]
 Example: `feat(layer): add WebGPU fallback for Safari`
 
 ### PR Conventions
-
 - [size guideline, e.g., "prefer small, focused PRs over large changesets"]
 - [label convention, if any]
 - [review request convention, if any]
 
 ### Versioning
-
 - [when and how to bump versions, e.g., "use `pnpm changeset` for any
   user-facing change; patch for fixes, minor for features, major for
   breaking changes"]
@@ -487,17 +524,15 @@ Example: `feat(layer): add WebGPU fallback for Safari`
 Every completed work unit must end with a structured summary. If breaking
 changes were introduced, they must be surfaced explicitly — never buried
 in prose.
-```
 
+```
 ✅ Work complete. Ready for commit.
 
-⚠️ BREAKING CHANGE DETECTED:
-
+⚠️  BREAKING CHANGE DETECTED:
 - [What was removed or changed in the public API]
 - [Who is affected and what breaks]
 - Migration: [what callers must do to adapt]
 - Suggest [MAJOR / MINOR / PATCH] version bump via `[versioning command]`
-
 ```
 
 If no breaking changes: omit the `⚠️` block. Never emit it as empty or
@@ -581,12 +616,25 @@ with placeholder text.
 ### Security Sensitivity
 - [any areas requiring special care, e.g., "treat all environment variable
   names as sensitive — never log them, even in debug output"]
+
+---
+
+## Related Documentation
+
+<!-- Include only files that actually exist in the repository -->
+
+- **openspec/config.yaml** — Project DNA: stack facts, coding patterns, domain concepts
+  *(Separation of concerns: this file defines WHAT the project is; AGENTS.md defines HOW agents behave)*
+- **ARCHITECTURE.md** — System architecture, deployment overview, component interactions
+  *(Reference this when behavioral decisions depend on understanding system structure)*
+- **README.md** — Installation, quick start, usage guide for developers
 ```
 
 ---
 
 ## Interaction Principles
 
+- **Parallel discovery.** Spawn subagents for Phase 3 simultaneously — don't scan config files one-by-one.
 - **Conversational, not interrogative.** Bundle related questions into a
   single turn. Use natural language, not bullet-dump forms.
 - **Infer and confirm.** "You mentioned Husky — I'll assume the pre-commit

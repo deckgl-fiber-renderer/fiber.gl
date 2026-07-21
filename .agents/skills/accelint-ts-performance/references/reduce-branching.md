@@ -20,35 +20,27 @@
 ### Switch to Lookup Table
 
 **❌ Incorrect: conditional checks**
-
 ```ts
-if (thing === "ONE") {
+if (thing === 'ONE') {
   /*...*/
 }
 
-if (thing === "TWO") {
+if (thing === 'TWO') {
   /*...*/
 }
 
-if (thing === "THREE") {
+if (thing === 'THREE') {
   /*...*/
 }
 ```
 
 **✅ Correct: lookup table**
-
 ```ts
 const lookup = {
-  ONE: {
-    /*...*/
-  },
-  TWO: {
-    /*...*/
-  },
-  THREE: {
-    /*...*/
-  },
-};
+  ONE: {/*...*/},
+  TWO: {/*...*/},
+  THREE: {/*...*/},
+}
 
 const action = lookup[thing];
 ```
@@ -56,7 +48,6 @@ const action = lookup[thing];
 ### Nested Conditionals to Early Returns
 
 **❌ Incorrect: excessive nesting**
-
 ```ts
 function process(data) {
   if (data) {
@@ -73,7 +64,6 @@ function process(data) {
 ```
 
 **✅ Correct: early returns**
-
 ```ts
 function process(data) {
   if (!data) return null;
@@ -88,7 +78,6 @@ function process(data) {
 ### Hoist Invariant Conditions
 
 **❌ Incorrect: repeated checks**
-
 ```ts
 for (const item of items) {
   if (config.enableFeature && item.active) {
@@ -98,7 +87,6 @@ for (const item of items) {
 ```
 
 **✅ Correct: hoist invariant**
-
 ```ts
 if (config.enableFeature) {
   for (const item of items) {
@@ -112,10 +100,9 @@ if (config.enableFeature) {
 ### Runtime Type Checks to Compile-Time
 
 **❌ Incorrect: runtime branching**
-
 ```ts
 function format(value: string | number) {
-  if (typeof value === "string") {
+  if (typeof value === 'string') {
     return value.toUpperCase();
   } else {
     return value.toFixed(2);
@@ -124,7 +111,6 @@ function format(value: string | number) {
 ```
 
 **✅ Correct: separate functions**
-
 ```ts
 function formatString(value: string): string {
   return value.toUpperCase();

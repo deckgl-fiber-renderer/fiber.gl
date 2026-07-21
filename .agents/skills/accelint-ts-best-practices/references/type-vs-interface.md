@@ -7,15 +7,11 @@ Prefer `type` over `interface for type aliases, unions, intersections, branded t
 - Legacy API compatibility
 
 **❌ Incorrect: interface not preferred for use case**
-
 ```ts
-interface AvatarProps {
-  avatar: string;
-}
+interface AvatarProps { avatar: string; }
 ```
 
 **✅ Correct: type preferred for use case**
-
 ```ts
-type AvatarProps = { avatar: string };
+type AvatarProps = { avatar: string; }
 ```

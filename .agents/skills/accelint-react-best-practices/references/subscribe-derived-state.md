@@ -3,7 +3,6 @@
 Subscribe to derived boolean state instead of continuous values to reduce re-render frequency.
 
 **❌ Incorrect: re-renders on every pixel change**
-
 ```tsx
 function Sidebar() {
   const width = useWindowWidth();  // updates continuously
@@ -14,7 +13,6 @@ function Sidebar() {
 ```
 
 **✅ Correct: re-renders only when boolean changes**
-
 ```tsx
 function Sidebar() {
   const isMobile = useMediaQuery('(max-width: 767px)')

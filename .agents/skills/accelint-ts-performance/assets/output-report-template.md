@@ -1,16 +1,15 @@
 ╭──────────────────────────╮
-│ accelint-ts-performance │
+│ accelint-ts-performance  │
 ╰──────────────────────────╯
 
 <!-- Make sure to display this warning block to the user -->
-
 ┌────────────────────────────────────────────────────┐
-│ ⚠️ WARNING: This skill assumes hot path first. If │
+│ ⚠️  WARNING: This skill assumes hot path first. If │
 │ you know that the suggested change is only used in │
-│ a cold path and won't be used in a hot path then │
-│ you are free to ignore any micro-opt suggestions. │
-│ You know better than the robots. When in doubt, │
-│ assume hot path. │
+│ a cold path and won't be used in a hot path then   │
+│ you are free to ignore any micro-opt suggestions.  │
+│ You know better than the robots. When in doubt,    │
+│ assume hot path.                                   │
 └────────────────────────────────────────────────────┘
 
 # Report: [Target Name]
@@ -61,14 +60,12 @@ See assets/audit-report-example.md for a real-world example.
 Completed systematic audit of [file/module path] following accelint-ts-performance workflow. Identified [N] performance anti-patterns with expected gains ranging from [min]x to [max]x. [Brief description of what this code does and why performance matters].
 
 **Key Findings:**
-
 - [N] [category] anti-patterns ([gain range] potential gain each)
 - [N] [category] issues ([gain range] each)
 - [N] [other category] opportunities ([gain range])
 
 **Impact Assessment:**
 [Explain WHY these optimizations matter for this specific code. Consider:]
-
 - Where is this code likely called? (hot paths, rendering loops, batch processing, etc.)
 - What operations trigger it? (user interactions, real-time updates, data processing)
 - Why do even small gains matter? (frame budgets, throughput requirements, scale)
@@ -87,7 +84,6 @@ Completed systematic audit of [file/module path] following accelint-ts-performan
 ```
 
 **Issue:**
-
 - [Point 1 explaining the problem]
 - [Point 2 with specifics about allocations/iterations/complexity]
 - [Point 3 quantifying the impact if possible]
@@ -97,7 +93,6 @@ Completed systematic audit of [file/module path] following accelint-ts-performan
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [code snippet showing the fix]
@@ -115,7 +110,6 @@ Completed systematic audit of [file/module path] following accelint-ts-performan
 ```
 
 **Issue:**
-
 - [Explanation]
 
 **Expected Gain:** [range]x
@@ -123,7 +117,6 @@ Completed systematic audit of [file/module path] following accelint-ts-performan
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [code snippet]
@@ -136,20 +129,17 @@ Completed systematic audit of [file/module path] following accelint-ts-performan
 <!-- Use this format when multiple issues share the same root cause and fix pattern -->
 
 **Locations:**
-
 - `[file:line]` - [function/context]
 - `[file:line]` - [function/context]
 - `[file:line]` - [function/context]
 
 **Example from [specific location]:**
-
 ```ts
 // ❌ Current: [Brief description of problem]
 [representative code snippet]
 ```
 
 **Issue:**
-
 - [Shared root cause explanation]
 - [Why this pattern is problematic]
 - [Impact across all instances]
@@ -159,14 +149,12 @@ Completed systematic audit of [file/module path] following accelint-ts-performan
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [fixed code snippet]
 ```
 
 **Same pattern applies to all [N] instances:**
-
 ```ts
 // [Location/function 2]
 // ❌ Current
@@ -187,12 +175,12 @@ Completed systematic audit of [file/module path] following accelint-ts-performan
 
 ## Phase 2: Categorized Issues
 
-| #   | Location    | Issue                     | Category   | Expected Gain |
-| --- | ----------- | ------------------------- | ---------- | ------------- |
-| 1   | [file:line] | [Brief issue description] | [Category] | [range]x      |
-| 2   | [file:line] | [Brief issue description] | [Category] | [range]x      |
-| 3   | [file:line] | [Brief issue description] | [Category] | [range]x      |
-| 4-N | [multiple]  | [Brief issue description] | [Category] | [range]x      |
+| # | Location | Issue | Category | Expected Gain |
+|---|----------|-------|----------|---------------|
+| 1 | [file:line] | [Brief issue description] | [Category] | [range]x |
+| 2 | [file:line] | [Brief issue description] | [Category] | [range]x |
+| 3 | [file:line] | [Brief issue description] | [Category] | [range]x |
+| 4-N | [multiple] | [Brief issue description] | [Category] | [range]x |
 
 **Total Issues:** [N]
 **Primary Categories:** [Category1] ([N]), [Category2] ([N]), [Category3] ([N])

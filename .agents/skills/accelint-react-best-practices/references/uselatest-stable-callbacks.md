@@ -7,18 +7,17 @@ Access latest values in callbacks without adding them to dependency arrays. Prev
 If your application uses React >= 19.2, prefer `useEffectEvent` over `useLatest`. It provides a cleaner API for the same pattern.
 
 **✅ Recommended for React 19.2+:**
-
 ```tsx
-import { useEffectEvent } from "react";
+import { useEffectEvent } from 'react'
 
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
-  const [query, setQuery] = useState("");
-  const onSearchStable = useEffectEvent(onSearch);
+  const [query, setQuery] = useState('')
+  const onSearchStable = useEffectEvent(onSearch)
 
   useEffect(() => {
-    const timeout = setTimeout(() => onSearchStable(query), 300);
-    return () => clearTimeout(timeout);
-  }, [query]);
+    const timeout = setTimeout(() => onSearchStable(query), 300)
+    return () => clearTimeout(timeout)
+  }, [query])
 }
 ```
 
@@ -31,43 +30,40 @@ See [store-event-handlers-refs.md](store-event-handlers-refs.md) for more detail
 For applications not yet on React 19.2, use the `useLatest` hook pattern:
 
 Implementation:
-
 ```tsx
 function useLatest<T>(value: T) {
-  const ref = useRef(value);
+  const ref = useRef(value)
 
   useLayoutEffect(() => {
-    ref.current = value;
-  }, [value]);
+    ref.current = value
+  }, [value])
 
-  return ref;
+  return ref
 }
 ```
 
 **❌ Incorrect: effect re-runs on every callback change**
-
 ```tsx
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
-    const timeout = setTimeout(() => onSearch(query), 300);
-    return () => clearTimeout(timeout);
-  }, [query, onSearch]);
+    const timeout = setTimeout(() => onSearch(query), 300)
+    return () => clearTimeout(timeout)
+  }, [query, onSearch])
 }
 ```
 
 **✅ Correct: stable effect, fresh callback**
-
 ```tsx
 function SearchInput({ onSearch }: { onSearch: (q: string) => void }) {
-  const [query, setQuery] = useState("");
-  const onSearchRef = useLatest(onSearch);
+  const [query, setQuery] = useState('')
+  const onSearchRef = useLatest(onSearch)
 
   useEffect(() => {
-    const timeout = setTimeout(() => onSearchRef.current(query), 300);
-    return () => clearTimeout(timeout);
-  }, [query]);
+    const timeout = setTimeout(() => onSearchRef.current(query), 300)
+    return () => clearTimeout(timeout)
+  }, [query])
 }
 ```
 

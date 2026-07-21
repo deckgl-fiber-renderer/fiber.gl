@@ -13,7 +13,6 @@ This document covers README-specific writing principles. The `humanizer` skill p
 When in doubt, include it. More detail is always better for documentation.
 
 **❌ Incorrect: assumes too much knowledge**
-
 ```markdown
 ## Installation
 
@@ -21,8 +20,7 @@ Install the package and configure it.
 ```
 
 **✅ Correct: explains everything**
-
-````markdown
+```markdown
 ## Installation
 
 Install the package using your preferred package manager:
@@ -30,11 +28,9 @@ Install the package using your preferred package manager:
 ```bash
 pnpm add @acme/toolkit
 ```
-````
 
 If you're using TypeScript, you're all set — types are included. For JavaScript projects, the package works with both CommonJS and ESM.
-
-````
+```
 
 ---
 
@@ -45,21 +41,18 @@ Every command should be copy-pasteable. Don't describe commands in prose when yo
 **❌ Incorrect: describes instead of shows**
 ```markdown
 Run the build script using pnpm to compile the TypeScript files.
-````
+```
 
 **✅ Correct: shows the actual command**
-
-````markdown
+```markdown
 Build the project:
 
 ```bash
 pnpm build
 ```
-````
 
 This compiles TypeScript to JavaScript in the `dist/` directory.
-
-````
+```
 
 ---
 
@@ -71,15 +64,14 @@ When helpful, show what the user should expect to see. This confirms they're on 
 ```markdown
 ```bash
 pnpm test
-````
-
-````
+```
+```
 
 **✅ Correct: shows expected output**
 ```markdown
 ```bash
 pnpm test
-````
+```
 
 You should see output like:
 
@@ -90,8 +82,7 @@ You should see output like:
  Test Files  2 passed (2)
       Tests  20 passed (20)
 ```
-
-````
+```
 
 ---
 
@@ -105,9 +96,8 @@ Set the `DEBUG` environment variable:
 
 ```bash
 export DEBUG=true
-````
-
-````
+```
+```
 
 **✅ Correct: includes motivation**
 ```markdown
@@ -115,11 +105,10 @@ For verbose logging during development, enable debug mode:
 
 ```bash
 export DEBUG=true
-````
+```
 
 This prints detailed information about each step, which is helpful when tracking down issues but too noisy for production.
-
-````
+```
 
 ---
 
@@ -130,11 +119,10 @@ Write as if the reader has never seen this codebase. Don't assume they know your
 **❌ Incorrect: assumes familiarity**
 ```markdown
 After cloning, run the usual setup commands.
-````
+```
 
 **✅ Correct: spells it out**
-
-````markdown
+```markdown
 After cloning the repository:
 
 ```bash
@@ -142,11 +130,9 @@ git clone https://github.com/acme/toolkit.git
 cd toolkit
 pnpm install
 ```
-````
 
 This installs all dependencies. The first install may take a few minutes.
-
-````
+```
 
 ---
 
@@ -157,16 +143,15 @@ Environment variables, CLI options, configuration options, and script references
 **❌ Incorrect: hard to scan**
 ```markdown
 The `format` option can be "json" or "yaml". The `output` option specifies where to write results. The `verbose` option enables detailed logging.
-````
+```
 
 **✅ Correct: scannable table**
-
 ```markdown
-| Option    | Type               | Default   | Description             |
-| --------- | ------------------ | --------- | ----------------------- |
-| `format`  | `"json" \| "yaml"` | `"json"`  | Output format           |
-| `output`  | `string`           | `"./out"` | Output directory        |
-| `verbose` | `boolean`          | `false`   | Enable detailed logging |
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `format` | `"json" \| "yaml"` | `"json"` | Output format |
+| `output` | `string` | `"./out"` | Output directory |
+| `verbose` | `boolean` | `false` | Enable detailed logging |
 ```
 
 ---
@@ -176,7 +161,6 @@ The `format` option can be "json" or "yaml". The `output` option specifies where
 Detect the actual package manager and use it consistently. Never assume npm.
 
 **❌ Incorrect: wrong package manager**
-
 ```markdown
 # Project uses pnpm (has pnpm-lock.yaml)
 
@@ -185,7 +169,6 @@ npm run build
 ```
 
 **✅ Correct: matches project tooling**
-
 ```markdown
 # Project uses pnpm (has pnpm-lock.yaml)
 
@@ -209,13 +192,11 @@ Check for lockfiles in this order:
 Sound like someone who genuinely wants to help, not a robot generating documentation.
 
 **❌ Incorrect: robotic**
-
 ```markdown
 The function accepts a configuration object parameter. The configuration object must contain the required fields. An error will be thrown if required fields are missing.
 ```
 
 **✅ Correct: conversational**
-
 ```markdown
 Pass in a config object with your settings. At minimum, you need `apiKey` and `endpoint` — the function will let you know if anything's missing.
 ```
@@ -243,7 +224,6 @@ Pass in a config object with your settings. At minimum, you need `apiKey` and `e
 For READMEs over ~200 lines, add a TOC at the top after the heading area.
 
 **✅ Good TOC format**
-
 ```markdown
 ## Table of Contents
 
@@ -267,13 +247,11 @@ After drafting content, apply the `humanizer` skill to catch patterns this guide
 ### Significance Inflation
 
 **❌ AI pattern:**
-
 ```markdown
 This package serves as a pivotal tool in the JavaScript ecosystem, marking a crucial advancement in configuration management.
 ```
 
 **✅ Human version:**
-
 ```markdown
 This package parses config files. It supports JSON, YAML, and TOML.
 ```
@@ -281,13 +259,11 @@ This package parses config files. It supports JSON, YAML, and TOML.
 ### Promotional Language
 
 **❌ AI pattern:**
-
 ```markdown
 Nestled within the Node.js ecosystem, this groundbreaking library offers seamless, intuitive, and powerful configuration management.
 ```
 
 **✅ Human version:**
-
 ```markdown
 A config parser for Node.js projects.
 ```
@@ -295,13 +271,11 @@ A config parser for Node.js projects.
 ### Superficial -ing Phrases
 
 **❌ AI pattern:**
-
 ```markdown
 The validate function checks your config, ensuring compliance with your schema while highlighting any issues.
 ```
 
 **✅ Human version:**
-
 ```markdown
 The validate function checks your config against a schema and returns any errors.
 ```
@@ -309,13 +283,11 @@ The validate function checks your config against a schema and returns any errors
 ### Vague Attributions
 
 **❌ AI pattern:**
-
 ```markdown
 Industry experts agree this approach improves developer productivity.
 ```
 
 **✅ Human version:**
-
 ```markdown
 In our benchmarks, this reduced config load time by 40%.
 ```
@@ -325,13 +297,11 @@ In our benchmarks, this reduced config load time by 40%.
 ### Rule of Three
 
 **❌ AI pattern:**
-
 ```markdown
 The package is fast, flexible, and fully featured.
 ```
 
 **✅ Human version:**
-
 ```markdown
 The package is fast. See benchmarks below.
 ```
@@ -339,13 +309,11 @@ The package is fast. See benchmarks below.
 ### Generic Conclusions
 
 **❌ AI pattern:**
-
 ```markdown
 The future looks bright for this project as we continue our journey toward excellence.
 ```
 
 **✅ Human version:**
-
 ```markdown
 See the roadmap in CONTRIBUTING.md for planned features.
 ```
@@ -357,7 +325,6 @@ See the roadmap in CONTRIBUTING.md for planned features.
 Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as obvious.
 
 ### Signs of soulless writing:
-
 - Every sentence is the same length
 - No opinions, just neutral reporting
 - No first-person perspective when appropriate
@@ -366,49 +333,37 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 ### How to add voice:
 
 **Have opinions when relevant:**
-
 ```markdown
 # ❌ Sterile
-
 The library provides configuration parsing functionality.
 
 # ✅ Has a pulse
-
 Config files are a pain. This library makes them less painful.
 ```
 
 **Acknowledge tradeoffs:**
-
 ```markdown
 # ❌ Too neutral
-
 The library supports multiple formats.
 
 # ✅ Honest
-
 We support JSON, YAML, and TOML. We don't support INI because frankly it's a mess to parse reliably.
 ```
 
 **Use "you" and "we" naturally:**
-
 ```markdown
 # ❌ Distant
-
 The user should run the install command.
 
 # ✅ Direct
-
 Run the install command.
 ```
 
 **Vary rhythm:**
-
 ```markdown
 # ❌ Monotonous
-
 This function parses configs. It returns an object. It throws on invalid input.
 
 # ✅ Varied
-
 Parse a config file. You get back a typed object, or an error if something's wrong.
 ```

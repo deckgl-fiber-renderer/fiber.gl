@@ -93,12 +93,10 @@ Use when optimizing bundle size:
 Use when a component is re-rendering too frequently:
 
 **Step 1: Identify the cause**
-
 - Check React DevTools Profiler for render frequency
 - Add console.log to identify what's triggering renders
 
 **Step 2: Check these common issues**
-
 - [ ] Parent re-renders causing child re-renders? → [1.2 Extract Memoized Components](extract-memoized-components.md)
 - [ ] Subscribing to changing state unnecessarily? → [1.1 Defer State Reads](defer-state-reads.md) or [1.4 Subscribe Derived State](subscribe-derived-state.md)
 - [ ] Object/array dependencies in effects? → [1.3 Narrow Effect Dependencies](narrow-effect-dependencies.md)
@@ -142,7 +140,6 @@ Use when working with React Compiler enabled projects:
 Use when doing a quick code review of React components:
 
 **High Priority (Fix These):**
-
 - [ ] forwardRef usage → [4.2 No forwardRef](no-forwardref.md)
 - [ ] Default React import → [4.1 Named Imports](named-imports.md)
 - [ ] Hydration mismatches → [2.5 Prevent Hydration Mismatch](prevent-hydration-mismatch.md)
@@ -151,14 +148,12 @@ Use when doing a quick code review of React components:
 - [ ] Components defined inside other components → [1.13 No Inline Components](no-inline-components.md)
 
 **Medium Priority (Optimize If Time Permits):**
-
 - [ ] Unnecessary subscriptions → [1.1 Defer State Reads](defer-state-reads.md)
 - [ ] Object dependencies in effects → [1.3 Narrow Dependencies](narrow-effect-dependencies.md)
 - [ ] Continuous value subscriptions → [1.4 Subscribe Derived State](subscribe-derived-state.md)
 - [ ] Non-lazy expensive initialization → [1.6 Lazy Initialization](lazy-state-initialization.md)
 
 **Low Priority (Nice to Have):**
-
 - [ ] Static JSX not hoisted → [2.3 Hoist Static JSX](hoist-static-jsx.md)
 - [ ] RegExp created in render → [2.7 Hoist RegExp](hoist-regexp-creation.md)
 - [ ] SVG precision not optimized → [2.4 Optimize SVG](optimize-svg-precision.md)

@@ -14,7 +14,6 @@ Use "better comment" markers for non-docblock comments to categorize different t
 - `REMARK:` - General observations
 
 **❌ Incorrect: Vague markers without context**
-
 ```typescript
 // TODO: fix this
 // TODO: improve performance
@@ -22,7 +21,6 @@ Use "better comment" markers for non-docblock comments to categorize different t
 ```
 
 **✅ Correct: Specific markers with context and ownership**
-
 ```typescript
 // TODO(username): Replace with binary search for O(log n) lookup
 // FIXME(username): Throws error on empty array, add guard clause
@@ -34,11 +32,9 @@ Use "better comment" markers for non-docblock comments to categorize different t
 Always remove these types of comments during audits:
 
 ### Commented-Out Code
-
 Dead code should be deleted, not commented. Version control preserves history.
 
 **❌ Incorrect: Dead code should be removed**
-
 ```typescript
 function process(data) {
   // const oldWay = transform(data);
@@ -48,7 +44,6 @@ function process(data) {
 ```
 
 **✅ Correct: Delete dead code**
-
 ```typescript
 function process(data) {
   return newWay(data);
@@ -56,11 +51,9 @@ function process(data) {
 ```
 
 ### Edit History Comments
-
 Comments like "added", "removed", "changed" should be removed. Git provides change history.
 
 **❌ Incorrect: Edit history in comments**
-
 ```typescript
 // Added 2024-01-15: Support for new API
 // Changed by John: Use async/await
@@ -71,7 +64,6 @@ function fetchData() {
 ```
 
 **✅ Correct: Remove edit history**
-
 ```typescript
 function fetchData() {
   // ...
@@ -79,11 +71,9 @@ function fetchData() {
 ```
 
 ### Comments Restating Code
-
 Comments that merely restate what the code clearly does add no value.
 
 **❌ Incorrect: Obvious comment**
-
 ```typescript
 // Increment counter by 1
 counter++;
@@ -98,7 +88,6 @@ return true;
 ```
 
 **✅ Correct: Only comment non-obvious intent**
-
 ```typescript
 // Reset counter for next batch
 counter = 0;
@@ -114,11 +103,9 @@ for (const user of users) {
 Always keep these types of comments during audits:
 
 ### Comments with Markers
-
 All comments using TODO, FIXME, HACK, NOTE, REVIEW, PERF, DEBUG, or REMARK markers should be preserved.
 
 **✅ Correct: Preserve marker comments**
-
 ```typescript
 // TODO(alice): Implement caching for repeated queries
 // FIXME(bob): Race condition when concurrent requests
@@ -126,11 +113,9 @@ All comments using TODO, FIXME, HACK, NOTE, REVIEW, PERF, DEBUG, or REMARK marke
 ```
 
 ### Linter and Tool Directives
-
 These have specific syntax required by tools and must not be modified.
 
 **✅ Correct: Preserve tool directives unchanged**
-
 ```typescript
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const data: any = parseUnknownFormat(input);
@@ -152,14 +137,12 @@ const result = functionThatThrows();
 ```
 
 ### Business Logic Explanations
-
 Comments explaining why code works a certain way (not what it does) are valuable.
 
 **✅ Correct: Preserve business logic explanations**
-
 ```typescript
 // Apply 10% discount only on weekdays per marketing policy
-const discount = isWeekday ? 0.1 : 0;
+const discount = isWeekday ? 0.10 : 0;
 
 // Cache must be invalidated after 5 minutes due to API rate limits
 const CACHE_TTL = 5 * 60 * 1000;
@@ -169,11 +152,9 @@ const index = binarySearch(sortedData, target);
 ```
 
 ### Docblock Comments
-
 All JSDoc comments should be preserved (and improved if incomplete).
 
 **✅ Correct: Preserve and enhance docblocks**
-
 ```typescript
 /**
  * Calculates the total price including tax.
@@ -191,7 +172,6 @@ function calculateTotal(basePrice: number, taxRate: number): number {
 Move end-of-line comments to their own line above the code they describe. This improves readability and prevents comments from being lost at the end of long lines.
 
 **❌ Incorrect: End-of-line comments**
-
 ```typescript
 const MAX_RETRIES = 3; // Maximum number of retry attempts
 const TIMEOUT = 5000; // Request timeout in milliseconds
@@ -204,7 +184,6 @@ function process(data: Data): Result {
 ```
 
 **✅ Correct: Comments above code**
-
 ```typescript
 // Maximum number of retry attempts
 const MAX_RETRIES = 3;
@@ -225,8 +204,7 @@ function process(data: Data): Result {
 ```
 
 **Exception: Short inline clarifications are acceptable**
-
 ```typescript
 const result = value ?? fallback; // Use fallback if value is null/undefined
-return items.filter((x) => x > 0); // Remove negative values
+return items.filter(x => x > 0); // Remove negative values
 ```

@@ -13,13 +13,11 @@ function assert(condition: boolean, message?: string): asserts condition {
 Split compound assertions for clarity.
 
 **❌ Incorrect: compound assertion**
-
 ```ts
 assert(a && b);
 ```
 
 **✅ Correct: split assertion**
-
 ```ts
 assert(a);
 assert(b);
@@ -28,13 +26,14 @@ assert(b);
 Include variable values in assertion messages.
 
 **❌ Incorrect: variable value not included**
-
 ```ts
-assert(index < items.length, "Index error");
+assert(index < items.length, 'Index error');
 ```
 
 **✅ Correct: variable value included**
-
 ```ts
-assert(index < items.length, `Index out of bounds: index=${index}, items.length=${items.length}`);
+assert(
+  index < items.length,
+  `Index out of bounds: index=${index}, items.length=${items.length}`
+);
 ```

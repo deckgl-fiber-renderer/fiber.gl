@@ -35,13 +35,13 @@
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/accelint-qrspi-archive/SKILL.md",
-      "computedHash": "f4fa0df5e7793e872783d8164fd5103abb53389f59c1dfbf5e786eb9cb66c51e"
+      "computedHash": "64671d41f3f5a811a0adcff55daca28df41c85efba77674cc9d085bbd65a2044"
     },
     "accelint-qrspi-propose": {
       "source": "gohypergiant/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/accelint-qrspi-propose/SKILL.md",
-      "computedHash": "775f59df0bf3c03d3806f474ed5e8c1026ceec56c86a836f93b4c7d0ef4ae1ee"
+      "computedHash": "d947b591123a12245b80c80aa2995f550ddea250268bf3b7c7f6819eb81a82a0"
     },
     "accelint-react-best-practices": {
       "source": "gohypergiant/agent-skills",
@@ -99,12 +99,20 @@
     "pnpm": {
       "source": "antfu/skills",
       "sourceType": "github",
-      "computedHash": "318f9fca2441a3e06fedc336e195dd18be5dbe901064e4fa71b76b40b096ab3a"
+      "skillPath": "skills/pnpm/SKILL.md",
+      "computedHash": "2ec08c851c6f901d4ed72c21b826416ed074a487db65662b36249418afd728bf"
+    },
+    "tsdown": {
+      "source": "antfu/skills",
+      "sourceType": "github",
+      "skillPath": "skills/tsdown/SKILL.md",
+      "computedHash": "2183b9019058744215ab8b1261e34833653b5864da159bc022e3b9ad2f706aa5"
     },
     "turborepo": {
-      "source": "vercel/turborepo",
+      "source": "antfu/skills",
       "sourceType": "github",
-      "computedHash": "affe2b38053704eae0c8a5613ae7b729124468458352c375727be50c4c01c073"
+      "skillPath": "skills/turborepo/SKILL.md",
+      "computedHash": "fda851d916bbee5b78446b9a22510e7f38aefdfab57f93de6e0bccbb5b0b537a"
     },
     "ultracite": {
       "source": "haydenbleasel/ultracite",

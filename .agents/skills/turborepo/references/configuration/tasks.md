@@ -65,7 +65,7 @@ Glob patterns for files to cache. **If omitted, nothing is cached.**
 
 ```json
 // Next.js
-"outputs": [".next/**", "!.next/cache/**"]
+"outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
 
 // Vite
 "outputs": ["dist/**"]
@@ -104,7 +104,11 @@ Files considered when calculating task hash. Defaults to all tracked files in pa
 {
   "tasks": {
     "build": {
-      "inputs": ["$TURBO_DEFAULT$", "!README.md", "$TURBO_ROOT$/tsconfig.base.json"]
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!README.md",
+        "$TURBO_ROOT$/tsconfig.base.json"
+      ]
     }
   }
 }

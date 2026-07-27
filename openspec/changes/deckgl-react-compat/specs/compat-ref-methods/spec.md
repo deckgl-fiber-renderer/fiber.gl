@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Compat DeckGL ref surface matches the approved supported method inventory
-The compat `DeckGL` ref surface SHALL be limited to the approved official-style method inventory for this change.
+The compat `DeckGL` ref surface exported from `@deckgl-fiber-renderer/compat` SHALL be limited to the approved official-style method inventory for this change.
 
 #### Scenario: Approved ref inventory is explicit
 - **GIVEN** a consumer uses a ref with compat `DeckGL`
@@ -15,6 +15,11 @@ The compat ref spec SHALL avoid promising broader imperative APIs than the appro
 - **GIVEN** a consumer expects arbitrary imperative mutation APIs through the compat ref
 - **WHEN** the ref behavior is specified
 - **THEN** the spec limits support claims to `deck`, `pickObject`, `pickObjects`, `pickMultipleObjects`, `pickObjectAsync`, and `pickObjectsAsync`
+
+#### Scenario: Excluded imperative APIs are called out for review
+- **GIVEN** deck.gl exposes imperative methods beyond the approved compat subset
+- **WHEN** the compat ref surface is documented
+- **THEN** the omitted methods are explicitly called out for review rather than hidden by omission
 
 ### Requirement: Compat ref supports official-style picking flows for the approved methods
 The compat `DeckGL` ref SHALL support the approved picking methods as part of the supported migration surface.

@@ -11,15 +11,17 @@ The planning pass is intentionally narrower and more evidence-driven than the pr
 
 ## What Changes
 
-- Add a `/compat` deep import path to `@deckgl-fiber-renderer/dom`
+- Add a dedicated `@deckgl-fiber-renderer/compat` package rather than a deep import path on `@deckgl-fiber-renderer/dom`
 - Create a `DeckGL` wrapper that adapts the official React-facing API shape onto the native `Deckgl` component
 - Add compat types and context primitives that mirror the official `@deck.gl/react` public surface only where fiber.gl runtime data and update semantics can be supported and verified cleanly
 - Export JSX layer and view wrapper components that bridge official-looking React element usage onto fiber.gl's existing `<layer>` and `<view>` primitives
-- Audit the compat surface against the official React binding shape, including documented `Render callbacks`, `ContextProvider`, constrained ref methods, prop omissions, and the current native `DeckglProps` boundary
-- Export one flat `/compat` entrypoint whose layer/view wrapper coverage is seeded by the existing `packages/types/src/jsx.ts` inventory: 5 views, 13 `@deck.gl/layers` wrappers, 12 `@deck.gl/geo-layers` wrappers, and 2 `@deck.gl/mesh-layers` wrappers; retain the existing deprecated alias coverage for `mVTLayer`/`mvtLayer` and `wMSLayer`/`wmsLayer` instead of inventing new family subpaths in this change
-- Document supported, deferred, and unsupported migration patterns with a compatibility matrix
+- Audit the compat surface against the official React binding shape, including documented `Render callbacks`, `ContextProvider`, constrained ref methods, prop omissions, widget APIs, and the current native `DeckglProps` boundary
+- Export package entrypoints that intentionally map onto existing deck.gl package families using `package.json#exports` generated via `tsdown`: `@deckgl-fiber-renderer/compat`, `@deckgl-fiber-renderer/compat/layers`, `@deckgl-fiber-renderer/compat/geo-layers`, `@deckgl-fiber-renderer/compat/aggregation-layers`, and `@deckgl-fiber-renderer/compat/mesh-layers`, while keeping view wrappers at the package root
+- Seed wrapper coverage from the existing `packages/types/src/jsx.ts` inventory, retain the existing deprecated alias coverage for `mVTLayer`/`mvtLayer` and `wMSLayer`/`wmsLayer`, and explicitly call out any excluded deck.gl properties, layers, methods, hooks, widgets, or context fields for review
+- Add development-only runtime warnings for detectable unsupported migration patterns, while remaining silent in production
+- Document supported, deferred, excluded-for-review, and unsupported migration patterns with a compatibility matrix
 
-**Non-breaking**: Additive only. This change adds a compat entrypoint without modifying the existing native API or existing package entrypoints.
+**Non-breaking**: Additive only. This change adds a dedicated compat package and subpath exports without modifying the existing native API or existing package entrypoints.
 
 ## Capabilities
 
@@ -39,31 +41,44 @@ _None - this change only adds new capabilities without modifying existing behavi
 ## Impact
 
 **Affected Packages:**
-- `@deckgl-fiber-renderer/dom`: add `/compat` exports and compat implementation files
+- `@deckgl-fiber-renderer/compat`: new dedicated compat package with package-family subpath exports
+- `@deckgl-fiber-renderer/dom`: native renderer dependency consumed by the compat package
 
 **New Dependencies:**
 - None planned in this pass
 
 **API Surface:**
-- New deep import: `@deckgl-fiber-renderer/dom/compat`
-- `/compat` is the only official compat entrypoint in this change
-- Planned exports: `DeckGL`, compat context/types, the inventory-backed layer/view wrapper set, ref types
+- New dedicated package root: `@deckgl-fiber-renderer/compat`
+- New subpath exports aligned to existing deck.gl package families:
+  - `@deckgl-fiber-renderer/compat`
+  - `@deckgl-fiber-renderer/compat/layers`
+  - `@deckgl-fiber-renderer/compat/geo-layers`
+  - `@deckgl-fiber-renderer/compat/aggregation-layers`
+  - `@deckgl-fiber-renderer/compat/mesh-layers`
+- Planned root exports: `DeckGL`, compat context/types, view wrappers, shared layer wrapper utilities, ref types
 - No changes to existing native API (`Deckgl`, `useDeckgl`, `<layer>`, `<view>`, `extend`)
 - Final wrapper/export matrix for this planning pass:
-  - views from `@deck.gl/core`: `MapView`, `OrthographicView`, `OrbitView`, `FirstPersonView`, `GlobeView`
-  - layer wrappers from `@deck.gl/layers`: `ArcLayer`, `BitmapLayer`, `IconLayer`, `LineLayer`, `PointCloudLayer`, `ScatterplotLayer`, `ColumnLayer`, `GridCellLayer`, `PathLayer`, `PolygonLayer`, `GeoJsonLayer`, `TextLayer`, `SolidPolygonLayer`
-  - layer wrappers from `@deck.gl/geo-layers`: `S2Layer`, `QuadkeyLayer`, `TileLayer`, `H3ClusterLayer`, `H3HexagonLayer`, `Tile3DLayer`, `TerrainLayer`, `GeohashLayer`, `GreatCircleLayer`, `TripsLayer`, `MVTLayer`, `WMSLayer`
-  - layer wrappers from `@deck.gl/mesh-layers`: `ScenegraphLayer`, `SimpleMeshLayer`
+  - root exports from `@deckgl-fiber-renderer/compat`:
+    - `DeckGL`
+    - compat context/types/ref types
+    - view wrappers from `@deck.gl/core`: `MapView`, `OrthographicView`, `OrbitView`, `FirstPersonView`, `GlobeView`
+  - layer wrappers from `@deckgl-fiber-renderer/compat/layers` aligned to `@deck.gl/layers`: `ArcLayer`, `BitmapLayer`, `IconLayer`, `LineLayer`, `PointCloudLayer`, `ScatterplotLayer`, `ColumnLayer`, `GridCellLayer`, `PathLayer`, `PolygonLayer`, `GeoJsonLayer`, `TextLayer`, `SolidPolygonLayer`
+  - layer wrappers from `@deckgl-fiber-renderer/compat/geo-layers` aligned to `@deck.gl/geo-layers`: `S2Layer`, `QuadkeyLayer`, `TileLayer`, `H3ClusterLayer`, `H3HexagonLayer`, `Tile3DLayer`, `TerrainLayer`, `GeohashLayer`, `GreatCircleLayer`, `TripsLayer`, `MVTLayer`, `WMSLayer`
+  - layer wrappers from `@deckgl-fiber-renderer/compat/mesh-layers` aligned to `@deck.gl/mesh-layers`: `ScenegraphLayer`, `SimpleMeshLayer`
+  - layer wrappers from `@deckgl-fiber-renderer/compat/aggregation-layers` aligned to `@deck.gl/aggregation-layers`: `ScreenGridLayer`, `HexagonLayer`, `ContourLayer`, `GridLayer`, `HeatmapLayer`
+  - aggregation-layer utility and base exports are not part of the JSX wrapper inventory for this change: `_AggregationLayer`, `WebGLAggregator`, `CPUAggregator`, and aggregator helper/type exports remain excluded-for-review unless a later change expands the public compat surface
   - deprecated intrinsic alias compatibility retained in the matrix: `mVTLayer` and `mvtLayer` map to `MVTLayer`; `wMSLayer` and `wmsLayer` map to `WMSLayer`
 - Final compat ref-method inventory for this planning pass: `deck`, `pickObject`, `pickObjects`, `pickMultipleObjects`, `pickObjectAsync`, `pickObjectsAsync`
 
 **Migration Scope:**
 - Target users already importing `DeckGL` from `@deck.gl/react`
-- Preserve official deck.gl class imports from packages such as `@deck.gl/layers`, `@deck.gl/geo-layers`, and `@deck.gl/mesh-layers`
+- Preserve official deck.gl class imports from packages such as `@deck.gl/layers`, `@deck.gl/geo-layers`, `@deck.gl/aggregation-layers`, and `@deck.gl/mesh-layers`
 - Reduce rewrite work for the React entrypoint, supported JSX layer/view composition, and supported imperative refs
-- Testable migration promise: an app using supported patterns can replace the `DeckGL` import with `@deckgl-fiber-renderer/dom/compat`, keep its official deck.gl class imports, and only make targeted syntax changes where fiber.gl documents a known incompatibility
+- Testable migration promise: an app using supported patterns can replace the `DeckGL` import with `@deckgl-fiber-renderer/compat`, move JSX wrapper imports to the matching compat family subpaths, keep its official deck.gl class imports where supported, and only make targeted syntax changes where fiber.gl documents a known incompatibility
 - Do not include widget wrappers or `useWidget` in this change
 - Treat official `Render callbacks` (`children` passed as a function, such as `{({viewport}) => ...}`) as unsupported in this change
+- Explicitly call out excluded or deferred deck.gl properties, methods, layers, widgets, hooks, and context fields for review rather than implying blanket parity through omission
+- Use development-only warnings for detectable unsupported patterns and remain silent in production
 
 **Testing:**
 - Compat-focused unit, integration, and type coverage under `packages/dom`
@@ -71,7 +86,10 @@ _None - this change only adds new capabilities without modifying existing behavi
 - Coverage tests should verify the declared wrapper/export matrix and the exact compat ref-method inventory above against the supported upstream deck.gl range already targeted by the repo (`>=9.1`, currently locked to `9.3.1` in this workspace)
 
 **Documentation:**
-- Migration guide from `@deck.gl/react` to `/compat`
-- Compatibility matrix for supported, deferred, and unsupported patterns
-- Wrapper/export matrix covering the approved `/compat` layer and view inventory
+- Migration guide from `@deck.gl/react` to `@deckgl-fiber-renderer/compat`
+- Package/subpath mapping guide covering `@deckgl-fiber-renderer/compat`, `/layers`, `/geo-layers`, `/aggregation-layers`, and `/mesh-layers`, while keeping views at the package root
+- Compatibility matrix for supported, deferred, excluded-for-review, and unsupported patterns
+- Wrapper/export matrix covering the approved compat layer and view inventory
+- Exclusions review checklist covering omitted `DeckGL` props, unsupported `Render callbacks`, deferred widget React wrappers, deferred `useWidget`, partial context parity, unsupported imperative APIs beyond the approved ref set, and any layer families or wrappers intentionally excluded from this change
+- Development-warning behavior for unsupported but detectable migration patterns, with explicit production silence
 - Known limitations and workarounds, including explicit entries for deferred widget React wrappers, unsupported official `Render callbacks`, partial context parity, and interleaved-mode caveats

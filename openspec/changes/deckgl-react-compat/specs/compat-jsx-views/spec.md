@@ -1,19 +1,19 @@
 ## ADDED Requirements
 
-### Requirement: Compat view wrappers are exported only from the flat compat entrypoint
-The compat change SHALL define JSX view wrapper support only from `@deckgl-fiber-renderer/dom/compat`.
+### Requirement: Compat view wrappers are exported from the compat package root
+The compat change SHALL define JSX view wrapper support from `@deckgl-fiber-renderer/compat`.
 
-#### Scenario: No family view compat entrypoints are required
+#### Scenario: Views remain at the compat package root
 - **GIVEN** a consumer wants JSX view wrappers
 - **WHEN** the supported import surface is specified
-- **THEN** the wrappers are defined under `@deckgl-fiber-renderer/dom/compat`
-- **AND** the spec does not claim additional `/compat/*` view family entrypoints
+- **THEN** the wrappers are defined under `@deckgl-fiber-renderer/compat`
+- **AND** the spec does not require an additional view-specific compat subpath in this change
 
 ### Requirement: Compat view wrapper coverage matches the approved wrapper matrix
 The compat change SHALL explicitly support the finalized view wrapper inventory defined by the approved proposal and design.
 
 #### Scenario: Supported view wrapper inventory is explicit
-- **GIVEN** a consumer imports view wrappers from `@deckgl-fiber-renderer/dom/compat`
+- **GIVEN** a consumer imports view wrappers from `@deckgl-fiber-renderer/compat`
 - **WHEN** the supported coverage is described
 - **THEN** the supported wrappers are exactly `MapView`, `OrthographicView`, `OrbitView`, `FirstPersonView`, and `GlobeView`
 
@@ -38,6 +38,11 @@ The compat view wrapper spec SHALL avoid promising broader parity than the appro
 - **GIVEN** a consumer expects a view wrapper outside the approved inventory
 - **WHEN** the supported compat coverage is described
 - **THEN** the spec limits support claims to `MapView`, `OrthographicView`, `OrbitView`, `FirstPersonView`, and `GlobeView`
+
+#### Scenario: Excluded view APIs are called out for review
+- **GIVEN** a compat view wrapper omits deck.gl view props or behaviors from the compat contract
+- **WHEN** that view surface is documented
+- **THEN** the omitted props or behaviors are explicitly called out for review rather than hidden by omission
 
 #### Scenario: Interleaved caveats are not over-promised away
 - **GIVEN** the renderer has existing interleaved-mode constraints around views

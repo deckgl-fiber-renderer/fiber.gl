@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Compat context parity is partial and explicit
-The compat change SHALL describe its official-style context surface as partial rather than fully equivalent to official `@deck.gl/react` context.
+The compat change SHALL describe its official-style context surface at `@deckgl-fiber-renderer/compat` as partial rather than fully equivalent to official `@deck.gl/react` context.
 
 #### Scenario: Partial context claim is explicit
 - **GIVEN** a consumer reads the compat context specification
@@ -45,6 +45,11 @@ The compat context spec SHALL not over-promise official context fields or timing
 - **WHEN** the compat context surface is specified
 - **THEN** the spec does not claim widget parity in this change
 - **AND** widget-related context support remains out of scope with widgets deferred
+
+#### Scenario: Unsupported context fields are called out for review
+- **GIVEN** an official `@deck.gl/react` context field is omitted from the compat context contract
+- **WHEN** the compat context surface is specified
+- **THEN** the omitted field is explicitly called out for review rather than hidden by omission
 
 ### Requirement: Compat context may integrate with ContextProvider without implying full context parity
 The compat context spec SHALL allow `ContextProvider` participation in the supported surface without implying unsupported official context completeness.

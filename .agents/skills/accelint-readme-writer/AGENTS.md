@@ -22,7 +22,6 @@ Comprehensive guide for creating thorough, human-sounding README documentation t
 ## 1. Codebase Analysis
 
 ### 1.1 Scoping the Analysis
-
 [View detailed examples](references/codebase-analysis.md)
 
 - Start from the README's directory, not the repository root
@@ -30,7 +29,6 @@ Comprehensive guide for creating thorough, human-sounding README documentation t
 - Respect package boundaries defined by `package.json`
 
 ### 1.2 Identifying Public API
-
 [View detailed examples](references/codebase-analysis.md)
 
 - Check `package.json` `exports` and `main` fields for entry points
@@ -39,7 +37,6 @@ Comprehensive guide for creating thorough, human-sounding README documentation t
 - Distinguish between public API (exported from entry) and internal utilities
 
 ### 1.3 Extracting Signatures
-
 [View detailed examples](references/codebase-analysis.md)
 
 - Capture function signatures with parameter types and return types
@@ -48,7 +45,6 @@ Comprehensive guide for creating thorough, human-sounding README documentation t
 - Include overloaded signatures if present
 
 ### 1.4 Finding Existing Documentation
-
 [View detailed examples](references/codebase-analysis.md)
 
 - Read JSDoc/TSDoc comments above exports
@@ -61,7 +57,6 @@ Comprehensive guide for creating thorough, human-sounding README documentation t
 ## 2. README Structure
 
 ### 2.1 Required Sections
-
 [View detailed examples](references/readme-structure.md)
 
 Every README must include these sections in order:
@@ -76,7 +71,6 @@ Every README must include these sections in order:
 8. **License** - License information
 
 ### 2.2 Optional Sections
-
 [View detailed examples](references/readme-structure.md)
 
 Include when relevant:
@@ -86,7 +80,6 @@ Include when relevant:
 - **Contributing** - How to contribute
 
 ### 2.3 Section Ordering
-
 [View detailed examples](references/readme-structure.md)
 
 Follow the prescribed order strictly. Users expect Installation near the top, API details in the middle, and License/Contributing at the bottom.
@@ -98,37 +91,31 @@ Follow the prescribed order strictly. Users expect Installation near the top, AP
 **REQUIRED SUB-SKILL:** Use `humanizer` to review all generated README content before finalizing.
 
 ### 3.1 Be Absurdly Thorough
-
 [View detailed examples](references/writing-principles.md)
 
 When in doubt, include it. Assume the reader has never seen this codebase.
 
 ### 3.2 Use Code Blocks Liberally
-
 [View detailed examples](references/writing-principles.md)
 
 Every command should be copy-pasteable. Show example output when helpful.
 
 ### 3.3 Explain the Why
-
 [View detailed examples](references/writing-principles.md)
 
 Don't just say "run this command" — explain what it does and why.
 
 ### 3.4 Use Tables for Reference
-
 [View detailed examples](references/writing-principles.md)
 
 Environment variables, CLI options, configuration options, and script references work great as tables.
 
 ### 3.5 Keep Commands Current
-
 [View detailed examples](references/writing-principles.md)
 
 Detect and use the correct package manager. Never assume npm.
 
 ### 3.6 Write Like a Human
-
 [View detailed examples](references/writing-principles.md)
 
 Sound like someone who genuinely wants to help, not a robot generating docs.
@@ -168,16 +155,13 @@ Present changes clearly:
 ## Suggested README Updates
 
 ### Missing Documentation
-
 - `parseConfig(path: string): Config` - Not documented in API section
 - `ValidationError` class - Not documented
 
 ### Stale Documentation
-
 - `oldFunction()` - Documented but no longer exported
 
 ### Signature Changes
-
 - `createClient(url)` → `createClient(url, options?)` - New optional parameter
 ```
 
@@ -195,7 +179,6 @@ When updating:
 ## 5. Template and Examples
 
 ### 5.1 README Template
-
 [View complete template](references/readme-template.md)
 
 Use the template as a starting point. Customize section depth based on package complexity.
@@ -209,10 +192,10 @@ For each public export:
 
 Brief description of what it does.
 
-| Parameter | Type      | Description                |
-| --------- | --------- | -------------------------- |
-| `param1`  | `string`  | What this parameter is for |
-| `param2`  | `Options` | Configuration options      |
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `param1` | `string` | What this parameter is for |
+| `param2` | `Options` | Configuration options |
 
 **Returns:** `ReturnType` - Description of return value
 

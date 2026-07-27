@@ -3,13 +3,12 @@
 ╰────────────────────────╯
 
 <!-- Make sure to display this warning block to the user -->
-
 ┌──────────────────────────────────────────────────────┐
-│ ⚠️ WARNING: This skill does it's best to process │
-│ the context needed to suggest correct react tests │
-│ but it can make mistakes. Please make sure to read │
-│ the suggested tests to make sure that they are │
-│ correct. │
+│ ⚠️  WARNING: This skill does it's best to process    │
+│ the context needed to suggest correct react tests    │
+│ but it can make mistakes. Please make sure to read   │
+│ the suggested tests to make sure that they are       │
+│ correct.                                             │
 └──────────────────────────────────────────────────────┘
 
 # Report: [Target Name]
@@ -79,7 +78,6 @@ See references/ for pattern guidance on each category.
 Completed systematic audit of [file/component path] following accelint-react-testing standards. Identified [N] test quality issues across [N] severity levels. [Brief description of what this component does and why user-centric, accessible tests matter here].
 
 **Key Findings:**
-
 - [N] Critical issues (inaccessible queries, stale DOM references, missing interaction sequences)
 - [N] High severity issues (implementation testing, waitFor side effects, excessive snapshots)
 - [N] Medium severity issues (wrong query variants, missing providers, brittle async patterns)
@@ -87,7 +85,6 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 
 **Impact Assessment:**
 [Explain the overall confidence in user experience and accessibility coverage. Consider:]
-
 - Do passing tests guarantee the UI is accessible to screen readers and keyboard users?
 - Are tests verifying user-observable behavior or React internals?
 - Are there stale queries that miss DOM updates after interactions?
@@ -108,7 +105,6 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 ```
 
 **Issue:**
-
 - [Point 1 explaining the problem]
 - [Point 2 with specifics about the violation]
 - [Point 3 quantifying the impact if possible]
@@ -116,7 +112,6 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Query Priority|Query Variants|User Events|Async Testing|Custom Render|Accessibility|Anti-patterns]
 **Impact:**
-
 - **Accessibility confidence:** [Does a passing test mean the UI is usable by screen readers?]
 - **User-centric confidence:** [Does a passing test mean a real user can complete this interaction?]
 - **Reliability:** [Could this go stale, have race conditions, or fail non-deterministically?]
@@ -125,7 +120,6 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```tsx
 // ✅ [Brief description of solution]
 [code snippet showing the fix]
@@ -143,13 +137,11 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 ```
 
 **Issue:**
-
 - [Explanation]
 
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Query Priority|Query Variants|User Events|Async Testing|Custom Render|Accessibility|Anti-patterns]
 **Impact:**
-
 - **Accessibility confidence:** [Does a passing test mean the UI is usable by screen readers?]
 - **User-centric confidence:** [Does a passing test mean a real user can complete this interaction?]
 - **Reliability:** [Could this go stale, have race conditions, or fail non-deterministically?]
@@ -158,7 +150,6 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```tsx
 // ✅ [Brief description of solution]
 [code snippet]
@@ -171,20 +162,17 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 <!-- Use this format when multiple issues share the same root cause and fix pattern -->
 
 **Locations:**
-
 - `[file:line]` - [component/context]
 - `[file:line]` - [component/context]
 - `[file:line]` - [component/context]
 
 **Example from [specific location]:**
-
 ```tsx
 // ❌ Current: [Brief description of problem]
 [representative code snippet]
 ```
 
 **Issue:**
-
 - [Shared root cause explanation]
 - [Why this pattern is problematic]
 - [Impact across all instances]
@@ -192,7 +180,6 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 **Severity:** [Critical|High|Medium|Low]
 **Category:** [Query Priority|Query Variants|User Events|Async Testing|Custom Render|Accessibility|Anti-patterns]
 **Impact:**
-
 - **Accessibility confidence:** [Does a passing test mean the UI is usable by screen readers, across all instances?]
 - **User-centric confidence:** [Does a passing test mean a real user can complete these interactions?]
 - **Reliability:** [Could these go stale, have race conditions, or fail non-deterministically?]
@@ -201,14 +188,12 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 **Pattern Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```tsx
 // ✅ [Brief description of solution]
 [fixed code snippet]
 ```
 
 **Same pattern applies to all [N] instances:**
-
 ```tsx
 // [Component/location 2]
 // ❌ Current
@@ -229,12 +214,12 @@ Completed systematic audit of [file/component path] following accelint-react-tes
 
 ## Phase 2: Categorized Issues
 
-| #   | Location    | Issue                     | Category   | Severity   |
-| --- | ----------- | ------------------------- | ---------- | ---------- |
-| 1   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 2   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 3   | [file:line] | [Brief issue description] | [Category] | [Severity] |
-| 4-N | [multiple]  | [Brief issue description] | [Category] | [Severity] |
+| # | Location | Issue | Category | Severity |
+|---|----------|-------|----------|----------|
+| 1 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 2 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 3 | [file:line] | [Brief issue description] | [Category] | [Severity] |
+| 4-N | [multiple] | [Brief issue description] | [Category] | [Severity] |
 
 **Total Issues:** [N]
 **By Severity:** Critical ([N]), High ([N]), Medium ([N]), Low ([N])

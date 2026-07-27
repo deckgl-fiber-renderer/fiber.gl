@@ -1,511 +1,395 @@
+---
+change: deckgl-react-compat
+specs_touched: [compat-deckgl-component, compat-jsx-layers, compat-jsx-views, compat-context, compat-ref-methods, compat-types]
+decisions:
+  - id: D1
+    choice: Keep the existing change slug but switch the compat delivery target to a dedicated `@deckgl-fiber-renderer/compat` package.
+    rationale: The work still targets React compatibility migration, and the needed reset is package shape and scope rather than change identity.
+    alternatives: [Create a new change slug, Keep a `@deckgl-fiber-renderer/dom/compat` deep import]
+  - id: D2
+    choice: Model compat around the official `@deck.gl/react` package root rather than nonexistent subpath exports.
+    rationale: Upstream `@deck.gl/react` exports from the package root, and layer classes continue to come from deck.gl layer packages.
+    alternatives: [Mirror `@deck.gl/react/layers`-style subpaths, Treat subpath parity as required]
+  - id: D3
+    choice: Lower compat JSX layer/view wrappers into fiber.gl's existing `<layer>` and `<view>` primitives.
+    rationale: The native runtime is already instance-first and the reconciler already handles validation, flattening, and organization for those primitives.
+    alternatives: [Build a separate React extraction pipeline, Bypass native primitives with a parallel renderer path]
+  - id: D4
+    choice: Phrase migration as supported-pattern rewrite reduction, not full API parity.
+    rationale: Known unsupported official features and current runtime evidence do not justify claiming universal interchangeability.
+    alternatives: [Promise one-import full parity, Keep vague minimal-code-change wording]
+  - id: D5
+    choice: Remove widget wrappers and `useWidget` from this change.
+    rationale: PR review and explicit user direction moved widgets to a future dedicated change.
+    alternatives: [Keep widgets in scope, Implement `useWidget` only]
+  - id: D6
+    choice: Use official `Render callbacks` terminology and keep them out of scope.
+    rationale: The upstream term is clearer, and current fiber.gl runtime does not support the needed child-positioning/context behavior cleanly.
+    alternatives: [Keep ambiguous positioned-render-callback wording, Attempt support in this change]
+  - id: D7
+    choice: Match the official public prop/ref surface only where evidence is clear.
+    rationale: Documented upstream prop omissions, `ContextProvider`, and constrained ref methods support a precise compat boundary.
+    alternatives: [Forward the full native prop bag, Guess at undocumented parity]
+  - id: D8
+    choice: Treat context parity as partial and explicit.
+    rationale: fiber.gl currently exposes the deck instance but not the full official context object or update semantics.
+    alternatives: [Promise full context parity now, Omit compat context entirely]
+  - id: D9
+    choice: Use broader inventory-backed wrapper coverage with a dedicated compat package plus deck.gl-family subpath exports.
+    rationale: The prior curated layer plan was too narrow, and the existing `packages/types/src/jsx.ts` inventory plus requested 1:1 package-family mapping justify a dedicated package with explicit subpaths.
+    alternatives: [Keep curated manual coverage, Keep one flat entrypoint only]
+  - id: D10
+    choice: Keep views, `DeckGL`, context, and shared types at the compat package root while mapping layer wrappers to family subpaths.
+    rationale: The requested 1:1 mapping applies naturally to deck.gl layer package families, while views belong more naturally at the root alongside `DeckGL` and shared compat APIs.
+    alternatives: [Add a separate compat views/core subpath, Put all wrappers back under the root entrypoint]
+  - id: D11
+    choice: Add development-only runtime warnings for detectable unsupported compat usage, silent in production.
+    rationale: Migration warnings help users discover unsupported patterns without breaking applications, while production output should remain clean.
+    alternatives: [Throw runtime errors for unsupported usage, Stay fully silent in all environments]
+  - id: D12
+    choice: Treat omitted deck.gl props, methods, context fields, widget APIs, hooks, and wrapper families as explicit review items rather than silent omissions.
+    rationale: A compat package can otherwise imply broader parity than intended; explicit review callouts keep exclusions visible and testable.
+    alternatives: [Rely on absence from exports alone, Delay exclusions review until implementation]
+---
+
 ## Context
 
-The official `@deck.gl/react` package provides React bindings for deck.gl with a component-based API. Our fiber renderer uses react-reconciler, which integrates differently with React's rendering but requires users to rewrite their code when migrating.
+The official `@deck.gl/react` package exposes a React-first `DeckGL` API from the package root. Official deck.gl usage keeps JSX layer classes in packages such as `@deck.gl/layers`; `@deck.gl/react` itself does not mirror those module families via subpath exports. Its public React surface also includes:
+- a `DeckGL` prop shape that omits low-level `gl`, `canvas`, `parent`, and `_customRender`
+- `ContextProvider`
+- documented `Render callbacks` as function children
+- a constrained ref surface rather than arbitrary instance mutation
 
-**Current State:**
-- Our `@deckgl-fiber-renderer/dom` package exports `Deckgl` component with JSX layer syntax: `<Deckgl><layer layer={new ScatterplotLayer({...})} /></Deckgl>`
-- Official API uses `<DeckGL layers={[new ScatterplotLayer({...})]} />` or JSX layers: `<DeckGL><ScatterplotLayer {...} /></DeckGL>`
-- No migration path exists - users must rewrite all deck.gl code to switch
+fiber.gl already has a different native center of gravity:
+- the runtime is instance-first
+- layers already work via `<layer layer={new SomeLayer(...)} />`
+- views already work via `<view view={new SomeView(...)} />`
+- the reconciler already flattens and organizes nested layer/view children
+- the shared store currently exposes the deck instance, but not the full official React context shape directly
 
-**Constraints:**
-- Must not modify existing native API (non-breaking change)
-- Must work with our reconciler's persistence mode architecture
-- Cannot depend on `@deck.gl/react` package (creates circular dependency conceptually)
-- Must maintain layer ID requirements (critical for deck.gl diffing)
-- Limited to what our current reconciler supports (no positioned render callbacks)
-
-**Stakeholders:**
-- Current `@deck.gl/react` users wanting to try our renderer
-- Teams with existing deck.gl codebases
-- New users familiar with official API patterns
+This redesign pass refreshes the change around those facts and the current PR review direction:
+- widget wrappers and `useWidget` are out of scope for this change
+- the previous partial layer-coverage plan was likely too narrow for the stated migration goal
+- the prior wording around function-children support needs to use official terminology and user-visible syntax
+- compat should ship as a dedicated `@deckgl-fiber-renderer/compat` package instead of a deep import on `@deckgl-fiber-renderer/dom`
+- layer wrappers should map onto deck.gl family subpaths where that mapping is natural, while views stay at the compat package root
+- omitted or unsupported deck.gl APIs must be explicitly called out for review
+- detectable unsupported migration patterns should produce development-only warnings, not production noise
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Users can import from `/compat` instead of `@deck.gl/react` with minimal code changes
-- JSX layer syntax works: `<DeckGL><ScatterplotLayer /></DeckGL>`
-- JSX view syntax works: `<DeckGL><MapView /></DeckGL>`
-- Imperative ref methods match official API
-- Context provides viewport/deck access for child components
-- Clear documentation of differences and migration path
+- Define a compat surface that materially reduces migration work for existing `@deck.gl/react` users
+- Add a dedicated `@deckgl-fiber-renderer/compat` package with package-family subpath exports that feel concrete and reviewable
+- Add a `DeckGL` wrapper that aligns with the official root-package API shape where fiber.gl can support it honestly
+- Reuse fiber.gl's existing `<layer>` and `<view>` primitives to support official-style JSX layer/view composition
+- Provide compat typings, context, and ref methods that match the supported runtime surface
+- State unsupported, excluded-for-review, and deferred patterns in official terms users will recognize
+- Add development-only warning behavior for detectable unsupported compat usage
 
 **Non-Goals:**
-- 100% behavioral compatibility (internal implementation can differ)
-- Positioned render callbacks: `{({viewport}) => <div>...</div>}`
-- Pre-built widget components (only provide hook)
-- Custom Deck class injection: `<DeckGL Deck={CustomDeck} />`
-- Supporting `_customRender` prop
-- Direct `canvas`/`gl` props (use `interleaved` instead)
+- 100% behavioral compatibility with official `@deck.gl/react`
+- Widget wrappers or `useWidget`
+- Changing fiber.gl's native instance-first API direction
+- Introducing new example apps in this planning pass
+- Supporting official `Render callbacks` in this change
+- Exposing low-level `gl`, `canvas`, `parent`, or `_customRender` through the compat API
 
 ## Decisions
 
-### Decision 1: Package Structure - Deep Import Path
+### Decision 1: Keep the existing change slug, but move compat delivery to a dedicated package
 
-**Chosen:** Add `/compat` as deep import to existing `@deckgl-fiber-renderer/dom` package
-
-**Rationale:**
-- Keeps related code together in one package
-- Users already depend on `@deckgl-fiber-renderer/dom`
-- tsdown supports multiple entry points via exports field
-- Tree-shakeable - users not using compat pay zero cost
-
-**Alternatives Considered:**
-- **New `@deckgl-fiber-renderer/react` package:** More obvious naming but adds maintenance overhead, extra package to publish, and splits related code
-- **Separate `@deckgl-fiber-renderer/compat` package:** Clear purpose but overkill for ~10KB of wrapper code
-
-**Implementation:**
-```json
-// package.json
-{
-  "exports": {
-    ".": "./dist/index.js",
-    "./compat": "./dist/compat/index.js",
-    "./components": "./dist/components.js",
-    "./hooks": "./dist/hooks.js"
-  }
-}
-```
-
-### Decision 2: JSX Layer Strategy - Thin Wrapper Components
-
-**Chosen:** Create wrapper components that use our reconciler's `<layer>` primitive
+**Chosen:** Continue using `openspec/changes/deckgl-react-compat` but deliver compat through a new `@deckgl-fiber-renderer/compat` package.
 
 **Rationale:**
-- Our reconciler already supports `<layer layer={instance} />` pattern (recommended v2+ syntax)
-- Uses reconciler's persistence mode, diffing, and lifecycle
-- Simple implementation - just instantiate and pass through
-- Type-safe with preserved generics
-- Each wrapper is ~3 lines of code
+- The active work still targets React-compatibility for deck.gl migration.
+- The key reset is scope, not identity: this pass removes widget scope and tightens the migration claims.
+- Keeping the slug avoids churn while the artifacts are being refreshed in place.
 
-**Example:**
-```tsx
-import { ScatterplotLayer as _ScatterplotLayer } from '@deck.gl/layers';
+**Consequence:**
+- The artifacts must stop promising all previously listed compat features.
+- Future widget work should happen in a separate change rather than being left as partially planned work here.
 
-export function ScatterplotLayer(props) {
-  const { children, ...layerProps } = props;
-  return <layer layer={new _ScatterplotLayer(layerProps)}>{children}</layer>;
-}
-```
+### Decision 2: Model compat around the official package root while still offering deck.gl-family subpath mapping where it improves migration clarity
 
-**Alternatives Considered:**
-- **Extract JSX then bypass reconciler:** Matches official behavior more closely but loses reconciler benefits (efficient updates, lifecycle hooks, suspense support)
-- **Dynamic proxy pattern:** Zero maintenance but less type-safe, harder to tree-shake, less explicit
-
-**Layer Coverage:**
-- Start with 15-20 most common layers manually
-- Core layers (`@deck.gl/layers`): ScatterplotLayer, ArcLayer, LineLayer, GeoJsonLayer, PolygonLayer, PathLayer, IconLayer, TextLayer, ColumnLayer, GridCellLayer, PointCloudLayer, BitmapLayer, SolidPolygonLayer
-- Geo layers (`@deck.gl/geo-layers`): H3HexagonLayer, S2Layer, GreatCircleLayer, TileLayer, MVTLayer
-- Can add codegen script later if users need more layers
-
-### Decision 3: DeckGL Component Architecture - Thin Adapter
-
-**Chosen:** Wrapper around native `Deckgl` that translates props
+**Chosen:** Treat the official package root as the compatibility anchor.
 
 **Rationale:**
-- Reuses battle-tested native component
-- Minimal code duplication
-- Clear translation layer for debugging
-- Easier to maintain as native component evolves
+- Official `@deck.gl/react` exports from the package root rather than from subpaths like `/layers`.
+- Official usage keeps JSX layer classes sourced from packages such as `@deck.gl/layers`.
+- The compat surface should therefore focus first on the `DeckGL` root import story and the child/ref/context behavior around it.
 
-**Implementation approach:**
-```tsx
-export const DeckGL = forwardRef<DeckGLRef, DeckGLProps>((props, ref) => {
-  const {
-    children,
-    ContextProvider,
-    ...deckProps
-  } = props;
+**Consequence:**
+- The design should not claim parity with nonexistent `@deck.gl/react/layers`-style imports.
+- However, the compat package may still provide `@deckgl-fiber-renderer/compat/layers`, `/geo-layers`, `/aggregation-layers`, and `/mesh-layers` as a migration convenience and package-shape contract.
+- Views, `DeckGL`, context, and shared types remain at the compat package root rather than being forced into extra subpaths.
 
-  // Create imperative ref handle
-  const deckglRef = useRef<Deck>();
-  useImperativeHandle(ref, () => ({
-    get deck() { return deckglRef.current; },
-    pickObject: (...args) => deckglRef.current?.pickObject(...args),
-    pickObjects: (...args) => deckglRef.current?.pickObjects(...args),
-    pickMultipleObjects: (...args) => deckglRef.current?.pickMultipleObjects(...args),
-    pickObjectAsync: (...args) => deckglRef.current?.pickObjectAsync(...args),
-    pickObjectsAsync: (...args) => deckglRef.current?.pickObjectsAsync(...args),
-  }));
+### Decision 3: Build on fiber.gl's native instance-first primitives instead of bypassing them
 
-  return (
-    <CompatContextProvider ContextProvider={ContextProvider}>
-      <Deckgl ref={deckglRef} {...deckProps}>
-        {children}
-      </Deckgl>
-    </CompatContextProvider>
-  );
-});
-```
-
-**Alternatives Considered:**
-- **Fork official implementation:** Higher compatibility but massive code duplication and maintenance burden
-- **Hybrid with edge case handling:** More complex, unclear when to use which path
-
-### Decision 4: JSX Element Handling - Let Reconciler Do The Work
-
-**Chosen:** Pass JSX children directly to `Deckgl`, let reconciler handle extraction and organization
+**Chosen:** Any compat JSX layer/view wrappers should lower into fiber.gl's existing `<layer>` and `<view>` elements.
 
 **Rationale:**
-- Reconciler already has `flattenTree` and `organizeList` utilities (packages/reconciler/src/utils.ts)
-- Layer/view wrappers create `<layer>` and `<view>` elements that reconciler processes
-- Reconciler's `replaceContainerChildren` flattens tree and separates layers/views automatically
-- No manual React.Children walking needed - reconciler does it correctly
-- Simpler implementation - less code, fewer edge cases
+- The native runtime already centers on pre-instantiated deck.gl objects.
+- The reconciler already validates, flattens, and organizes nested layer/view trees.
+- Reusing those primitives preserves the existing architecture instead of creating a parallel React extraction pipeline.
 
-**How it works:**
-1. JSX layer/view wrappers render `<layer layer={instance} />` and `<view view={instance} />`
-2. Reconciler processes these through `createInstance` creating Instance nodes
-3. `replaceContainerChildren` (line 821 in config.ts) calls `flattenTree(newChildren)`
-4. `organizeList` (line 824) separates into `{ views: [], layers: [] }`
-5. Combined with layers prop via `state._passedLayers.concat(types.layers)` (line 828)
+**Implementation direction:**
+- `DeckGL` remains a thin React-facing adapter over native `Deckgl`.
+- compat layer wrappers instantiate official deck.gl layer classes and render `<layer layer={instance} />`.
+- compat view wrappers instantiate view classes and render `<view view={instance} />`.
 
-**Implementation:**
-```tsx
-export const DeckGL = forwardRef<DeckGLRef, DeckGLProps>((props, ref) => {
-  const {
-    children,
-    layers: layersProp,
-    views: viewsProp,
-    ...deckProps
-  } = props;
+**Consequence:**
+- The compat design is intentionally adapter-based, not a fork of the official renderer internals.
+- Migration messaging must explain that fiber.gl stays instance-first underneath even when official-style JSX wrappers are provided.
 
-  // No extraction needed - just pass everything to Deckgl
-  // Reconciler will handle layer/view separation automatically
-  return (
-    <CompatContextProvider ContextProvider={props.ContextProvider}>
-      <Deckgl {...deckProps} layers={layersProp} views={viewsProp}>
-        {children}
-      </Deckgl>
-    </CompatContextProvider>
-  );
-});
-```
+### Decision 4: Reframe the migration promise around React-surface rewrite reduction, not full API parity
 
-**Why this is better:**
-- Reuses battle-tested reconciler logic
-- Handles nested structures automatically
-- Works with fragments, conditional rendering, etc.
-- Less code to maintain
-- No risk of drift between manual extraction and reconciler behavior
+**Chosen:** The refreshed change should promise reduced React-side rewrite work, not blanket "change one import and everything works" parity.
 
-### Decision 5: Context Strategy - Wrapper Around Store
-
-**Chosen:** Create `DeckGLContext` that reads from our existing store and formats for official API
+**Testable migration promise:**
+- for supported patterns, a consumer can replace the `DeckGL` import with `@deckgl-fiber-renderer/dom/compat`
+- keep official deck.gl class imports from their existing deck.gl packages
+- preserve imperative picking flows through the constrained compat ref surface
+- only perform targeted syntax rewrites for patterns explicitly listed as unsupported or deferred in the compatibility matrix
 
 **Rationale:**
-- Our store already tracks deck instance via `useDeckgl()` hook
-- Just need to format data to match official context shape
-- No changes to existing store implementation
-- Document limitations if store doesn't expose everything needed
+- The previous artifacts overreached given known unsupported official features.
+- The current store/runtime evidence does not justify claiming full behavior parity.
+- PR review already exposed that incomplete layer coverage and vague non-goal wording weakened the old migration story.
 
-**Implementation:**
-```tsx
-export const DeckGLContext = createContext<DeckGLContextValue>(null);
+**Consequence:**
+- Proposal and later specs/tasks should frame compatibility in terms of supported migration patterns, not universal interchangeability.
+- Unsupported official patterns must be called out explicitly.
 
-export function CompatContextProvider({ children, ContextProvider }) {
-  const deckgl = useDeckgl();
-  
-  const contextValue = useMemo(() => {
-    if (!deckgl) return null;
-    
-    const viewport = deckgl.getViewports()[0];
-    
-    return {
-      viewport,
-      container: deckgl.canvas?.parentElement,
-      eventManager: deckgl.eventManager,
-      onViewStateChange: deckgl.props.onViewStateChange,
-      deck: deckgl,
-      widgets: deckgl.props.widgets || []
-    };
-  }, [deckgl]);
+### Decision 5: Remove widgets from this change completely
 
-  const Provider = ContextProvider || DeckGLContext.Provider;
-  
-  return <Provider value={contextValue}>{children}</Provider>;
-}
-```
-
-**Limitations Accepted:**
-- Context updates only when deck instance changes (may be less granular than official)
-- May not expose all internal deck.gl properties
-- Documented in migration guide
-
-### Decision 6: Widget Support - Hook Only
-
-**Chosen:** Provide `useWidget` hook, no pre-built widget components
+**Chosen:** Exclude widget wrappers and `useWidget` from the refreshed design.
 
 **Rationale:**
-- Hook is ~50 lines, widget components add 500+ lines for 20+ widgets
-- Most users need 1-3 widgets, not all 20+
-- Users can wrap the 2-3 widgets they need in 5 minutes
-- Lower maintenance burden
-- Smaller bundle size
+- PR review explicitly rejected widget wrappers in this change.
+- The user explicitly deferred widget work to a dedicated future change.
+- Keeping widget content here would blur scope and imply work the current design no longer intends to deliver.
 
-**Implementation:**
-```tsx
-export function useWidget<T extends Widget, PropsT>(
-  WidgetClass: { new(props: PropsT): T },
-  props: PropsT
-): T {
-  const deckgl = useDeckgl();
-  const widgetRef = useRef<T>();
+**Consequence:**
+- This change should not add `@deck.gl/widgets` dependencies.
+- Widget support should only appear in these artifacts as a deferred item in limitation/scoping language, not as a planned capability.
 
-  if (!widgetRef.current) {
-    widgetRef.current = new WidgetClass(props);
-  }
+### Decision 6: Use the official term `Render callbacks` for function children and keep them out of scope
 
-  useEffect(() => {
-    widgetRef.current?.setProps(props);
-  }, [props]);
-
-  useEffect(() => {
-    if (deckgl && widgetRef.current) {
-      const currentWidgets = deckgl.props.widgets || [];
-      deckgl.setProps({ widgets: [...currentWidgets, widgetRef.current] });
-
-      return () => {
-        const widgets = deckgl.props.widgets?.filter(w => w !== widgetRef.current);
-        deckgl.setProps({ widgets });
-      };
-    }
-  }, [deckgl]);
-
-  return widgetRef.current!;
-}
-```
-
-**User implementation:**
-```tsx
-import { useWidget } from '@deckgl-fiber-renderer/dom/compat';
-import { ZoomWidget as BaseZoomWidget } from '@deck.gl/widgets';
-
-function ZoomWidget(props) {
-  useWidget(BaseZoomWidget, props);
-  return null;
-}
-```
-
-**Alternatives Considered:**
-- **Pre-wrapped common widgets:** Better DX but 5-10KB added, maintenance burden
-- **All widgets:** Full compatibility but 15-20KB added, high maintenance
-- **Codegen widgets:** Automated but build complexity
-
-**Dependencies:**
-- `@deck.gl/widgets` as peer dependency (user installs)
-
-### Decision 7: Type Definitions - Create Our Own
-
-**Chosen:** Write compatible types from scratch, no dependency on `@deck.gl/react`
+**Chosen:** Refer to function children using the official `Render callbacks` terminology and show the user-visible syntax when documenting the non-goal.
 
 **Rationale:**
-- Full control over type definitions
-- No dependency on official package
-- Can optimize for our implementation
-- Can improve types where official ones are unclear
+- The prior term `positioned render callbacks` was unclear in PR review.
+- Official deck.gl documentation already names this feature `Render callbacks`.
+- The current fiber.gl runtime does not expose the same child-positioning/context machinery needed to promise that feature cleanly.
 
-**Type Coverage:**
-```tsx
-// Core types
-export type DeckGLProps<ViewsT = View | View[]> = Omit<
-  DeckProps<ViewsT>,
-  'canvas' | 'gl' | 'parent' | '_customRender'
-> & {
-  width?: string | number;
-  height?: string | number;
-  children?: ReactNode;
-  ContextProvider?: Context<DeckGLContextValue>['Provider'];
-};
+**Canonical non-goal wording direction:**
+- Unsupported in this change: `children` passed as a function, such as `{({viewport}) => ...}`
+- Refer to them as official `Render callbacks` in docs and specs.
 
-export type DeckGLRef = {
-  deck?: Deck;
-  pickObject: Deck['pickObject'];
-  pickObjects: Deck['pickObjects'];
-  pickMultipleObjects: Deck['pickMultipleObjects'];
-  pickObjectAsync: Deck['pickObjectAsync'];
-  pickObjectsAsync: Deck['pickObjectsAsync'];
-};
+**Consequence:**
+- Later artifacts should use official terminology consistently.
+- This unsupported pattern remains visible enough that migration docs need a specific entry for it.
 
-export type DeckGLContextValue = {
-  viewport: Viewport;
-  container: HTMLElement;
-  eventManager: EventManager;
-  onViewStateChange?: DeckProps['onViewStateChange'];
-  deck?: Deck;
-  widgets?: Widget[];
-};
+### Decision 7: Match the official public prop/ref surface where evidence is clear
 
-// Layer wrapper types
-export type LayerProps<T> = T & {
-  children?: ReactNode;
-};
-```
+**Chosen:** Align the compat API with the official public React surface in the areas already confirmed by research.
 
-**Alternatives Considered:**
-- **Re-export from `@deck.gl/react`:** Always in sync but requires dependency
-- **Hybrid approach:** Partial re-export plus custom types, split maintenance
+**Confirmed upstream shape to reflect:**
+- omit low-level `gl`, `canvas`, `parent`, and `_customRender` from public compat props
+- include `ContextProvider`
+- include official-style constrained ref methods (`pickObject`, `pickObjects`, `pickMultipleObjects`, `pickObjectAsync`, `pickObjectsAsync`) plus `deck`
+- keep the wrapper centered on `DeckGL` at the root compat entrypoint
 
-### Decision 8: Error Handling - Development Warnings
-
-**Chosen:** Runtime warnings in development mode, silent in production
+**Version check used for this decision:**
+- the repo targets deck.gl peer ranges of `>=9.1` in `pnpm-workspace.yaml`
+- the current workspace lock resolves deck.gl packages to `9.3.1`
+- the researched upstream `@deck.gl/react` public ref surface for that supported range includes exactly: `deck`, `pickObject`, `pickObjects`, `pickMultipleObjects`, `pickObjectAsync`, `pickObjectsAsync`
+- no broader imperative compat API is planned in this change
 
 **Rationale:**
-- Helpful during migration without breaking apps
-- Can detect common mistakes (missing layer IDs, unsupported props)
-- Production builds stay clean
-- Can add strict mode flag later if needed
+- These are concrete, documented parts of the official public surface.
+- They align with the migration story better than forwarding the entire native prop bag.
 
-**Warning scenarios:**
-```tsx
-if (process.env.NODE_ENV === 'development') {
-  // Warn about unsupported props
-  if (props.Deck) {
-    console.warn(
-      '@deckgl-fiber-renderer/dom/compat: Custom Deck class not supported. ' +
-      'See migration guide: https://...'
-    );
-  }
-  
-  // Warn about render callbacks
-  if (typeof children === 'function') {
-    console.warn(
-      '@deckgl-fiber-renderer/dom/compat: Positioned render callbacks not supported. ' +
-      'See migration guide: https://...'
-    );
-  }
-}
-```
+**Consequence:**
+- Compat types should be defined intentionally rather than by directly re-exporting native `DeckglProps`.
+- The wrapper needs an explicit translation boundary between the compat API and the native runtime.
 
-**Alternatives Considered:**
-- **Silent degradation:** Poor DX, confusing failures
-- **Throw errors:** App breaks, frustrating for users
-- **Strict mode:** Could add as opt-in later
+### Decision 8: Treat context parity as partial and explicit
+
+**Chosen:** Promise only a partial official-style context surface in this change.
+
+**Supported promise now:**
+- provide a compat context type/provider surface
+- include `deck` parity as the required field
+- include additional official fields only if implementation can derive and update them with documented semantics
+
+**Do not promise now:**
+- full parity for `viewport`, `container`, `eventManager`, `onViewStateChange`, or `widgets`
+- official timing/update semantics for those fields until proven by implementation
+
+**Rationale:**
+- fiber.gl's shared store currently exposes `deckgl`, not the full official context object.
+- `useDeckgl()` returns only the deck instance today.
+- Official React context includes `viewport`, `container`, `eventManager`, `onViewStateChange`, and `widgets`, which require runtime-derived values beyond the current store.
+
+**Consequence:**
+- Later specs must verify context field presence and update semantics separately.
+- Migration docs should describe context parity as partial until those fields are implemented and tested.
+
+### Decision 9: Choose broader inventory-backed wrapper coverage with a dedicated compat package and family subpaths
+
+**Chosen:** Do not use a small curated manual wrapper set as the contract. Use a broader wrapper inventory derived from existing evidence, delivered through a dedicated compat package with family subpath exports for layer wrappers.
+
+**What this resolves:**
+- between the reviewed options, the contract is closer to a broader inventory than to a hand-picked manual subset
+- add explicit compat family entrypoints for layer wrappers where they map cleanly to existing deck.gl packages
+- keep views at the package root rather than inventing a separate views/core subpath for this change
+- wrapper breadth should be defined from the existing layer/view inventory already encoded in `packages/types/src/jsx.ts`, not from an ad hoc popularity list
+
+**Final wrapper/export matrix for specs generation:**
+- export `DeckGL`, compat context/types/ref types, and the 5 approved view wrappers from `@deckgl-fiber-renderer/compat`
+- include 5 view wrappers backed by the current `@deck.gl/core` inventory:
+  - `MapView`
+  - `OrthographicView`
+  - `OrbitView`
+  - `FirstPersonView`
+  - `GlobeView`
+- export 13 layer wrappers from `@deckgl-fiber-renderer/compat/layers`, backed by the current `@deck.gl/layers` inventory:
+  - `ArcLayer`
+  - `BitmapLayer`
+  - `IconLayer`
+  - `LineLayer`
+  - `PointCloudLayer`
+  - `ScatterplotLayer`
+  - `ColumnLayer`
+  - `GridCellLayer`
+  - `PathLayer`
+  - `PolygonLayer`
+  - `GeoJsonLayer`
+  - `TextLayer`
+  - `SolidPolygonLayer`
+- export 12 canonical layer wrappers from `@deckgl-fiber-renderer/compat/geo-layers`, backed by the current `@deck.gl/geo-layers` inventory:
+  - `S2Layer`
+  - `QuadkeyLayer`
+  - `TileLayer`
+  - `H3ClusterLayer`
+  - `H3HexagonLayer`
+  - `Tile3DLayer`
+  - `TerrainLayer`
+  - `GeohashLayer`
+  - `GreatCircleLayer`
+  - `TripsLayer`
+  - `MVTLayer`
+  - `WMSLayer`
+- export 2 layer wrappers from `@deckgl-fiber-renderer/compat/mesh-layers`, backed by the current `@deck.gl/mesh-layers` inventory:
+  - `ScenegraphLayer`
+  - `SimpleMeshLayer`
+- export 5 layer wrappers from `@deckgl-fiber-renderer/compat/aggregation-layers`, aligned to `@deck.gl/aggregation-layers`:
+  - `ScreenGridLayer`
+  - `HexagonLayer`
+  - `ContourLayer`
+  - `GridLayer`
+  - `HeatmapLayer`
+- keep non-layer exports from `@deck.gl/aggregation-layers` out of the JSX wrapper inventory for this change:
+  - `_AggregationLayer`
+  - `WebGLAggregator`
+  - `CPUAggregator`
+  - aggregator helper/type exports
+- preserve deprecated intrinsic alias compatibility in the planning matrix without turning aliases into separate canonical wrapper families:
+  - `mVTLayer` and `mvtLayer` both map to `MVTLayer`
+  - `wMSLayer` and `wmsLayer` both map to `WMSLayer`
+
+**Rationale:**
+- PR review directly challenged the sufficiency of the old `15-20 most common layers` plan.
+- Official `@deck.gl/react` itself exports only from the package root, so mirrored family subpaths are not required for source-shape parity.
+- The repo already has a concrete legacy inventory spanning views plus core, geo, and mesh layer families in `packages/types/src/jsx.ts`, which is stronger evidence than guessing at a smaller subset.
+
+**Consequence:**
+- Later specs/tasks should implement exactly this wrapper/export matrix unless a new planning revision changes scope.
+- Specs generation no longer needs a separate wrapper-inventory discovery step.
+- This change stays scoped to a dedicated compat package rooted at `@deckgl-fiber-renderer/compat`, with family subpaths for layer wrappers and root exports for views/shared APIs.
+- Whether wrappers are hand-authored or generated remains an implementation detail, not a planning commitment.
+- Excluded or deferred APIs must be explicitly listed for review, not hidden by the package layout.
+
+## Compatibility Matrix
+
+| Pattern | Status in this change | Notes |
+| --- | --- | --- |
+| `import { DeckGL } from '@deck.gl/react'` → `import { DeckGL } from '@deckgl-fiber-renderer/compat'` | Supported | Root compat package is the supported React migration entrypoint in this change. |
+| Layer wrapper imports from compat family subpaths such as `@deckgl-fiber-renderer/compat/layers`, `@deckgl-fiber-renderer/compat/geo-layers`, and `@deckgl-fiber-renderer/compat/mesh-layers` | Supported | Compat layer wrappers map to family subpaths, while views stay at the package root. |
+| Official deck.gl class imports from packages such as `@deck.gl/layers`, `@deck.gl/geo-layers`, `@deck.gl/aggregation-layers`, and `@deck.gl/mesh-layers` | Supported where explicitly documented | Consumers may keep importing classes from official deck.gl packages where compat support is declared; exclusions must be called out explicitly for review. |
+| JSX layer composition through the approved wrapper matrix | Supported | Limited to the inventory-backed wrappers declared in this change. Stable layer IDs remain explicit. |
+| JSX view composition through the approved wrapper matrix | Supported | Limited to `MapView`, `OrthographicView`, `OrbitView`, `FirstPersonView`, and `GlobeView`. |
+| Compat imperative refs: `deck`, `pickObject`, `pickObjects`, `pickMultipleObjects`, `pickObjectAsync`, `pickObjectsAsync` | Supported | Exact inventory is fixed for the supported upstream deck.gl range already targeted by the repo. |
+| `ContextProvider` participation | Supported with limits | Supported only within the partial compat context surface defined in this change. |
+| Compat context parity for `deck` | Supported | `deck` is the required supported parity field. |
+| Compat context parity for `viewport`, `container`, `eventManager`, `onViewStateChange`, `widgets` | Unsupported unless explicitly verified later in implementation | This change does not promise full official context field or timing parity. |
+| Official `Render callbacks` (`children` as a function, such as `{({viewport}) => ...}`) | Unsupported | Use official terminology and document the syntax explicitly. |
+| Widget React wrappers such as `<ZoomWidget />` | Deferred | Not part of this change; leave widget compatibility to a future dedicated change. |
+| `useWidget` | Deferred | `https://deck.gl/docs/api-reference/react/use-widget` documents it upstream; this change must call out its exclusion explicitly for review. |
+| Interleaved mode view behavior beyond existing native constraints | Limited | Compat wrappers do not remove the current native interleaved-mode caveats around views. |
+| `@deckgl-fiber-renderer/compat/aggregation-layers` canonical layer wrappers (`ScreenGridLayer`, `HexagonLayer`, `ContourLayer`, `GridLayer`, `HeatmapLayer`) | Supported | Limited to the public layer exports of `@deck.gl/aggregation-layers` that fit the compat JSX wrapper model. |
+| `@deck.gl/aggregation-layers` non-layer exports such as `_AggregationLayer`, `WebGLAggregator`, `CPUAggregator`, and aggregator helper/type exports | Excluded for review | These are not part of the JSX wrapper inventory for this change and must not be implied by the family subpath. |
+| Unsupported or omitted `DeckGL` props, context fields, and imperative methods outside the approved compat subset | Excluded for review | The change must list them explicitly instead of implying full parity. |
+| Full `@deck.gl/react` behavioral parity | Unsupported | The migration promise is scoped to supported patterns only. |
 
 ## Risks / Trade-offs
 
-### [Risk] JSX layer re-render behavior differs from official
-**Impact:** Layers may re-initialize at different times than official bindings
-
-**Why it happens:** Our reconciler uses persistence mode (creates new instances on every change), official bindings use mutation mode
+### [Risk] Compat claims outpace what the runtime actually supports
+**Impact:** Users may expect official behavior that fiber.gl does not yet match.
 
 **Mitigation:**
-- Stable layer IDs prevent expensive re-initialization (our reconciler validates this)
-- Document the difference in migration guide
-- In practice, deck.gl handles both patterns well due to efficient ID-based diffing
+- Narrow the top-level migration promise.
+- Track supported, deferred, and unsupported patterns explicitly.
+- Avoid vague wording such as "minimal code changes" without a scoped explanation.
 
-### [Risk] Context may not expose all properties child components need
-**Impact:** Some child components reading context may break
-
-**Why it happens:** We map from our store to official context shape, may miss edge cases
+### [Risk] Context behavior may diverge from official React expectations
+**Impact:** Consumers relying on viewport/container/event-manager context semantics may see differences.
 
 **Mitigation:**
-- Document which context properties are available
-- Test with common child component patterns
-- Users can fall back to our native hooks (`useDeckgl`)
+- Treat context parity as a verified surface, not an assumed one.
+- Document context limitations clearly if runtime plumbing remains partial.
 
-### [Risk] Missing layer/view wrappers
-**Impact:** Users need layers we haven't wrapped yet
-
-**Why it happens:** Starting with 15-20 common layers, not all 40+
+### [Risk] Layer/view coverage may still be too narrow for credible migration
+**Impact:** Users may hit missing wrapper/export gaps early.
 
 **Mitigation:**
-- Users can easily create wrappers for missing layers (3-line pattern)
-- Document how to wrap custom layers
-- Add codegen script if users request it
-- Priority layers cover 80%+ of use cases
+- Carry the breadth question forward into the next planning stage.
+- Use the existing intrinsic inventory and official package families to define a concrete coverage matrix before implementation.
 
-### [Risk] Widget hook requires manual component creation
-**Impact:** More work than official pre-built widget components
-
-**Why it happens:** Trade-off for smaller bundle and less maintenance
+### [Risk] Unsupported official `Render callbacks` reduce migration completeness
+**Impact:** Some official React apps will still need targeted rewrites.
 
 **Mitigation:**
-- Provide cookbook with examples of wrapping common widgets
-- Pattern is simple (5 lines per widget)
-- Most users only need 1-3 widgets
-
-### [Risk] Type definitions drift from official API
-**Impact:** Types may become inaccurate as deck.gl evolves
-
-**Why it happens:** We maintain our own types instead of depending on `@deck.gl/react`
-
-**Mitigation:**
-- Types based on stable `@deck.gl/core` which changes less frequently
-- Test types with real deck.gl usage
-- Users report type issues via GitHub
-
-### [Risk] Performance overhead from wrapper layer
-**Impact:** Additional function calls and prop spreading
-
-**Why it happens:** Adapter pattern adds indirection
-
-**Mitigation:**
-- Overhead is minimal (prop spreading, ref indirection)
-- JSX wrappers compile to direct function calls
-- Tree-shakeable when not used
-- Trade-off acceptable for migration path
+- Name the feature exactly as official docs do.
+- Provide explicit migration guidance instead of letting this appear as accidental breakage.
 
 ## Migration Plan
 
-This is an additive change with no migration needed. Users opt-in by importing from `/compat`.
+This remains an additive change. Users would opt in via `@deckgl-fiber-renderer/compat`.
 
-**Deployment steps:**
-1. Add `/compat` directory to `packages/dom/src/`
-2. Update `packages/dom/package.json` exports field
-3. Add `@deck.gl/widgets` to peerDependencies
-4. Build and test
-5. Publish via changesets (minor version bump)
-6. Update documentation site with migration guide
+The refreshed planning direction is:
+1. match the official root-level `DeckGL` story first
+2. support official-style JSX layer/view migration on top of native `<layer>` / `<view>` primitives
+3. document unsupported/deferred official patterns clearly
+4. keep widget migration out of this change
 
-**Rollback:**
-- Remove `/compat` from exports field
-- Existing users unaffected (don't import `/compat`)
-- No breaking changes
+## Design Review Checkpoint
 
-**Testing strategy:**
-- Unit tests for each compat component
-- Integration tests with real deck.gl layers/views
-- Type tests for IntelliSense compatibility
-- Manual testing with example app migrated from official API
+The next planning phase should treat the following as resolved for scope and wording:
 
-## Open Questions
+1. wrapper coverage should be inventory-backed and broader than the old curated plan
+2. this change delivers a dedicated compat package rooted at `@deckgl-fiber-renderer/compat`, with family subpaths for layer wrappers and views kept at the package root
+3. context parity is partial for now and must not promise full official update semantics beyond verified fields
+4. the migration promise must be phrased as supported-pattern rewrite reduction, with targeted rewrites only for documented incompatibilities
+5. the compatibility matrix must include explicit rows for:
+   - deferred widget JSX/wrapper support
+   - unsupported official `Render callbacks` (`children` as a function, e.g. `{({viewport}) => ...}`)
+   - partial context parity, including `deck` as supported and broader official fields as unverified unless later proven in implementation
+   - interleaved-mode caveats that remain inherited from the native renderer
 
-### Q1: Should we support more than 15-20 layers initially?
-**Options:**
-- **A:** Start with 15-20 core + geo layers (recommended)
-- **B:** Add mesh + aggregation layers too (~30 total)
-- **C:** Codegen all layers from start (~40 total)
-
-**Recommendation:** Option A. Add more based on user requests. Most users need fewer than 10 layers.
-
-### Q2: Should we provide any pre-built widget components?
-**Options:**
-- **A:** Hook only (current plan)
-- **B:** Add 3-5 most common widgets (Zoom, Compass, Fullscreen)
-- **C:** Add all widgets
-
-**Recommendation:** Option A initially. Revisit if many users request it.
-
-### Q3: Error handling - warnings or errors for unsupported features?
-**Options:**
-- **A:** Warnings only (current plan)
-- **B:** Errors in development, warnings in production
-- **C:** Optional strict mode
-
-**Recommendation:** Option A. Can add strict mode later.
-
-### Q4: Should context update more granularly?
-**Options:**
-- **A:** Update when deck instance changes (current plan)
-- **B:** Update when viewport changes
-- **C:** Update on every render
-
-**Recommendation:** Option A. Profile if users report performance issues.
-
-### Q5: Documentation format?
-**Options:**
-- **A:** Single migration guide page
-- **B:** Separate pages for each feature area
-- **C:** Interactive migration tool
-
-**Recommendation:** Option B. Easier to navigate, better for SEO.
+Residual open issues:
+- aggregation-layer wrapper coverage still needs to be stated explicitly as supported, deferred, or excluded-for-review in the specs/tasks rather than inferred from package shape alone
+- no blocking planning gaps remain for specs generation on root package direction, family subpath direction, or compat ref methods
+- any future expansion beyond the declared wrapper/export matrix or ref-method inventory should happen through a follow-up planning change, not implicitly during specs generation

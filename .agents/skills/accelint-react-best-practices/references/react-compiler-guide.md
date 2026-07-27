@@ -24,19 +24,16 @@ Learn more: [React Compiler Documentation](https://react.dev/learn/react-compile
 When React Compiler is enabled, these patterns are **automatically optimized** - you don't need to manually apply them:
 
 **Memoization:**
-
 - **1.2 Extract to Memoized Components** - Compiler auto-memoizes components
 - Components wrapped with `memo()` - Compiler does this automatically
 - Values wrapped with `useMemo()` - Compiler memoizes automatically
 - Callbacks wrapped with `useCallback()` - Compiler stabilizes automatically
 
 **Static Extraction:**
-
 - **2.3 Hoist Static JSX Elements** - Compiler hoists automatically
 - **2.7 Hoist RegExp Creation** - Compiler hoists automatically
 
 **Effect Dependencies:**
-
 - Stable callback references in dependency arrays - Compiler handles this
 
 ---
@@ -48,7 +45,6 @@ When React Compiler is enabled, these patterns are **automatically optimized** -
 Even with React Compiler enabled, you still need to manually apply these patterns:
 
 **State Management Patterns:**
-
 - **1.1 Defer State Reads** - Compiler can't know you don't need subscription
 - **1.4 Subscribe to Derived State** - Requires semantic understanding of intent
 - **1.5 Functional setState Updates** - Compiler can't infer functional updates
@@ -57,12 +53,10 @@ Even with React Compiler enabled, you still need to manually apply these pattern
 - **1.15 Use useDeferredValue** - Requires explicit API usage
 
 **Effect Optimizations:**
-
 - **1.3 Narrow Effect Dependencies** - Requires code restructuring
 - **3.1 Store Event Handlers in Refs** - Requires useEffectEvent pattern
 
 **Rendering Performance:**
-
 - **1.7 Transitions for Non-Urgent Updates** - Requires explicit `startTransition()`
 - **2.1 Animate SVG Wrapper** - Requires DOM structure change
 - **2.2 CSS content-visibility** - CSS optimization, not React code
@@ -72,12 +66,10 @@ Even with React Compiler enabled, you still need to manually apply these pattern
 - **2.8 Avoid useMemo For Simple Expressions** - Code simplification preference
 
 **Advanced Patterns:**
-
 - **3.2 useLatest for Stable Callbacks** - Custom hook pattern
 - **3.3 Cache Repeated Function Calls** - Module-level caching
 
 **React 19 Migration:**
-
 - **4.1 Named Imports** - Import syntax requirement
 - **4.2 No forwardRef** - API migration requirement
 
@@ -101,20 +93,17 @@ cat next.config.js | grep -i compiler
 ### Step 2: Apply the Right Strategy
 
 **If React Compiler is ENABLED:**
-
 - Skip manual `memo()`, `useMemo()`, `useCallback()` - compiler handles it
 - Skip hoisting static JSX/RegExp - compiler handles it
 - Still apply all other optimizations from this guide
 
 **If React Compiler is NOT enabled:**
-
 - Apply all optimizations from this guide as needed
 - Manual memoization is necessary and beneficial
 
 ### Step 3: When in Doubt
 
 If you're unsure whether a project uses React Compiler:
-
 1. Ask the user
 2. Check the build configuration files
 3. Assume it's NOT enabled and apply manual optimizations (safer default)
@@ -147,23 +136,23 @@ If you're unsure whether a project uses React Compiler:
 
 ## Quick Reference
 
-| Pattern                | Auto with Compiler? | Manual Still Needed? |
-| ---------------------- | ------------------- | -------------------- |
-| memo() components      | ✅ Yes              | ❌ No                |
-| useMemo() values       | ✅ Yes              | ❌ No                |
-| useCallback() handlers | ✅ Yes              | ❌ No                |
-| Hoist static JSX       | ✅ Yes              | ❌ No                |
-| Hoist RegExp           | ✅ Yes              | ❌ No                |
-| Defer state reads      | ❌ No               | ✅ Yes               |
-| Functional setState    | ❌ No               | ✅ Yes               |
-| Lazy initialization    | ❌ No               | ✅ Yes               |
-| Narrow dependencies    | ❌ No               | ✅ Yes               |
-| Split combined hooks   | ❌ No               | ✅ Yes               |
-| useDeferredValue       | ❌ No               | ✅ Yes               |
-| Transitions            | ❌ No               | ✅ Yes               |
-| CSS optimizations      | ❌ No               | ✅ Yes               |
-| SSR/Hydration          | ❌ No               | ✅ Yes               |
-| Advanced patterns      | ❌ No               | ✅ Yes               |
+| Pattern | Auto with Compiler? | Manual Still Needed? |
+|---------|---------------------|----------------------|
+| memo() components | ✅ Yes | ❌ No |
+| useMemo() values | ✅ Yes | ❌ No |
+| useCallback() handlers | ✅ Yes | ❌ No |
+| Hoist static JSX | ✅ Yes | ❌ No |
+| Hoist RegExp | ✅ Yes | ❌ No |
+| Defer state reads | ❌ No | ✅ Yes |
+| Functional setState | ❌ No | ✅ Yes |
+| Lazy initialization | ❌ No | ✅ Yes |
+| Narrow dependencies | ❌ No | ✅ Yes |
+| Split combined hooks | ❌ No | ✅ Yes |
+| useDeferredValue | ❌ No | ✅ Yes |
+| Transitions | ❌ No | ✅ Yes |
+| CSS optimizations | ❌ No | ✅ Yes |
+| SSR/Hydration | ❌ No | ✅ Yes |
+| Advanced patterns | ❌ No | ✅ Yes |
 
 ---
 
@@ -175,10 +164,10 @@ If you're unsure whether a project uses React Compiler:
 // DON'T: Manual memo when compiler is enabled
 const MemoizedComponent = memo(function MyComponent() {
   // ... compiler already memoizes this
-});
+})
 
 // DON'T: Manual useMemo for simple values
-const doubled = useMemo(() => count * 2, [count]);
+const doubled = useMemo(() => count * 2, [count])
 // Compiler handles this automatically
 ```
 
@@ -187,17 +176,17 @@ const doubled = useMemo(() => count * 2, [count]);
 ```tsx
 // DO: Write clean code, let compiler optimize
 function MyComponent({ count }) {
-  const doubled = count * 2;
-  return <div>{doubled}</div>;
+  const doubled = count * 2
+  return <div>{doubled}</div>
 }
 
 // DO: Still use functional updates
-setCount((curr) => curr + 1);
+setCount(curr => curr + 1)
 
 // DO: Still use transitions
 startTransition(() => {
-  setSearchResults(newResults);
-});
+  setSearchResults(newResults)
+})
 ```
 
 ---
@@ -205,7 +194,6 @@ startTransition(() => {
 ## When to Reference This Guide
 
 Load this reference when:
-
 - Determining which optimizations to apply
 - Project has React Compiler and you're unsure what's still needed
 - Migrating to/from React Compiler

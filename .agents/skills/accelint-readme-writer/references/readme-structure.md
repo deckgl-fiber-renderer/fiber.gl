@@ -19,7 +19,8 @@ READMEs must follow this section order. Users expect to find information in pred
 8.  Examples
 9.  Further Reading (optional)
 10. License
-11. Contributing (optional)
+11. Architecture & Development Guides (optional)
+12. Contributing (optional)
 ```
 
 ---
@@ -39,7 +40,6 @@ The heading area establishes the package identity at a glance.
 - Badges (npm version, build status, coverage, license)
 
 **❌ Incorrect: cluttered, no clear title**
-
 ```markdown
 ![Build](badge) ![Coverage](badge) ![npm](badge) ![Downloads](badge) ![License](badge) ![Stars](badge) ![Forks](badge)
 
@@ -47,7 +47,6 @@ A utility library for parsing configuration files in various formats including J
 ```
 
 **✅ Correct: clean, focused**
-
 ```markdown
 # config-parser
 
@@ -70,7 +69,6 @@ Parse configuration files with schema validation.
 Include only for READMEs over ~200 lines. Place after heading area.
 
 **✅ Correct format**
-
 ```markdown
 ## Table of Contents
 
@@ -100,14 +98,12 @@ How to add this package to a project.
 - TypeScript note (if types included)
 
 **✅ Correct: complete installation section**
-
-````markdown
+```markdown
 ## Installation
 
 ```bash
 pnpm add config-parser
 ```
-````
 
 ### Peer Dependencies
 
@@ -118,8 +114,7 @@ pnpm add zod
 ```
 
 TypeScript types are included — no separate `@types` package needed.
-
-````
+```
 
 ---
 
@@ -152,9 +147,8 @@ registerFormat('ini', iniPlugin);
 
 const config = await parser.parse('./config.yaml');
 const result = validate(config, schema);
-````
-
-````
+```
+```
 
 **✅ Correct: minimal working example**
 ```markdown
@@ -166,9 +160,8 @@ import { parse } from 'config-parser';
 const config = await parse('./config.yaml');
 console.log(config);
 // { database: { host: 'localhost', port: 5432 } }
-````
-
-````
+```
+```
 
 ---
 
@@ -187,7 +180,7 @@ Explain what this package is in 2-4 sentences.
 ## What is config-parser?
 
 config-parser is a TypeScript library for reading configuration files. It supports JSON, YAML, and TOML formats out of the box, and can validate configs against a schema. It handles environment variable interpolation automatically.
-````
+```
 
 ---
 
@@ -202,7 +195,6 @@ Explain why this package was created and what makes it different.
 - Who should use this (and who shouldn't)
 
 **✅ Correct**
-
 ```markdown
 ## Why config-parser?
 
@@ -224,28 +216,25 @@ Document all public exports with signatures and descriptions.
 
 ### Format for Functions
 
-````markdown
+```markdown
 ### `functionName(param1, param2)`
 
 Brief description of what it does.
 
-| Parameter | Type      | Description                |
-| --------- | --------- | -------------------------- |
-| `param1`  | `string`  | What this parameter is for |
-| `param2`  | `Options` | Optional configuration     |
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `param1` | `string` | What this parameter is for |
+| `param2` | `Options` | Optional configuration |
 
 **Returns:** `Promise<Result>` - Description of return value
 
 **Throws:** `ParseError` - When the file cannot be parsed
 
 **Example:**
-
 ```typescript
-const result = await functionName("input.yaml", { strict: true });
+const result = await functionName('input.yaml', { strict: true });
 ```
-````
-
-````
+```
 
 ### Format for Types/Interfaces
 
@@ -261,9 +250,8 @@ interface Config {
   /** Enable strict mode validation */
   strict?: boolean;
 }
-````
-
-````
+```
+```
 
 ### Format for Constants
 
@@ -277,9 +265,8 @@ const DEFAULT_OPTIONS = {
   formats: ['json', 'yaml'],
   strict: false,
 } as const;
-````
-
-````
+```
+```
 
 ---
 
@@ -304,19 +291,19 @@ Use a standalone Examples section with complete workflows:
 import { parse } from 'config-parser';
 
 const config = await parse('./app.config.yaml');
-````
+```
 
 ### Validating Against a Schema
 
 ```typescript
-import { parse, validate } from "config-parser";
-import { configSchema } from "./schema";
+import { parse, validate } from 'config-parser';
+import { configSchema } from './schema';
 
-const config = await parse("./app.config.yaml");
+const config = await parse('./app.config.yaml');
 const result = validate(config, configSchema);
 
 if (!result.success) {
-  console.error("Invalid config:", result.errors);
+  console.error('Invalid config:', result.errors);
   process.exit(1);
 }
 ```
@@ -329,11 +316,10 @@ if (!result.success) {
 //   host: ${DB_HOST}
 //   port: ${DB_PORT:5432}  # with default
 
-const config = await parse("./config.yaml");
+const config = await parse('./config.yaml');
 // Environment variables are interpolated automatically
 ```
-
-````
+```
 
 ---
 
@@ -348,7 +334,7 @@ Links to extended documentation, related projects, or background reading.
 - [API Reference](./docs/api.md) - Complete API documentation
 - [Migration Guide](./docs/migration.md) - Upgrading from v1 to v2
 - [YAML Spec](https://yaml.org/spec/) - Understanding YAML syntax
-````
+```
 
 ---
 
@@ -357,7 +343,6 @@ Links to extended documentation, related projects, or background reading.
 State the license. Link to LICENSE file if present.
 
 **✅ Correct**
-
 ```markdown
 ## License
 
@@ -366,13 +351,35 @@ MIT - see [LICENSE](./LICENSE) for details.
 
 ---
 
-## 11. Contributing (Optional)
+## 11. Architecture & Development Guides (Optional)
+
+<!-- Include this section only if any of these files exist: openspec/config.yml, ARCHITECTURE.md, AGENTS.md -->
+
+Links to deeper technical and behavioral documentation that complements the README.
+
+**✅ Correct**
+```markdown
+## Architecture & Development Guides
+
+For deeper technical and behavioral context:
+
+- **[openspec/config.yml](./openspec/config.yml)** — Tech stack, coding patterns, and domain concepts
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — System architecture, deployment, and data flows
+- **[AGENTS.md](./AGENTS.md)** — How AI agents should behave when working in this codebase
+
+These documents form a layered guidance system: config.yml defines what the project is, ARCHITECTURE.md explains how it's structured and deployed, and AGENTS.md governs how agents collaborate on it.
+```
+
+**Note:** Only include files that actually exist. Check for openspec/config.yml (or config.yaml), ARCHITECTURE.md, and AGENTS.md/CLAUDE.md before adding this section. If none exist, omit this section entirely.
+
+---
+
+## 12. Contributing (Optional)
 
 How to contribute to the project.
 
 **✅ Correct**
-
-````markdown
+```markdown
 ## Contributing
 
 Contributions welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before submitting PRs.
@@ -384,8 +391,4 @@ pnpm test
 # Run linting
 pnpm lint
 ```
-````
-
-```
-
 ```

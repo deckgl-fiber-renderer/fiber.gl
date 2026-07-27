@@ -34,26 +34,21 @@ Comprehensive patterns for writing maintainable, effective vitest tests. Focused
 Apply these expert thinking patterns before implementing tests:
 
 ### Should This File Be Tested?
-
 - **Does this file contain behavior to test?** Files that only declare constants, types, or data structures without logic don't need tests. Constants files (`export const X = 42`), type definition files (`type User = {...}`), GLSL uniform declarations, configuration objects, and pure data files have no behavior to verify. If the file contains no functions, no logic, no transformations - skip testing it. Test behavior, not data.
 
 ### Test Isolation and Setup
-
 - **Where should cleanup logic live?** Think in layers: configuration eliminates entire error classes (mock cleanup in vitest.config.ts), setup files handle project-wide concerns (custom matchers, global mocks), beforeEach handles test-specific state. Each test doing its own mock cleanup is like each function doing its own null checks - it works but misses the point. Push concerns to the highest appropriate layer.
 - **Does this test depend on previous tests or shared state?** Test suites are parallel universes - each test should work identically whether it runs first, last, or alone. State dependency creates "quantum tests" that pass or fail based on execution order. If a test needs data from another test, they're actually one test split artificially.
 
 ### What to Test
-
 - **Am I testing behavior or implementation?** Test what users experience (inputs → outputs), not how code achieves it (which functions were called). Implementation tests break during safe refactoring.
 - **What's the simplest dependency I can use?** Real implementation > fake > stub > spy > mock. Each step down this hierarchy adds brittleness. Mock only when using real code is impractical (external APIs, slow operations).
 
 ### Test Clarity
-
 - **Can someone understand this test in 5 seconds?** Follow AAA pattern (Arrange, Act, Assert) with clear boundaries. If setup is complex, extract to helper functions with descriptive names.
 - **Are there multiple variations of the same behavior?** Use `it.each()` for parameterized tests instead of copying test structure. One assertion per concept keeps tests focused.
 
 ### Performance and Maintenance
-
 - **Will this test still be valuable in 6 months?** Avoid testing framework internals or trivial operations. Focus on business logic, edge cases, and error handling that actually prevent bugs.
 - **Is this test fast enough to run on every save?** Avoid expensive operations in tests. Use fakes for databases, mock timers for delays, stub external calls. Tests should complete in milliseconds.
 
@@ -78,29 +73,23 @@ Expert guidance on vitest testing patterns:
 This skill uses a **progressive disclosure** structure to minimize context usage:
 
 ### 1. Start with the Overview (AGENTS.md)
-
 Read [AGENTS.md](AGENTS.md) for a concise overview of all rules with one-line summaries and the workflow for discovering existing test configuration.
 
 ### 2. Check for Existing Test Configuration
-
 Before writing tests:
-
 - First check `vitest.config.ts` for global mock cleanup settings (`clearMocks`, `mockReset`, `restoreMocks`)
 - Then search for setup files (`test/setup.ts`, `vitest.setup.ts`, etc.) and analyze their configuration
 - See the workflow in [AGENTS.md](AGENTS.md#workflow-before-writing-tests)
 
 ### 3. Load Specific Rules as Needed
-
 Use these explicit triggers to know when to load each reference file:
 
 **MANDATORY Loading (load entire file):**
-
 - **Writing async tests with promises/timers** → [async-testing.md](references/async-testing.md)
 - **Working with mocks, stubs, spies, or fakes** → [test-doubles.md](references/test-doubles.md)
 - **Auditing/reviewing existing test files** → [property-based-testing.md](references/property-based-testing.md) (to identify PBT opportunities)
 
 **Load When You See These Patterns:**
-
 - **Nested describe blocks >2 levels deep** → [organization.md](references/organization.md)
 - **Test files not co-located with implementation** → [organization.md](references/organization.md)
 - **Tests without clear Arrange/Act/Assert structure** → [aaa-pattern.md](references/aaa-pattern.md)
@@ -115,27 +104,22 @@ Use these explicit triggers to know when to load each reference file:
 - **Existing fast-check or property-based tests** → [property-based-testing.md](references/property-based-testing.md)
 
 **Do NOT Load Unless Specifically Needed:**
-
 - Do NOT load [performance.md](references/performance.md) if tests are fast (<50ms)
 - Do NOT load [snapshot-testing.md](references/snapshot-testing.md) unless snapshots are mentioned
 - Do NOT load [vitest-features.md](references/vitest-features.md) for basic test writing
 
 ### 4. Apply the Pattern
-
 Each reference file contains:
-
 - ❌ Incorrect examples showing the anti-pattern
 - ✅ Correct examples showing the optimal implementation
 - Explanations of why the pattern matters
 
 ### 5. Use the Report Template
-
 When this skill is invoked for test code review, use the standardized report format:
 
 **Template:** [`assets/output-report-template.md`](assets/output-report-template.md)
 
 The report format provides:
-
 - Executive Summary with test quality impact assessment
 - Severity levels (Critical, High, Medium, Low) for prioritization
 - Impact analysis (test reliability, maintainability, performance, clarity)
@@ -144,18 +128,15 @@ The report format provides:
 - Summary table for tracking all issues
 
 **When to use the report template:**
-
 - Skill invoked directly via `/accelint-ts-testing <path>`
 - User asks to "review test code" or "audit tests" across file(s), invoking skill implicitly
 
 **When NOT to use the report template:**
-
 - User asks to "write a test for this function" (direct implementation)
 - User asks "what's wrong with this test?" (answer the question)
 - User requests specific test fixes (apply fixes directly without formal report)
 
 **IMPORTANT: When auditing tests, ALWAYS check for property-based testing opportunities**
-
 - Load [property-based-testing.md](references/property-based-testing.md) during every audit
 - Follow the "Workflow: Test Code Review/Audit" in [AGENTS.md](AGENTS.md)
 - Check for high-value PBT patterns: encode/decode pairs, normalizers, validators, pure functions, sorting functions

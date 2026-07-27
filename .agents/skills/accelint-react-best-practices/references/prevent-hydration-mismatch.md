@@ -3,23 +3,27 @@
 When rendering content that depends on client-side storage (localStorage, cookies), avoid both SSR breakage and post-hydration flickering by injecting a synchronous script that updates the DOM before React hydrates.
 
 **❌ Incorrect: breaks SSR**
-
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   // localStorage is not available on server - throws error
-  const theme = localStorage.getItem("theme") || "light";
+  const theme = localStorage.getItem('theme') || 'light'
 
-  return <div className={theme}>{children}</div>;
+  return (
+    <div className={theme}>
+      {children}
+    </div>
+  )
 }
 ```
 
 **✅ Correct: no flicker, no hydration mismatch**
-
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   return (
     <>
-      <div id="theme-wrapper">{children}</div>
+      <div id="theme-wrapper">
+        {children}
+      </div>
       <script
         dangerouslySetInnerHTML={{
           __html: `
@@ -34,12 +38,11 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
         }}
       />
     </>
-  );
+  )
 }
 ```
 
 **❌ Incorrect: visual flickering**
-
 ```ts
 function ThemeWrapper({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState('light')
@@ -62,12 +65,13 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
 ```
 
 **✅ Correct: no flicker, no hydration mismatch**
-
 ```tsx
 function ThemeWrapper({ children }: { children: ReactNode }) {
   return (
     <>
-      <div id="theme-wrapper">{children}</div>
+      <div id="theme-wrapper">
+        {children}
+      </div>
       <script
         dangerouslySetInnerHTML={{
           __html: `
@@ -82,7 +86,7 @@ function ThemeWrapper({ children }: { children: ReactNode }) {
         }}
       />
     </>
-  );
+  )
 }
 ```
 

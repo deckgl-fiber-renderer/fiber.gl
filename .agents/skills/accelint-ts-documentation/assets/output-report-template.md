@@ -3,13 +3,12 @@
 ╰───────────────────────────╯
 
 <!-- Make sure to display this warning block to the user -->
-
 ┌─────────────────────────────────────────────────────┐
-│ ⚠️ WARNING: This skill does it's best to process │
+│ ⚠️  WARNING: This skill does it's best to process   │
 │ the context needed to suggest correct documentation │
-│ but it can make mistakes in large systems. Please │
-│ verify the correctness of the documentation. │
-│ Particularly any suggested @links tags. │
+│ but it can make mistakes in large systems. Please   │
+│ verify the correctness of the documentation.        │
+│ Particularly any suggested @links tags.             │
 └─────────────────────────────────────────────────────┘
 
 # Report: [Target Name]
@@ -63,7 +62,6 @@ See this file for a complete example of what a real audit looks like.
 ```
 
 **Issue:**
-
 - [Point 1 explaining the documentation problem]
 - [Point 2 with specifics about what's missing or incorrect]
 - [Point 3 about impact on users/maintainers]
@@ -72,7 +70,6 @@ See this file for a complete example of what a real audit looks like.
 **Reference:** [jsdoc.md|comments.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [code snippet with proper documentation]
@@ -90,14 +87,12 @@ See this file for a complete example of what a real audit looks like.
 ```
 
 **Issue:**
-
 - [Explanation of the problem]
 
 **Category:** [Category Name]
 **Reference:** [filename.md]
 
 **Recommended Fix:**
-
 ```ts
 // ✅ [Brief description of solution]
 [code snippet with fix]
@@ -111,11 +106,11 @@ See this file for a complete example of what a real audit looks like.
 
 ## Summary
 
-| #   | Location    | Issue                     | Category   |
-| --- | ----------- | ------------------------- | ---------- |
-| 1   | [file:line] | [Brief issue description] | [Category] |
-| 2   | [file:line] | [Brief issue description] | [Category] |
-| 3   | [file:line] | [Brief issue description] | [Category] |
+| # | Location | Issue | Category |
+|---|----------|-------|----------|
+| 1 | [file:line] | [Brief issue description] | [Category] |
+| 2 | [file:line] | [Brief issue description] | [Category] |
+| 3 | [file:line] | [Brief issue description] | [Category] |
 
 **Total Issues:** [N]
 **By Category:** [Category1] ([N]), [Category2] ([N]), [Category3] ([N])

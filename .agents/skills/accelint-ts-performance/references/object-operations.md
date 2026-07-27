@@ -20,7 +20,6 @@
 ### Mutate When Safe
 
 **❌ Incorrect: unnecessary spread in loop**
-
 ```ts
 let result = {};
 for (const item of items) {
@@ -29,7 +28,6 @@ for (const item of items) {
 ```
 
 **✅ Correct: mutate owned object**
-
 ```ts
 const result = {};
 for (const item of items) {
@@ -40,9 +38,8 @@ for (const item of items) {
 ### Shallow vs Deep Clone
 
 **❌ Incorrect: deep clone for simple update**
-
 ```ts
-import { cloneDeep } from "lodash";
+import { cloneDeep } from 'lodash';
 
 function updateUser(user, name) {
   const updated = cloneDeep(user);
@@ -52,7 +49,6 @@ function updateUser(user, name) {
 ```
 
 **✅ Correct: shallow clone with Object.assign**
-
 ```ts
 function updateUser(user, name) {
   return Object.assign({}, user, { name });
@@ -62,7 +58,6 @@ function updateUser(user, name) {
 ### Single Property Update
 
 **❌ Incorrect: spread for one property**
-
 ```ts
 function setActive(state, active) {
   return {
@@ -73,7 +68,6 @@ function setActive(state, active) {
 ```
 
 **✅ Correct: Object.assign for performance**
-
 ```ts
 function setActive(state, active) {
   return Object.assign({}, state, { active });
@@ -83,7 +77,6 @@ function setActive(state, active) {
 ### Preallocate Object Shape
 
 **❌ Incorrect: dynamic property addition**
-
 ```ts
 function buildConfig(data) {
   const config = {};
@@ -95,7 +88,6 @@ function buildConfig(data) {
 ```
 
 **✅ Correct: preallocate shape**
-
 ```ts
 function buildConfig(data) {
   return {
@@ -109,7 +101,6 @@ function buildConfig(data) {
 ### Object.keys on Hot Paths
 
 **❌ Incorrect: repeated Object.keys**
-
 ```ts
 for (const item of items) {
   const keys = Object.keys(item);
@@ -120,7 +111,6 @@ for (const item of items) {
 ```
 
 **✅ Correct: use for...in or check properties directly**
-
 ```ts
 for (const item of items) {
   if (item.id !== undefined) {
@@ -132,7 +122,6 @@ for (const item of items) {
 ### Unnecessary Object Creation
 
 **❌ Incorrect: create object just to destructure**
-
 ```ts
 function getCoords(x, y) {
   const point = { x, y };
@@ -145,7 +134,6 @@ function processPoint({ x, y }) {
 ```
 
 **✅ Correct: pass values directly**
-
 ```ts
 function getCoords(x, y) {
   return processPoint(x, y);

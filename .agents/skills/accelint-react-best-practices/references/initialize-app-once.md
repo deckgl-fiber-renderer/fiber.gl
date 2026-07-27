@@ -3,22 +3,20 @@
 Do not put app-wide initialization that must run once per app load inside `useEffect()` of a component. Components can remount and effects will re-run. Use a module-level guard or top-level init in the entry module instead.
 
 **❌ Incorrect: runs twice in dev, re-runs on remount**
-
 ```tsx
 function Comp() {
   useEffect(() => {
-    loadFromStorage();
-    checkAuthToken();
-  }, []);
+    loadFromStorage()
+    checkAuthToken()
+  }, [])
 
   // ...
 }
 ```
 
 **✅ Correct: once per app load**
-
 ```tsx
-let didInit = false;
+let didInit = false
 
 function Comp() {
   useEffect(() => {
@@ -26,10 +24,10 @@ function Comp() {
       return;
     }
 
-    didInit = true;
-    loadFromStorage();
-    checkAuthToken();
-  }, []);
+    didInit = true
+    loadFromStorage()
+    checkAuthToken()
+  }, [])
 
   // ...
 }

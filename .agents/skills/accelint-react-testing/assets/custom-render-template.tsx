@@ -2,30 +2,33 @@
 // Reusable test utilities with all common providers
 // Customize this template based on your project's needs
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { RenderOptions, RenderResult } from "@testing-library/react";
-import { render } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import type { ReactElement, ReactNode } from "react";
-
-import { getQueryClient } from "~/configs/query-client";
+import { render, RenderOptions, RenderResult } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactElement, ReactNode } from 'react';
+import { getQueryClient } from '~/configs/query-client';
 // import { ThemeProvider } from '~/configs/theme'; // Uncomment if using themes
 
 // Re-export Testing Library utilities for convenience
-export { screen, waitFor, within, waitForElementToBeRemoved } from "@testing-library/react";
+export { 
+  screen, 
+  waitFor, 
+  within, 
+  waitForElementToBeRemoved 
+} from '@testing-library/react';
 
 /**
  * Custom render options extending RTL's RenderOptions
  * Add your project-specific provider options here
  */
-interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
+interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   // Redux
   // preloadedState?: PreloadedState<RootState>;
   // store?: ReturnType<typeof configureStore>;
-
+  
   // React Query
   queryClient?: QueryClient;
-
+  
   // Theme
   // theme?: Theme;
 }
@@ -36,37 +39,37 @@ interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
 interface CustomRenderResult extends RenderResult {
   // Return store for assertions
   // store: ReturnType<typeof configureStore>;
-
+  
   // Return query client for cache inspection
   queryClient: QueryClient;
-
+  
   // Return configured userEvent for interactions
   user: ReturnType<typeof userEvent.setup>;
 }
 
 const defaultQueryClient = getQueryClient({
   defaultOptions: {
-    mutations: {
-      retry: false,
-    },
-    queries: {
+    queries: { 
+      retry: false, 
       cacheTime: 0,
-      retry: false,
-      staleTime: 0,
+      staleTime: 0
+    },
+    mutations: { 
+      retry: false 
     },
   },
-});
+})
 
 /**
  * Custom render function that wraps components with all necessary providers
- *
+ * 
  * @example
  * ```tsx
  * test('example', async () => {
  *   const { user, queryClient } = renderWithProviders(<MyComponent />, {
  *     queryClient: new QueryClient(...),
  *   });
- *
+ *   
  *   await user.click(screen.getByRole('button'));
  *   expect(screen.getByText('Clicked')).toBeInTheDocument();
  * });
@@ -77,20 +80,21 @@ export function renderWithProviders(
   {
     // Redux setup
     // preloadedState = {},
-    // store = configureStore({
-    //   reducer: rootReducer,
-    //   preloadedState
+    // store = configureStore({ 
+    //   reducer: rootReducer, 
+    //   preloadedState 
     // }),
-
+    
     // React Query setup - disable retries for faster tests
     queryClient = defaultQueryClient,
-
+    
     // Theme setup
     // theme = defaultTheme,
 
     ...options
-  }: CustomRenderOptions = {},
+  }: CustomRenderOptions = {}
 ): CustomRenderResult {
+  
   /**
    * Wrapper component with all providers
    * Add/remove providers based on your project needs
@@ -99,7 +103,7 @@ export function renderWithProviders(
     return (
       <QueryClientProvider client={queryClient}>
         {/* <ThemeProvider theme={theme}> */}
-        {children}
+          {children}
         {/* </ThemeProvider> */}
       </QueryClientProvider>
     );
@@ -124,10 +128,10 @@ export { renderWithProviders as render };
  */
 export function createTestUser(overrides = {}) {
   return {
-    email: "test@example.com",
-    id: "123",
-    name: "Test User",
-    role: "user",
+    id: '123',
+    name: 'Test User',
+    email: 'test@example.com',
+    role: 'user',
     ...overrides,
   };
 }
@@ -138,19 +142,19 @@ export function createTestUser(overrides = {}) {
 export function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
+      queries: {
+        retry: false,
+        cacheTime: 0,
+        staleTime: 0,
+      },
       mutations: {
         retry: false,
       },
-      queries: {
-        cacheTime: 0,
-        retry: false,
-        staleTime: 0,
-      },
     },
     logger: {
-      error: () => {},
       log: console.log,
-      warn: console.warn, // Silence errors in tests
+      warn: console.warn,
+      error: () => {}, // Silence errors in tests
     },
   });
 }
@@ -160,5 +164,5 @@ export function createTestQueryClient() {
  */
 export async function waitForQueryClient(queryClient: QueryClient) {
   await queryClient.refetchQueries();
-  return new Promise((resolve) => setTimeout(resolve, 0));
+  return new Promise(resolve => setTimeout(resolve, 0));
 }

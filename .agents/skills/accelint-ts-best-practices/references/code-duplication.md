@@ -5,7 +5,6 @@ When refactoring code, look for common patterns that can be extracted into utili
 ## When to Extract Common Patterns
 
 Extract common patterns when:
-
 - The same logic appears in multiple places (2+ occurrences)
 - Parameters differ but the core logic is identical
 - The abstraction reduces complexity rather than adding it
@@ -24,14 +23,13 @@ Extract common patterns when:
 ### Example 1: Extracting Padding Logic
 
 **❌ Incorrect: duplicated padding logic**
-
 ```ts
-const TWO_DIGIT_DEFAULT = "--";
-const FOUR_DIGIT_DEFAULT = "----";
+const TWO_DIGIT_DEFAULT = '--';
+const FOUR_DIGIT_DEFAULT = '----';
 
 export function formatCodeM1(value?: string | number): string {
   if (value) {
-    return `${value}`.padStart(2, "0");
+    return `${value}`.padStart(2, '0');
   }
 
   return TWO_DIGIT_DEFAULT;
@@ -39,7 +37,7 @@ export function formatCodeM1(value?: string | number): string {
 
 export function formatCodeM2(value?: string | number): string {
   if (value) {
-    return `${value}`.padStart(4, "0");
+    return `${value}`.padStart(4, '0');
   }
 
   return FOUR_DIGIT_DEFAULT;
@@ -47,19 +45,21 @@ export function formatCodeM2(value?: string | number): string {
 ```
 
 **✅ Correct: extracted common pattern with optimizations**
-
 ```ts
-const TWO_DIGIT_DEFAULT = "--";
-const FOUR_DIGIT_DEFAULT = "----";
+const TWO_DIGIT_DEFAULT = '--';
+const FOUR_DIGIT_DEFAULT = '----';
 
-function formatCode(value: string | number | undefined, digits: 2 | 4): string {
+function formatCode(
+  value: string | number | undefined,
+  digits: 2 | 4,
+): string {
   if (!value) {
     return digits === 2 ? TWO_DIGIT_DEFAULT : FOUR_DIGIT_DEFAULT;
   }
 
   // Optimize string coercion: avoid template literal overhead
-  const str = typeof value === "string" ? value : String(value);
-  return str.padStart(digits, "0");
+  const str = typeof value === 'string' ? value : String(value);
+  return str.padStart(digits, '0');
 }
 
 export function formatCodeM1(value?: string | number): string {
@@ -74,38 +74,36 @@ export function formatCodeM2(value?: string | number): string {
 ### Example 2: Extracting Validation Logic
 
 **❌ Incorrect: duplicated validation**
-
 ```ts
 export function updateEmail(email: string): void {
-  if (!email || email.trim() === "") {
-    throw new Error("Email is required");
+  if (!email || email.trim() === '') {
+    throw new Error('Email is required');
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Invalid email format");
+    throw new Error('Invalid email format');
   }
   // Update email logic
 }
 
 export function registerUser(email: string, password: string): void {
-  if (!email || email.trim() === "") {
-    throw new Error("Email is required");
+  if (!email || email.trim() === '') {
+    throw new Error('Email is required');
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Invalid email format");
+    throw new Error('Invalid email format');
   }
   // Registration logic
 }
 ```
 
 **✅ Correct: extracted validation function**
-
 ```ts
 function validateEmail(email: string): void {
-  if (!email || email.trim() === "") {
-    throw new Error("Email is required");
+  if (!email || email.trim() === '') {
+    throw new Error('Email is required');
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw new Error("Invalid email format");
+    throw new Error('Invalid email format');
   }
 }
 
@@ -123,7 +121,6 @@ export function registerUser(email: string, password: string): void {
 ### Example 3: Extracting Data Transformation
 
 **❌ Incorrect: duplicated transformation logic**
-
 ```ts
 export function getUserDisplayName(user: User): string {
   if (user.firstName && user.lastName) {
@@ -135,7 +132,7 @@ export function getUserDisplayName(user: User): string {
   if (user.lastName) {
     return user.lastName;
   }
-  return "Anonymous";
+  return 'Anonymous';
 }
 
 export function getAuthorDisplayName(author: Author): string {
@@ -148,14 +145,16 @@ export function getAuthorDisplayName(author: Author): string {
   if (author.lastName) {
     return author.lastName;
   }
-  return "Anonymous";
+  return 'Anonymous';
 }
 ```
 
 **✅ Correct: extracted name formatting**
-
 ```ts
-function formatFullName(firstName: string | undefined, lastName: string | undefined): string {
+function formatFullName(
+  firstName: string | undefined,
+  lastName: string | undefined,
+): string {
   if (firstName && lastName) {
     return `${firstName} ${lastName}`;
   }
@@ -165,7 +164,7 @@ function formatFullName(firstName: string | undefined, lastName: string | undefi
   if (lastName) {
     return lastName;
   }
-  return "Anonymous";
+  return 'Anonymous';
 }
 
 export function getUserDisplayName(user: User): string {
@@ -180,14 +179,12 @@ export function getAuthorDisplayName(author: Author): string {
 ## When NOT to Extract
 
 **Don't extract if:**
-
 - The duplication is incidental (similar-looking but semantically different)
 - The abstraction makes the code harder to understand
 - The logic is too simple (e.g., 1-2 line operations)
 - Each instance is likely to diverge in future requirements
 
 **❌ Incorrect: over-abstraction**
-
 ```ts
 // Extracting trivial operations creates unnecessary indirection
 function addOne(x: number): number {
@@ -198,7 +195,6 @@ const result = addOne(counter); // Just use counter + 1
 ```
 
 **✅ Correct: keep it simple**
-
 ```ts
 const result = counter + 1;
 ```

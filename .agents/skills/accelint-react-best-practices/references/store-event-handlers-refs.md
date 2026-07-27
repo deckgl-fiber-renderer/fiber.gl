@@ -3,28 +3,26 @@
 Store callbacks in refs when used in effects that shouldn't re-subscribe on callback changes.
 
 **❌ Incorrect: re-subscribes on every render**
-
 ```tsx
 function useWindowEvent(event: string, handler: (e) => void) {
   useEffect(() => {
-    window.addEventListener(event, handler);
-    return () => window.removeEventListener(event, handler);
-  }, [event, handler]);
+    window.addEventListener(event, handler)
+    return () => window.removeEventListener(event, handler)
+  }, [event, handler])
 }
 ```
 
 **✅ Correct: stable subscription**
-
 ```tsx
-import { useEffectEvent } from "react";
+import { useEffectEvent } from 'react'
 
 function useWindowEvent(event: string, handler: (e) => void) {
-  const onEvent = useEffectEvent(handler);
+  const onEvent = useEffectEvent(handler)
 
   useEffect(() => {
-    window.addEventListener(event, onEvent);
-    return () => window.removeEventListener(event, onEvent);
-  }, [event]);
+    window.addEventListener(event, onEvent)
+    return () => window.removeEventListener(event, onEvent)
+  }, [event])
 }
 ```
 

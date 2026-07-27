@@ -23,9 +23,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    clearMocks: true // Clear call history before each test
-    mockReset: true // Reset implementation before each test
-    restoreMocks: true // Restore original implementation before each test
+    clearMocks: true // Clear call history before each test     
+    mockReset: true // Reset implementation before each test     
+    restoreMocks: true // Restore original implementation before each test   
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
@@ -38,11 +38,11 @@ export default defineConfig({
 
 ```ts
 // math.test.ts
-import { describe, it, expect } from "vitest";
-import { add } from "./math";
+import { describe, it, expect } from 'vitest';
+import { add } from './math';
 
-describe("add", () => {
-  it("should add two numbers", () => {
+describe('add', () => {
+  it('should add two numbers', () => {
     expect(add(2, 3)).toBe(5);
   });
 });
@@ -74,7 +74,6 @@ vitest --ui         # Visual UI
 ## What You'll Learn
 
 This skill covers expert-level guidance on:
-
 - Test organization and AAA pattern
 - Strict assertions to catch bugs
 - Test doubles hierarchy (fakes > stubs > mocks)

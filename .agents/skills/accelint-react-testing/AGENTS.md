@@ -38,36 +38,29 @@ This structure minimizes context usage while providing complete implementation g
 ## 1. Testing Patterns
 
 ### 1.1 Query Priority
-
 Use accessible query hierarchy: getByRole > getByLabelText > getByText > getByTestId.
 [View detailed examples](references/query-priority.md)
 
 ### 1.2 Query Variants
-
-getBy* for immediate presence, findBy* for async appearance, queryBy\* to assert absence.
+getBy* for immediate presence, findBy* for async appearance, queryBy* to assert absence.
 [View detailed examples](references/query-variants.md)
 
 ### 1.3 User Events
-
 Use @testing-library/user-event for realistic interaction sequences, not fireEvent.
 [View detailed examples](references/user-events.md)
 
 ### 1.4 Async Testing
-
 Handle async with findBy queries and waitFor; avoid act warnings with proper awaiting.
 [View detailed examples](references/async-testing.md)
 
 ### 1.5 Custom Render
-
 Create test utils that wrap components with Context, Redux, Router providers.
 [View detailed examples](references/custom-render.md)
 
 ### 1.6 Accessibility Queries
-
 Query by semantic roles and labels; test ensures accessibility by design.
 [View detailed examples](references/accessibility-queries.md)
 
 ### 1.7 Anti-patterns
-
 Never test implementation details, use container queries, rely on excessive snapshots, use queryBy for presence, or put side effects in waitFor.
 [View detailed examples](references/anti-patterns.md)

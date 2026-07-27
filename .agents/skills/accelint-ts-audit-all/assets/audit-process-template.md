@@ -28,7 +28,6 @@ For each code file, you MUST follow this sequence:
 8. **Interactive Changes** - Use two-phase pattern with numbered table. **SAVE PROGRESS after this step before archiving.**
 
 **Progress Tracking:**
-
 - After each step, save detailed progress to the "Current File - Detailed Progress" section in this file
 - When a file is complete (all 9 steps done), move its detailed progress to `audit-history-{same date as audit-process file}-{same time as audit-process file}.md`
 - Update the file status in the "Files to Audit" section (Pending → In Progress → Completed)
@@ -38,7 +37,6 @@ For each code file, you MUST follow this sequence:
 ## Files to Audit ({total} total)
 
 ### Pending ({count})
-
 - [ ] file1.ts
 - [ ] file2.ts
 - [ ] file3.ts
@@ -56,7 +54,6 @@ For each code file, you MUST follow this sequence:
 **Next File:** `{filename.ts}` (first in pending list)
 
 **Process:**
-
 ```bash
 # Step 1: Test coverage analysis
 /skill accelint-ts-testing {path/to/file.ts}
@@ -89,14 +86,12 @@ For each code file, you MUST follow this sequence:
 ## Notes
 
 ### File Organization
-
 - **In-progress work** → Document in "Current File - Detailed Progress" section of this file
 - **Completed work** → Move to `audit-history.md` when all 9 steps are done
 - **Historical reference** → Only read `audit-history.md` if you need to revert or understand past decisions
 
 ### Audit Guidelines
-
-- Test files (_.test.ts) and benchmark files (_.bench.ts) are excluded from this audit
+- Test files (*.test.ts) and benchmark files (*.bench.ts) are excluded from this audit
 - **ALWAYS use two-phase interactive pattern:** Show ALL issues in emoji severity table first, then detailed before/after for each, then accept via numbered list. NEVER present one-by-one.
 - Performance comments (`// PERF:`) should only be added when they provide meaningful insight
 - User must approve each change before applying (numbered list acceptance workflow)
@@ -113,7 +108,6 @@ For each code file, you MUST follow this sequence:
 ## Verification Commands
 
 You MUST run the provided commands exactly when they are needed:
-
 - Test changes: `{exact test command}`
 - Verify build/check tsc types: `{exact build command}`
 - Test benches (±0.05x is acceptable variance): `{exact bench command}` (if applicable)

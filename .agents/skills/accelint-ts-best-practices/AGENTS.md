@@ -21,25 +21,21 @@ This structure minimizes context usage while providing complete implementation g
 ## Loading Strategy
 
 **When writing new code:**
-
 - **MANDATORY**: Read [quick-start.md](references/quick-start.md) for complete workflow examples
 - Load specific pattern files only as you encounter relevant scenarios
 - Start with the pattern, then check related safety rules
 
 **When reviewing existing code:**
-
 - Start with the rule summaries below to identify anti-patterns
 - Load corresponding reference files for detailed fixes
 - **Do NOT load all references at once** - use progressive loading
 
 **When fixing type errors:**
-
 - Read [any.md](references/any.md) if encountering `any` types
 - Read [enums.md](references/enums.md) if replacing `enum`
 - Read [type-vs-interface.md](references/type-vs-interface.md) for declaration choices
 
 **When implementing safety features:**
-
 - **MANDATORY**: Read [input-validation.md](references/input-validation.md) for external data
 - Read [bounded-iteration.md](references/bounded-iteration.md) for any loops or queues
 - Read [error-handling.md](references/error-handling.md) for proper error patterns
@@ -66,37 +62,30 @@ See individual reference files for detailed alternatives and ✅ correct pattern
 ## 1. General Best Practices
 
 ### 1.1 Naming Conventions
-
 Append qualifiers in descending order (latencyMsMax not maxLatencyMs) to enable autocomplete grouping; prefix booleans with `is`/`has`.
 [View detailed examples](references/naming-conventions.md)
 
 ### 1.2 Functions
-
 Keep functions under 50 lines; explicitly type return values; avoid defaults; use `function` keyword for pure functions.
 [View detailed examples](references/functions.md)
 
 ### 1.3 Control Flow
-
 Always use block style `{ }` for control flow (prevents bugs when adding code); use early returns for guard clauses.
 [View detailed examples](references/control-flow.md)
 
 ### 1.4 State Management
-
 Use `const` to signal immutability; never mutate function parameters (creates hidden side effects); keep leaf functions pure for testability.
 [View detailed examples](references/state-management.md)
 
 ### 1.5 Return Values
-
 Return zero values ([], {}, 0, '') instead of null/undefined to eliminate defensive null checks and enable method chaining and composition.
 [View detailed examples](references/return-values.md)
 
 ### 1.6 Misc
-
 Use Linux line endings; employ defensive programming; aim for zero technical debt.
 [View detailed examples](references/misc.md)
 
 ### 1.7 Code Duplication (DRY Principle)
-
 Extract common patterns into utility functions; consolidate duplicated logic; apply DRY when abstraction reduces complexity.
 [View detailed examples](references/code-duplication.md)
 
@@ -105,46 +94,42 @@ Extract common patterns into utility functions; consolidate duplicated logic; ap
 ## 2. TypeScript
 
 ### 2.1 Any
-
 Never use `any` (disables type checking and propagates through codebase); use `unknown` to force validation or generics to preserve types.
 [View detailed examples](references/any.md)
 
 ### 2.2 Enums
-
 Never use `enum` (generates 5+ lines of runtime code per enum); use `as const` objects for zero-cost type-safe constants.
 [View detailed examples](references/enums.md)
 
 ### 2.3 Type vs. Interface
-
 Prefer `type` over `interface`; use `interface` only for declaration merging or class contracts.
 [View detailed examples](references/type-vs-interface.md)
+
+### 2.4 Bundler-Friendly Paths
+Use statically analyzable paths for imports and file-system operations; avoid dynamic path composition that prevents build-time analysis.
+[View detailed examples](references/bundler-paths.md)
 
 ---
 
 ## 3. Safety
 
 ### 3.1 Input Validation
-
 Always validate and sanitize external data at system boundaries with schemas.
 [View detailed examples](references/input-validation.md)
 
 ### 3.2 Assertions
-
 Use assertions to detect programmer errors; split compound assertions; include values.
 [View detailed examples](references/assertions.md)
 
 ### 3.3 Error Handling
-
 Handle all errors explicitly; use Result types or try-catch blocks; never swallow errors silently.
 [View detailed examples](references/error-handling.md)
 
 ### 3.4 Error Messages
-
 Make user errors empathetic and actionable; make developer errors specific with values.
 [View detailed examples](references/error-messages.md)
 
 ### 3.5 Bounded Iteration
-
 Never create unbounded loops, queues, or recursive calls; set explicit limits to prevent runaway resource consumption and system crashes.
 [View detailed examples](references/bounded-iteration.md)
 
@@ -153,7 +138,6 @@ Never create unbounded loops, queues, or recursive calls; set explicit limits to
 ## 4. Performance
 
 **For performance optimization tasks**, use the `accelint-ts-performance` skill instead. It provides:
-
 - 4-phase workflow (Profile → Analyze → Optimize → Verify)
 - Comprehensive optimization patterns for all performance categories
 - Profiling tool guidance (Chrome DevTools, Node.js --prof)

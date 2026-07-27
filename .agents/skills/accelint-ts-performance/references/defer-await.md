@@ -3,7 +3,6 @@
 Move `await` operations into the branches where they're actually used to avoid blocking code paths that don't need them.
 
 **❌ Incorrect: blocks both branches**
-
 ```ts
 async function handleRequest(userId: string, skipProcessing: boolean) {
   const userData = await fetchUserData(userId);
@@ -19,7 +18,6 @@ async function handleRequest(userId: string, skipProcessing: boolean) {
 ```
 
 **✅ Correct: only blocks when needed**
-
 ```ts
 async function handleRequest(userId: string, skipProcessing: boolean) {
   if (skipProcessing) {

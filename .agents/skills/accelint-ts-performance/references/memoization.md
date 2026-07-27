@@ -21,33 +21,29 @@
 ### Avoid Trivial Memoization
 
 **❌ Incorrect: trivial computation**
-
 ```ts
-const ternMemo = memoize((pred) => (pred ? "Right!" : "Wrong"));
+const ternMemo = memoize((pred) => pred ? 'Right!' : 'Wrong');
 ```
 
 **✅ Correct: direct computation**
-
 ```ts
-const result = test ? "Right!" : "Wrong";
+const result = test ? 'Right!' : 'Wrong';
 ```
 
 ### Hoist Loop-Invariant Calculations
 
 **❌ Incorrect: calculations recomputed each iteration**
-
 ```ts
 for (let i = 0; i < items.length; i++) {
-  const prefix = config.namespace + ".";
+  const prefix = config.namespace + '.';
   const multiplier = Math.PI * 2;
   process(items[i], prefix, multiplier);
 }
 ```
 
 **✅ Correct: hoist outside loop**
-
 ```ts
-const prefix = config.namespace + ".";
+const prefix = config.namespace + '.';
 const multiplier = Math.PI * 2;
 const len = items.length;
 
@@ -59,7 +55,6 @@ for (let i = 0; i < len; i++) {
 ### Precompute Constants
 
 **❌ Incorrect: compute at runtime**
-
 ```ts
 function calculateArea(radius) {
   const pi = Math.PI;
@@ -68,7 +63,6 @@ function calculateArea(radius) {
 ```
 
 **✅ Correct: module-level constant**
-
 ```ts
 const PI = Math.PI;
 
@@ -80,7 +74,6 @@ function calculateArea(radius) {
 ### Memoize Expensive Operations
 
 **❌ Incorrect: repeated expensive calls**
-
 ```ts
 function render() {
   const data = parseAndTransformData(rawData);
@@ -94,7 +87,6 @@ render();
 ```
 
 **✅ Correct: memoize expensive function**
-
 ```ts
 const memoizedParse = memoize(parseAndTransformData);
 
@@ -107,7 +99,6 @@ function render() {
 ### Cache Function Results
 
 **❌ Incorrect: repeated calculation**
-
 ```ts
 function processItems(items) {
   for (const item of items) {
@@ -123,7 +114,6 @@ function getConfig(type) {
 ```
 
 **✅ Correct: cache results**
-
 ```ts
 function processItems(items) {
   const configCache = new Map();
@@ -141,7 +131,6 @@ function processItems(items) {
 ### Repeated Function Calls with Same Arguments
 
 **❌ Incorrect: call multiple times**
-
 ```ts
 function validate(data) {
   if (isValid(data.user) && isComplete(data.user)) {
@@ -156,8 +145,7 @@ function isComplete(user) {
 ```
 
 **✅ Correct: call once, reuse result**
-
-````ts
+```ts
 function validate(data) {
   const valid = isValid(data.user);
   if (valid && isComplete(data.user, valid)) {
@@ -187,10 +175,9 @@ function double(n: number): number {
   cache.set(n, result);
   return result;
 }
-````
+```
 
 **✅ Just compute directly**
-
 ```ts
 function double(n: number): number {
   return n * 2;
@@ -198,7 +185,6 @@ function double(n: number): number {
 ```
 
 **When to skip memoization**:
-
 - Simple arithmetic (addition, multiplication, modulo)
 - Property access on in-memory objects
 - String concatenation of short strings
@@ -209,7 +195,6 @@ function double(n: number): number {
 ### Fallback 2: Limit cache size to prevent memory leaks
 
 **Scenario**: Cache grows unbounded and causes memory exhaustion
-
 ```ts
 // ❌ Unbounded cache can leak memory
 const cache = new Map<string, Result>();
@@ -223,7 +208,6 @@ function compute(input: string): Result {
 ```
 
 **✅ Use LRU cache with size limit**
-
 ```ts
 class LRUCache<K, V> {
   private cache = new Map<K, V>();
@@ -235,7 +219,7 @@ class LRUCache<K, V> {
     const value = this.cache.get(key);
     if (value !== undefined) {
       // Move to end (most recently used)
-      this.order = this.order.filter((k) => k !== key);
+      this.order = this.order.filter(k => k !== key);
       this.order.push(key);
     }
     return value;
@@ -243,7 +227,7 @@ class LRUCache<K, V> {
 
   set(key: K, value: V): void {
     if (this.cache.has(key)) {
-      this.order = this.order.filter((k) => k !== key);
+      this.order = this.order.filter(k => k !== key);
     } else if (this.cache.size >= this.maxSize) {
       // Evict least recently used
       const oldest = this.order.shift()!;
@@ -272,7 +256,6 @@ function compute(input: string): Result {
 ### Fallback 3: Time-based cache invalidation for stale data
 
 **Scenario**: Cached data becomes stale and must be refreshed
-
 ```ts
 // ❌ Cache never expires, returns stale data
 const cache = new Map<string, UserData>();
@@ -286,7 +269,6 @@ function getUserData(userId: string): UserData {
 ```
 
 **✅ Add TTL (time-to-live) to cache entries**
-
 ```ts
 interface CacheEntry<T> {
   value: T;
@@ -319,7 +301,6 @@ function getUserData(userId: string): UserData {
 ### Fallback 4: Recompute instead of complex cache key generation
 
 **Scenario**: Cache key generation is expensive or complex
-
 ```ts
 // ❌ Complex cache key generation
 const cache = new Map<string, Result>();
@@ -336,7 +317,6 @@ function process(obj: ComplexObject): Result {
 ```
 
 **✅ Skip memoization, just recompute**
-
 ```ts
 function process(obj: ComplexObject): Result {
   return expensiveOperation(obj);
@@ -344,7 +324,6 @@ function process(obj: ComplexObject): Result {
 ```
 
 **When to skip memoization due to key complexity**:
-
 - Cache key requires serialization (JSON.stringify, hash computation)
 - Objects are large or deeply nested
 - Key generation cost approaches computation cost
@@ -354,7 +333,6 @@ function process(obj: ComplexObject): Result {
 ### Fallback 5: Use WeakMap for object-keyed caches
 
 **Scenario**: Caching results keyed by objects, need automatic cleanup
-
 ```ts
 // ❌ Regular Map prevents garbage collection
 const cache = new Map<object, Result>();
@@ -368,7 +346,6 @@ function process(obj: SomeObject): Result {
 ```
 
 **✅ Use WeakMap for automatic cleanup**
-
 ```ts
 const cache = new WeakMap<object, Result>();
 
@@ -389,7 +366,6 @@ function process(obj: SomeObject): Result {
 ### Fallback 6: Precomputation instead of runtime memoization
 
 **Scenario**: All possible inputs are known ahead of time
-
 ```ts
 // ❌ Compute and cache at runtime
 const cache = new Map<number, number>();
@@ -403,13 +379,13 @@ function factorial(n: number): number {
 ```
 
 **✅ Precompute all values at startup**
-
 ```ts
 // Precompute factorials for n = 0 to 20
 const FACTORIALS = [
-  1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800,
-  87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000, 121645100408832000,
-  2432902008176640000,
+  1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880,
+  3628800, 39916800, 479001600, 6227020800, 87178291200,
+  1307674368000, 20922789888000, 355687428096000,
+  6402373705728000, 121645100408832000, 2432902008176640000
 ];
 
 function factorial(n: number): number {
@@ -421,13 +397,9 @@ function factorial(n: number): number {
 ```
 
 **When to precompute**:
-
 - Input space is small and finite (< 1000 values)
 - All inputs are known at compile time
 - Computation is expensive but only needs to run once
 
 **Why**: Precomputation eliminates runtime overhead (cache checks, storage). Array lookup is faster than Map lookup. Memory cost is paid upfront and constant.
-
-```
-
 ```

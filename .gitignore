@@ -37,5 +37,6 @@ dist
 # Remix
 .react-router
 
-# Skills
+# AI
 .agents/audit
+.pi/tasks

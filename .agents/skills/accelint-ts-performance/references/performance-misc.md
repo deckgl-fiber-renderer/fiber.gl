@@ -27,28 +27,25 @@
 String concatenation creates new strings on each operation. Use array join for building strings in loops.
 
 **❌ Incorrect: repeated string concatenation**
-
 ```ts
-let result = "";
+let result = '';
 for (const item of items) {
-  result += item.name + ", ";
+  result += item.name + ', ';
 }
 ```
 
 **✅ Correct: array join**
-
 ```ts
 const parts = [];
 for (const item of items) {
   parts.push(item.name);
 }
-const result = parts.join(", ");
+const result = parts.join(', ');
 ```
 
 ### Regular Expression in Loops
 
 **❌ Incorrect: create regex each iteration**
-
 ```ts
 for (const text of texts) {
   const matches = text.match(/\d+/g);
@@ -57,7 +54,6 @@ for (const text of texts) {
 ```
 
 **✅ Correct: compile once**
-
 ```ts
 const digitRegex = /\d+/g;
 for (const text of texts) {
@@ -69,25 +65,22 @@ for (const text of texts) {
 ### Unnecessary Async Overhead
 
 **❌ Incorrect: async wrapper with no await**
-
 ```ts
 async function getUser(id) {
-  return users.find((u) => u.id === id);
+  return users.find(u => u.id === id);
 }
 ```
 
 **✅ Correct: synchronous function**
-
 ```ts
 function getUser(id) {
-  return users.find((u) => u.id === id);
+  return users.find(u => u.id === id);
 }
 ```
 
 ### try/catch in Tight Loops
 
 **❌ Incorrect: error handling in loop**
-
 ```ts
 for (let i = 0; i < items.length; i++) {
   try {
@@ -99,7 +92,6 @@ for (let i = 0; i < items.length; i++) {
 ```
 
 **✅ Correct: move error handling outside**
-
 ```ts
 try {
   for (let i = 0; i < items.length; i++) {
@@ -115,7 +107,6 @@ try {
 ### Closures Capturing Large Scopes
 
 **❌ Incorrect: capture entire context**
-
 ```ts
 function createProcessor(largeConfig) {
   return function process(item) {
@@ -125,7 +116,6 @@ function createProcessor(largeConfig) {
 ```
 
 **✅ Correct: minimize closure scope**
-
 ```ts
 function createProcessor(largeConfig) {
   const multiplier = largeConfig.data.nested.multiplier;
@@ -138,7 +128,6 @@ function createProcessor(largeConfig) {
 ### Function Bind in Render Paths
 
 **❌ Incorrect: create new function each render**
-
 ```ts
 function Component({ items }) {
   return items.map(item => (
@@ -150,7 +139,6 @@ function Component({ items }) {
 ```
 
 **✅ Correct: prebind or use data attributes**
-
 ```ts
 function Component({ items }) {
   const handleItemClick = (e) => {
@@ -168,38 +156,36 @@ function Component({ items }) {
 ### Async I/O on Hot Paths
 
 **❌ Incorrect: synchronous blocking**
-
 ```ts
-import { readFileSync } from "fs";
+import { readFileSync } from 'fs';
 
 function loadTemplate(name) {
-  return readFileSync(`./templates/${name}.html`, "utf-8");
+  return readFileSync(`./templates/${name}.html`, 'utf-8');
 }
 
 // Called in request handler
-app.get("/page", (req, res) => {
-  const template = loadTemplate("home");
+app.get('/page', (req, res) => {
+  const template = loadTemplate('home');
   res.send(template);
 });
 ```
 
 **✅ Correct: async with caching**
-
 ```ts
-import { readFile } from "fs/promises";
+import { readFile } from 'fs/promises';
 
 const templateCache = new Map();
 
 async function loadTemplate(name) {
   if (!templateCache.has(name)) {
-    const content = await readFile(`./templates/${name}.html`, "utf-8");
+    const content = await readFile(`./templates/${name}.html`, 'utf-8');
     templateCache.set(name, content);
   }
   return templateCache.get(name);
 }
 
-app.get("/page", async (req, res) => {
-  const template = await loadTemplate("home");
+app.get('/page', async (req, res) => {
+  const template = await loadTemplate('home');
   res.send(template);
 });
 ```
@@ -209,28 +195,26 @@ app.get("/page", async (req, res) => {
 For complex string building with many parts, array join can be more efficient than template literals.
 
 **❌ Incorrect: multiple concatenations per iteration**
-
 ```ts
 function buildHTML(items) {
-  let html = "<ul>";
+  let html = '<ul>';
   for (const item of items) {
-    html += "<li>" + item.name + "</li>";
+    html += '<li>' + item.name + '</li>';
   }
-  html += "</ul>";
+  html += '</ul>';
   return html;
 }
 ```
 
 **✅ Correct: array join (better for many items)**
-
 ```ts
 function buildHTML(items) {
-  const parts = ["<ul>"];
+  const parts = ['<ul>'];
   for (const item of items) {
-    parts.push("<li>", item.name, "</li>");
+    parts.push('<li>', item.name, '</li>');
   }
-  parts.push("</ul>");
-  return parts.join("");
+  parts.push('</ul>');
+  return parts.join('');
 }
 ```
 

@@ -3,18 +3,16 @@
 `localStorage`, `sessionStorage`, and `document.cookie` are synchronous and expensive. Cache reads in memory.
 
 **❌ Incorrect: reads storage on every call**
-
 ```ts
 function getTheme() {
-  return localStorage.getItem("theme") ?? "light";
+  return localStorage.getItem('theme') ?? 'light';
 }
 // Called 10 times = 10 storage reads
 ```
 
 **✅ Correct: `Map` cache**
-
 ```ts
-const storageCache = new Map<string, string | null>();
+const storageCache = new Map<string, string | null>()
 
 function getLocalStorage(key: string) {
   if (!storageCache.has(key)) {
@@ -26,7 +24,7 @@ function getLocalStorage(key: string) {
 
 function setLocalStorage(key: string, value: string) {
   localStorage.setItem(key, value);
-  storageCache.set(key, value); // keep cache in sync
+  storageCache.set(key, value);  // keep cache in sync
 }
 ```
 
@@ -49,15 +47,15 @@ function getCookie(name: string) {
 **Important**: invalidate on external changes
 
 ```ts
-window.addEventListener("storage", (e) => {
+window.addEventListener('storage', (e) => {
   if (e.key) {
     storageCache.delete(e.key);
   }
 });
 
-document.addEventListener("visibilitychange", () => {
-  if (document.visibilityState === "visible") {
-    storageCache.clear();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    storageCache.clear()
   }
 });
 ```

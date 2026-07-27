@@ -1,129 +1,67 @@
-## 1. Setup and Infrastructure
+## 1. Establish the compat implementation contract
 
-- [ ] 1.1 Create `/compat` directory structure under `packages/dom/src/`
-- [ ] 1.2 Update `packages/dom/package.json` exports field to include `./compat` entry point
-- [ ] 1.3 Add `@deck.gl/widgets` to peerDependencies in `packages/dom/package.json`
-- [ ] 1.4 Create `packages/dom/src/compat/index.ts` with placeholder exports
-- [ ] 1.5 Verify tsdown builds `/compat` entry point correctly
+- [ ] 1.1 Reconcile `proposal.md`, `design.md`, `questions.md`, `answers.md`, and `specs/*` into a single implementation checklist for this change, confirming the supported `/compat` surface, the migration promise, and that widgets remain out of scope. Verify by reviewing the updated artifact set for internal consistency.
+- [ ] 1.2 Produce the final wrapper/export matrix for `@deckgl-fiber-renderer/compat`, keeping `DeckGL`, shared types/context/ref types, and 5 view wrappers at the package root while exporting layer wrappers from `/layers`, `/geo-layers`, `/aggregation-layers`, and `/mesh-layers`; confirm `/aggregation-layers` is limited to `ScreenGridLayer`, `HexagonLayer`, `ContourLayer`, `GridLayer`, and `HeatmapLayer`, with non-layer aggregation exports excluded-for-review. Verify by checking the matrix against `packages/types/src/jsx.ts`, upstream package exports, and the compat specs.
+- [ ] 1.3 Produce the final compat ref-method inventory for this change, limited to `deck`, `pickObject`, `pickObjects`, `pickMultipleObjects`, `pickObjectAsync`, and `pickObjectsAsync`, and confirm it matches the approved design/specs and supported deck.gl version range. Verify by cross-checking the design/spec artifacts and the workspace version evidence.
+- [ ] 1.4 Define the compatibility matrix for supported, excluded-for-review, unsupported, and deferred official `@deck.gl/react` patterns, including explicit rows for unsupported official `Render callbacks`, deferred widget JSX/wrappers, deferred `useWidget`, partial context parity, native interleaved-mode caveats, omitted props/methods/context fields, and any unsupported aggregation-layer wrappers. Verify by checking that every non-goal or limitation named in the design/specs appears in the matrix.
 
-## 2. Type Definitions
+## 2. Deliver a vertical slice for the compat DeckGL package entrypoint
 
-- [ ] 2.1 Create `packages/dom/src/compat/types.ts` with DeckGLProps type (omitting unsupported props)
-- [ ] 2.2 Add DeckGLRef type with deck property and picking methods
-- [ ] 2.3 Add DeckGLContextValue type matching official API shape
-- [ ] 2.4 Add LayerProps<T> generic type for layer wrapper props
-- [ ] 2.5 Add ViewProps<T> generic type for view wrapper props
-- [ ] 2.6 Export all types from `packages/dom/src/compat/index.ts`
-- [ ] 2.7 Write type tests in `packages/dom/src/compat/__tests__/types.test-d.ts`
+- [ ] 2.1 Add the dedicated compat package and export wiring so `@deckgl-fiber-renderer/compat` is the supported React migration entrypoint for this change, using `tsdown` package export generation for the approved subpaths. Verify with package-level export tests or build checks targeted to `@deckgl-fiber-renderer/compat`.
+- [ ] 2.2 Implement the compat `DeckGL` wrapper around the native `Deckgl` component with the approved official-shaped prop boundary, keeping low-level `gl`, `canvas`, `parent`, and `_customRender` out of the supported compat API. Verify with focused component tests covering supported prop forwarding and unsupported-prop behavior.
+- [ ] 2.3 Implement the compat ref surface on `DeckGL`, exposing exactly the approved picking methods and `deck` handle for supported migration flows. Verify with unit or integration tests that cover each supported ref method.
+- [ ] 2.4 Add validation coverage for the entrypoint slice, including supported root import behavior, supported migration claims, explicit unsupported/deferred paths for `Render callbacks`, widget React components, and `useWidget`, plus development-only warnings for detectable unsupported usage. Verify with Vitest assertions and any needed type-level checks.
+- [ ] 2.5 Run `pnpm exec turbo test --filter=@deckgl-fiber-renderer/compat`, plus relevant lint/format checks for the touched package, and record that the compat entrypoint slice passes package-level validation.
 
-## 3. DeckGLContext Implementation
+## 3. Deliver a vertical slice for compat JSX layer wrappers
 
-- [ ] 3.1 Create `packages/dom/src/compat/context.ts` with DeckGLContext creation
-- [ ] 3.2 Implement CompatContextProvider component that reads from useDeckgl hook
-- [ ] 3.3 Add memoization for context value to prevent unnecessary re-renders
-- [ ] 3.4 Support custom ContextProvider prop
-- [ ] 3.5 Write unit tests for context in `packages/dom/src/compat/__tests__/context.test.tsx`
-- [ ] 3.6 Export DeckGLContext and CompatContextProvider from index
+- [ ] 3.1 Implement the compat JSX layer wrapper set under the approved compat family subpaths for the declared `@deck.gl/layers`, `@deck.gl/geo-layers`, `@deck.gl/aggregation-layers`, and `@deck.gl/mesh-layers` contract, with aggregation-layer coverage limited to `ScreenGridLayer`, `HexagonLayer`, `ContourLayer`, `GridLayer`, and `HeatmapLayer`. Verify wrapper coverage against the approved matrix and ensure non-layer aggregation exports are explicitly excluded-for-review rather than implied.
+- [ ] 3.2 Ensure the layer-wrapper slice preserves the supported migration story: official-style JSX layer composition works through compat wrappers, stable layer IDs remain explicit in examples/tests, and official deck.gl class imports can remain unchanged for consumers using the compat `DeckGL` entrypoint. Verify with integration tests and type checks.
+- [ ] 3.3 Add explicit compatibility coverage for the documented alias mappings so `mVTLayer`/`mvtLayer` map to `MVTLayer` and `wMSLayer`/`wmsLayer` map to `WMSLayer` without expanding the canonical wrapper inventory. Verify with targeted tests or export assertions.
+- [ ] 3.4 Add negative coverage showing the layer compat surface does not claim blanket parity beyond the approved wrapper matrix. Verify with spec-aligned tests or type assertions for unsupported wrappers.
+- [ ] 3.5 Run `pnpm exec turbo test --filter=@deckgl-fiber-renderer/compat`, any required package type checks, and relevant lint/format checks for the touched compat layer files.
 
-## 4. Layer Wrapper Components
+## 4. Deliver a vertical slice for compat JSX view wrappers
 
-- [ ] 4.1 Create `packages/dom/src/compat/layers.tsx` file
-- [ ] 4.2 Implement ScatterplotLayer wrapper component
-- [ ] 4.3 Implement ArcLayer wrapper component
-- [ ] 4.4 Implement LineLayer wrapper component
-- [ ] 4.5 Implement GeoJsonLayer wrapper component
-- [ ] 4.6 Implement PolygonLayer wrapper component
-- [ ] 4.7 Implement PathLayer wrapper component
-- [ ] 4.8 Implement IconLayer wrapper component
-- [ ] 4.9 Implement TextLayer wrapper component
-- [ ] 4.10 Implement ColumnLayer wrapper component
-- [ ] 4.11 Implement GridCellLayer wrapper component
-- [ ] 4.12 Implement PointCloudLayer wrapper component
-- [ ] 4.13 Implement BitmapLayer wrapper component
-- [ ] 4.14 Implement SolidPolygonLayer wrapper component
-- [ ] 4.15 Implement H3HexagonLayer wrapper component (geo-layers)
-- [ ] 4.16 Implement S2Layer wrapper component (geo-layers)
-- [ ] 4.17 Implement GreatCircleLayer wrapper component (geo-layers)
-- [ ] 4.18 Implement TileLayer wrapper component (geo-layers)
-- [ ] 4.19 Implement MVTLayer wrapper component (geo-layers)
-- [ ] 4.20 Export all layer wrappers from index
-- [ ] 4.21 Write integration tests for layer wrappers in `__tests__/layers.test.tsx`
+- [ ] 4.1 Implement the compat JSX view wrapper set at the compat package root for exactly `MapView`, `OrthographicView`, `OrbitView`, `FirstPersonView`, and `GlobeView`. Verify wrapper coverage against the approved matrix.
+- [ ] 4.2 Ensure the view-wrapper slice supports official-style JSX view composition, including nested compat layer wrappers, explicit view IDs, and native renderer organization of views plus layers. Verify with integration tests covering end-to-end composition behavior.
+- [ ] 4.3 Add coverage that compat view behavior does not over-promise beyond current renderer constraints, especially the documented native interleaved-mode caveats around views. Verify with tests or assertions aligned to the compat specs.
+- [ ] 4.4 Run `pnpm exec turbo test --filter=@deckgl-fiber-renderer/compat`, any required package type checks, and relevant lint/format checks for the touched compat view files.
 
-## 5. View Wrapper Components
+## 5. Deliver a vertical slice for compat context and public types
 
-- [ ] 5.1 Create `packages/dom/src/compat/views.tsx` file
-- [ ] 5.2 Implement MapView wrapper component
-- [ ] 5.3 Implement FirstPersonView wrapper component
-- [ ] 5.4 Implement OrthographicView wrapper component
-- [ ] 5.5 Implement OrbitView wrapper component
-- [ ] 5.6 Add development mode warning for missing view IDs
-- [ ] 5.7 Export all view wrappers from index
-- [ ] 5.8 Write integration tests for view wrappers in `__tests__/views.test.tsx`
+- [ ] 5.1 Define and export compat public shared types from `@deckgl-fiber-renderer/compat`, including `DeckGLProps`, `DeckGLRef`, and `DeckGLContextValue`, aligned to the approved compat prop boundary, ref inventory, and partial context parity, while keeping family-specific wrapper exports aligned to their compat subpaths. Verify with type tests in the relevant package.
+- [ ] 5.2 Implement the compat context surface with `deck` as the required supported field and only the additional official-style context fields whose presence and update semantics can be explicitly supported by this change. Verify with focused context tests.
+- [ ] 5.3 Support `ContextProvider` participation without implying full official context parity, and add negative coverage for unsupported over-claims around `viewport`, `container`, `eventManager`, `onViewStateChange`, and widgets where not explicitly implemented. Verify with tests and public type assertions.
+- [ ] 5.4 Ensure the compat type surface and context surface do not include widget APIs such as `useWidget` or widget wrapper types. Verify by checking exports and type coverage.
+- [ ] 5.5 Run `pnpm exec turbo test --filter=@deckgl-fiber-renderer/compat`, relevant type-test commands, and lint/format checks for the touched compat type/context files.
 
-## 6. DeckGL Component Implementation
+## 6. Finish migration documentation and package validation
 
-- [ ] 6.1 Create `packages/dom/src/compat/deckgl.tsx` file
-- [ ] 6.2 Implement DeckGL component with forwardRef
-- [ ] 6.3 Integrate CompatContextProvider to wrap children
-- [ ] 6.4 Implement useImperativeHandle for ref methods (pickObject, pickObjects, etc.)
-- [ ] 6.5 Add development mode warnings for unsupported props (Deck, _customRender)
-- [ ] 6.6 Pass all children directly to underlying Deckgl (reconciler handles layer/view extraction)
-- [ ] 6.7 Handle width/height/style props correctly
-- [ ] 6.8 Export DeckGL as named and default export from index
-- [ ] 6.9 Write unit tests for DeckGL component in `__tests__/deckgl.test.tsx`
+- [ ] 6.1 Update package-level documentation for `/compat` with a migration guide centered on replacing the official `DeckGL` import, keeping official deck.gl class imports where supported, and calling out the compatibility matrix for supported, unsupported, and deferred patterns. Verify by reviewing docs against the approved proposal/design/spec language.
+- [ ] 6.2 Document the final wrapper/export matrix, ref-method inventory, partial context parity, unsupported official `Render callbacks`, deferred widgets, and any interleaved-mode caveats so the migration contract is explicit and testable. Verify that the docs match the approved artifacts exactly.
+- [ ] 6.3 Run final package validation for the touched scope: targeted build/test/typecheck commands for `@deckgl-fiber-renderer/compat`, plus any required dependency-package validation, lint, and format checks appropriate to the changed files. Verify all targeted checks pass before marking the change implementation tasks complete.
+- [ ] 6.4 If the implementation affects published package surface, generate the required changeset and verify the release note reflects the additive `@deckgl-fiber-renderer/compat` package and approved subpaths without claiming widget support or full `@deck.gl/react` parity.
 
-## 7. useWidget Hook Implementation
+## Parallelization Strategy
 
-- [ ] 7.1 Create `packages/dom/src/compat/use-widget.ts` file
-- [ ] 7.2 Implement useWidget hook with generic type parameters
-- [ ] 7.3 Add widget instance creation and persistence via useRef
-- [ ] 7.4 Implement widget props update via useEffect
-- [ ] 7.5 Implement widget addition to deck on mount
-- [ ] 7.6 Implement widget removal from deck on unmount
-- [ ] 7.7 Read deck instance from useDeckgl hook
-- [ ] 7.8 Return widget instance for imperative access
-- [ ] 7.9 Export useWidget from index
-- [ ] 7.10 Write unit tests for useWidget in `__tests__/use-widget.test.tsx`
+### Dependencies (Must Complete First)
 
-## 8. Testing
+- **Section 1** must complete first because it establishes the approved implementation contract, wrapper/export matrix, ref-method inventory, compatibility matrix, and scope guardrails for the rest of the change.
 
-- [ ] 8.1 Write integration test: basic DeckGL with layers prop
-- [ ] 8.2 Write integration test: DeckGL with JSX layers
-- [ ] 8.3 Write integration test: DeckGL with JSX views
-- [ ] 8.4 Write integration test: ref methods (pickObject, pickObjects, etc.)
-- [ ] 8.5 Write integration test: DeckGLContext access in child components
-- [ ] 8.6 Write integration test: useWidget hook with ZoomWidget example
-- [ ] 8.7 Write integration test: mix of layers prop and JSX layers
-- [ ] 8.8 Write integration test: custom ContextProvider prop
-- [ ] 8.9 Write integration test: width/height/style props
-- [ ] 8.10 Verify all tests pass with `pnpm --filter=@deckgl-fiber-renderer/dom test`
+**Independent tasks (can run in parallel):**
+- **Section 3** (compat JSX layer wrappers) and **Section 4** (compat JSX view wrappers) can run in parallel after Section 2 because they implement separate wrapper inventories on top of the same approved compat entrypoint.
+- **Section 5** (compat context and public types) can run in parallel with **Section 3** or **Section 4** after Section 2 because it focuses on the public type/context surface rather than wrapper-family implementation.
 
-## 9. Documentation
+**Sequential dependencies:**
+- **Section 2** must complete before Sections 3, 4, and 5 because the compat entrypoint and `DeckGL` wrapper define the public surface those slices attach to.
+- **Section 6** should run after Sections 2 through 5 because documentation and final validation need the implemented compat surface, wrapper matrices, and compatibility matrix to be stable.
 
-- [ ] 9.1 Create migration guide from `@deck.gl/react` to `/compat`
-- [ ] 9.2 Document API compatibility matrix (what works/differs/doesn't work)
-- [ ] 9.3 Create cookbook for implementing custom widget components
-- [ ] 9.4 Document how to create wrappers for missing layers
-- [ ] 9.5 Document known limitations and workarounds
-- [ ] 9.6 Add JSDoc comments to all exported types and functions
-- [ ] 9.7 Create example showing migration from official to compat to native API
+**Critical path:**
+Section 1 → Section 2 → Section 6
 
-## 10. Build and Quality Checks
-
-- [ ] 10.1 Run `pnpm --filter=@deckgl-fiber-renderer/dom build` and verify `/compat` dist files
-- [ ] 10.2 Run `pnpm --filter=@deckgl-fiber-renderer/dom lint` and fix any issues
-- [ ] 10.3 Run `pnpm --filter=@deckgl-fiber-renderer/dom format` to format code
-- [ ] 10.4 Verify type definitions are exported correctly in dist
-- [ ] 10.5 Check bundle size impact of `/compat` entry point
-- [ ] 10.6 Verify tree-shaking works (compat not included when not imported)
-
-## 11. Final Integration
-
-- [ ] 11.1 Create example app in `examples/` directory using `/compat` API
-- [ ] 11.2 Manually test all layer wrapper components in example app
-- [ ] 11.3 Manually test all view wrapper components in example app
-- [ ] 11.4 Manually test ref methods in example app
-- [ ] 11.5 Manually test useWidget with multiple widgets in example app
-- [ ] 11.6 Test in development mode to verify warnings appear correctly
-- [ ] 11.7 Test in production build to verify no warnings
-- [ ] 11.8 Generate changeset with `pnpm changeset` (minor version bump)
+**Recommended implementation order:**
+1. Implement **Section 1** first to lock the contract, wrapper/export matrix, ref-method inventory, and compatibility matrix.
+2. Implement **Section 2** next to establish the compat entrypoint and `DeckGL` wrapper.
+3. Implement **Sections 3, 4, and 5** in parallel where staffing allows.
+4. Implement **Section 6** last to finalize docs, validation, and release metadata.

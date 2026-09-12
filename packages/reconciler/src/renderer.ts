@@ -94,6 +94,24 @@ export const renderer: ReturnType<typeof reactReconciler> = reactReconciler(
 export const roots = new Map<RootElement, ReconcilerRoot>();
 
 /**
+ * Which root created each deck.gl instance.
+ *
+ * The store is a module-level singleton shared by every root, so by the time a
+ * root unmounts the store may already hold a *different* root's instance:
+ * React commits an incoming root's effects (createRoot + configure) before the
+ * outgoing root's cleanup runs. Finalizing whatever sits in the store at that
+ * moment destroys the instance that was just created and blanks the slot, so
+ * `useDeckgl()` returns undefined while a live instance is still on screen.
+ *
+ * Instances put into the store from outside `configure()` have no owner here
+ * and keep the previous behaviour: they are finalized by whichever root unmounts.
+ */
+const instanceOwners = new WeakMap<Deck | MapboxOverlay, RootElement>();
+
+/** The instance each root created, so it can still be finalized once the store has moved on. */
+const ownInstances = new WeakMap<RootElement, Deck | MapboxOverlay>();
+
+/**
  * Unmounts and cleans up a reconciler root
  *
  * Performs complete cleanup including:
@@ -139,13 +157,25 @@ export function unmountAtNode(node: RootElement) {
 
     const state = root.store.getState();
 
+    // The store may already hold a newer root's instance. Only that root may
+    // finalize it, so fall back to the one this root created.
+    const stored = state.deckgl;
+    const storedOwner = stored ? instanceOwners.get(stored) : undefined;
+    const ownedByAnotherRoot = storedOwner !== undefined && storedOwner !== node;
+    const target = ownedByAnotherRoot ? ownInstances.get(node) : stored;
+
     // Ensure cleanup completes even if finalize throws
     try {
-      state.deckgl?.finalize();
+      target?.finalize();
     } finally {
-      // Always clear state and remove from registry, even on error
-      // oxlint-disable-next-line typescript/no-explicit-any
-      state.setDeckgl(undefined as any);
+      // Always remove from registry, even on error. Leave the shared slot alone
+      // when it points at an instance another root still owns — blanking it
+      // would strand `useDeckgl()` at undefined while that instance is live.
+      if (!ownedByAnotherRoot) {
+        // oxlint-disable-next-line typescript/no-explicit-any
+        state.setDeckgl(undefined as any);
+      }
+      ownInstances.delete(node);
       roots.delete(node);
     }
   }
@@ -252,6 +282,8 @@ export function createRoot(node: RootElement): ReconcilerRoot {
     const isOverlay = "interleaved" in props;
     const deckgl = isOverlay ? new MapboxOverlay(props) : new Deck(props);
 
+    instanceOwners.set(deckgl, node);
+    ownInstances.set(node, deckgl);
     state.setDeckgl(deckgl);
 
     configured = true;

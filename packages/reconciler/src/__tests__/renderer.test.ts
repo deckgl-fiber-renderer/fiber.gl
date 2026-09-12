@@ -3,6 +3,8 @@ import * as fc from "fast-check";
 import React from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { noop } from "@deckgl-fiber-renderer/shared";
+
 import { createRoot, roots, unmountAtNode } from "../renderer";
 import type { RootElement } from "../types";
 import { createTestRoot } from "./test-renderer";
@@ -155,6 +157,60 @@ describe("renderer", () => {
       expect(deck.finalize).toHaveBeenCalledOnce();
       expect(roots.has(rootElement)).toBeFalsy();
       expect(root.store.getState().deckgl).toBeUndefined();
+    });
+
+    it("should finalize the instance its own root created, not the one currently in the shared store", () => {
+      // Arrange: two roots, each configuring its own deck.gl instance. The
+      // store is a module-level singleton, so the second configure() leaves
+      // the store pointing at the second root's instance.
+      const nodeA = document.createElement("div") as RootElement;
+      const rootA = createRoot(nodeA);
+      rootA.configure({ canvas: nodeA as unknown as HTMLCanvasElement });
+      const deckA = rootA.store.getState().deckgl;
+
+      const nodeB = document.createElement("div") as RootElement;
+      const rootB = createRoot(nodeB);
+      rootB.configure({ canvas: nodeB as unknown as HTMLCanvasElement });
+      const deckB = rootB.store.getState().deckgl;
+
+      if (!(deckA && deckB)) {
+        throw new Error("Expected both roots to configure an instance");
+      }
+      expect(deckA).not.toBe(deckB);
+
+      const finalizeA = vi.spyOn(deckA, "finalize").mockImplementation(noop);
+      const finalizeB = vi.spyOn(deckB, "finalize").mockImplementation(noop);
+
+      // Act
+      unmountAtNode(nodeA);
+
+      // Assert
+      expect(finalizeA).toHaveBeenCalledOnce();
+      expect(finalizeB).not.toHaveBeenCalled();
+    });
+
+    it("should leave the store pointing at an instance another root still owns", () => {
+      // Arrange
+      const nodeA = document.createElement("div") as RootElement;
+      const rootA = createRoot(nodeA);
+      rootA.configure({ canvas: nodeA as unknown as HTMLCanvasElement });
+      const deckA = rootA.store.getState().deckgl;
+
+      const nodeB = document.createElement("div") as RootElement;
+      const rootB = createRoot(nodeB);
+      rootB.configure({ canvas: nodeB as unknown as HTMLCanvasElement });
+      const deckB = rootB.store.getState().deckgl;
+
+      if (!(deckA && deckB)) {
+        throw new Error("Expected both roots to configure an instance");
+      }
+      vi.spyOn(deckA, "finalize").mockImplementation(noop);
+
+      // Act
+      unmountAtNode(nodeA);
+
+      // Assert: rootB's instance is still live, so the store must still expose it
+      expect(rootB.store.getState().deckgl).toBe(deckB);
     });
 
     it("should handle unmounting non-existent node gracefully", () => {
